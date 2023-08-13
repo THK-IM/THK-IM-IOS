@@ -1,0 +1,232 @@
+//
+//  DefaultSignalModule.swift
+//  demo
+//
+//  Created by vizoss on 2023/5/20.
+//
+
+import Foundation
+import Starscream
+import Alamofire
+import CocoaLumberjack
+
+class DefaultSignalModule: SignalModule, WebSocketDelegate {
+    
+    private var token = ""
+    private  var signalListener : SignalListener?
+    private let reachabilityManager = NetworkReachabilityManager.init()
+    private var status = ConnectStatus.Init
+    private var webSocketUrl = ""
+    private weak var app: UIApplication?
+    private var webSocketClient: WebSocket?
+    private var retryTimes : Float = 0
+    private let timeout = 5
+    private let reconnectInterval: Float = 0.5
+    private let heatBeatInterval = 10
+    private let lock = NSLock.init()
+    
+    private var hearBeatTask: GCDTask?
+    private var timeoutTask: GCDTask?
+    private var reconnectTask: GCDTask?
+    
+    init(_ app: UIApplication, _ webSocketUrl: String, _ token: String) {
+        self.app = app
+        self.webSocketUrl = webSocketUrl
+        self.token = token
+    }
+    
+    func updateToken(_ token: String) {
+        
+    }
+    
+    func connect() {
+        DDLogDebug("DefaultSignalModule: connect start, status: \(self.status) ")
+        lock.lock()
+        defer {lock.unlock()}
+        if self.status == ConnectStatus.Connecting || self.status == ConnectStatus.Connected {
+            return
+        }
+        if self.webSocketClient != nil {
+            self.webSocketClient?.forceDisconnect()
+        }
+        self.onStateChange(ConnectStatus.Connecting)
+        var request = URLRequest(url: URL(string: self.webSocketUrl)!)
+        request.timeoutInterval = 5.0
+        request.setValue(self.token, forHTTPHeaderField: "uid")
+        request.setValue("0", forHTTPHeaderField: "platform")
+        self.webSocketClient = WebSocket(request: request)
+        self.webSocketClient?.delegate = self
+        self.webSocketClient?.connect()
+    }
+    
+    private func startTimeoutTask() {
+        GCDTool.gcdCancel(self.timeoutTask)
+        self.timeoutTask = GCDTool.gcdDelay(TimeInterval(timeout)) { [weak self] in
+            guard let sf = self else {
+                return
+            }
+            DDLogDebug("DefaultSignalModule startTimeoutTask status \(sf.status)")
+            if sf.status == ConnectStatus.Connecting  {
+                sf.onStateChange(ConnectStatus.DisConnected)
+            }
+        }
+    }
+    
+    private func cancelTimeoutTask() {
+        GCDTool.gcdCancel(self.timeoutTask)
+        self.timeoutTask = nil
+    }
+    
+    private func startReconnectTask() {
+        GCDTool.gcdCancel(self.reconnectTask)
+        self.retryTimes = self.retryTimes + 1
+        let delay = self.retryTimes * reconnectInterval > 5 ? 5 : self.retryTimes * reconnectInterval
+        DDLogDebug("DefaultSignalModule startReconnectTask, delay: \(delay)")
+        self.reconnectTask = GCDTool.gcdDelay(TimeInterval(delay)) { [weak self] in
+            guard let sf = self else {
+                return
+            }
+            sf.connect()
+        }
+    }
+    
+    private func cancelReconnectTask() {
+        GCDTool.gcdCancel(self.reconnectTask)
+        self.hearBeatTask = nil
+    }
+    
+    private func startHeatBeatTask() {
+        GCDTool.gcdCancel(self.hearBeatTask)
+        self.hearBeatTask = GCDTool.gcdDelay(TimeInterval(heatBeatInterval)) { [weak self] in
+            guard let sf = self else {
+                return
+            }
+            if sf.status == ConnectStatus.Connected {
+                sf.sendMessage(Signal.heatBeat)
+                sf.startHeatBeatTask()
+            }
+        }
+    }
+    
+    private func cancelHeatBeatTask() {
+        GCDTool.gcdCancel(self.hearBeatTask)
+        self.hearBeatTask = nil
+    }
+    
+    private func onTextMessage(_ message: String) {
+        DDLogError("DefaultSignalModule onTextMessage: \(message) ")
+        let signalData = message.data(using: String.Encoding.utf8)
+        if signalData != nil {
+            do {
+                let signal = try JSONDecoder().decode(Signal.self, from: signalData!)
+                lock.lock()
+                self.signalListener?.onNewMessage(signal.type, signal.subType, signal.body)
+                lock.unlock()
+            } catch {
+                DDLogError("DefaultSignalModule onTextMessage error: \(error)")
+            }
+        }
+    }
+    
+    func disconnect(_ reason: String) {
+        lock.lock()
+        self.webSocketClient?.forceDisconnect()
+        self.signalListener = nil
+        lock.unlock()
+        self.onStateChange(ConnectStatus.DisConnected)
+    }
+    
+    func getConnectStatus() -> ConnectStatus {
+        lock.lock()
+        defer { lock.unlock() }
+        return self.status
+    }
+    
+    func setSignalListener(_ listener: SignalListener) {
+        lock.lock()
+        defer { lock.unlock() }
+        self.signalListener = listener
+    }
+    
+    
+    func sendMessage(_ message: String) {
+        lock.lock()
+        defer { lock.unlock() }
+        if self.status == ConnectStatus.Connected {
+            self.webSocketClient?.write(string: message)
+        }
+    }
+    
+    
+    func didReceive(event: WebSocketEvent, client: WebSocket) {
+        switch event {
+        case .connected:
+            self.retryTimes = 0
+            DDLogDebug("DefaultSignalModule: connected")
+            onStateChange(ConnectStatus.Connected)
+            break
+        case .disconnected:
+            DDLogDebug("DefaultSignalModule: disconnected")
+            onStateChange(ConnectStatus.DisConnected)
+            break
+        case .text(let message):
+            onTextMessage(message)
+            break
+        case .binary:
+            DDLogDebug("DefaultSignalModule: binary")
+            break
+        case .ping(_):
+            DDLogDebug("DefaultSignalModule: ping")
+            break
+        case .pong(_):
+            DDLogDebug("DefaultSignalModule: pong")
+            break
+        case .viabilityChanged(let viability):
+            DDLogDebug("DefaultSignalModule: viabilityChanged: \(viability)")
+            if viability == false {
+                onStateChange(ConnectStatus.DisConnected)
+            } else {
+                self.retryTimes = 0
+            }
+            break
+        case .reconnectSuggested(_):
+            DDLogDebug("DefaultSignalModule: reconnectSuggested")
+            onStateChange(ConnectStatus.DisConnected)
+            break
+        case .cancelled:
+            DDLogDebug("DefaultSignalModule: cancelled")
+            onStateChange(ConnectStatus.DisConnected)
+            break
+        case .error(let error):
+            DDLogDebug("DefaultSignalModule: error: \(error ?? CocoaError.error(.coderInvalidValue))")
+            onStateChange(ConnectStatus.DisConnected)
+            break
+        }
+    }
+    
+    private func onStateChange(_ status: ConnectStatus) {
+        if (self.status != status) {
+            self.status = status
+            self.signalListener?.onStatusChange(status)
+        }
+        if (self.status == ConnectStatus.Connecting) {
+            // 连接中，只跑超时任务
+            cancelHeatBeatTask()
+            cancelReconnectTask()
+            startTimeoutTask()
+        } else if (self.status == ConnectStatus.DisConnected) {
+            // 连接断开，只跑重连任务
+            cancelTimeoutTask()
+            cancelHeatBeatTask()
+            startReconnectTask()
+        } else if (self.status == ConnectStatus.Connected) {
+            // 连接成功，只跑心跳任务
+            cancelTimeoutTask()
+            cancelReconnectTask()
+            startHeatBeatTask()
+        } else {
+            
+        }
+    }
+    
+}
