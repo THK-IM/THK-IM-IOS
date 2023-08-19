@@ -2,38 +2,32 @@
 //  BaseParticipant.swift
 //  THK-IM-IOS
 //
-//  Created by vizoss on 2023/8/1.
+//  Created by vizoss on 2023/8/2.
 //
 
 import Foundation
 import WebRTC
 import Moya
 import RxSwift
+import CocoaLumberjack
 
 class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate {
     
     let uId: String
-    let channelId: String
+    let roomId: String
     let liveApi = MoyaProvider<LiveApi>(plugins: [NetworkLoggerPlugin()])
     let disposeBag = DisposeBag()
-    private var peerConnection: RTCPeerConnection?
-    private var innerDataChannel: RTCDataChannel?
+    var peerConnection: RTCPeerConnection?
     private var audioTracks = [RTCAudioTrack]()
     private var videoTracks = [RTCVideoTrack]()
     private var dataChannels = [String: RTCDataChannel]()
     private var rtcVideoView: RTCEAGLVideoView?
+    private var audioMuted: Bool = false
+    private var videoMuted: Bool = false
     
-    init(uId: String, channelId: String) {
+    init(uId: String, roomId: String) {
         self.uId = uId
-        self.channelId = channelId
-    }
-    
-    func getRTCPeerConnection() -> RTCPeerConnection? {
-        return self.peerConnection
-    }
-    
-    open func setVideoEnable() {
-        
+        self.roomId = roomId
     }
     
     open func initPeerConnection() {
@@ -53,19 +47,13 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
         guard let p = self.peerConnection else {
             return
         }
-        let dcConfig = RTCDataChannelConfiguration()
-        dcConfig.isOrdered = true
-        dcConfig.maxRetransmits = 3
-        self.innerDataChannel = p.dataChannel(forLabel: "", configuration: dcConfig)
-        self.innerDataChannel?.delegate = self
-        
         var mandatoryConstraints = [String: String]()
         if self is LocalParticipant {
-            mandatoryConstraints["OfferToReceiveAudio"] = "true"
-            mandatoryConstraints["OfferToReceiveVideo"] = "true"
-        } else {
             mandatoryConstraints["OfferToReceiveAudio"] = "false"
             mandatoryConstraints["OfferToReceiveVideo"] = "false"
+        } else {
+            mandatoryConstraints["OfferToReceiveAudio"] = "true"
+            mandatoryConstraints["OfferToReceiveVideo"] = "true"
         }
         mandatoryConstraints["googCpuOveruseDetection"] = "true"
         let mediaConstraints = RTCMediaConstraints(
@@ -114,6 +102,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     }
     
     open func attachViewRender(_ rtcVideoView: RTCEAGLVideoView) {
+        DDLogInfo("peerConnection attachViewRender \(self)")
         if self.rtcVideoView != nil {
             detachViewRender()
         }
@@ -122,6 +111,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     }
     
     private func attach() {
+        DDLogInfo("peerConnection attach \(self)")
         guard let view = self.rtcVideoView else {
             return
         }
@@ -131,11 +121,13 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     }
     
     open func detachViewRender() {
+        DDLogInfo("peerConnection detachViewRender \(self)")
         self.detach()
         self.rtcVideoView = nil
     }
     
     private func detach() {
+        DDLogInfo("peerConnection detach \(self) \(videoTracks.count)")
         guard let view = self.rtcVideoView else {
             return
         }
@@ -150,19 +142,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     
     func addVideoTrack(track: RTCVideoTrack) {
         self.videoTracks.append(track)
-    }
-    
-    open func leave() {
-        self.detachViewRender()
-        self.videoTracks.removeAll()
-        self.audioTracks.removeAll()
-        self.innerDataChannel?.delegate = nil
-        self.innerDataChannel?.close()
-        for (_, dc) in self.dataChannels {
-            dc.delegate = nil
-            dc.close()
-        }
-        self.peerConnection?.close()
+        self.attach()
     }
     
     func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
@@ -170,39 +150,101 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     }
     
     func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
+        DDLogInfo("peerConnection didReceiveMessageWith \(self) \(buffer.data)")
         if buffer.isBinary {
-            
+            self.onNewBufferMessage(data: buffer.data)
         } else {
-            let msg = String(data: buffer.data, encoding: .utf8) ?? ""
-            print(msg)
+            self.onNewMessage(data: buffer.data)
+        }
+    }
+    
+    private func onNewBufferMessage(data: Data) {
+        guard let room = LiveManager.shared.getRoom() else {
+            return
+        }
+        room.receiveDcData(data)
+    }
+    
+    private func onNewMessage(data: Data) {
+        guard let room = LiveManager.shared.getRoom() else {
+            return
+        }
+        do {
+            let notify = try JSONDecoder().decode(NotifyBean.self, from: data)
+            DDLogInfo("onNewMessage \(notify.type), \(notify.message)")
+            switch notify.type {
+            case NotifyType.NewStream.rawValue:
+                let newStream = try JSONDecoder().decode(
+                    NewStreamNotify.self, from: notify.message.data(using: .utf8) ?? Data())
+                let participant = RemoteParticipant(
+                    uId: newStream.uid,
+                    roomId: newStream.roomId,
+                    subStreamKey: newStream.streamKey
+                )
+                DispatchQueue.main.async {
+                    room.participantJoin(p: participant)
+                }
+                break
+            case NotifyType.RemoveStream.rawValue:
+                let removeStream = try JSONDecoder().decode(
+                    RemoveStreamNotify.self, from: notify.message.data(using: .utf8) ?? Data())
+                DispatchQueue.main.async {
+                    room.participantLeave(roomId: removeStream.roomId, streamKey: removeStream.streamKey)
+                }
+                break
+            case NotifyType.DataChannelMsg.rawValue:
+                let dataChannelMsg = try JSONDecoder().decode(
+                        DataChannelMsg.self, from: notify.message.data(using: .utf8) ?? Data())
+                DispatchQueue.main.async {
+                    room.receivedDcMsg(dataChannelMsg.uid, dataChannelMsg.text)
+                }
+                break
+            default:
+                DDLogError("onNewMessage unknown type \(notify.type)")
+                break
+            }
+        } catch {
+            DDLogError("onNewMessage \(error)")
         }
     }
     
     
-    
     func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
-        
+        DDLogInfo("peerConnectionShouldNegotiate \(self)")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
+        DDLogInfo("peerConnection didChange RTCSignalingState: \(stateChanged) \(self)")
         
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
-        
+        DDLogInfo("peerConnection didChange RTCIceConnectionState: \(newState) \(self)")
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCPeerConnectionState) {
+        DDLogInfo("peerConnection didChange RTCPeerConnectionState: \(newState), \(RTCPeerConnectionState.connected) \(self)")
+        switch newState {
+        case RTCPeerConnectionState.new, RTCPeerConnectionState.connecting:
+            break
+        case RTCPeerConnectionState.connected:
+            break
+        case RTCPeerConnectionState.closed, RTCPeerConnectionState.disconnected, RTCPeerConnectionState.failed:
+            self.onDisconnected()
+            break
+        default:
+            break
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
+        DDLogInfo("peerConnection didRemove RTCMediaStream \(self)")
         if self is RemoteParticipant {
-            for v in stream.videoTracks {
-                self.videoTracks.removeAll { t in
-                    if v == t {
-                        return true
-                    }
-                    return false
+            if stream.videoTracks.count > 0 {
+                DispatchQueue.main.async { [weak self] in
+                    self?.detach()
                 }
             }
-            
             for a in stream.audioTracks {
                 self.audioTracks.removeAll { t in
                     if a == t {
@@ -211,13 +253,11 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
                     return false
                 }
             }
-            DispatchQueue.main.async { [weak self] in
-                self?.detach()
-            }
         }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
+        DDLogInfo("peerConnection didAdd RTCMediaStream \(self)")
         if self is RemoteParticipant {
             self.audioTracks.append(contentsOf: stream.audioTracks)
             self.videoTracks.append(contentsOf: stream.videoTracks)
@@ -227,21 +267,75 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
         }
     }
     
+    func peerConnection(_ peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver, streams mediaStreams: [RTCMediaStream]) {
+        DDLogInfo("peerConnection didAdd RTCRtpReceiver \(self)")
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove rtpReceiver: RTCRtpReceiver) {
+        DDLogInfo("peerConnection didRemove RTCRtpReceiver \(self)")
+    }
+    
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
-        
+        DDLogInfo("peerConnection didChange RTCIceGatheringState: \(newState)")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
-        
+        DDLogInfo("peerConnection didGenerate RTCIceCandidate: \(candidate)")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
-        
+        DDLogInfo("peerConnection didRemove RTCIceCandidate: \(candidates)")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
         self.dataChannels[dataChannel.label] = dataChannel
         dataChannel.delegate = self
+    }
+    
+    func pushStreamKey() -> String? {
+        return nil
+    }
+
+    func playStreamKey() -> String? {
+        return nil
+    }
+    
+    func setVideoMuted(_ muted: Bool) {
+        for t in self.videoTracks {
+            t.isEnabled = !muted
+        }
+        videoMuted = muted
+    }
+    
+    func getVideoMuted() -> Bool {
+        return videoMuted
+    }
+    
+    func setAudioMuted(_ muted: Bool) {
+        for t in self.audioTracks {
+            t.isEnabled = !muted
+        }
+        audioMuted = muted
+    }
+    
+    func getAudioMuted() -> Bool {
+        return audioMuted
+    }
+    
+    
+    open func onDisconnected() {
+        self.detachViewRender()
+        self.videoTracks.removeAll()
+        self.audioTracks.removeAll()
+        for (_, dc) in self.dataChannels {
+            dc.delegate = nil
+            dc.close()
+        }
+    }
+    
+    open func leave() {
+        self.peerConnection?.close()
+        self.peerConnection = nil
     }
     
 }

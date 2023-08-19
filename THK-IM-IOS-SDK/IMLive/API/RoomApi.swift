@@ -1,50 +1,51 @@
 //
-//  LiveApi.swift
+//  RoomApi.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/8/2.
 //
 
 import Foundation
+
 import Moya
 
-enum LiveApi {
-    /// 请求推流
-    case requestPublish(_ bean: PublishReqBean)
-    /// 请求拉流
-    case requestPlay(_ bean: PlayReqBean)
+enum RoomApi {
+    ///  创建房间
+    case createRoom(_ bean: CreateRoomReqBean)
+    ///  加入房间
+    case joinRoom(_ bean: JoinRoomReqBean)
 }
 
 
-extension LiveApi: TargetType {
+extension RoomApi: TargetType {
     
     var baseURL: URL {
-        return URL.init(string: "\(LiveManager.shared.endpoint())/stream")!
+        return URL.init(string: "\(LiveManager.shared.endpoint())/room")!
     }
     
     var path: String {
         switch self {
-        case .requestPublish:
-            return "/publish"
-        case .requestPlay:
-            return "/play"
+        case .createRoom:
+            return ""
+        case .joinRoom:
+            return "/join"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .requestPublish:
+        case .createRoom:
             return .post
-        case .requestPlay:
+        case .joinRoom:
             return .post
         }
     }
     
     var task: Moya.Task {
         switch self {
-        case let .requestPublish(bean):
+        case let .createRoom(bean):
             return .requestJSONEncodable(bean)
-        case let .requestPlay(bean):
+        case let .joinRoom(bean):
             return .requestJSONEncodable(bean)
         }
     }
@@ -57,4 +58,3 @@ extension LiveApi: TargetType {
         return nil
     }
 }
-

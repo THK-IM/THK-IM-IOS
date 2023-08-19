@@ -2,7 +2,7 @@
 //  RemoteParticipant.swift
 //  THK-IM-IOS
 //
-//  Created by vizoss on 2023/8/1.
+//  Created by vizoss on 2023/8/2.
 //
 
 import Foundation
@@ -10,22 +10,25 @@ import WebRTC
 
 class RemoteParticipant: BaseParticipant {
     
-    private let streamKey: String
+    private let subStreamKey: String
+    private var streamKey: String? = nil
     
-    init(uId: String, channelId: String, streamKey: String) {
-        self.streamKey = streamKey
-        super.init(uId: uId, channelId: channelId)
+    init(uId: String, roomId: String, subStreamKey: String) {
+        self.subStreamKey = subStreamKey
+        super.init(uId: uId, roomId: roomId)
     }
     
     override func initPeerConnection() {
         super.initPeerConnection()
-        guard let p = self.getRTCPeerConnection() else {
+        guard let p = self.peerConnection else {
             return
         }
-        let transceiver = RTCRtpTransceiverInit()
-        transceiver.direction = .recvOnly
-        p.addTransceiver(of: .audio, init: transceiver)
-        p.addTransceiver(of: .video, init: transceiver)
+        let audioTransceiver = RTCRtpTransceiverInit()
+        audioTransceiver.direction = .recvOnly
+        p.addTransceiver(of: .audio, init: audioTransceiver)
+        let videoTransceiver = RTCRtpTransceiverInit()
+        videoTransceiver.direction = .recvOnly
+        p.addTransceiver(of: .video, init: videoTransceiver)
         
         self.startPeerConnection()
     }
@@ -39,7 +42,7 @@ class RemoteParticipant: BaseParticipant {
         
         self.liveApi.rx
             .request(.requestPlay(
-                PlayReqBean(uid: self.uId, roomId: self.channelId, offerSdp: offerBase64, streamKey: self.streamKey))
+                PlayReqBean(uid: self.uId, roomId: self.roomId, offerSdp: offerBase64, streamKey: self.subStreamKey))
             )
             .asObservable()
             .compose(DefaultRxTransformer.io2Main())
@@ -47,11 +50,20 @@ class RemoteParticipant: BaseParticipant {
             .subscribe(onNext: { [weak self] bean in
                 let data = Data(base64Encoded: bean.answerSdp) ?? Data()
                 let answer = String(data: data, encoding: .utf8) ?? ""
+                self?.streamKey = bean.streamKey
                 let remoteSdp = RTCSessionDescription(type: .answer, sdp: answer)
                 self?.setRemoteSessionDescription(remoteSdp)
             }, onError: { err in
                 
             }).disposed(by: self.disposeBag)
             
+    }
+    
+    override func pushStreamKey() -> String? {
+        return subStreamKey
+    }
+    
+    override func playStreamKey() -> String? {
+        return streamKey
     }
 }

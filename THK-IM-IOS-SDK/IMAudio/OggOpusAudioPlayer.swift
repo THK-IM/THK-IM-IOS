@@ -217,17 +217,20 @@ class OggOpusAudioPlayer {
     }
     
     private func playPCMData() {
-        if (self._oggDecoder == nil || _currentLen >= self._oggDecoder!.pcmData.count) {
+        guard let oggDecoder = self._oggDecoder else {
+            return
+        }
+        if (_currentLen >= oggDecoder.pcmData.count) {
             stopPlaying()
             return
         }
         lock.lock()
         let length : Int = Int(_bufferCount)
         var end = _currentLen + length
-        if end > self._oggDecoder!.pcmData.count {
-            end = self._oggDecoder!.pcmData.count
+        if end > oggDecoder.pcmData.count {
+            end = oggDecoder.pcmData.count
         }
-        let data = self._oggDecoder!.pcmData.subdata(in: _currentLen ..< end)
+        let data = oggDecoder.pcmData.subdata(in: _currentLen ..< end)
         doCallback(data)
         for i in 0..<self.idleBufferTag.count {
             if (self.idleBufferTag[i]) {
