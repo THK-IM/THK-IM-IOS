@@ -1,5 +1,5 @@
 //
-//  PreviewController.swift
+//  MediaPreviewController.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/25.
