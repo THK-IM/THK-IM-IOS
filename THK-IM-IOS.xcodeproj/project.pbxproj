@@ -382,7 +382,7 @@
 			path = IMMedia;
 			sourceTree = "<group>";
 		};
-		A045CF8C2A92566000654957 /* IMUtils */ = {
+		A045CF8C2A92566000654957 /* IMBase */ = {
 			isa = PBXGroup;
 			children = (
 				A0D68ADF2A888678004D11A5 /* Extension */,
@@ -392,7 +392,7 @@
 				A0D68B642A888679004D11A5 /* MimeType.swift */,
 				A0D68B652A888679004D11A5 /* WeakReference.swift */,
 			);
-			path = IMUtils;
+			path = IMBase;
 			sourceTree = "<group>";
 		};
 		A045CF8F2A9257BF00654957 /* Image */ = {
@@ -468,7 +468,7 @@
 		A0D68AAA2A8884E3004D11A5 /* THK-IM-IOS-SDK */ = {
 			isa = PBXGroup;
 			children = (
-				A045CF8C2A92566000654957 /* IMUtils */,
+				A045CF8C2A92566000654957 /* IMBase */,
 				A045CF8B2A92561900654957 /* IMMedia */,
 				A0D68AB32A888678004D11A5 /* IMAPI */,
 				A0D68B372A888679004D11A5 /* IMCore */,
