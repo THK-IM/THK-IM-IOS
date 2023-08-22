@@ -30,14 +30,13 @@ class IMDatabase {
             try self.database.create(table: TableName.User.rawValue, of: User.self)
             try self.database.create(table: TableName.Message.rawValue, of: Message.self)
             try self.database.create(table: TableName.Session.rawValue, of: Session.self)
-            
         } catch {
             DDLogError(error)
         }
         
-        self.messageDao = innerMessageDao(self.database, TableName.Message.rawValue)
-        self.sessionDao = innerSessionDao(self.database, TableName.Session.rawValue)
-        self.userDao = innerUserDao(self.database, TableName.User.rawValue)
+        self.messageDao = DefaultMessageDao(self.database, TableName.Message.rawValue)
+        self.sessionDao = DefaultSessionDao(self.database, TableName.Session.rawValue)
+        self.userDao = DefaultUserDao(self.database, TableName.User.rawValue)
     }
     
     

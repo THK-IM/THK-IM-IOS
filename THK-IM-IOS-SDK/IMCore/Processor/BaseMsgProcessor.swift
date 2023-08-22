@@ -15,7 +15,7 @@ class BaseMsgProcessor {
     private let disposeBag = DisposeBag()
     
     func getMessageModule() -> MessageModule {
-        return IMManager.shared.getMessageModule()
+        return IMCoreManager.shared.getMessageModule()
     }
     
     /**
@@ -23,22 +23,27 @@ class BaseMsgProcessor {
      */
     open func received(_ msg: Message){
         do {
-            let dbMsg = try IMManager.shared.database.messageDao.findMessage(msg.id, msg.fUId)
+            let dbMsg = try IMCoreManager.shared.database.messageDao.findMessage(msg.id, msg.sessionId, msg.fromUId)
             if (dbMsg == nil) {
-                if (msg.fUId == IMManager.shared.uId) {
-                    msg.status = MsgStatus.AlreadyReadInServer.rawValue
+                // 数据库不存在
+                if (msg.fromUId == IMCoreManager.shared.uId) {
+                    // 如果发件人为自己，插入前补充消息状态为已接受并已读
+                    msg.operateStatus = msg.operateStatus |
+                        MsgOperateStatus.Ack.rawValue |
+                        MsgOperateStatus.ClientRead.rawValue |
+                        MsgOperateStatus.ServerRead.rawValue
+                    msg.sendStatus = MsgSendStatus.Success.rawValue
                 }
-                try IMManager.shared.database.messageDao.insertMessages(msg)
+                try IMCoreManager.shared.database.messageDao.insertMessages(msg)
                 SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
             } else {
                 // 数据库存在，只更新消息状态
-                if msg.status >= dbMsg!.status {
-                    try updateMsgStatus(msg)
-                }
+                msg.sendStatus = MsgSendStatus.Success.rawValue
+                try updateMsgSendStatus(msg)
             }
-            IMManager.shared.getMessageModule().ackMessage(msg.sid, msg.msgId)
+            IMCoreManager.shared.getMessageModule().ackMessageToCache(msg.sessionId, msg.msgId)
         } catch let error {
-            DDLogError(error)
+            DDLogError("Received New Msg \(error)")
         }
     }
     
@@ -47,26 +52,21 @@ class BaseMsgProcessor {
     }
     
     open func buildSendMsg(_ body:String, _ sid: Int64, _ atUsers: String? = nil, _ rMsgId: Int64? = nil) -> Message {
-        let clientId = IMManager.shared.getMessageModule().newMsgId()
-        let now = IMManager.shared.getCommonModule().getSeverTime()
-        let msg = Message()
-        msg.id = clientId
-        msg.fUId = IMManager.shared.uId
-        msg.sid = sid
-        msg.msgId = -clientId
-        msg.type =  messageType()
-        msg.content = body
-        msg.status = MsgStatus.Init.rawValue
-        msg.cTime = now
-        msg.mTime = now
+        let clientId = IMCoreManager.shared.getMessageModule().generateNewMsgId()
+        let now = IMCoreManager.shared.getCommonModule().getSeverTime()
+        let msg = Message(
+            id: clientId, sessionId: sid, fromUId: IMCoreManager.shared.uId, msgId: -clientId, type: messageType(),
+            content: body, sendStatus: MsgSendStatus.Init.rawValue, operateStatus: MsgOperateStatus.Init.rawValue,
+            cTime: now, mTime: now
+        )
         return msg
     }
     
-    open func sendMessage(_ body: String, _ sid: Int64, _ atUsers: String? = nil, _ rMsgId: Int64? = nil, _ params: Dictionary<String, Any>? = nil) {
+    open func sendMessage(_ body: String, _ sid: Int64, _ atUsers: String? = nil, _ rMsgId: Int64? = nil) {
         let msg = self.buildSendMsg(body, sid, atUsers, rMsgId)
         Observable.create({observer -> Disposable in
             do {
-                msg.status = MsgStatus.Sending.rawValue
+                msg.sendStatus = MsgSendStatus.Sending.rawValue
                 try self.insertDb(msg)
                 observer.onNext(msg)
             } catch let error {
@@ -83,25 +83,21 @@ class BaseMsgProcessor {
                 return Observable.just(message)
             }
         })
-        .flatMap({ (message) -> Observable<MessageBean> in
-            let bean = self.entity2MsgBean(msg: message)
-            return self.getMessageModule().sendMessageToServer(bean)
+        .flatMap({ (message) -> Observable<Message> in
+            return IMCoreManager.shared.api.sendMessageToServer(msg:message)
         })
         .compose(DefaultRxTransformer.io2Io())
         .subscribe(onNext: { bean in
-            msg.msgId = bean.msgId
-            msg.status = MsgStatus.SendOrRSuccess.rawValue
-            msg.cTime = bean.cTime
             do {
-                try self.updateMsgStatus(msg)
+                try self.updateMsgSendStatus(msg)
             } catch let error {
                 DDLogError(error)
             }
         }, onError: { error in
             DDLogError(error)
-            msg.status = MsgStatus.SendFailed.rawValue
+            msg.sendStatus = MsgSendStatus.Success.rawValue
             do {
-                try self.updateMsgStatus(msg)
+                try self.updateMsgSendStatus(msg)
             } catch let error {
                 DDLogError(error)
             }
@@ -112,9 +108,9 @@ class BaseMsgProcessor {
     open func resend(_ msg: Message) {
         Observable.just(msg)
             .flatMap({ (message) -> Observable<Message> in
-                message.status = MsgStatus.Sending.rawValue
+                message.sendStatus = MsgSendStatus.Sending.rawValue
                 do {
-                    try self.updateMsgStatus(message)
+                    try self.updateMsgSendStatus(message)
                 } catch let error {
                     return Observable.error(error)
                 }
@@ -125,25 +121,21 @@ class BaseMsgProcessor {
                     return Observable.just(message)
                 }
             })
-            .flatMap({ (message) -> Observable<MessageBean> in
-                let bean = self.entity2MsgBean(msg: message)
-                return self.getMessageModule().sendMessageToServer(bean)
+            .flatMap({ (message) -> Observable<Message> in
+                return IMCoreManager.shared.api.sendMessageToServer(msg:message)
             })
             .compose(DefaultRxTransformer.io2Io())
-            .subscribe(onNext: { bean in
-                msg.msgId = bean.msgId
-                msg.status = MsgStatus.AlreadyReadInServer.rawValue
-                msg.cTime = bean.cTime
+            .subscribe(onNext: { msg in
                 do {
-                    try self.updateMsgStatus(msg)
+                    try self.updateMsgSendStatus(msg)
                 } catch let error {
                     DDLogError(error)
                 }
             }, onError: { error in
                 DDLogError(error)
-                msg.status = MsgStatus.SendFailed.rawValue
+                msg.sendStatus = MsgSendStatus.Failed.rawValue
                 do {
-                    try self.updateMsgStatus(msg)
+                    try self.updateMsgSendStatus(msg)
                 } catch let error {
                     DDLogError(error)
                 }
@@ -155,45 +147,25 @@ class BaseMsgProcessor {
         return 0
     }
     
-    open func msgBean2Entity(bean: MessageBean) -> Message {
-        return bean.toMessage()
-    }
-    
-    /**
-     * 本地数据entity转换为与服务器交互的bean
-     */
-    open func entity2MsgBean(msg: Message) -> MessageBean {
-        return MessageBean(msg: msg)
-    }
-    
     open func insertDb(_ msg: Message) throws {
-        DDLogDebug("BaseMsgProcessor insertDb ")
-        try IMManager.shared.database.messageDao.insertMessages(msg)
+        try IMCoreManager.shared.database.messageDao.insertMessages(msg)
         SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
-        IMManager.shared.getMessageModule().processSessionByMessage(msg)
+        IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
     }
-    
-    
-//    open func updateDb(_ msg: Message) throws {
-//        DDLogDebug("BaseMsgProcessor updateDb ")
-//        try IMManager.shared.database.messageDao.updateMessages(msg)
-//    }
     
     open func updateMsgContent(_ msg: Message, _ sendNotify: Bool = false) throws {
-        DDLogDebug("BaseMsgProcessor updateMsgContent \(sendNotify), msg id: \(msg.id), status: \(msg.status)")
-        let msgDao = IMManager.shared.database.messageDao
-        try msgDao.updateMessageContent(msg.id, msg.fUId, msg.content)
+        let msgDao = IMCoreManager.shared.database.messageDao
+        try msgDao.updateMessageContent(msg.id, msg.sessionId, msg.fromUId, msg.content)
         if (sendNotify == true) {
             SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
         }
     }
     
-    open func updateMsgStatus(_ msg: Message) throws {
-        DDLogDebug("BaseMsgProcessor updateMsgStatus: \(msg.status), id: \(msg.id)")
-        let msgDao = IMManager.shared.database.messageDao
-        try msgDao.updateMessageStatus(msg.id, msg.fUId, msg.status, msg.msgId, msg.cTime)
+    open func updateMsgSendStatus(_ msg: Message) throws {
+        let msgDao = IMCoreManager.shared.database.messageDao
+        try msgDao.updateSendStatus(msg.sessionId, msg.id, msg.fromUId, msg.sendStatus)
         SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
-        IMManager.shared.getMessageModule().processSessionByMessage(msg)
+        IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
     }
     
     /**

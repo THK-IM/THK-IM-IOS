@@ -47,20 +47,6 @@ class VideoMsgProcessor : BaseMsgProcessor {
         return ImageCompressor.Options(maxWidth: 300, maxHeight: 480, maxSize: 200*1024, quality: 0.9)
     }
     
-    override func entity2MsgBean(msg entity: Message) -> MessageBean {
-        let bean = super.entity2MsgBean(msg: entity)
-        let videoBody = self.contentToBody(bean.body)
-        if videoBody != nil {
-            videoBody!.thumbnailPath = nil
-            videoBody!.path = nil
-            let content = self.bodyToContent(videoBody!)
-            if content != nil {
-                bean.body = content!
-            }
-        }
-        return bean
-    }
-    
     override func uploadObservable(_ entity: Message) -> Observable<Message>? {
         guard let videoBody = self.contentToBody(entity.content) else {
             return Observable.error(CocoaError.error(CocoaError.executableLoad))
@@ -70,7 +56,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
         }
         if (videoBody.thumbnailPath == nil) {
             // 从视频文件中解析第一帧图片
-            let realPath = IMManager.shared.storageModule!.sandboxFilePath(videoBody.path!)
+            let realPath = IMCoreManager.shared.storageModule!.sandboxFilePath(videoBody.path!)
             let asset = AVURLAsset(url: NSURL.fileURL(withPath: realPath))
             videoBody.duration = Int(asset.duration.seconds)
             let imageGenerator = AVAssetImageGenerator.init(asset: asset)
@@ -92,9 +78,9 @@ class VideoMsgProcessor : BaseMsgProcessor {
                 videoBody.height = Int(coverImage.size.height)
                 videoBody.width = Int(coverImage.size.width)
                 let fileName = "\(String().random(8))_cover.jpeg"
-                let localPath = IMManager.shared.storageModule?
-                    .allocLocalFilePath(entity.sid, IMManager.shared.uId, fileName, "img")
-                try IMManager.shared.storageModule?.saveMediaDataInto(localPath!, compressData)
+                let localPath = IMCoreManager.shared.storageModule?
+                    .allocLocalFilePath(entity.sessionId, IMCoreManager.shared.uId, fileName, "img")
+                try IMCoreManager.shared.storageModule?.saveMediaDataInto(localPath!, compressData)
                 videoBody.thumbnailPath = localPath
                 guard let newContent = self.bodyToContent(videoBody) else {
                     return Observable.error(CocoaError.error(CocoaError.executableLoad))
@@ -114,10 +100,10 @@ class VideoMsgProcessor : BaseMsgProcessor {
     }
     
     func uploadThumbnail(_ entity: Message) -> Observable<Message> {
-        guard let storageModule = IMManager.shared.storageModule else {
+        guard let storageModule = IMCoreManager.shared.storageModule else {
             return Observable.error(CocoaError.error(CocoaError.executableLoad))
         }
-        guard let fileLoadModule = IMManager.shared.fileLoadModule else {
+        guard let fileLoadModule = IMCoreManager.shared.fileLoadModule else {
             return Observable.error(CocoaError.error(CocoaError.executableLoad))
         }
         guard let videoBody = self.contentToBody(entity.content) else {
@@ -125,16 +111,16 @@ class VideoMsgProcessor : BaseMsgProcessor {
         }
         let path = storageModule.sandboxFilePath(videoBody.thumbnailPath!)
         let (_, fileName) = storageModule.getPathsFromFullPath(path)
-        let serverKey = storageModule.allocServerFilePath(entity.sid, entity.fUId, fileName)
+        let serverKey = storageModule.allocServerFilePath(entity.sessionId, entity.fromUId, fileName)
         
         return Observable.create({observer -> Disposable in
-            let uploadListener = LoadListener({ [weak self] progress, state, url, path in
+            let uploadListener = FileLoaderListener({ [weak self] progress, state, url, path in
                 switch(state) {
-                case LoadState.Failed.rawValue:
+                case FileLoaderState.Failed.rawValue:
                     observer.onError(Exception.IMError("\(path) upload \(url) error"))
                     observer.onCompleted()
                     break
-                case LoadState.Success.rawValue:
+                case FileLoaderState.Success.rawValue:
                     // url 放入本地数据库
                     do {
                         videoBody.thumbnailUrl = url
@@ -160,10 +146,10 @@ class VideoMsgProcessor : BaseMsgProcessor {
     }
     
     func uploadVideo(_ entity: Message) -> Observable<Message> {
-        guard let storageModule = IMManager.shared.storageModule else {
+        guard let storageModule = IMCoreManager.shared.storageModule else {
             return Observable.error(CocoaError.error(CocoaError.executableLoad))
         }
-        guard let fileLoadModule = IMManager.shared.fileLoadModule else {
+        guard let fileLoadModule = IMCoreManager.shared.fileLoadModule else {
             return Observable.error(CocoaError.error(CocoaError.executableLoad))
         }
         guard let videoBody = self.contentToBody(entity.content) else {
@@ -171,10 +157,10 @@ class VideoMsgProcessor : BaseMsgProcessor {
         }
         var path = storageModule.sandboxFilePath(videoBody.path!)
         var (_, fileName) = storageModule.getPathsFromFullPath(path)
-        let isAssigned = storageModule.isAssignedPath(path, fileName, format, entity.sid, entity.fUId)
+        let isAssigned = storageModule.isAssignedPath(path, fileName, format, entity.sessionId, entity.fromUId)
         if !isAssigned {
             do {
-                let dePath = storageModule.allocLocalFilePath(entity.sid, IMManager.shared.uId, fileName, format)
+                let dePath = storageModule.allocLocalFilePath(entity.sessionId, IMCoreManager.shared.uId, fileName, format)
                 try storageModule.copyFile(path, dePath)
                 videoBody.path = dePath
                 let d = try JSONEncoder().encode(videoBody)
@@ -187,15 +173,15 @@ class VideoMsgProcessor : BaseMsgProcessor {
                 return Observable.error(CocoaError.error(CocoaError.executableLoad))
             }
         }
-        let serverKey = storageModule.allocServerFilePath(entity.sid, entity.fUId, fileName)
+        let serverKey = storageModule.allocServerFilePath(entity.sessionId, entity.fromUId, fileName)
         return Observable.create({observer -> Disposable in
-            let uploadListener = LoadListener({ [weak self] progress, state, url, path in
+            let uploadListener = FileLoaderListener({ [weak self] progress, state, url, path in
                 switch(state) {
-                case LoadState.Failed.rawValue:
+                case FileLoaderState.Failed.rawValue:
                     observer.onError(Exception.IMError("\(path) upload \(url) error"))
                     observer.onCompleted()
                     break
-                case LoadState.Success.rawValue:
+                case FileLoaderState.Success.rawValue:
                     // url 放入本地数据库
                     do {
                         videoBody.url = url

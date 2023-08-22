@@ -9,26 +9,14 @@ import Foundation
 import WCDBSwift
 
 protocol UserDao {
+    /**
+     * 插入用户信息
+     */
     func insertUsers(_ users: User...) throws
+    
+    /**
+     * 查询用户信息
+     */
     func queryUserInfo(_ id: Int64) throws -> User?
-}
-
-class innerUserDao : UserDao {
-    
-    weak var database: Database?
-    let tableName: String
-    
-    init(_ database: Database, _ tableName: String) {
-        self.database = database
-        self.tableName = tableName
-    }
-    
-    func insertUsers(_ users: User...) throws {
-        try self.database?.insertOrReplace(users, intoTable: self.tableName)
-    }
-    
-    func queryUserInfo(_ id: Int64) throws -> User? {
-        return try self.database?.getObject(fromTable: self.tableName, where: User.Properties.id == id)
-    }
     
 }

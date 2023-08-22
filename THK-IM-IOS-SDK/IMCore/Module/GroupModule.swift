@@ -7,7 +7,5 @@
 
 import Foundation
 
-
-protocol GroupModule : BaseModule {
-    func onNewGroupMember() 
+protocol GroupModule: BaseModule {
 }

@@ -11,8 +11,8 @@ import CocoaLumberjack
 
 class DefaultFileLoadModule: FileLoaderModule {
     
-    private var downloadTaskMap = [String: (FileTask, Array<LoadListener>)]()
-    private var uploadTaskMap = [String: (FileTask, Array<LoadListener>)]()
+    private var downloadTaskMap = [String: (FileTask, Array<FileLoaderListener>)]()
+    private var uploadTaskMap = [String: (FileTask, Array<FileLoaderListener>)]()
     private let lock = NSLock()
     
     let oSsBucket: String
@@ -31,7 +31,7 @@ class DefaultFileLoadModule: FileLoaderModule {
         return "\(type)/\(url)/\(path)"
     }
     
-    func download(url: String, path: String, loadListener: LoadListener) -> String {
+    func download(url: String, path: String, loadListener: FileLoaderListener) -> String {
         lock.lock()
         defer {lock.unlock()}
         let taskId = self.taskId(url: url, path: path, type: "download")
@@ -46,7 +46,7 @@ class DefaultFileLoadModule: FileLoaderModule {
         return taskId
     }
     
-    func upload(key: String, path: String, loadListener: LoadListener) -> String {
+    func upload(key: String, path: String, loadListener: FileLoaderListener) -> String {
         lock.lock()
         defer {lock.unlock()}
         let taskId = self.taskId(url: key, path: path, type: "upload")
@@ -72,7 +72,7 @@ class DefaultFileLoadModule: FileLoaderModule {
         }
     }
     
-    func cancelDownloadListener(taskId: String, listener: LoadListener) {
+    func cancelDownloadListener(taskId: String, listener: FileLoaderListener) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = downloadTaskMap[taskId]
@@ -100,7 +100,7 @@ class DefaultFileLoadModule: FileLoaderModule {
         }
     }
     
-    func cancelUploadListener(taskId: String, listener: LoadListener) {
+    func cancelUploadListener(taskId: String, listener: FileLoaderListener) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = uploadTaskMap[taskId]
@@ -136,7 +136,7 @@ class DefaultFileLoadModule: FileLoaderModule {
                     listener.notifyProgress(progress, state, url, path)
                 }
             }
-            if (state == LoadState.Failed.rawValue || state == LoadState.Success.rawValue) {
+            if (state == FileLoaderState.Failed.rawValue || state == FileLoaderState.Success.rawValue) {
                 cancelDownload(taskId: taskId)
             }
         }
@@ -152,7 +152,7 @@ class DefaultFileLoadModule: FileLoaderModule {
                     listener.notifyProgress(progress, state, url, path)
                 }
             }
-            if (state == LoadState.Failed.rawValue || state == LoadState.Success.rawValue) {
+            if (state == FileLoaderState.Failed.rawValue || state == FileLoaderState.Success.rawValue) {
                 cancelUpload(taskId: taskId)
             }
         }

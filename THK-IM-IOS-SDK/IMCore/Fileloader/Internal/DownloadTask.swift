@@ -18,7 +18,7 @@ class DownloadTask : FileTask {
         let tempFilePath = self.path + ".tmp"
         let tempFileURL = NSURL(fileURLWithPath: tempFilePath) as URL
         let fileUrl = NSURL(fileURLWithPath: self.path) as URL
-        self.notify(progress: 0, state: LoadState.Init.rawValue)
+        self.notify(progress: 0, state: FileLoaderState.Init.rawValue)
         if self.resumeData != nil {
             self.request = AF.download(resumingWith: self.resumeData!, to: { _, response in
                 return (tempFileURL, [.removePreviousFile, .createIntermediateDirectories])
@@ -27,7 +27,7 @@ class DownloadTask : FileTask {
                         return
                     }
                     let p: Int = Int(100 * progress.completedUnitCount / progress.totalUnitCount)
-                    sf.notify(progress: p, state: LoadState.Ing.rawValue)
+                    sf.notify(progress: p, state: FileLoaderState.Ing.rawValue)
                 }
                 .response { [weak self] response in
                     guard let sf = self else {
@@ -38,18 +38,18 @@ class DownloadTask : FileTask {
                         if !FileManager.default.fileExists(atPath: sf.path) {
                             do {
                                 try FileManager.default.moveItem(at: tempFileURL, to: fileUrl)
-                                sf.notify(progress: 100, state: LoadState.Success.rawValue)
+                                sf.notify(progress: 100, state: FileLoaderState.Success.rawValue)
                             } catch {
-                                sf.notify(progress: 100, state: LoadState.Failed.rawValue)
+                                sf.notify(progress: 100, state: FileLoaderState.Failed.rawValue)
                                 DDLogError(error)
                             }
                         } else {
-                            sf.notify(progress: 100, state: LoadState.Failed.rawValue)
+                            sf.notify(progress: 100, state: FileLoaderState.Failed.rawValue)
                         }
                         break
                     case .failure(_):
                         sf.resumeData = response.resumeData
-                        sf.notify(progress: 0, state: LoadState.Failed.rawValue)
+                        sf.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
                         break
                     }
                 }
@@ -61,7 +61,7 @@ class DownloadTask : FileTask {
                         return
                     }
                     let p: Int = Int(100 * progress.completedUnitCount / progress.totalUnitCount)
-                    sf.notify(progress: p, state: LoadState.Ing.rawValue)
+                    sf.notify(progress: p, state: FileLoaderState.Ing.rawValue)
                 }
                 .response { [weak self] response in
                     guard let sf = self else {
@@ -72,18 +72,18 @@ class DownloadTask : FileTask {
                         if !FileManager.default.fileExists(atPath: sf.path) {
                             do {
                                 try FileManager.default.moveItem(at: tempFileURL, to: fileUrl)
-                                sf.notify(progress: 100, state: LoadState.Success.rawValue)
+                                sf.notify(progress: 100, state: FileLoaderState.Success.rawValue)
                             } catch {
-                                sf.notify(progress: 100, state: LoadState.Failed.rawValue)
+                                sf.notify(progress: 100, state: FileLoaderState.Failed.rawValue)
                                 DDLogError(error)
                             }
                         } else {
-                            sf.notify(progress: 100, state: LoadState.Failed.rawValue)
+                            sf.notify(progress: 100, state: FileLoaderState.Failed.rawValue)
                         }
                         break
                     case .failure(_):
                         sf.resumeData = response.resumeData
-                        sf.notify(progress: 0, state: LoadState.Failed.rawValue)
+                        sf.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
                         break
                     }
                 }

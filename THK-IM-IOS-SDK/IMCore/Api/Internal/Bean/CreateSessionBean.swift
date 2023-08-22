@@ -10,9 +10,9 @@ import Foundation
 class CreateSessionBean: Codable {
     var type: Int = 0
     var entityId : Int64?
-    var members: Array<Int64>
+    var members: Set<Int64>
     
-    init(type: Int, entityId: Int64?, members: Array<Int64>) {
+    init(type: Int, entityId: Int64?, members: Set<Int64>) {
         self.type = type
         self.entityId = entityId
         self.members = members

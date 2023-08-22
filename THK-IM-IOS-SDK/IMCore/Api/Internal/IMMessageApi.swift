@@ -13,7 +13,7 @@ enum IMMessageApi {
     /// 发送消息
     case sendMsg(_ bean: MessageBean)
     /// 查询最新消息
-    case getLatestMsg(_ uId: Int64, _ offset :Int, _ count: Int, _ cTime: Int64)
+    case queryLatestMsg(_ uId: Int64, _ offset :Int, _ count: Int, _ cTime: Int64)
     /// 消息ack
     case ackMsgs(_ bean: AckMsgBean)
     /// 删除消息
@@ -24,14 +24,14 @@ enum IMMessageApi {
 extension IMMessageApi: TargetType {
     
     var baseURL: URL {
-        return URL.init(string: "\(IMManager.ApiEndpoint)/im/v3")!
+        return URL.init(string: "\(IMCoreManager.ApiEndpoint)/im/v3")!
     }
     
     var path: String {
         switch self {
         case .sendMsg:
             return "/message"
-        case .getLatestMsg:
+        case .queryLatestMsg:
             return "/message/latest"
         case .ackMsgs:
             return "/message/ack"
@@ -44,7 +44,7 @@ extension IMMessageApi: TargetType {
         switch self {
         case .sendMsg:
             return .post
-        case .getLatestMsg:
+        case .queryLatestMsg:
             return .get
         case .ackMsgs:
             return .post
@@ -57,7 +57,7 @@ extension IMMessageApi: TargetType {
         switch self {
         case let .sendMsg(bean):
             return .requestJSONEncodable(bean)
-        case let .getLatestMsg(uId, offset, count, cTime):
+        case let .queryLatestMsg(uId, offset, count, cTime):
             let urlParameters = ["u_id": uId, "offset": offset, "size": count, "c_time": cTime] as [String : Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         case let .ackMsgs(bean):

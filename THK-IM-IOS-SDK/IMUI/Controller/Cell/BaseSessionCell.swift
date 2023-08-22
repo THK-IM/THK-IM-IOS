@@ -92,7 +92,7 @@ open class BaseSessionCell : BaseCell {
         self.avatarView.ca_setImageUrlWithCorner(url: "https://picsum.photos/300/300", radius: 20)
         self.nickView.text = String(format: "nick-%d", session.entityId)
         self.msgView.text = session.lastMsg
-        let dateString = Date().timeToDateString(showTime: session.mTime, currentTime: IMManager.shared.severTime)
+        let dateString = Date().timeToDateString(showTime: session.mTime, currentTime: IMCoreManager.shared.severTime)
         self.timeView.text = dateString
         self.timeView.textAlignment = .right
     }

@@ -15,7 +15,7 @@ class PreviewVideoCellView : UICollectionViewCell {
     var cellIndex: Int = 0
     var media: Media? = nil
     private var taskId: String?
-    private var listener: LoadListener?
+    private var listener: FileLoaderListener?
     
     
     private lazy var progressView: CircleProgressView = {
@@ -66,7 +66,7 @@ class PreviewVideoCellView : UICollectionViewCell {
             self.videoPlayView.initCover(media.thumbPath!)
         }
         if media.sourcePath != nil {
-            let realPath = IMManager.shared.storageModule!.sandboxFilePath(media.sourcePath!)
+            let realPath = IMCoreManager.shared.storageModule!.sandboxFilePath(media.sourcePath!)
             if FileManager.default.fileExists(atPath: realPath) {
                 self.play(path: realPath)
                 return
@@ -74,7 +74,7 @@ class PreviewVideoCellView : UICollectionViewCell {
         }
         
         if media.sourceUrl != nil && media.sourcePath != nil {
-            let realPath = IMManager.shared.storageModule!.sandboxFilePath(media.sourcePath!)
+            let realPath = IMCoreManager.shared.storageModule!.sandboxFilePath(media.sourcePath!)
             self.downloadMedia(media.sourceUrl!, path: realPath)
         }
     }
@@ -93,27 +93,27 @@ class PreviewVideoCellView : UICollectionViewCell {
     }
     
     func downloadMedia(_ url: String, path: String) {
-        guard let fileLoader = IMManager.shared.fileLoadModule else {
+        guard let fileLoader = IMCoreManager.shared.fileLoadModule else {
             return
         }
         if self.taskId != nil && self.listener != nil {
             fileLoader.cancelDownloadListener(taskId: self.taskId!, listener: self.listener!)
         }
-        let listener = LoadListener({ [weak self] progress, state, url, path in
+        let listener = FileLoaderListener({ [weak self] progress, state, url, path in
             guard let sf = self else {
                 return
             }
             switch(state) {
-            case LoadState.Init.rawValue:
+            case FileLoaderState.Init.rawValue:
                 break
-            case LoadState.Failed.rawValue:
+            case FileLoaderState.Failed.rawValue:
                 sf.progressView.isHidden = true
                 break
-            case LoadState.Success.rawValue:
+            case FileLoaderState.Success.rawValue:
                 sf.progressView.isHidden = true
                 sf.updatePlayer(path: path)
                 break
-            case LoadState.Ing.rawValue:
+            case FileLoaderState.Ing.rawValue:
                 sf.progressView.isHidden = false
                 sf.progressView.setProgress(to: progress)
                 break

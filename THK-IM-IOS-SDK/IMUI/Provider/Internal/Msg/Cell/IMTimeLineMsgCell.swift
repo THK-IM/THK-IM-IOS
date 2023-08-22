@@ -28,7 +28,7 @@ class IMTimeLineMsgCell: BaseMsgCell {
         guard let msg = self.message else {
             return
         }
-        let dateString = Date().timeToDateString(showTime: msg.cTime, currentTime: IMManager.shared.severTime)
+        let dateString = Date().timeToDateString(showTime: msg.cTime, currentTime: IMCoreManager.shared.severTime)
         self.view.text = dateString
     }
     

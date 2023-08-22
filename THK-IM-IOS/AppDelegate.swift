@@ -53,8 +53,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        })
 //        IMManager.shared.fileLoadModule = DefaultFileLoadModule(ossBucket, ossEndpoint, credentialProvider)
         let debug = true
-        IMManager.shared.initApplication(application, 1, debug)
-        IMManager.shared.connect()
+        IMCoreManager.shared.initApplication(application, 1, debug)
+        IMCoreManager.shared.connect()
     }
     
     

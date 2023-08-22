@@ -8,51 +8,72 @@
 import Foundation
 import WCDBSwift
 
-public final class Message: Hashable, TableCodable {
-    
+public final class Message: TableCodable {
+    // 消息id(客户端)
     var id: Int64 = 0
-    var fUId: Int64 = 0
-    var sid : Int64 = 0
+    // sessionId
+    var sessionId : Int64 = 0
+    // 发件人id
+    var fromUId: Int64 = 0
+    // 消息id(服务端)
     var msgId: Int64 = 0
+    // 消息类型
     var type: Int = 0
-    var content: String = ""
-    var status: Int = MsgStatus.Init.rawValue
-    var extData: String? = nil
-    var rMsgId: Int64? = nil
+    // 消息内容
+    var content: String
+    // 消息发送状态,值标记
+    var sendStatus: Int = MsgSendStatus.Init.rawValue
+    // 消息操作状态 ack/read/revoke/update bit位标记
+    var operateStatus: Int = MsgOperateStatus.Init.rawValue
+    // 引用消息Id
+    var referMsgId: Int64? = nil
+    // 消息@人列表, uId1#uId2
     var atUsers: String? = nil
-    var cTime: Int64 = 0
-    var mTime: Int64 = 0
+    // 自定义扩展数据 推荐使用json结构存储
+    var extData: String? = nil
+    // 消息创建时间
+    var cTime: Int64
+    // 消息最近修改时间
+    var mTime: Int64
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Message
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
-            BindMultiPrimary(id, fUId, onConflict: ConflictAction.Ignore)
-            BindMultiUnique(sid, msgId, onConflict: ConflictAction.Ignore)
-            BindIndex(sid, cTime, namedWith: "_message_sid_ctime_index", isUnique: false)
+            BindMultiPrimary(id, sessionId, fromUId, onConflict: ConflictAction.Ignore)
+            BindMultiUnique(sessionId, msgId, onConflict: ConflictAction.Ignore)
+            BindIndex(sessionId, cTime, namedWith: "message_session_id_create_time_index", isUnique: false)
         }
         case id = "id"
-        case fUId = "f_uid"
-        case sid = "sid"
+        case sessionId = "session_id"
+        case fromUId = "from_u_id"
         case msgId = "msg_id"
         case type = "type"
         case content = "content"
-        case status = "status"
-        case extData = "ext_data"
-        case rMsgId = "r_msg_id"
+        case sendStatus = "send_status"
+        case operateStatus = "operate_status"
+        case referMsgId = "refer_msg_id"
         case atUsers = "at_users"
+        case extData = "ext_data"
         case cTime = "c_time"
         case mTime = "m_time"
     }
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    public static func == (lhs: Message, rhs: Message) -> Bool {
-        return lhs.id == rhs.id
+    init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String, sendStatus: Int, operateStatus: Int, referMsgId: Int64? = nil, atUsers: String? = nil, extData: String? = nil, cTime: Int64, mTime: Int64) {
+        self.id = id
+        self.sessionId = sessionId
+        self.fromUId = fromUId
+        self.msgId = msgId
+        self.type = type
+        self.content = content
+        self.sendStatus = sendStatus
+        self.operateStatus = operateStatus
+        self.referMsgId = referMsgId
+        self.atUsers = atUsers
+        self.extData = extData
+        self.cTime = cTime
+        self.mTime = mTime
     }
     
 }

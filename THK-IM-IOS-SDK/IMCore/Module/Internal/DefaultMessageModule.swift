@@ -13,242 +13,79 @@ import CocoaLumberjack
 
 open class DefaultMessageModule : MessageModule {
     
-    private let messageApi = MoyaProvider<IMMessageApi>(plugins: [NetworkLoggerPlugin()])
-    private let sessionApi = MoyaProvider<IMSessionApi>(plugins: [NetworkLoggerPlugin()])
-    private var processorDic = [Int: BaseMsgProcessor]()
-    private let disposeBag = DisposeBag()
-    private var lastTimestamp : Int64 = 0
-    private var lastSequence : Int = 0
-    private var needAckDic = [Int64: Set<Int64>]()
-    private let idLock = NSLock()
-    private let ackLock = NSLock()
-    private let msgLock = NSLock()
-    
     func registerMsgProcessor(_ processor: BaseMsgProcessor) {
         processorDic[processor.messageType()] = processor
     }
-    
+
     func getMsgProcessor(_ msgType: Int) -> BaseMsgProcessor {
         let processor = processorDic[msgType]
         return (processor != nil) ? (processor!) : processorDic[0]!
     }
     
-    func newMsgId() -> Int64 {
-        idLock.lock()
-        defer {
-            idLock.unlock()
-        }
-        let current = IMManager.shared.severTime
-        if (current == self.lastTimestamp) {
-            self.lastSequence += 1
-        } else {
-            self.lastTimestamp = current
-            self.lastSequence = 0
-        }
-        
-        return current * 100 + Int64(self.lastSequence)
+    func syncOfflineMessages() {
+        let lastTime = self.getOfflineMsgLastSyncTime()
+        let count = 200
+        IMCoreManager.shared.api.getLatestMessages(lastTime, 0, count)
+           .compose(DefaultRxTransformer.io2Io())
+           .subscribe(onNext: { messageArray in
+               do {
+                   var sessionMsgs = [Int64: [Message]]()
+                   for msg in messageArray {
+                       if msg.fromUId == IMCoreManager.shared.uId {
+                           msg.operateStatus = msg.operateStatus | MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+                       }
+                       msg.sendStatus = MsgSendStatus.Success.rawValue
+                       if sessionMsgs[msg.sessionId] == nil {
+                           sessionMsgs[msg.sessionId] = [Message]()
+                       }
+                       sessionMsgs[msg.sessionId]?.append(msg)
+                   }
+                   // 批量插入消息
+                   try IMCoreManager.shared.database.messageDao.insertMessages(messageArray)
+
+                   // 插入ack
+                   for msg in messageArray {
+                       self.ackMessageToCache(msg.sessionId, msg.msgId)
+                   }
+
+                   // 更新每个session的最后一条消息
+                   for (sid, msgs) in sessionMsgs {
+                       SwiftEventBus.post(IMEvent.MsgsNew.rawValue, sender: (sid, msgs))
+                       let lastMsg = msgs.last
+                       if lastMsg != nil {
+                           self.processSessionByMessage(lastMsg!)
+                       }
+                   }
+               } catch {
+                   DDLogError(error)
+               }
+
+               if (messageArray.count > 0) {
+                   let severTime = IMCoreManager.shared.severTime
+                   _ = self.setOfflineMsgSyncTime(severTime)
+               }
+
+               if (messageArray.count >= count) {
+                   self.syncOfflineMessages()
+               }
+           })
+           .disposed(by: disposeBag)
     }
     
-    func ackMessage(_ sId: Int64, _ msgId: Int64) {
-        ackLock.lock()
-        if self.needAckDic[sId] == nil {
-            self.needAckDic[sId] = Set()
-        }
-        self.needAckDic[sId]!.insert(msgId)
-        ackLock.unlock()
+    func syncLatestSessionsFromServer(_ lastSyncTime: Int, _ count: Int) {
+        // TODO
     }
     
-    func ackMessages() {
-        ackLock.lock()
-        for (k, v) in self.needAckDic {
-            if v.count > 0 {
-                self.ackServerMessage(k, v)
-            }
-        }
-        ackLock.unlock()
-    }
     
-    func ackMessageSuccess(_ sId: Int64, _ msgIds: Set<Int64>) {
-        ackLock.lock()
-        var messageIds = needAckDic[sId]
-        if messageIds != nil {
-            for id in msgIds {
-                messageIds!.remove(id)
-            }
-            needAckDic[sId] = messageIds
-        }
-        ackLock.unlock()
-    }
     
-    func ackServerMessage(_ sId: Int64, _ msgIds: Set<Int64>) {
-        messageApi.rx
-            .request(.ackMsgs(AckMsgBean(sId: sId, uId: IMManager.shared.uId, msgIds: msgIds)))
-            .asObservable()
-            .compose(DefaultRxTransformer.response2ErrorBean())
-            .compose(DefaultRxTransformer.io2Io())
-            .subscribe(
-                onNext: { value in
-                    self.ackMessageSuccess(sId, msgIds)
-                },
-                onError: { error in
-                    DDLogError(error)
-                }
-            ).disposed(by: disposeBag)
-    }
-    
-    func deleteServerMessages(_ sId: Int64, _ msgIds: Array<Int64>) -> Observable<ErrorBean> {
-        return messageApi.rx
-            .request(.deleteMsgs(DeleteMsgBean(sId: sId, uId: IMManager.shared.uId, msgIds: msgIds)))
-            .asObservable()
-            .compose(DefaultRxTransformer.response2ErrorBean())
-    }
-    
-    func deleteMessages(_ sId: Int64, _ messages: Array<Message>, _ deleteServer: Bool) -> Observable<Bool> {
-        if (deleteServer) {
-            var ids = Array<Int64>()
-            for message in messages {
-                ids.append(message.id)
-            }
-            return self.deleteServerMessages(sId, ids).flatMap({
-                (value) -> Observable<Bool> in
-                if (value.code == 200) {
-                    return self.deleteLocalMessages(messages)
-                }
-                return Observable.error(Exception.IMHttp(value.code, value.message))
-            })
-        }
-        return self.deleteLocalMessages(messages)
-    }
-    
-    func deleteLocalMessages(_ messages: Array<Message>) -> Observable<Bool> {
+    func createSession(_ entityId: Int64, _ sessionType: Int) -> Observable<Session> {
         return Observable.create({observer -> Disposable in
             do {
-                try IMManager.shared.database.messageDao.deleteMessages(messages)
-                observer.onNext(true)
-            } catch {
-                observer.onNext(false)
-            }
-            observer.onCompleted()
-            return Disposables.create()
-        })
-    }
-    
-    func onNewMessage(_ msg: Message) {
-        msgLock.lock()
-        getMsgProcessor(msg.type).received(msg)
-        processSessionByMessage(msg)
-        msgLock.unlock()
-    }
-    
-    func onNewMessage(_ bean: MessageBean) {
-        let msg = bean.toMessage()
-        onNewMessage(msg)
-    }
-    
-    func resendMessage(_ message: Message) {
-        getMsgProcessor(message.type).resend(message)
-    }
-    
-    
-    func sendMessage(_ sId: Int64, _ type: Int, _ msgBody: String) {
-        getMsgProcessor(type).sendMessage(msgBody, sId)
-    }
-    
-    func sendMessageToServer(_ bean: MessageBean) -> Observable<MessageBean> {
-        return messageApi.rx
-            .request(.sendMsg(bean))
-            .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(MessageBean.self))
-    }
-    
-    func syncLatestMessagesFromServer(_ cTime: Int64, _ offset: Int, _ size: Int) -> Observable<Array<MessageBean>> {
-        return messageApi.rx
-            .request(.getLatestMsg(IMManager.shared.uId, offset, size, cTime))
-            .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(ListBean<MessageBean>.self))
-            .flatMap({ (listBean) -> Observable<Array<MessageBean>> in
-                return Observable.just(listBean.data)
-            })
-    }
-    
-    func syncOfflineMessages(_ time: Int64, _ offset: Int, _ size: Int) {
-        DDLogDebug("MessageModule: syncOfflineMessages \(time), \(offset), \(size)")
-        self.syncLatestMessagesFromServer(time, offset, size)
-            .compose(DefaultRxTransformer.io2Io())
-            .subscribe(onNext: { beanArray in
-                do {
-                    var msgs = Array<Message>()
-                    var sessionMsgs = [Int64: [Message]]()
-                    for bean in beanArray {
-                        let msg = bean.toMessage()
-                        if msg.fUId == IMManager.shared.uId {
-                            msg.status = MsgStatus.AlreadyReadInServer.rawValue
-                        }
-                        msgs.append(msg)
-                        if sessionMsgs[msg.sid] == nil {
-                            sessionMsgs[msg.sid] = [Message]()
-                        }
-                        sessionMsgs[msg.sid]?.append(msg)
-                    }
-                    // 批量插入消息
-                    try IMManager.shared.database.messageDao.insertMessages(msgs)
-                    
-                    // 插入ack
-                    for msg in msgs {
-                        self.ackMessage(msg.sid, msg.msgId)
-                    }
-                    
-                    // 更新每个session的最后一条消息
-                    for (sid, msgs) in sessionMsgs {
-                        SwiftEventBus.post(IMEvent.MsgsNew.rawValue, sender: (sid, msgs))
-                        let lastMsg = msgs.last
-                        if lastMsg != nil {
-                            self.processSessionByMessage(lastMsg!)
-                        }
-                    }
-                } catch {
-                    DDLogError(error)
-                }
-                
-                if (beanArray.count > 0) {
-                    let severTime = IMManager.shared.severTime
-                    _ = self.setOfflineMsgSyncTime(severTime)
-                }
-                
-                if (beanArray.count >= size) {
-                    self.syncOfflineMessages(time, offset + beanArray.count, size)
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    func syncAllMessages(_ offset: Int, _ size: Int) {
-        let time: Int64 = 0
-        self.syncLatestMessagesFromServer(time, offset, size)
-            .compose(DefaultRxTransformer.io2Io())
-            .subscribe(onNext: { beanArray in
-                for bean in beanArray {
-                    self.onNewMessage(bean)
-                }
-                if (beanArray.count >= size) {
-                    self.syncAllMessages(offset + beanArray.count, size)
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    func syncLatestSessionsFromServer(_ offset: Int, _ size: Int) -> Observable<Array<SessionBean>> {
-        return Observable.just(Array())
-    }
-    
-    func getSession(_ uId: Int64, _ map: Dictionary<String, Any>?) -> Observable<Session> {
-        return Observable.create({observer -> Disposable in
-            do {
-                var session = try IMManager.shared.database.sessionDao.querySessionByEntityId(uId, SessionType.Single.rawValue)
+                var session = try IMCoreManager.shared.database.sessionDao.querySessionByEntityId(entityId, sessionType)
                 if (session == nil) {
-                    session = Session()
-                    session?.type = SessionType.Single.rawValue
-                    session?.entityId = uId
+                    session = Session(
+                        id: 0, type: 0, entityId: 0, status: 0, unreadCount: 0, cTime: 0, mTime: 0
+                    )
                 }
                 observer.onNext(session!)
             } catch {
@@ -260,68 +97,41 @@ open class DefaultMessageModule : MessageModule {
             if (session.id > 0) {
                 return Observable.just(session)
             } else {
-                return self.getSessionFromServerByEntityId(uId, SessionType.Single.rawValue, map).flatMap({
-                    (bean) -> Observable<Session> in
-                    return Observable.just(bean.toSession())
-                })
+                var members = Set<Int64>()
+                members.insert(IMCoreManager.shared.uId)
+                return IMCoreManager.shared.api.createSession(sessionType, entityId, members)
             }
         })
     }
     
-    func getSessionFromServerByEntityId(_ entityId: Int64, _ type: Int, _ map: Dictionary<String, Any>?) -> Observable<SessionBean> {
-        let bean = CreateSessionBean(type: type, entityId: nil, members: [IMManager.shared.uId, entityId])
-        return sessionApi.rx
-            .request(.createSession(bean))
-            .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(SessionBean.self))
-    }
-    
-    func querySessionFromServer(_ sId: Int64) -> Observable<SessionBean> {
-        let selfUId = IMManager.shared.uId
-        return sessionApi.rx
-            .request(.querySession(selfUId, sId))
-            .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(SessionBean.self))
-    }
-    
-    func queryLocalSession(_ sId: Int64) -> Observable<Session> {
+    func getSession(_ sessionId: Int64) -> RxSwift.Observable<Session> {
         return Observable.create({observer -> Disposable in
             do {
-                var session = try IMManager.shared.database.sessionDao.querySessionById(sId)
-                if session == nil {
-                    session = Session()
-                    session!.id = sId
+                var session = try IMCoreManager.shared.database.sessionDao.querySessionById(sessionId)
+                if (session == nil) {
+                    session = Session(
+                        id: 0, type: 0, entityId: 0, status: 0, unreadCount: 0, cTime: 0, mTime: 0
+                    )
                 }
                 observer.onNext(session!)
             } catch {
                 observer.onError(error)
-                DDLogError(error)
             }
             observer.onCompleted()
             return Disposables.create()
-        })
-    }
-    
-    func querySession(_ sId: Int64) -> Observable<Session> {
-        return queryLocalSession(sId).flatMap({ (session) -> Observable<Session> in
-            if (session.id == 0 || session.type == 0) {
-                return self.querySessionFromServer(sId).flatMap({ (bean) -> Observable<Session> in
-                    return Observable.just(bean.toSession())
-                })
+        }).flatMap({ (session) -> Observable<Session> in
+            if (session.id > 0) {
+                return Observable.just(session)
+            } else {
+                return IMCoreManager.shared.api.querySession(IMCoreManager.shared.uId, sessionId)
             }
-            return Observable.just(session)
-            
         })
     }
     
-    func syncAllSessionsFromServer(_ offset: Int, _ size: Int) -> Observable<Array<SessionBean>> {
-        return Observable.just(Array())
-    }
-    
-    func queryLocalSessions(_ size: Int, _ mTime: Int64) -> Observable<Array<Session>> {
+    func queryLocalSessions(_ count: Int, _ mTime: Int64) -> RxSwift.Observable<Array<Session>> {
         return Observable.create({observer -> Disposable in
             do {
-                let sessions = try IMManager.shared.database.sessionDao.querySessions(size, mTime)
+                let sessions = try IMCoreManager.shared.database.sessionDao.querySessions(count, mTime)
                 if (sessions != nil) {
                     observer.onNext(sessions!)
                 } else {
@@ -336,10 +146,10 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    func queryLocalMessages(_ sId: Int64, _ cTime: Int64, _ size: Int) -> Observable<Array<Message>> {
+    func queryLocalMessages(_ sessionId: Int64, _ cTime: Int64, _ count: Int) -> RxSwift.Observable<Array<Message>> {
         return Observable.create({observer -> Disposable in
             do {
-                let messages = try IMManager.shared.database.messageDao.queryMessageBySidAndCTime(sId, cTime, size)
+                let messages = try IMCoreManager.shared.database.messageDao.queryMessageBySidAndCTime(sessionId, cTime, count)
                 if (messages != nil) {
                     observer.onNext(messages!)
                 } else {
@@ -354,51 +164,139 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    func deleteServerSession(_ sessionList: Array<Session>) -> Observable<Int> {
-        return Observable.just(0)
+    func deleteSession(_ sessionList: Array<Session>, _ deleteServer: Bool) -> RxSwift.Observable<Bool> {
+        // TODO
+        return Observable.just(true)
     }
     
-    func deleteLocalSession(_ sessionList: Array<Session>) -> Observable<Int> {
-        return Observable.just(0)
+    func onNewMessage(_ msg: Message) {
+        msgLock.lock()
+        getMsgProcessor(msg.type).received(msg)
+        processSessionByMessage(msg)
+        msgLock.unlock()
     }
     
-    func deleteSession(_ sessionList: Array<Session>, _ deleteServer: Bool) -> Observable<Bool> {
-        return Observable.just(false)
-    }
-    
-    func signMessageReadBySessionId(_ sId: Int64) {
-        
-    }
-    
-    func onSignalReceived(_ subType: Int, _ body: String) {
-        if subType == 0 {
-            do {
-                let msgBean = try JSONDecoder().decode(
-                    MessageBean.self,
-                    from: body.data(using: String.Encoding.utf8)!)
-                onNewMessage(msgBean)
-            } catch {
-                DDLogError(error)
-            }
-        } else {
-            DDLogError(String(format: "subType: %d message not support", subType))
+    func generateNewMsgId() -> Int64 {
+        idLock.lock()
+        defer {
+            idLock.unlock()
         }
+        let current = IMCoreManager.shared.severTime
+        if (current == self.lastTimestamp) {
+            self.lastSequence += 1
+        } else {
+            self.lastTimestamp = current
+            self.lastSequence = 0
+        }
+        return current * 100 + Int64(self.lastSequence)
+    }
+    
+    func sendMessageToServer(_ message: Message) -> RxSwift.Observable<Message> {
+        return IMCoreManager.shared.api.sendMessageToServer(msg: message)
+    }
+    
+    func readMessages(_ sessionId: Int64, _ msgIds: [Int64]?) -> RxSwift.Observable<Bool> {
+        // TODO
+        return Observable.just(true)
+    }
+    
+    func revokeMessage(_ message: Message) -> RxSwift.Observable<Bool> {
+        // TODO
+        return Observable.just(true)
+    }
+    
+    func reeditMessage(_ message: Message) -> RxSwift.Observable<Bool> {
+        // TODO
+        return Observable.just(true)
+    }
+    
+    func ackMessageToCache(_ sessionId: Int64, _ msgId: Int64) {
+        ackLock.lock()
+        if self.needAckDic[sessionId] == nil {
+            self.needAckDic[sessionId] = Set()
+        }
+        self.needAckDic[sessionId]!.insert(msgId)
+        ackLock.unlock()
+    }
+    
+    private func ackMessageSuccess(_ sessionId: Int64, _ msgIds: Set<Int64>) {
+        ackLock.lock()
+        var messageIds = needAckDic[sessionId]
+        if messageIds != nil {
+            for id in msgIds {
+                messageIds!.remove(id)
+            }
+            needAckDic[sessionId] = messageIds
+        }
+        ackLock.unlock()
+    }
+
+    
+    private func ackServerMessage(_ sessionId: Int64, _ msgIds: Set<Int64>) {
+        IMCoreManager.shared.api.ackMessages(IMCoreManager.shared.uId, sessionId, msgIds)
+            .compose(DefaultRxTransformer.io2Io())
+            .subscribe(
+                onNext: { success in
+                    if success {
+                        self.ackMessageSuccess(sessionId, msgIds)
+                    }
+                },
+                onError: { error in
+                    DDLogError(error)
+                }
+            ).disposed(by: disposeBag)
+    }
+    
+    func ackMessagesToServer() {
+        ackLock.lock()
+        for (k, v) in self.needAckDic {
+            if v.count > 0 {
+                self.ackServerMessage(k, v)
+            }
+        }
+        ackLock.unlock()
+    }
+    
+    func deleteServerMessages(_ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<ErrorBean> {
+        return messageApi.rx
+            .request(.deleteMsgs(DeleteMsgBean(sessionId: sessionId, uId: IMCoreManager.shared.uId, msgIds: msgIds)))
+            .asObservable()
+            .compose(DefaultRxTransformer.response2ErrorBean())
+    }
+
+    private func deleteLocalMessages(_ messages: Array<Message>) -> Observable<Bool> {
+        return Observable.create({observer -> Disposable in
+            do {
+                try IMCoreManager.shared.database.messageDao.deleteMessages(messages)
+                observer.onNext(true)
+            } catch {
+                observer.onNext(false)
+            }
+            observer.onCompleted()
+            return Disposables.create()
+        })
+    }
+    
+    func deleteMessages(_ sessionId: Int64, _ messages: Array<Message>, _ deleteServer: Bool) -> RxSwift.Observable<Bool> {
+        if (deleteServer) {
+            var ids = Set<Int64>()
+            for message in messages {
+                ids.insert(message.msgId)
+            }
+            return self.deleteServerMessages(sessionId, ids).flatMap({
+                (value) -> Observable<Bool> in
+                if (value.code == 200) {
+                    return self.deleteLocalMessages(messages)
+                }
+                return Observable.error(Exception.IMHttp(value.code, value.message))
+            })
+        }
+        return self.deleteLocalMessages(messages)
     }
     
     func processSessionByMessage(_ msg: Message) {
-        let sessionDao = IMManager.shared.database.sessionDao
-        queryLocalSession(msg.sid)
-            .flatMap({ (session) -> Observable<Session> in
-                if (session.entityId == 0) {
-                    return self.querySessionFromServer(session.id)
-                        .flatMap { (bean) -> Observable<Session> in
-                        let s = bean.toSession()
-                        try sessionDao.insertSessions(s)
-                        return Observable.just(s)
-                    }
-                }
-                return Observable.just(session)
-            })
+        let sessionDao = IMCoreManager.shared.database.sessionDao
+        self.getSession(msg.sessionId)
             .compose(DefaultRxTransformer.io2Io())
             .subscribe(
                 onNext: { s in
@@ -418,18 +316,45 @@ open class DefaultMessageModule : MessageModule {
                     DDLogError(error)
                 }
             ).disposed(by: disposeBag)
-        
     }
     
-    func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
-        let key = "/\(IMManager.shared.uId)/user_sync_time"
-        let saveTime = IMManager.shared.severTime
+    func onSignalReceived(_ subType: Int, _ body: String) {
+        if subType == 0 {
+            do {
+                let msgBean = try JSONDecoder().decode(
+                    MessageBean.self,
+                    from: body.data(using: String.Encoding.utf8)!)
+                let msg = msgBean.toMessage()
+                onNewMessage(msg)
+            } catch {
+                DDLogError(error)
+            }
+        } else {
+            DDLogError(String(format: "subType: %d message not support", subType))
+        }
+    }
+    
+    
+    private let messageApi = MoyaProvider<IMMessageApi>(plugins: [NetworkLoggerPlugin()])
+    private let sessionApi = MoyaProvider<IMSessionApi>(plugins: [NetworkLoggerPlugin()])
+    private var processorDic = [Int: BaseMsgProcessor]()
+    private let disposeBag = DisposeBag()
+    private var lastTimestamp : Int64 = 0
+    private var lastSequence : Int = 0
+    private var needAckDic = [Int64: Set<Int64>]()
+    private let idLock = NSLock()
+    private let ackLock = NSLock()
+    private let msgLock = NSLock()
+    
+    private func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
+        let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
+        let saveTime = IMCoreManager.shared.severTime
         UserDefaults.standard.setValue(saveTime, forKey: key)
         return UserDefaults.standard.synchronize()
     }
-    
-    func getOfflineMsgLastSyncTime() -> Int64 {
-        let key = "/\(IMManager.shared.uId)/user_sync_time"
+
+    private func getOfflineMsgLastSyncTime() -> Int64 {
+        let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
         let value = UserDefaults.standard.object(forKey: key)
         let time = value == nil ? 0 : (value as! Int64 )
         return time

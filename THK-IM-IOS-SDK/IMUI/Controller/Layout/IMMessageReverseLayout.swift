@@ -124,12 +124,12 @@ class IMMessageReverseLayout: UIView, UITableViewDataSource, UITableViewDelegate
         isLoading = true
         var latestMsgTime: Int64 = 0
         if (self.messages.count == 0) {
-            latestMsgTime = IMManager.shared.severTime
+            latestMsgTime = IMCoreManager.shared.severTime
         } else {
             latestMsgTime = self.messages[self.messages.count-1].cTime
         }
         if (self.session != nil) {
-            IMManager.shared.getMessageModule()
+            IMCoreManager.shared.getMessageModule()
                 .queryLocalMessages((self.session?.id)!, latestMsgTime, self.loadCount)
                 .compose(DefaultRxTransformer.io2Main())
                 .subscribe(onNext: { [weak self] value in
@@ -173,7 +173,10 @@ class IMMessageReverseLayout: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     private func newTimelineMessage(_ cTime: Int64) -> Message {
-        let message = Message()
+        let message = Message(
+            id: 0, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0, type: 0, content: "", sendStatus: 0,
+            operateStatus: 0, referMsgId: nil, atUsers: nil, extData: nil, cTime: 0, mTime: 0
+        )
         message.cTime = cTime
         message.type = 9999
         return message

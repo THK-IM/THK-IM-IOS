@@ -19,18 +19,14 @@ class MessageBean: Codable {
     var atUsers: String? = nil
     var cTime: Int64 = 0
     
-    init() {
-        
-    }
-    
     init(msg: Message) {
         self.clientId = msg.id
-        self.fUId = msg.fUId
-        self.sessionId = msg.sid
+        self.fUId = msg.fromUId
+        self.sessionId = msg.sessionId
         self.msgId = msg.msgId
         self.type = msg.type
         self.body = msg.content
-        self.rMsgId = msg.rMsgId
+        self.rMsgId = msg.referMsgId
         self.atUsers = msg.atUsers
         self.cTime = msg.cTime
     }
@@ -62,7 +58,7 @@ class MessageBean: Codable {
     
     enum CodingKeys: String, CodingKey {
         case clientId = "client_id"
-        case fUId = "f_uid"
+        case fUId = "from_u_id"
         case sessionId = "session_id"
         case msgId = "msg_id"
         case type = "type"
@@ -73,17 +69,10 @@ class MessageBean: Codable {
     }
     
     func toMessage() -> Message {
-        let message = Message()
-        message.id = self.clientId
-        message.sid = self.sessionId
-        message.msgId = self.msgId
-        message.type = self.type
-        message.fUId = self.fUId
-        message.atUsers = self.atUsers
-        message.rMsgId = self.rMsgId
-        message.content = self.body
-        message.mTime = self.cTime
-        message.cTime = self.cTime
+        let message = Message(
+            id: self.clientId, sessionId: self.sessionId, fromUId: self.fUId, msgId: self.msgId,
+            type: self.type, content: self.body, sendStatus: MsgSendStatus.Success.rawValue,
+            operateStatus: MsgOperateStatus.Init.rawValue, cTime: self.cTime, mTime: self.cTime)
         return message
     }
 }

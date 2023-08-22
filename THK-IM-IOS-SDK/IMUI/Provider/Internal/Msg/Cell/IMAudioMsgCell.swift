@@ -16,7 +16,7 @@ class IMAudioMsgCell: BaseMsgCell {
     private var audioMsgBody: AudioMsgBody?
     
     private var taskId: String?
-    private var downloadListener: LoadListener?
+    private var downloadListener: FileLoaderListener?
     
     override func msgView() -> UIView {
         self.textView.sizeToFit()
@@ -83,23 +83,23 @@ class IMAudioMsgCell: BaseMsgCell {
     }
     
     private func downloadAudio(_ audioMsgBody: AudioMsgBody) {
-        guard let storageModule = IMManager.shared.storageModule else {
+        guard let storageModule = IMCoreManager.shared.storageModule else {
             return
         }
-        guard let fileModule = IMManager.shared.fileLoadModule else {
+        guard let fileModule = IMCoreManager.shared.fileLoadModule else {
             return
         }
         guard let msg = self.message else {
             return
         }
         let fileName = storageModule.getFileExtFromUrl(audioMsgBody.url!)
-        let path = storageModule.allocLocalFilePath(msg.sid, msg.fUId, fileName, "audio")
+        let path = storageModule.allocLocalFilePath(msg.sessionId, msg.fromUId, fileName, "audio")
         self.unregister()
-        let downloadListener = LoadListener(
+        let downloadListener = FileLoaderListener(
             {
                 [weak self] progress, state, url, path in
                 switch state {
-                case LoadState.Success.rawValue:
+                case FileLoaderState.Success.rawValue:
                     do {
                         audioMsgBody.path = path
                         let d = try JSONEncoder().encode(audioMsgBody)
@@ -110,7 +110,7 @@ class IMAudioMsgCell: BaseMsgCell {
                             return
                         }
                         msg.content = content
-                        try IMManager.shared.database.messageDao.updateMessages(msg)
+                        try IMCoreManager.shared.database.messageDao.updateMessages(msg)
                     } catch {
                         DDLogError(error)
                     }
@@ -130,7 +130,7 @@ class IMAudioMsgCell: BaseMsgCell {
     
     private func playAudio(_ path: String) {
         // 每次debug运行时 document目录位置会改变，适配一下
-        guard let realPath = IMManager.shared.storageModule?.sandboxFilePath(path) else {
+        guard let realPath = IMCoreManager.shared.storageModule?.sandboxFilePath(path) else {
             return
         }
         let success = OggOpusAudioPlayer.shared.startPlaying(realPath) {
@@ -153,7 +153,7 @@ class IMAudioMsgCell: BaseMsgCell {
     }
     
     private func unregister() {
-        guard let fileModule = IMManager.shared.fileLoadModule else {
+        guard let fileModule = IMCoreManager.shared.fileLoadModule else {
             return
         }
         guard let downloadListener = self.downloadListener else {

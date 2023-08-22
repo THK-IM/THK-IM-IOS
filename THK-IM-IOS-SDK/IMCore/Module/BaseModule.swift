@@ -8,5 +8,6 @@
 import Foundation
 
 protocol BaseModule : AnyObject {
+    
     func onSignalReceived(_ subType: Int, _ body: String)
 }

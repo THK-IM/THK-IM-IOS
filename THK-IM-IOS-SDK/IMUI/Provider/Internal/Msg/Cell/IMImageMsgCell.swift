@@ -15,7 +15,7 @@ class IMImageMsgCell: BaseMsgCell {
     
     private let view = UIImageView()
     private var taskId: String?
-    private var downloadListener: LoadListener?
+    private var downloadListener: FileLoaderListener?
     
     override func msgView() -> UIView {
         return self.view
@@ -55,7 +55,7 @@ class IMImageMsgCell: BaseMsgCell {
             
             if (imageBody.shrinkPath != nil) {
                 // 每次debug运行时 document目录位置会改变，适配一下
-                let path = IMManager.shared.storageModule?.sandboxFilePath(imageBody.shrinkPath!)
+                let path = IMCoreManager.shared.storageModule?.sandboxFilePath(imageBody.shrinkPath!)
                 self.view.ca_setImagePathWithCorner(path: path!, radius: 8.0)
                 return
             }
@@ -69,20 +69,20 @@ class IMImageMsgCell: BaseMsgCell {
     }
     
     func downloadShrinkImage(_ imageBody: ImageMsgBody, _ msg: Message) {
-        guard let storageModule = IMManager.shared.storageModule else {
+        guard let storageModule = IMCoreManager.shared.storageModule else {
             return
         }
-        guard let fileModule = IMManager.shared.fileLoadModule else {
+        guard let fileModule = IMCoreManager.shared.fileLoadModule else {
             return
         }
         let filePaths = storageModule.getPathsFromFullPath(imageBody.shrinkUrl!)
-        let path = storageModule.allocLocalFilePath(msg.sid, msg.fUId, filePaths.1, "img")
+        let path = storageModule.allocLocalFilePath(msg.sessionId, msg.fromUId, filePaths.1, "img")
         self.unregister()
-        let downloadListener = LoadListener(
+        let downloadListener = FileLoaderListener(
             {
                 [weak self] progress, state, url, path in
                 switch state {
-                case LoadState.Success.rawValue:
+                case FileLoaderState.Success.rawValue:
                     do {
                         imageBody.shrinkPath = path
                         let d = try JSONEncoder().encode(imageBody)
@@ -93,7 +93,7 @@ class IMImageMsgCell: BaseMsgCell {
                             return
                         }
                         msg.content = content
-                        try IMManager.shared.database.messageDao.updateMessages(msg)
+                        try IMCoreManager.shared.database.messageDao.updateMessages(msg)
                         SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
                     } catch {
                         DDLogError(error)
@@ -118,7 +118,7 @@ class IMImageMsgCell: BaseMsgCell {
     }
     
     private func unregister() {
-        guard let fileModule = IMManager.shared.fileLoadModule else {
+        guard let fileModule = IMCoreManager.shared.fileLoadModule else {
             return
         }
         guard let downloadListener = self.downloadListener else {

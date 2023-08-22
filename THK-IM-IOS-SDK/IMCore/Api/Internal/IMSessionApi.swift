@@ -15,14 +15,14 @@ enum IMSessionApi {
     /// 查询最近会话列表
     case queryLatestSession(_ uId: Int64, _ offset :Int, _ count: Int, _ mTime: Int64)
     /// 查询单个会话
-    case querySession(_ uId: Int64, _ sId: Int64)
+    case querySession(_ uId: Int64, _ sessionId: Int64)
 }
 
 
 extension IMSessionApi: TargetType {
     
     var baseURL: URL {
-        return URL.init(string: "\(IMManager.ApiEndpoint)/im/v3")!
+        return URL.init(string: "\(IMCoreManager.ApiEndpoint)/im/v3")!
     }
     
     var path: String {
@@ -31,8 +31,8 @@ extension IMSessionApi: TargetType {
             return "/session"
         case .queryLatestSession:
             return "/session/latest"
-        case let .querySession(uId, sId):
-            return "/user_session/\(uId)/\(sId)"
+        case let .querySession(uId, sessionId):
+            return "/user_session/\(uId)/\(sessionId)"
         }
     }
     

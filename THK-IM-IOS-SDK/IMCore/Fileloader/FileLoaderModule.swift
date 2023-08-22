@@ -17,7 +17,7 @@ protocol FileLoaderModule: AnyObject {
      * @param listener 进度监听器
      * @return 任务id
      */
-    func download(url: String, path: String, loadListener: LoadListener) -> String
+    func download(url: String, path: String, loadListener: FileLoaderListener) -> String
     
     /**
      *  上传
@@ -26,7 +26,7 @@ protocol FileLoaderModule: AnyObject {
      * @param listener 进度监听器
      * @return 任务id
      */
-    func upload(key: String, path: String, loadListener: LoadListener) -> String
+    func upload(key: String, path: String, loadListener: FileLoaderListener) -> String
     
     
     /**
@@ -37,7 +37,7 @@ protocol FileLoaderModule: AnyObject {
     /**
      * 取消下载监听
      */
-    func cancelDownloadListener(taskId: String, listener: LoadListener)
+    func cancelDownloadListener(taskId: String, listener: FileLoaderListener)
     
     /**
      * 取消所有下载监听
@@ -52,7 +52,7 @@ protocol FileLoaderModule: AnyObject {
     /**
      * 取消上传监听
      */
-    func cancelUploadListener(taskId: String, listener: LoadListener)
+    func cancelUploadListener(taskId: String, listener: FileLoaderListener)
     
     
     /**

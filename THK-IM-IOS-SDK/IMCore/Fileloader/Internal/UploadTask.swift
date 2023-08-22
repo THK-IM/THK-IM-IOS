@@ -21,31 +21,31 @@ class UploadTask: FileTask {
     }
     
     override func start() {
-        self.notify(progress: 0, state: LoadState.Init.rawValue)
+        self.notify(progress: 0, state: FileLoaderState.Init.rawValue)
         guard let fileLoadModule = self.fileModuleReference.value else {
-            self.notify(progress: 0, state: LoadState.Failed.rawValue)
+            self.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
             return
         }
         request = OSSPutObjectRequest()
         request?.bucketName = fileLoadModule.oSsBucket
         request?.objectKey = self.url
         
-        let (_ , ext) = IMManager.shared.storageModule!.getFileExt(self.path)
+        let (_ , ext) = IMCoreManager.shared.storageModule!.getFileExt(self.path)
         let mimeType = MimeType.shared.mimeType(pathExtension: ext)
         request?.contentType = mimeType
         request?.uploadingFileURL = URL.init(fileURLWithPath: self.path)
         request?.uploadProgress = { [weak self]
             (bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Void in
             let p: Int = Int(100 * totalBytesSent / totalBytesExpectedToSend)
-            self?.notify(progress: p, state: LoadState.Ing.rawValue)
+            self?.notify(progress: p, state: FileLoaderState.Ing.rawValue)
         }
         let client = fileLoadModule.oSsClient
         let putTask = client.putObject(request!)
         putTask.continue({ [weak self] (t) -> Any? in
             if (t.error == nil) {
-                self?.notify(progress: 100, state: LoadState.Success.rawValue)
+                self?.notify(progress: 100, state: FileLoaderState.Success.rawValue)
             } else {
-                self?.notify(progress: 0, state: LoadState.Failed.rawValue)
+                self?.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
             }
             return nil
         })

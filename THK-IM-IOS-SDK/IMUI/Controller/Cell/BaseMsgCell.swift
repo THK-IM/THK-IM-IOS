@@ -112,12 +112,12 @@ open class BaseMsgCell : BaseCell {
             self.previousMessage = msgs[position-1]
         }
         showMessageStatus()
-        guard let fUId = self.message?.fUId else {
+        guard let fUId = self.message?.fromUId else {
             return
         }
         if self.showAvatar() {
             self.cellWrapper.avatarView()?.isHidden = false
-            IMManager.shared.getUserModule()
+            IMCoreManager.shared.getUserModule()
                 .getUserInfo(id: fUId)
                 .compose(DefaultRxTransformer.io2Main())
                 .subscribe(onNext: { [weak self] user in
@@ -130,7 +130,7 @@ open class BaseMsgCell : BaseCell {
             self.cellWrapper.avatarView()?.isHidden = true
         }
         if self.hasBubble() {
-            IMManager.shared.getUserModule()
+            IMCoreManager.shared.getUserModule()
                 .getUserChatBubble(id: fUId)
                 .compose(DefaultRxTransformer.io2Main())
                 .subscribe(onNext: { [weak self] image in
@@ -158,14 +158,14 @@ open class BaseMsgCell : BaseCell {
         guard let message = self.message else {
             return
         }
-        DDLogDebug("showMessageStatus: " + message.status.description)
-        switch message.status {
-        case MsgStatus.Init.rawValue, MsgStatus.Sending.rawValue:
+        DDLogDebug("showMessageStatus: " + message.sendStatus.description)
+        switch message.sendStatus {
+        case MsgSendStatus.Init.rawValue, MsgSendStatus.Sending.rawValue:
             self.cellWrapper.statusView()?.isHidden = false
             self.cellWrapper.resendButton()?.isHidden = true
             self.cellWrapper.readStatusView()?.isHidden = true
             break
-        case MsgStatus.SendFailed.rawValue:
+        case MsgSendStatus.Failed.rawValue:
             self.cellWrapper.statusView()?.isHidden = true
             self.cellWrapper.resendButton()?.isHidden = false
             self.cellWrapper.readStatusView()?.isHidden = true
@@ -198,7 +198,7 @@ open class BaseMsgCell : BaseCell {
         guard let previousMsg = self.previousMessage else {
             return false
         }
-        return msg.fUId != previousMsg.fUId && msg.fUId != 0
+        return msg.fromUId != previousMsg.fromUId && msg.fromUId != 0
     }
     
     /**

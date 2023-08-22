@@ -11,7 +11,7 @@ import CocoaLumberjack
 typealias NotifyProgressBlock = (_ progress: Int, _ state: Int, _ url: String, _ path :String) -> Void
 typealias NotifyOnUiThreadBlock = () -> Bool
 
-class LoadListener : NSObject {
+class FileLoaderListener : NSObject {
     
     let notifyProgress: NotifyProgressBlock
     let notifyOnUiThread: NotifyOnUiThreadBlock
@@ -19,11 +19,5 @@ class LoadListener : NSObject {
     init(_ notifyProgressBlock: @escaping NotifyProgressBlock, _ notifyOnUiThreadBlock: @escaping  NotifyOnUiThreadBlock) {
         self.notifyProgress = notifyProgressBlock
         self.notifyOnUiThread = notifyOnUiThreadBlock
-        DDLogDebug("SwiftObj init LoadListener")
     }
-    
-    deinit {
-        DDLogDebug("SwiftObj deinit LoadListener")
-    }
-    
 }

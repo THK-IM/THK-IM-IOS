@@ -162,7 +162,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             guard let msg = result?.object as? Message else {
                 return
             }
-            if msg.sid != self?.session?.id {
+            if msg.sessionId != self?.session?.id {
                 return
             }
             DDLogDebug("IMEvent: \(IMEvent.MsgNew.rawValue)")
@@ -172,7 +172,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             guard let msg = result?.object as? Message else {
                 return
             }
-            if msg.sid != self?.session?.id {
+            if msg.sessionId != self?.session?.id {
                 return
             }
             DDLogDebug("IMEvent: \(IMEvent.MsgUpdate.rawValue)")
@@ -183,7 +183,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             guard let msg = result?.object as? Message else {
                 return
             }
-            if msg.sid != self?.session?.id {
+            if msg.sessionId != self?.session?.id {
                 return
             }
             DDLogDebug("IMEvent: \(IMEvent.MsgUpdate.rawValue)")
@@ -273,7 +273,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     }
     
     func resendMessage(_ msg: Message) {
-        IMManager.shared.getMessageModule().resendMessage(msg)
+        IMCoreManager.shared.getMessageModule().getMsgProcessor(msg.type).resend(msg)
     }
     
     func getSession() -> Session? {
@@ -282,7 +282,10 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     
     
     func sendMessage(_ type: Int, _ body: String) {
-        IMManager.shared.getMessageModule().sendMessage((self.session?.id)!, type, body)
+        guard let sessionId = self.session?.id else {
+            return
+        }
+        IMCoreManager.shared.getMessageModule().getMsgProcessor(type).sendMessage(body, sessionId)
     }
     
     /// 显示消息多选视图
@@ -340,12 +343,12 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 do {
                     let asset = AVURLAsset(url: videoUrl!)
                     let videoData = try Data(contentsOf: asset.url)
-                    let storageModule = IMManager.shared.storageModule!
+                    let storageModule = IMCoreManager.shared.storageModule!
                     let (_, fName) = storageModule.getPathsFromFullPath(asset.url.absoluteString)
                     let (name, ext) = storageModule.getFileExt(fName)
                     let fileName = "\(name)_\(String().random(8)).\(ext)"
                     let path = storageModule.allocLocalFilePath(
-                        (sf.session?.id)!, IMManager.shared.uId, fileName, "video")
+                        (sf.session?.id)!, IMCoreManager.shared.uId, fileName, "video")
                     try storageModule.saveMediaDataInto(path, videoData)
                     try sf.sendVideo(path)
                 } catch {
@@ -373,12 +376,12 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 }
                 do {
                     let videoData = try Data(contentsOf: urlAsset.url)
-                    let storageModule = IMManager.shared.storageModule!
+                    let storageModule = IMCoreManager.shared.storageModule!
                     let (_, fName) = storageModule.getPathsFromFullPath(urlAsset.url.absoluteString)
                     let (name, ext) = storageModule.getFileExt(fName)
                     let fileName = "\(name)_\(String().random(8)).\(ext)"
                     let path = storageModule.allocLocalFilePath(
-                        (self?.session?.id)!, IMManager.shared.uId, fileName, "video")
+                        (self?.session?.id)!, IMCoreManager.shared.uId, fileName, "video")
                     try storageModule.saveMediaDataInto(path, videoData)
                     try self?.sendVideo(path, r.image, Int(r.asset.duration))
                 } catch {
@@ -409,7 +412,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     }
     
     private func sendImage(_ image: UIImage) throws {
-        guard let storageModule = IMManager.shared.storageModule else {
+        guard let storageModule = IMCoreManager.shared.storageModule else {
             return
         }
         var data = image.pngData()
@@ -419,8 +422,8 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
         if (data != nil) {
             let ext = data!.detectImageType().rawValue
             let fileName = "\(String().random(8)).\(ext)"
-            let localPath = storageModule.allocLocalFilePath((self.session?.id)!, IMManager.shared.uId, fileName, "img")
-            try IMManager.shared.storageModule?.saveMediaDataInto(localPath, data!)
+            let localPath = storageModule.allocLocalFilePath((self.session?.id)!, IMCoreManager.shared.uId, fileName, "img")
+            try IMCoreManager.shared.storageModule?.saveMediaDataInto(localPath, data!)
             
             let imageBody = ImageMsgBody()
             imageBody.width = Int(image.size.width)
@@ -439,9 +442,9 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                     from: msg.content.data(using: .utf8) ?? Data()
                 )
                 if imageBody.path == nil && imageBody.url != nil {
-                    let (_, fileName) = IMManager.shared.storageModule!.getPathsFromFullPath(imageBody.url!)
-                    imageBody.path = IMManager.shared.storageModule?
-                        .allocLocalFilePath(msg.sid, msg.fUId, fileName, "img")
+                    let (_, fileName) = IMCoreManager.shared.storageModule!.getPathsFromFullPath(imageBody.url!)
+                    imageBody.path = IMCoreManager.shared.storageModule?
+                        .allocLocalFilePath(msg.sessionId, msg.fromUId, fileName, "img")
                 }
                 return Media.imageMedia(
                     id: "\(msg.msgId)",
@@ -458,9 +461,9 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                     from: msg.content.data(using: .utf8) ?? Data()
                 )
                 if videoBody.path == nil && videoBody.url != nil {
-                    let (_, fileName) = IMManager.shared.storageModule!.getPathsFromFullPath(videoBody.url!)
-                    videoBody.path = IMManager.shared.storageModule?
-                        .allocLocalFilePath(msg.sid, msg.fUId, fileName, "video")
+                    let (_, fileName) = IMCoreManager.shared.storageModule!.getPathsFromFullPath(videoBody.url!)
+                    videoBody.path = IMCoreManager.shared.storageModule?
+                        .allocLocalFilePath(msg.sessionId, msg.fromUId, fileName, "video")
                 }
                 return Media.videoMedia(
                     id: "\(msg.msgId)",
@@ -484,12 +487,12 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             return
         }
         var ay = [Media]()
-        ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sid, true, 5).reversed())
+        ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, true, 5).reversed())
         let current = self.msgToMedia(msg: msg)
         if current != nil {
             ay.append(current!)
         }
-        ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sid, false, 5))
+        ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, false, 5))
         let absoluteFrame = originView.convert(originView.bounds, to: nil)
         MediaPreviewController.preview(
             from: self, onMediaDownloaded: self,
@@ -517,7 +520,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     private func fetchMoreMessage(_ msgId: Int64, _ sessionId: Int64, _ before: Bool, _ count: Int) -> [Media] {
         do {
             let types = [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue]
-            let msgDao = IMManager.shared.database.messageDao
+            let msgDao = IMCoreManager.shared.database.messageDao
             var messages: [Message]? = nil
             if before {
                 messages = try msgDao.findOlderMessages(msgId, types, sessionId, count)
@@ -548,7 +551,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             return
         }
         do {
-            guard let msg = try IMManager.shared.database.messageDao.findMessageBySid(msgId, sessionId) else {
+            guard let msg = try IMCoreManager.shared.database.messageDao.findMessageBySid(msgId, sessionId) else {
                 return
             }
             if msg.type == MsgType.IMAGE.rawValue {
@@ -566,7 +569,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 let content = String(data: data, encoding: .utf8)
                 if content != nil {
                     msg.content = content!
-                    try IMManager.shared.database.messageDao.updateMessages(msg)
+                    try IMCoreManager.shared.database.messageDao.updateMessages(msg)
                     SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
                 }
                 
@@ -585,7 +588,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 let content = String(data: data, encoding: .utf8)
                 if content != nil {
                     msg.content = content!
-                    try IMManager.shared.database.messageDao.updateMessages(msg)
+                    try IMCoreManager.shared.database.messageDao.updateMessages(msg)
 //                    SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
                 }
             }

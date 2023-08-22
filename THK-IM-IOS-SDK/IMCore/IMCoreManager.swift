@@ -1,5 +1,5 @@
 //
-//  IMManager.swift
+//  IMCoreManager.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/13.
@@ -11,17 +11,28 @@ import RxSwift
 import Kingfisher
 import SwiftEventBus
 
-class IMManager: SignalListener {
+class IMCoreManager: SignalListener {
     
-    static let shared = IMManager()
+    static let shared = IMCoreManager()
     static let ApiEndpoint = "http://192.168.1.4:18000"
     static let WsEndpoint = "ws://192.168.1.4:18002"
     
     private var moduleDic = [Int: BaseModule]()
     private var disposeBag = DisposeBag()
     
-    var fileLoadModule :FileLoaderModule?
+    var fileLoadModule: FileLoaderModule?
     var storageModule: StorageModule?
+    private var _api: IMApi?
+    
+    var api : IMApi{
+        set {
+            self._api = newValue
+        }
+        get {
+            return self._api!
+        }
+    }
+    
     
     private var _database: IMDatabase?
     var database : IMDatabase{
@@ -54,8 +65,7 @@ class IMManager: SignalListener {
         }
     }
     
-    private init() {
-    }
+    private init() {}
     
     func initApplication(_ app : UIApplication, _ uId :Int64, _ debug: Bool) {
         DDLog.add(DDOSLogger.sharedInstance) // Uses os_log
@@ -63,12 +73,12 @@ class IMManager: SignalListener {
         fileLogger.rollingFrequency = 60 * 60 * 24 // 24 hours
         fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.add(fileLogger)
-        let wsUrl = String(format: "%@/ws", IMManager.WsEndpoint)
+        let wsUrl = String(format: "%@/ws", IMCoreManager.WsEndpoint)
         self._uId = uId
         self._database = IMDatabase(app, uId, debug)
         
         do {
-            try self._database?.messageDao.resetSendingMsg(MsgStatus.SendFailed.rawValue)
+            try self._database?.messageDao.resetSendStatusFailed()
         } catch {
             DDLogError("initApplication: \(error)")
         }
@@ -130,8 +140,7 @@ class IMManager: SignalListener {
     
     func onStatusChange(_ status: ConnectStatus) {
         if (status == ConnectStatus.Connected) {
-            let lastSyncTime = getMessageModule().getOfflineMsgLastSyncTime()
-            getMessageModule().syncOfflineMessages(lastSyncTime, 0, 500)
+            getMessageModule().syncOfflineMessages()
         }
         SwiftEventBus.post(IMEvent.OnlineStatusUpdate.rawValue, sender: status)
     }

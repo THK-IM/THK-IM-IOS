@@ -57,13 +57,12 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
         textView1.rx.tap
             .flatMap({ (value) -> Observable<Session> in
                 let entityId = Int64(arc4random() % 100000) + 2
-                return IMManager.shared.getMessageModule()
-                    .getSession(entityId, nil)
+                return IMCoreManager.shared.getMessageModule().createSession(entityId, SessionType.Single.rawValue)
             })
             .subscribe(onNext: { data in
                 print(data)
                 do {
-                    try IMManager.shared.database.sessionDao.insertSessions(data)
+                    try IMCoreManager.shared.database.sessionDao.insertSessions(data)
                 } catch {
                     print(error)
                 }
@@ -185,7 +184,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
             .compose(DefaultRxTransformer.io2Main())
             .subscribe(onNext: { [weak self] in
                 do {
-                    let msgs = try IMManager.shared.database.messageDao.queryMessageBySidAndBeforeCTime(1682166592156209152, [MsgType.IMAGE.rawValue], Date().timeMilliStamp, 10)
+                    let msgs = try IMCoreManager.shared.database.messageDao.queryMessageBySidAndBeforeCTime(1682166592156209152, [MsgType.IMAGE.rawValue], Date().timeMilliStamp, 10)
                     print(msgs)
                 } catch {
                     print(error)

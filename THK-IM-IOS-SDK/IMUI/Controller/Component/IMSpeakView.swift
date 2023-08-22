@@ -159,8 +159,8 @@ class IMSpeakView: UILabel {
             return false
         }
         let fileName = "audio_\(String().random(8)).oga"
-        guard let filePath = IMManager.shared.storageModule?
-            .allocLocalFilePath(session.id, IMManager.shared.uId, fileName, "audio") else {
+        guard let filePath = IMCoreManager.shared.storageModule?
+            .allocLocalFilePath(session.id, IMCoreManager.shared.uId, fileName, "audio") else {
             return false
         }
         return OggOpusAudioRecorder.shared.startRecording(filePath) {
@@ -176,7 +176,7 @@ class IMSpeakView: UILabel {
                     sf.sendVoiceMsg(duration: duration, path: path)
                 } else {
                     // 取消，删除文件
-                    IMManager.shared.storageModule?.removeFile(path)
+                    IMCoreManager.shared.storageModule?.removeFile(path)
                 }
             } else {
                 // 录制中

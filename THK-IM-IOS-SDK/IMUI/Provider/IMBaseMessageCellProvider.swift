@@ -12,7 +12,7 @@ import CocoaLumberjack
 open class IMBaseMessageCellProvider {
     
     func getSelfId() -> Int64 {
-        return IMManager.shared.uId
+        return IMCoreManager.shared.uId
     }
     
     open func messageType() -> Int {
@@ -22,7 +22,7 @@ open class IMBaseMessageCellProvider {
     func viewType(_ msg: Message) -> Int {
         let msgType = self.messageType()
         let selfId = self.getSelfId()
-        switch msg.fUId {
+        switch msg.fromUId {
         case 0: // 中间消息
             return 3 * msgType
         case selfId: // 自己消息

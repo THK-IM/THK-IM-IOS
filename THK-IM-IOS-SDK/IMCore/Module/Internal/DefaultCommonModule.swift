@@ -41,7 +41,7 @@ open class DefaultCommonModule : CommonModule {
     
     func onSignalReceived(_ subType: Int, _ body: String) {
         if subType == CommonSubType.PONG.rawValue {
-            IMManager.shared.getMessageModule().ackMessages()
+            IMCoreManager.shared.getMessageModule().ackMessagesToServer()
         } else if subType == CommonSubType.ServerTime.rawValue {
             let time = Int64(body)
             self.setSeverTime(time)

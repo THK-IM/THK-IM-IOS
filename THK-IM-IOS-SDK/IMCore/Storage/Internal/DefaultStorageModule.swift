@@ -9,10 +9,7 @@ import Foundation
 import CocoaLumberjack
 
 class DefaultStorageModule : StorageModule {
-    
-    
     private let rootPath: String
-    
     init(_ uId: Int64) {
         rootPath = NSHomeDirectory() + "/Documents/im/\(uId)"
         DDLogDebug("documentPath: \(rootPath)")
@@ -146,7 +143,7 @@ class DefaultStorageModule : StorageModule {
     }
     
     func allocServerFilePath(_ sId: Int64, _ uId: Int64, _ fileName: String) -> String {
-        return "im/session_\(sId)/\(uId)/\(IMManager.shared.severTime)_\(fileName)"
+        return "im/session_\(sId)/\(uId)/\(IMCoreManager.shared.severTime)_\(fileName)"
     }
     
     func allocLocalFilePath(_ sId: Int64, _ uId: Int64, _ fileName: String, _ format: String) -> String {

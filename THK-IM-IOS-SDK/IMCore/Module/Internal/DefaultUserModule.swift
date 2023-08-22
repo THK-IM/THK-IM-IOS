@@ -50,7 +50,7 @@ open class DefaultUserModule : UserModule {
                 } else {
                     observer.onNext((self?.systemBubbleImage)!)
                 }
-            } else if id == IMManager.shared.uId {
+            } else if id == IMCoreManager.shared.uId {
                 if self?.selfBubbleImage == nil {
                     observer.onError(CocoaError.error(CocoaError.featureUnsupported))
                 } else {
