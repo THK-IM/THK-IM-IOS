@@ -39,7 +39,7 @@ class BaseMsgProcessor {
             } else {
                 // 数据库存在，只更新消息状态
                 msg.sendStatus = MsgSendStatus.Success.rawValue
-                try updateMsgSendStatus(msg)
+                try updateDb(msg)
             }
             IMCoreManager.shared.getMessageModule().ackMessageToCache(msg.sessionId, msg.msgId)
         } catch let error {
@@ -89,7 +89,7 @@ class BaseMsgProcessor {
         .compose(DefaultRxTransformer.io2Io())
         .subscribe(onNext: { bean in
             do {
-                try self.updateMsgSendStatus(msg)
+                try self.updateDb(msg)
             } catch let error {
                 DDLogError(error)
             }
@@ -97,7 +97,7 @@ class BaseMsgProcessor {
             DDLogError(error)
             msg.sendStatus = MsgSendStatus.Success.rawValue
             do {
-                try self.updateMsgSendStatus(msg)
+                try self.updateDb(msg)
             } catch let error {
                 DDLogError(error)
             }
@@ -110,7 +110,7 @@ class BaseMsgProcessor {
             .flatMap({ (message) -> Observable<Message> in
                 message.sendStatus = MsgSendStatus.Sending.rawValue
                 do {
-                    try self.updateMsgSendStatus(message)
+                    try self.updateDb(message)
                 } catch let error {
                     return Observable.error(error)
                 }
@@ -127,7 +127,7 @@ class BaseMsgProcessor {
             .compose(DefaultRxTransformer.io2Io())
             .subscribe(onNext: { msg in
                 do {
-                    try self.updateMsgSendStatus(msg)
+                    try self.updateDb(msg)
                 } catch let error {
                     DDLogError(error)
                 }
@@ -135,7 +135,7 @@ class BaseMsgProcessor {
                 DDLogError(error)
                 msg.sendStatus = MsgSendStatus.Failed.rawValue
                 do {
-                    try self.updateMsgSendStatus(msg)
+                    try self.updateDb(msg)
                 } catch let error {
                     DDLogError(error)
                 }
@@ -153,18 +153,9 @@ class BaseMsgProcessor {
         IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
     }
     
-    open func updateMsgContent(_ msg: Message, _ sendNotify: Bool = false) throws {
-        let msgDao = IMCoreManager.shared.database.messageDao
-        try msgDao.updateMessageContent(msg.id, msg.sessionId, msg.fromUId, msg.content)
-        if (sendNotify == true) {
-            SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
-        }
-    }
-    
-    open func updateMsgSendStatus(_ msg: Message) throws {
-        let msgDao = IMCoreManager.shared.database.messageDao
-        try msgDao.updateSendStatus(msg.sessionId, msg.id, msg.fromUId, msg.sendStatus)
-        SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
+    open func updateDb(_ msg: Message) throws {
+        try IMCoreManager.shared.database.messageDao.updateMessages(msg)
+        SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
         IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
     }
     

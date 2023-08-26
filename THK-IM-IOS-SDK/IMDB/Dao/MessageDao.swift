@@ -103,4 +103,3 @@ protocol MessageDao {
     func queryMessageBySidAndAfterCTime(_ sessionId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>?
     
 }
-

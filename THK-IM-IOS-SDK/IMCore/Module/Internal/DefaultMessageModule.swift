@@ -99,6 +99,9 @@ open class DefaultMessageModule : MessageModule {
             } else {
                 var members = Set<Int64>()
                 members.insert(IMCoreManager.shared.uId)
+                if sessionType == SessionType.Single.rawValue {
+                    members.insert(entityId)
+                }
                 return IMCoreManager.shared.api.createSession(sessionType, entityId, members)
             }
         })
@@ -257,7 +260,7 @@ open class DefaultMessageModule : MessageModule {
         ackLock.unlock()
     }
     
-    func deleteServerMessages(_ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<ErrorBean> {
+    private func deleteServerMessages(_ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<ErrorBean> {
         return messageApi.rx
             .request(.deleteMsgs(DeleteMsgBean(sessionId: sessionId, uId: IMCoreManager.shared.uId, msgIds: msgIds)))
             .asObservable()
@@ -281,7 +284,9 @@ open class DefaultMessageModule : MessageModule {
         if (deleteServer) {
             var ids = Set<Int64>()
             for message in messages {
-                ids.insert(message.msgId)
+                if message.msgId > 0 { // msgId 大于0 才是正确的服务端消息id
+                    ids.insert(message.msgId)
+                }
             }
             return self.deleteServerMessages(sessionId, ids).flatMap({
                 (value) -> Observable<Bool> in

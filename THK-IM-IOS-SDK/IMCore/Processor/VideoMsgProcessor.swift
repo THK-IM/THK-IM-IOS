@@ -126,7 +126,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                         videoBody.thumbnailUrl = url
                         let d = try JSONEncoder().encode(videoBody)
                         entity.content = String(data: d, encoding: .utf8)!
-                        try self?.updateMsgContent(entity, false)
+                        try self?.updateDb(entity)
                         observer.onNext(entity)
                     } catch {
                         DDLogError(error)
@@ -165,7 +165,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                 videoBody.path = dePath
                 let d = try JSONEncoder().encode(videoBody)
                 entity.content = String(data: d, encoding: .utf8)!
-                try updateMsgContent(entity, false)
+                try self.updateDb(entity)
                 // 重新设置path/fileName/ext
                 path = storageModule.sandboxFilePath(videoBody.path!)
                 (_, fileName) = storageModule.getPathsFromFullPath(path)
@@ -187,7 +187,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                         videoBody.url = url
                         let d = try JSONEncoder().encode(videoBody)
                         entity.content = String(data: d, encoding: .utf8)!
-                        try self?.updateMsgContent(entity, false)
+                        try self?.updateDb(entity)
                         observer.onNext(entity)
                     } catch {
                         DDLogError(error)

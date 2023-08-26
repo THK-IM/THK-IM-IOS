@@ -63,7 +63,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                 imageBody.shrinkPath = thumbPath
                 let d = try JSONEncoder().encode(imageBody)
                 entity.content = String(data: d, encoding: .utf8)!
-                try updateMsgContent(entity, true)
+                try updateDb(entity)
             }
             
             let (_, thumbName) = storageModule.getPathsFromFullPath(imageBody.shrinkPath!)
@@ -86,7 +86,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                                 imageBody.shrinkUrl = url
                                 let d = try JSONEncoder().encode(imageBody)
                                 entity.content = String(data: d, encoding: .utf8)!
-                                try self?.updateMsgContent(entity, false)
+                                try self?.updateDb(entity)
                                 observer.onNext(entity)
                             } catch {
                                 DDLogError(error)
@@ -133,7 +133,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                 imageBody.path = dePath
                 let d = try JSONEncoder().encode(imageBody)
                 entity.content = String(data: d, encoding: .utf8)!
-                try updateMsgContent(entity, false)
+                try self.updateDb(entity)
             }
             let path = IMCoreManager.shared.storageModule?.sandboxFilePath(imageBody.path!)
             let uploadKey = storageModule.allocServerFilePath(entity.sessionId, entity.fromUId, name)
@@ -153,7 +153,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                                 imageBody.url = url
                                 let d = try JSONEncoder().encode(imageBody)
                                 entity.content = String(data: d, encoding: .utf8)!
-                                try self?.updateMsgContent(entity, false)
+                                try self?.updateDb(entity)
                                 observer.onNext(entity)
                             } catch {
                                 DDLogError(error)

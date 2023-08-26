@@ -45,7 +45,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
                 audioBody.path = dePath
                 let d = try JSONEncoder().encode(audioBody)
                 entity.content = String(data: d, encoding: .utf8)!
-                try updateMsgContent(entity, false)
+                try self.updateDb(entity)
             }
             let path = IMCoreManager.shared.storageModule?.sandboxFilePath(audioBody.path!)
             let uploadKey = storageModule.allocServerFilePath(entity.sessionId, entity.fromUId, name)
@@ -65,7 +65,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
                                 audioBody.url = url
                                 let d = try JSONEncoder().encode(audioBody)
                                 entity.content = String(data: d, encoding: .utf8)!
-                                try self?.updateMsgContent(entity, false)
+                                try self?.updateDb(entity)
                                 observer.onNext(entity)
                             } catch {
                                 DDLogError(error)
