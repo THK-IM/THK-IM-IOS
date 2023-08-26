@@ -171,6 +171,7 @@
 		A0EA42F52A94B49100F64A90 /* GroupModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42F32A94B49100F64A90 /* GroupModule.swift */; };
 		A0EA42F82A94CC5300F64A90 /* IMApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42F72A94CC5300F64A90 /* IMApi.swift */; };
 		A0EA42FB2A94CCE200F64A90 /* DefaultIMApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42FA2A94CCE200F64A90 /* DefaultIMApi.swift */; };
+		A0EA42FD2A99A60200F64A90 /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42FC2A99A60200F64A90 /* ImageCacheManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -342,6 +343,7 @@
 		A0EA42F32A94B49100F64A90 /* GroupModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupModule.swift; sourceTree = "<group>"; };
 		A0EA42F72A94CC5300F64A90 /* IMApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMApi.swift; sourceTree = "<group>"; };
 		A0EA42FA2A94CCE200F64A90 /* DefaultIMApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultIMApi.swift; sourceTree = "<group>"; };
+		A0EA42FC2A99A60200F64A90 /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -402,6 +404,7 @@
 			children = (
 				A0D68AE02A888678004D11A5 /* UIImageView+Cache.swift */,
 				A0D68B622A888679004D11A5 /* ImageCompress.swift */,
+				A0EA42FC2A99A60200F64A90 /* ImageCacheManager.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -472,7 +475,6 @@
 			children = (
 				A045CF8C2A92566000654957 /* IMBase */,
 				A045CF8B2A92561900654957 /* IMMedia */,
-				A0D68AB32A888678004D11A5 /* IMAPI */,
 				A0D68B372A888679004D11A5 /* IMCore */,
 				A0D68ACF2A888678004D11A5 /* IMDB */,
 				A0D68AC02A888678004D11A5 /* IMLive */,
@@ -500,13 +502,6 @@
 				A0D68AB12A888678004D11A5 /* OGGEncoder.swift */,
 			);
 			path = OpusCodec;
-			sourceTree = "<group>";
-		};
-		A0D68AB32A888678004D11A5 /* IMAPI */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = IMAPI;
 			sourceTree = "<group>";
 		};
 		A0D68AB42A888678004D11A5 /* Bean */ = {
@@ -1159,6 +1154,7 @@
 				A0D68C072A888679004D11A5 /* SignalModule.swift in Sources */,
 				A0D68BF02A888679004D11A5 /* VideoMsgBody.swift in Sources */,
 				A0D68BBC2A888679004D11A5 /* IMMoreCell.swift in Sources */,
+				A0EA42FD2A99A60200F64A90 /* ImageCacheManager.swift in Sources */,
 				A0D68BF92A888679004D11A5 /* FileLoaderListener.swift in Sources */,
 				A0D68BEA2A888679004D11A5 /* VideoMsgProcessor.swift in Sources */,
 				A0C431F52A909CCE00A84D4A /* PublishBean.swift in Sources */,

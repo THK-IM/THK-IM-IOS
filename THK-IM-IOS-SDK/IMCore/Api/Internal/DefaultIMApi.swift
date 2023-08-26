@@ -2,7 +2,7 @@
 //  DefaultIMApi.swift
 //  THK-IM-IOS
 //
-//  Created by 周维 on 2023/8/22.
+//  Created by vizoss on 2023/8/22.
 //
 
 import Foundation

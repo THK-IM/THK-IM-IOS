@@ -8,7 +8,6 @@
 import Foundation
 import CocoaLumberjack
 import RxSwift
-import Kingfisher
 import SwiftEventBus
 
 class IMCoreManager: SignalListener {
@@ -93,12 +92,7 @@ class IMCoreManager: SignalListener {
         self.getMessageModule().registerMsgProcessor(AudioMsgProcessor())
         self.getMessageModule().registerMsgProcessor(VideoMsgProcessor())
         
-        // Limit memory cache size to 300 MB.
-        ImageCache.default.memoryStorage.config.totalCostLimit = 20 * 1024 * 1024
-        
-        // Limit memory cache to hold 150 images at most.
-        ImageCache.default.memoryStorage.config.countLimit = 10
-        storageModule = DefaultStorageModule(uId)
+        self.storageModule = DefaultStorageModule(uId)
     }
     
     func connect() {

@@ -191,6 +191,10 @@ class Room: NSObject {
         }
     }
     
+    func switchCamera() {
+        localParticipant?.switchCamera()
+    }
+    
     func destroy() {
         self.observers.removeAll()
         self.localParticipant?.onDisconnected()

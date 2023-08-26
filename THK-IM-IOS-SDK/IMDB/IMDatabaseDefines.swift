@@ -61,7 +61,8 @@ public enum SexType: Int {
     case Unknown = 0,
          Man = 1,
          Women = 2,
-         Machine = 3
+         Machine = 3,
+         Ai = 4
 }
 
 /**

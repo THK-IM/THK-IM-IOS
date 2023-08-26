@@ -16,8 +16,8 @@ class LocalParticipant: BaseParticipant {
     let role: Role
     var innerDataChannel: RTCDataChannel?
     private var pushStreamKey: String? = nil
-    
-    private var cameraCapture: RTCCameraVideoCapturer? = nil
+    private var videoCapturer: RTCCameraVideoCapturer?
+    private var currentDevice: AVCaptureDevice?
     
     init(uId: String, roomId: String, role: Role, audioEnable: Bool = true, videoEnable: Bool = true) {
         self.audioEnable = audioEnable
@@ -53,21 +53,28 @@ class LocalParticipant: BaseParticipant {
         }
         
         if self.videoEnable && role == Role.Broadcaster {
-            let cameraDevices = RTCCameraVideoCapturer.captureDevices()
-            var device = cameraDevices.first
-            for d in cameraDevices {
-                if d.position == .front {
-                    device = d
-                    break
-                }
-            }
-            if device == nil {
+            currentDevice = self.getFrontCameraDevice()
+            if currentDevice == nil {
                 return
             }
+            
             let videoSource = LiveManager.shared.factory.videoSource()
-            let videoCapturer = RTCCameraVideoCapturer()
-            videoCapturer.delegate = videoSource
-            let format = RTCCameraVideoCapturer.supportedFormats(for: device!).last
+            self.videoCapturer = RTCCameraVideoCapturer()
+            videoCapturer?.delegate = videoSource
+            
+            var format = RTCCameraVideoCapturer.supportedFormats(for: currentDevice!).first
+//            let formats = RTCCameraVideoCapturer.supportedFormats(for: currentDevice!)
+//            for f in formats {
+//                if #available(iOS 16.0, *) {
+//                    let p = f.supportedMaxPhotoDimensions.first
+//                    if p?.width == 480 && p?.height == 360 {
+//                        format = f
+//                    }
+//                    DDLogInfo("LocalParticipant, device format \(f.minISO), \(f.maxISO), \(f.supportedMaxPhotoDimensions)")
+//                } else {
+//                    DDLogInfo("LocalParticipant, device format \(f.minISO), \(f.maxISO)")
+//                }
+//            }
             let fps = 10
             let videoTrack = LiveManager.shared.factory.videoTrack(with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)")
             
@@ -76,8 +83,7 @@ class LocalParticipant: BaseParticipant {
             p.addTransceiver(with: videoTrack, init: transceiver)
             self.addVideoTrack(track: videoTrack)
             
-            videoCapturer.startCapture(with: device!, format: format!, fps: Int(fps))
-            self.cameraCapture = videoCapturer
+            videoCapturer?.startCapture(with: currentDevice!, format: format!, fps: Int(fps))
             addVideoTrack(track: videoTrack)
             
             let dcConfig = RTCDataChannelConfiguration()
@@ -136,6 +142,47 @@ class LocalParticipant: BaseParticipant {
         return channel.sendData(buffer)
     }
     
+    private func getFrontCameraDevice() -> AVCaptureDevice? {
+        return self.getCameraDevice(position: .front)
+    }
+    
+    private func getBackCameraDevice() -> AVCaptureDevice? {
+        return self.getCameraDevice(position: .back)
+    }
+    
+    private func getCameraDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+        let discovery = AVCaptureDevice.DiscoverySession.init(
+            deviceTypes: [.builtInWideAngleCamera],
+            mediaType: .video,
+            position: position
+        )
+        for device in discovery.devices {
+            if device.position == position {
+                return device
+            }
+        }
+        return nil
+    }
+    
+    func switchCamera() {
+        guard let currentDevice = self.currentDevice else {
+            return
+        }
+        if currentDevice.position == .front {
+            self.currentDevice = self.getBackCameraDevice()
+        } else {
+            self.currentDevice = self.getFrontCameraDevice()
+        }
+        if self.currentDevice == nil {
+            return
+        }
+        let format = RTCCameraVideoCapturer.supportedFormats(for: self.currentDevice!).first
+        if format == nil {
+            return
+        }
+        self.videoCapturer?.startCapture(with: self.currentDevice!, format: format!, fps: 10)
+    }
+    
     override func onDisconnected() {
         self.innerDataChannel?.delegate = nil
         self.innerDataChannel?.close()
@@ -143,7 +190,8 @@ class LocalParticipant: BaseParticipant {
     }
     
     override func leave() {
-        self.cameraCapture?.stopCapture()
+        self.videoCapturer?.stopCapture()
+        self.videoCapturer = nil
         super.leave()
     }
     
