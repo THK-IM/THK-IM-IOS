@@ -12,91 +12,140 @@ import SwiftEventBus
 
 class AudioMsgProcessor : BaseMsgProcessor {
     
-    private let format = "audio"
-    
     override func messageType() -> Int {
         return MsgType.Audio.rawValue
     }
     
-    override func uploadObservable(_ entity: Message) -> Observable<Message>? {
+    override func getSessionDesc(msg: Message) -> String {
+        return "[Audio]"
+    }
+    
+    override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
+        do {
+            guard let storageModule = IMCoreManager.shared.storageModule else {
+                return Observable.error(CocoaError.init(.executableLoad))
+            }
+            var audioData = try JSONDecoder().decode(
+                IMAudioData.self,
+                from: message.data.data(using: .utf8) ?? Data()
+            )
+            if audioData.path == nil || audioData.duration == nil  {
+                return Observable.error(CocoaError.init(.fileNoSuchFile))
+            }
+            var entity = message
+            // 1 检查文件所在目录，如果非IM目录，拷贝到IM目录下
+            try self.checkDir(storageModule, &audioData, &entity)
+            
+            return Observable.just(message)
+        } catch {
+            DDLogInfo(error)
+            return Observable.error(error)
+        }
+    }
+    
+    private func checkDir(_ storageModule: StorageModule, _ imageData: inout IMAudioData, _ entity: inout Message) throws {
+        let isAssignedPath = storageModule.isAssignedPath(
+            imageData.path!,
+            IMFileFormat.Image.rawValue,
+            entity.sessionId,
+            entity.fromUId
+        )
+        let (_, name) = storageModule.getPathsFromFullPath(imageData.path!)
+        if !isAssignedPath {
+            let dePath = storageModule.allocSessionFilePath(
+                entity.sessionId,
+                IMCoreManager.shared.uId,
+                name,
+                IMFileFormat.Audio.rawValue
+            )
+            try storageModule.copyFile(imageData.path!, dePath)
+            imageData.path = dePath
+            let d = try JSONEncoder().encode(imageData)
+            entity.data = String(data: d, encoding: .utf8)!
+        }
+    }
+    
+    override func uploadObservable(_ entity: Message) -> Observable<Message> {
         return self.uploadAudio(entity)
     }
     
-    open func uploadAudio(_ entity: Message) -> Observable<Message>? {
-        guard let storageModule = IMCoreManager.shared.storageModule else {
-            return Observable.error(CocoaError.error(CocoaError.executableLoad))
-        }
+    func uploadAudio(_ entity: Message) -> Observable<Message> {
         do {
             let audioBody = try JSONDecoder().decode(
-                AudioMsgBody.self,
-                from: entity.content.data(using: .utf8) ?? Data())
-            if audioBody.url != nil {
+                IMAudioMsgBody.self,
+                from: entity.content.data(using: .utf8) ?? Data()
+            )
+            if audioBody.url == nil {
                 return Observable.just(entity)
             }
-            guard var fullPath = audioBody.path else {
-                return Observable.error(CocoaError.error(CocoaError.fileNoSuchFile))
+            guard let fileLoadModule = IMCoreManager.shared.fileLoadModule else {
+                return Observable.error(CocoaError.init(.executableLoad))
             }
-            fullPath = (IMCoreManager.shared.storageModule?.sandboxFilePath(fullPath))!
-            let (_, name) = storageModule.getPathsFromFullPath(fullPath)
-            let isAssignedPath = storageModule.isAssignedPath(fullPath, name, format, entity.sessionId, entity.fromUId)
-            if (!isAssignedPath) {
-                let dePath = storageModule.allocLocalFilePath(entity.sessionId, IMCoreManager.shared.uId, name, format)
-                try storageModule.copyFile(fullPath, dePath)
-                audioBody.path = dePath
-                let d = try JSONEncoder().encode(audioBody)
-                entity.content = String(data: d, encoding: .utf8)!
-                try self.updateDb(entity)
+            guard let storageModule = IMCoreManager.shared.storageModule else {
+                return Observable.error(CocoaError.init(.executableLoad))
             }
-            let path = IMCoreManager.shared.storageModule?.sandboxFilePath(audioBody.path!)
-            let uploadKey = storageModule.allocServerFilePath(entity.sessionId, entity.fromUId, name)
+            let audioData = try JSONDecoder().decode(
+                IMAudioData.self,
+                from: entity.data.data(using: .utf8) ?? Data()
+            )
+            if audioData.path == nil || audioData.duration == nil  {
+                return Observable.error(CocoaError.init(.fileNoSuchFile))
+            }
+            let (_, name) = storageModule.getPathsFromFullPath(audioData.path!)
+            
+            let uploadKey = fileLoadModule.getUploadKey(
+                entity.sessionId,
+                entity.fromUId,
+                name,
+                entity.id
+            )
+            
             return Observable.create({observer -> Disposable in
-                _ = IMCoreManager.shared.fileLoadModule?.upload(
-                    key: uploadKey,
-                    path: path!,
-                    loadListener: FileLoaderListener({ [weak self] progress, state, url, path in
+                let loaderListener = FileLoaderListener(
+                    { progress, state, url, path in
                         switch(state) {
-                        case FileLoaderState.Failed.rawValue:
-                            observer.onError(Exception.IMError("\(path) upload \(url) error"))
-                            observer.onCompleted()
+                        case
+                            FileLoaderState.Wait.rawValue,
+                            FileLoaderState.Init.rawValue,
+                            FileLoaderState.Ing.rawValue:
+                            let progress = IMUploadProgress(uploadKey, state, progress)
+                            SwiftEventBus.post(IMEvent.MsgUploadProgressUpdate.rawValue, sender: progress)
                             break
-                        case FileLoaderState.Success.rawValue:
-                            // url 放入本地数据库
+                        case
+                            FileLoaderState.Success.rawValue:
                             do {
                                 audioBody.url = url
-                                let d = try JSONEncoder().encode(audioBody)
-                                entity.content = String(data: d, encoding: .utf8)!
-                                try self?.updateDb(entity)
+                                audioBody.duration = audioData.duration
+                                let content = try JSONEncoder().encode(audioBody)
+                                entity.content = String(data: content, encoding: .utf8)!
+                                entity.sendStatus = MsgSendStatus.Sending.rawValue
                                 observer.onNext(entity)
                             } catch {
                                 DDLogError(error)
                                 observer.onError(error)
                             }
-                            observer.onCompleted()
                             break
                         default:
-                            do {
-                                let extData = try JSONEncoder().encode(ExtData(state, progress))
-                                entity.extData = String(data: extData, encoding: .utf8)
-                                SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: entity)
-                            } catch {
-                                DDLogError(error)
-                            }
+                            observer.onError(CocoaError.init(.coderInvalidValue))
+                            observer.onCompleted()
                             break
                         }
-                    }, {
+                    },
+                    {
                         return false
-                    })
+                    }
+                )
+                _ = fileLoadModule.upload(
+                    key: uploadKey,
+                    path: audioData.path!,
+                    loadListener: loaderListener
                 )
                 return Disposables.create()
             })
         } catch {
+            DDLogError(error)
             return Observable.error(error)
         }
-    }
-    
-    
-    override func getSessionDesc(msg: Message) -> String {
-        return "[Audio]"
     }
     
 }

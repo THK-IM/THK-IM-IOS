@@ -15,7 +15,7 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
     private var token = ""
     private  var signalListener : SignalListener?
     private let reachabilityManager = NetworkReachabilityManager.init()
-    private var status = ConnectStatus.Init
+    private var status = SignalStatus.Init
     private var webSocketUrl = ""
     private weak var app: UIApplication?
     private var webSocketClient: WebSocket?
@@ -43,13 +43,13 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
         DDLogDebug("DefaultSignalModule: connect start, status: \(self.status) ")
         lock.lock()
         defer {lock.unlock()}
-        if self.status == ConnectStatus.Connecting || self.status == ConnectStatus.Connected {
+        if self.status == SignalStatus.Connecting || self.status == SignalStatus.Connected {
             return
         }
         if self.webSocketClient != nil {
             self.webSocketClient?.forceDisconnect()
         }
-        self.onStateChange(ConnectStatus.Connecting)
+        self.onStateChange(SignalStatus.Connecting)
         var request = URLRequest(url: URL(string: self.webSocketUrl)!)
         request.timeoutInterval = 5.0
         request.setValue(self.token, forHTTPHeaderField: "uid")
@@ -66,8 +66,8 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
                 return
             }
             DDLogDebug("DefaultSignalModule startTimeoutTask status \(sf.status)")
-            if sf.status == ConnectStatus.Connecting  {
-                sf.onStateChange(ConnectStatus.DisConnected)
+            if sf.status == SignalStatus.Connecting  {
+                sf.onStateChange(SignalStatus.DisConnected)
             }
         }
     }
@@ -101,7 +101,7 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
             guard let sf = self else {
                 return
             }
-            if sf.status == ConnectStatus.Connected {
+            if sf.status == SignalStatus.Connected {
                 sf.sendMessage(Signal.heatBeat)
                 sf.startHeatBeatTask()
             }
@@ -120,7 +120,7 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
             do {
                 let signal = try JSONDecoder().decode(Signal.self, from: signalData!)
                 lock.lock()
-                self.signalListener?.onNewMessage(signal.type, signal.subType, signal.body)
+                self.signalListener?.onNewSignal(signal.type, signal.subType, signal.body)
                 lock.unlock()
             } catch {
                 DDLogError("DefaultSignalModule onTextMessage error: \(error)")
@@ -133,10 +133,10 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
         self.webSocketClient?.forceDisconnect()
         self.signalListener = nil
         lock.unlock()
-        self.onStateChange(ConnectStatus.DisConnected)
+        self.onStateChange(SignalStatus.DisConnected)
     }
     
-    func getConnectStatus() -> ConnectStatus {
+    func getSignalStatus() -> SignalStatus {
         lock.lock()
         defer { lock.unlock() }
         return self.status
@@ -152,7 +152,7 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
     func sendMessage(_ message: String) {
         lock.lock()
         defer { lock.unlock() }
-        if self.status == ConnectStatus.Connected {
+        if self.status == SignalStatus.Connected {
             self.webSocketClient?.write(string: message)
         }
     }
@@ -163,11 +163,11 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
         case .connected:
             self.retryTimes = 0
             DDLogDebug("DefaultSignalModule: connected")
-            onStateChange(ConnectStatus.Connected)
+            onStateChange(SignalStatus.Connected)
             break
         case .disconnected:
             DDLogDebug("DefaultSignalModule: disconnected")
-            onStateChange(ConnectStatus.DisConnected)
+            onStateChange(SignalStatus.DisConnected)
             break
         case .text(let message):
             onTextMessage(message)
@@ -184,42 +184,42 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
         case .viabilityChanged(let viability):
             DDLogDebug("DefaultSignalModule: viabilityChanged: \(viability)")
             if viability == false {
-                onStateChange(ConnectStatus.DisConnected)
+                onStateChange(SignalStatus.DisConnected)
             } else {
                 self.retryTimes = 0
             }
             break
         case .reconnectSuggested(_):
             DDLogDebug("DefaultSignalModule: reconnectSuggested")
-            onStateChange(ConnectStatus.DisConnected)
+            onStateChange(SignalStatus.DisConnected)
             break
         case .cancelled:
             DDLogDebug("DefaultSignalModule: cancelled")
-            onStateChange(ConnectStatus.DisConnected)
+            onStateChange(SignalStatus.DisConnected)
             break
         case .error(let error):
             DDLogDebug("DefaultSignalModule: error: \(error ?? CocoaError.error(.coderInvalidValue))")
-            onStateChange(ConnectStatus.DisConnected)
+            onStateChange(SignalStatus.DisConnected)
             break
         }
     }
     
-    private func onStateChange(_ status: ConnectStatus) {
+    private func onStateChange(_ status: SignalStatus) {
         if (self.status != status) {
             self.status = status
-            self.signalListener?.onStatusChange(status)
+            self.signalListener?.onSignalStatusChange(status)
         }
-        if (self.status == ConnectStatus.Connecting) {
+        if (self.status == SignalStatus.Connecting) {
             // 连接中，只跑超时任务
             cancelHeatBeatTask()
             cancelReconnectTask()
             startTimeoutTask()
-        } else if (self.status == ConnectStatus.DisConnected) {
+        } else if (self.status == SignalStatus.DisConnected) {
             // 连接断开，只跑重连任务
             cancelTimeoutTask()
             cancelHeatBeatTask()
             startReconnectTask()
-        } else if (self.status == ConnectStatus.Connected) {
+        } else if (self.status == SignalStatus.Connected) {
             // 连接成功，只跑心跳任务
             cancelTimeoutTask()
             cancelReconnectTask()

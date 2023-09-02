@@ -11,7 +11,6 @@ import RxSwift
 
 class DefaultIMApi: IMApi {
     
-    
     private let messageApi = MoyaProvider<IMMessageApi>(plugins: [NetworkLoggerPlugin()])
     private let sessionApi = MoyaProvider<IMSessionApi>(plugins: [NetworkLoggerPlugin()])
     
@@ -62,6 +61,7 @@ class DefaultIMApi: IMApi {
             .flatMap({ (bean) -> Observable<Message> in
                 msg.msgId = bean.msgId
                 msg.cTime = bean.cTime
+                msg.sendStatus = MsgSendStatus.Success.rawValue
                 return Observable.just(msg)
             })
     }

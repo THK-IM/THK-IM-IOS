@@ -104,7 +104,7 @@ class PreviewImageCellView : UICollectionViewCell {
         }, {
             return true
         })
-        let taskId = fileLoader.download(url: url, path: path, loadListener: listener)
+        let taskId = fileLoader.download(key: url, path: path, loadListener: listener)
         self.taskId = taskId
         self.listener = listener
     }

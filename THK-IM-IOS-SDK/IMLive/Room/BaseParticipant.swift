@@ -15,6 +15,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     
     let uId: String
     let roomId: String
+    let role: Role
     let liveApi = MoyaProvider<LiveApi>(plugins: [NetworkLoggerPlugin()])
     let disposeBag = DisposeBag()
     var peerConnection: RTCPeerConnection?
@@ -25,9 +26,10 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     private var audioMuted: Bool = false
     private var videoMuted: Bool = false
     
-    init(uId: String, roomId: String) {
+    init(uId: String, roomId: String, role: Role) {
         self.uId = uId
         self.roomId = roomId
+        self.role = role
     }
     
     open func initPeerConnection() {
@@ -176,10 +178,16 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             case NotifyType.NewStream.rawValue:
                 let newStream = try JSONDecoder().decode(
                     NewStreamNotify.self, from: notify.message.data(using: .utf8) ?? Data())
+                let role = newStream.role == Role.Broadcaster.rawValue ? Role.Broadcaster: Role.Audience
+                let audioEnable = room.mode == Mode.Audio || room.mode == Mode.Video
+                let videoEnable = room.mode == Mode.Video
                 let participant = RemoteParticipant(
                     uId: newStream.uid,
                     roomId: newStream.roomId,
-                    subStreamKey: newStream.streamKey
+                    role: role,
+                    subStreamKey: newStream.streamKey,
+                    audioEnable: audioEnable,
+                    videoEnable: videoEnable
                 )
                 DispatchQueue.main.async {
                     room.participantJoin(p: participant)

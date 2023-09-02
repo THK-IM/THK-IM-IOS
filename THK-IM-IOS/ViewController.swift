@@ -192,8 +192,6 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
             })
             .disposed(by: self.disposeBag)
         self.view.addSubview(textView6)
-        
-        
     }
 }
 

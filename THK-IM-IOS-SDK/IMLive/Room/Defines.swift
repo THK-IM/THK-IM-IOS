@@ -38,11 +38,13 @@ public class NewStreamNotify: Codable {
     let roomId: String
     let uid: String
     let streamKey: String
+    let role: Int
     
     enum CodingKeys: String, CodingKey {
         case roomId = "room_id"
         case uid = "uid"
         case streamKey = "stream_key"
+        case role = "role"
     }
 }
 

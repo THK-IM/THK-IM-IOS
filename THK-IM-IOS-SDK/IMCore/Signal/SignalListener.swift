@@ -9,8 +9,8 @@ import Foundation
 
 protocol SignalListener {
     
-    func onStatusChange(_ status: ConnectStatus)
+    func onSignalStatusChange(_ status: SignalStatus)
     
-    func onNewMessage(_ type: Int, _ subType: Int, _ body: String)
+    func onNewSignal(_ type: Int, _ subType: Int, _ body: String)
     
 }

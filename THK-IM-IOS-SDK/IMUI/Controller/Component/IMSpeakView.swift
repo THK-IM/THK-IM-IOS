@@ -160,7 +160,7 @@ class IMSpeakView: UILabel {
         }
         let fileName = "audio_\(String().random(8)).oga"
         guard let filePath = IMCoreManager.shared.storageModule?
-            .allocLocalFilePath(session.id, IMCoreManager.shared.uId, fileName, "audio") else {
+            .allocSessionFilePath(session.id, IMCoreManager.shared.uId, fileName, "audio") else {
             return false
         }
         return OggOpusAudioRecorder.shared.startRecording(filePath) {
@@ -190,7 +190,7 @@ class IMSpeakView: UILabel {
     
     func sendVoiceMsg(duration: Int, path: String) {
         do {
-            let audioBody = AudioMsgBody(duration: duration, path: path)
+            let audioBody = IMAudioMsgBody(duration: duration)
             let d = try JSONEncoder().encode(audioBody)
             guard let content = String(data: d, encoding: .utf8) else {
                 return

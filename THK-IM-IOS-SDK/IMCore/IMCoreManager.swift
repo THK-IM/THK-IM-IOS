@@ -10,7 +10,7 @@ import CocoaLumberjack
 import RxSwift
 import SwiftEventBus
 
-class IMCoreManager: SignalListener {
+public class IMCoreManager: SignalListener {
     
     static let shared = IMCoreManager()
     static let ApiEndpoint = "http://192.168.1.4:18000"
@@ -132,14 +132,14 @@ class IMCoreManager: SignalListener {
         return self.getModule(SignalType.Custom.rawValue)! as! CustomModule
     }
     
-    func onStatusChange(_ status: ConnectStatus) {
-        if (status == ConnectStatus.Connected) {
+    func onSignalStatusChange(_ status: SignalStatus) {
+        if (status == SignalStatus.Connected) {
             getMessageModule().syncOfflineMessages()
         }
         SwiftEventBus.post(IMEvent.OnlineStatusUpdate.rawValue, sender: status)
     }
     
-    func onNewMessage(_ type: Int, _ subType: Int, _ body: String) {
+    func onNewSignal(_ type: Int, _ subType: Int, _ body: String) {
         let module = getModule(type)
         module?.onSignalReceived(subType, body)
     }

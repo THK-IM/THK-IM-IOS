@@ -1,5 +1,5 @@
 //
-//  THK-IM-IOSageMsgProcessor.swift
+//  ImageMsgProcessor.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/21.
@@ -12,148 +12,148 @@ import SwiftEventBus
 
 class ImageMsgProcessor : BaseMsgProcessor {
     
-    private let format = "img"
-    
     override func messageType() -> Int {
         return MsgType.IMAGE.rawValue
     }
     
-    override func uploadObservable(_ entity: Message) -> Observable<Message>? {
-        guard let uploadShrinkImage = self.uploadShrinkImage(entity) else {
-            return uploadOriginImage(entity)
+    override func getSessionDesc(msg: Message) -> String {
+        return "[Image]"
+    }
+    
+    override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
+        do {
+            var entity = message
+            guard let storageModule = IMCoreManager.shared.storageModule else {
+                return Observable.error(CocoaError.init(.executableLoad))
+            }
+            var imageData = try JSONDecoder().decode(
+                IMImageData.self,
+                from: entity.data.data(using: .utf8) ?? Data()
+            )
+            if imageData.path == nil {
+                return Observable.error(CocoaError.init(.fileNoSuchFile))
+            }
+            // 1 检查文件所在目录，如果非IM目录，拷贝到IM目录下
+            try self.checkDir(storageModule, &imageData, &entity)
+            
+            // 2 如果缩略图不存在，压缩
+            if imageData.thumbnailPath == nil {
+                try self.compress(storageModule, &imageData, &entity)
+            }
+            return Observable.just(entity)
+        } catch {
+            DDLogInfo(error)
+            return Observable.error(error)
         }
-        return uploadShrinkImage.flatMap({ (msg) -> Observable<Message> in
-            return self.uploadOriginImage(msg)!
-        })
+    }
+    
+    private func checkDir(_ storageModule: StorageModule, _ imageData: inout IMImageData, _ entity: inout Message) throws {
+        let isAssignedPath = storageModule.isAssignedPath(
+            imageData.path!,
+            IMFileFormat.Image.rawValue,
+            entity.sessionId,
+            entity.fromUId
+        )
+        let (_, name) = storageModule.getPathsFromFullPath(imageData.path!)
+        if !isAssignedPath {
+            let dePath = storageModule.allocSessionFilePath(
+                entity.sessionId,
+                IMCoreManager.shared.uId,
+                name,
+                IMFileFormat.Image.rawValue
+            )
+            try storageModule.copyFile(imageData.path!, dePath)
+            imageData.path = dePath
+            let d = try JSONEncoder().encode(imageData)
+            entity.data = String(data: d, encoding: .utf8)!
+        }
     }
     
     open func getImageCompressorOptions() -> ImageCompressor.Options {
         return ImageCompressor.Options(maxWidth: 160, maxHeight: 400, maxSize: 100*1024, quality: 0.9)
     }
     
-    // 如需要上传缩略图，继承ImageMsgProcessor后，重写uploadShrinkImage方法即可
-    open func uploadShrinkImage(_ entity: Message) -> Observable<Message>? {
-        guard let storageModule = IMCoreManager.shared.storageModule else {
-            return Observable.error(CocoaError.error(CocoaError.executableLoad))
+    open func compress(_ storageModule: StorageModule, _ imageData: inout IMImageData, _ entity: inout Message) throws {
+        let path = storageModule.sandboxFilePath(imageData.path!)
+        let originImage = UIImage.init(contentsOfFile: path)
+        if (originImage == nil) {
+            throw CocoaError.init(CocoaError.fileReadNoSuchFile)
         }
-        do {
-            let imageBody = try JSONDecoder().decode(
-                ImageMsgBody.self,
-                from: entity.content.data(using: .utf8) ?? Data())
-            if imageBody.shrinkUrl != nil {
-                return Observable.just(entity)
-            }
-            if imageBody.shrinkPath == nil {
-                let path = IMCoreManager.shared.storageModule?.sandboxFilePath(imageBody.path!)
-                let originImage = UIImage.init(contentsOfFile: path!)
-                if (originImage == nil) {
-                    return Observable.error(CocoaError.init(CocoaError.fileReadNoSuchFile))
-                }
-                let (_, fileName) = storageModule.getPathsFromFullPath(imageBody.path!)
-                let (name, ext) = storageModule.getFileExt(fileName)
-                let thumbName = "\(name)_thumb.\(ext)"
-                let thumbPath = storageModule.allocLocalFilePath(entity.sessionId, IMCoreManager.shared.uId, thumbName, format)
-                guard let compressImage = ImageCompressor.compressImage(
-                    originImage!,
-                    getImageCompressorOptions()
-                ) else {
-                    return Observable.error(Exception.IMError("compress error"))
-                }
-                try storageModule.saveMediaDataInto(thumbPath, compressImage.toData())
-                imageBody.shrinkPath = thumbPath
-                let d = try JSONEncoder().encode(imageBody)
-                entity.content = String(data: d, encoding: .utf8)!
-                try updateDb(entity)
-            }
-            
-            let (_, thumbName) = storageModule.getPathsFromFullPath(imageBody.shrinkPath!)
-            let uploadKey = storageModule.allocServerFilePath(entity.sessionId, entity.fromUId, thumbName)
-            
-            let shrinkPath = IMCoreManager.shared.storageModule?.sandboxFilePath(imageBody.shrinkPath!)
-            return Observable.create({observer -> Disposable in
-                _ = IMCoreManager.shared.fileLoadModule?.upload(
-                    key: uploadKey,
-                    path: shrinkPath!,
-                    loadListener: FileLoaderListener({ [weak self] progress, state, url, path in
-                        switch(state) {
-                        case FileLoaderState.Failed.rawValue:
-                            observer.onError(Exception.IMError("\(path) upload \(url) error"))
-                            observer.onCompleted()
-                            break
-                        case FileLoaderState.Success.rawValue:
-                            // url 放入本地数据库
-                            do {
-                                imageBody.shrinkUrl = url
-                                let d = try JSONEncoder().encode(imageBody)
-                                entity.content = String(data: d, encoding: .utf8)!
-                                try self?.updateDb(entity)
-                                observer.onNext(entity)
-                            } catch {
-                                DDLogError(error)
-                                observer.onError(error)
-                            }
-                            observer.onCompleted()
-                            break
-                        default:
-                            break
-                        }
-                    }, {
-                        return false
-                    })
-                )
-                return Disposables.create()
-            })
-        } catch {
-            return Observable.error(error)
+        let (_, fileName) = storageModule.getPathsFromFullPath(path)
+        let (name, ext) = storageModule.getFileExt(fileName)
+        let thumbName = "\(name)_thumb.\(ext)"
+        let thumbPath = storageModule.allocSessionFilePath(
+            entity.sessionId,
+            entity.fromUId,
+            thumbName,
+            IMFileFormat.Image.rawValue
+        )
+        guard let compressImage = ImageCompressor.compressImage(
+            originImage!,
+            getImageCompressorOptions()
+        ) else {
+            throw CocoaError.init(.executableLoad)
         }
+        try storageModule.saveMediaDataInto(thumbPath, compressImage.toData())
+        imageData.thumbnailPath = thumbPath
+        imageData.width = Int(originImage!.size.width)
+        imageData.height = Int(originImage!.size.height)
+        
+        let d = try JSONEncoder().encode(imageData)
+        entity.data = String(data: d, encoding: .utf8)!
     }
     
-    func uploadOriginImage(_ entity: Message) -> Observable<Message>? {
+    
+    override func uploadObservable(_ entity: Message) -> Observable<Message>? {
         guard let storageModule = IMCoreManager.shared.storageModule else {
-            return Observable.error(CocoaError.error(CocoaError.executableLoad))
+            return Observable.error(CocoaError.init(.executableLoad))
         }
+        guard let fileLoadModule = IMCoreManager.shared.fileLoadModule else {
+            return Observable.error(CocoaError.init(.executableLoad))
+        }
+        return self.uploadThumbImage(fileLoadModule, storageModule, entity)
+            .flatMap({ (msg) -> Observable<Message> in
+                return self.uploadOriginImage(fileLoadModule, storageModule, msg)
+            })
+    }
+    
+    open func uploadThumbImage(_ fileLoadModule: FileLoaderModule, _ storageModule: StorageModule,
+                               _ entity: Message) -> Observable<Message> {
         do {
             let imageBody = try JSONDecoder().decode(
-                ImageMsgBody.self,
-                from: entity.content.data(using: .utf8) ?? Data())
-            
+                IMImageMsgBody.self,
+                from: entity.content.data(using: .utf8) ?? Data()
+            )
             if imageBody.url != nil {
                 return Observable.just(entity)
             }
-            
-            guard var fullPath = imageBody.path else {
-                return Observable.error(CocoaError.error(CocoaError.fileNoSuchFile))
+            let imageData = try JSONDecoder().decode(
+                IMImageData.self,
+                from: entity.data.data(using: .utf8) ?? Data()
+            )
+            guard var thumbPath = imageData.thumbnailPath else {
+                return Observable.error(CocoaError.init(.fileNoSuchFile))
             }
-            fullPath = (IMCoreManager.shared.storageModule?.sandboxFilePath(fullPath))!
-            let (_, name) = storageModule.getPathsFromFullPath(fullPath)
-            let isAssignedPath = storageModule.isAssignedPath(fullPath, name, format, entity.sessionId, entity.fromUId)
-            if (!isAssignedPath) {
-                let dePath = storageModule.allocLocalFilePath(entity.sessionId, IMCoreManager.shared.uId, name, format)
-                try storageModule.copyFile(fullPath, dePath)
-                imageBody.path = dePath
-                let d = try JSONEncoder().encode(imageBody)
-                entity.content = String(data: d, encoding: .utf8)!
-                try self.updateDb(entity)
-            }
-            let path = IMCoreManager.shared.storageModule?.sandboxFilePath(imageBody.path!)
-            let uploadKey = storageModule.allocServerFilePath(entity.sessionId, entity.fromUId, name)
-            return Observable.create({observer -> Disposable in
-                _ = IMCoreManager.shared.fileLoadModule?.upload(
-                    key: uploadKey,
-                    path: path!,
-                    loadListener: FileLoaderListener({ [weak self] progress, state, url, path in
+            thumbPath = storageModule.sandboxFilePath(thumbPath)
+            let (_, thumbName) = storageModule.getPathsFromFullPath(thumbPath)
+            let uploadKey = storageModule.allocSessionFilePath(
+                entity.sessionId, entity.fromUId, thumbName, IMFileFormat.Image.rawValue)
+            return Observable.create({ observer -> Disposable in
+                let loadListener = FileLoaderListener(
+                    {[weak self] progress, state, url, path in
                         switch(state) {
-                        case FileLoaderState.Failed.rawValue:
-                            observer.onError(Exception.IMError("\(path) upload \(url) error"))
-                            observer.onCompleted()
-                            break
+                        case
+                            FileLoaderState.Wait.rawValue,
+                            FileLoaderState.Init.rawValue,
+                            FileLoaderState.Ing.rawValue:
+                            let progress = IMUploadProgress(uploadKey, state, progress)
+                            SwiftEventBus.post(IMEvent.MsgUploadProgressUpdate.rawValue, sender: progress)
                         case FileLoaderState.Success.rawValue:
-                            // url 放入本地数据库
                             do {
-                                imageBody.url = url
+                                imageBody.thumbnailUrl = url
                                 let d = try JSONEncoder().encode(imageBody)
                                 entity.content = String(data: d, encoding: .utf8)!
-                                try self?.updateDb(entity)
+                                try self?.insertOrUpdateDb(entity, false)
                                 observer.onNext(entity)
                             } catch {
                                 DDLogError(error)
@@ -162,28 +162,94 @@ class ImageMsgProcessor : BaseMsgProcessor {
                             observer.onCompleted()
                             break
                         default:
-                            do {
-                                let extData = try JSONEncoder().encode(ExtData(state, progress))
-                                entity.extData = String(data: extData, encoding: .utf8)
-                                SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: entity)
-                            } catch {
-                                DDLogError(error)
-                            }
+                            observer.onError(CocoaError.init(.executableLoad))
+                            observer.onCompleted()
                             break
                         }
-                    }, {
+                    },
+                    {
                         return false
                     })
+                _ = fileLoadModule.upload(
+                    key: uploadKey,
+                    path: thumbPath,
+                    loadListener: loadListener
                 )
                 return Disposables.create()
             })
         } catch {
+            DDLogError(error)
             return Observable.error(error)
         }
     }
     
-    override func getSessionDesc(msg: Message) -> String {
-        return "[Image]"
+    open func uploadOriginImage(_ fileLoadModule: FileLoaderModule, _ storageModule: StorageModule,
+                               _ entity: Message) -> Observable<Message> {
+        do {
+            let imageBody = try JSONDecoder().decode(
+                IMImageMsgBody.self,
+                from: entity.content.data(using: .utf8) ?? Data()
+            )
+            if imageBody.url != nil {
+                return Observable.just(entity)
+            }
+            let imageData = try JSONDecoder().decode(
+                IMImageData.self,
+                from: entity.data.data(using: .utf8) ?? Data()
+            )
+            guard var originPath = imageData.path else {
+                return Observable.error(CocoaError.init(.fileNoSuchFile))
+            }
+            originPath = storageModule.sandboxFilePath(originPath)
+            let (_, originName) = storageModule.getPathsFromFullPath(originPath)
+            let uploadKey = storageModule.allocSessionFilePath(
+                entity.sessionId, entity.fromUId, originName, IMFileFormat.Image.rawValue)
+            return Observable.create({ observer -> Disposable in
+                let loadListener = FileLoaderListener(
+                    {progress, state, url, path in
+                        switch(state) {
+                        case
+                            FileLoaderState.Wait.rawValue,
+                            FileLoaderState.Init.rawValue,
+                            FileLoaderState.Ing.rawValue:
+                            let progress = IMUploadProgress(uploadKey, state, progress)
+                            SwiftEventBus.post(IMEvent.MsgUploadProgressUpdate.rawValue, sender: progress)
+                        case
+                            FileLoaderState.Success.rawValue:
+                            do {
+                                imageBody.url = url
+                                imageBody.width = imageData.width
+                                imageBody.height = imageData.height
+                                let d = try JSONEncoder().encode(imageBody)
+                                entity.content = String(data: d, encoding: .utf8)!
+                                observer.onNext(entity)
+                            } catch {
+                                DDLogError(error)
+                                observer.onError(error)
+                            }
+                            observer.onCompleted()
+                            break
+                        default:
+                            observer.onError(CocoaError.init(.executableLoad))
+                            observer.onCompleted()
+                            break
+                        }
+                    },
+                    {
+                        return false
+                    }
+                )
+                _ = fileLoadModule.upload(
+                    key: uploadKey,
+                    path: originPath,
+                    loadListener: loadListener
+                )
+                return Disposables.create()
+            })
+        } catch {
+            DDLogError(error)
+            return Observable.error(error)
+        }
     }
     
 }

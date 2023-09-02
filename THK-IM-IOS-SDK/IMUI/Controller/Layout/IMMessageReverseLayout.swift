@@ -175,7 +175,7 @@ class IMMessageReverseLayout: UIView, UITableViewDataSource, UITableViewDelegate
     private func newTimelineMessage(_ cTime: Int64) -> Message {
         let message = Message(
             id: 0, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0, type: 0, content: "", sendStatus: 0,
-            operateStatus: 0, referMsgId: nil, atUsers: nil, extData: nil, cTime: 0, mTime: 0
+            operateStatus: 0, referMsgId: nil, atUsers: nil, data: "", cTime: 0, mTime: 0
         )
         message.cTime = cTime
         message.type = 9999

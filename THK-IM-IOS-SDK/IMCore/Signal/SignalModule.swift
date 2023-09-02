@@ -17,7 +17,7 @@ protocol SignalModule : AnyObject {
     
     func disconnect(_ reason: String)
     
-    func getConnectStatus() -> ConnectStatus
+    func getSignalStatus() -> SignalStatus
     
     func setSignalListener(_ listener: SignalListener) 
 }

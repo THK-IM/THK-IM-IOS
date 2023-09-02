@@ -29,23 +29,23 @@ class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
     }
     
     override func cellHeight(_ message: Message, _ sessionType: Int) -> CGFloat {
-        do {
-            let videoBody = try JSONDecoder().decode(
-                VideoMsgBody.self,
-                from: message.content.data(using: .utf8) ?? Data())
-            var calHeight = 20
-            if (videoBody.width >= videoBody.height) {
-                var calWidth = min(160, videoBody.width)
-                calWidth = max(100, calWidth)
-                calHeight += max(100, calWidth * videoBody.height / videoBody.width)
-            } else if (videoBody.height > videoBody.width) {
-                var height = min(160, videoBody.height)
-                calHeight += max(100, height)
-            }
-            return CGFloat(calHeight) + self.cellHeightForSessionType(sessionType)
-        } catch {
-            DDLogError(error)
-        }
+//        do {
+//            let videoBody = try JSONDecoder().decode(
+//                VideoMsgBody.self,
+//                from: message.content.data(using: .utf8) ?? Data())
+//            var calHeight = 20
+//            if (videoBody.width >= videoBody.height) {
+//                var calWidth = min(160, videoBody.width)
+//                calWidth = max(100, calWidth)
+//                calHeight += max(100, calWidth * videoBody.height / videoBody.width)
+//            } else if (videoBody.height > videoBody.width) {
+//                var height = min(160, videoBody.height)
+//                calHeight += max(100, height)
+//            }
+//            return CGFloat(calHeight) + self.cellHeightForSessionType(sessionType)
+//        } catch {
+//            DDLogError(error)
+//        }
         return super.cellHeight(message, sessionType)
     }
     

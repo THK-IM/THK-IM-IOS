@@ -67,6 +67,11 @@ protocol MessageModule : BaseModule {
     func generateNewMsgId() -> Int64
     
     /**
+     * 发送消息
+     */
+    func sendMessage(_ body: Codable, _ sessionId: Int64, _ type: Int, _ atUser: String?, _ replyMsgId: Int64?) -> Bool
+    
+    /**
      * 消息发送到服务端
      */
     func sendMessageToServer(_ message: Message) -> Observable<Message>
@@ -107,5 +112,11 @@ protocol MessageModule : BaseModule {
      * 处理session
      */
     func processSessionByMessage(_ msg: Message)
+    
+    
+    /**
+     * 取消所有执行中的任务
+     */
+    func cancelAllTasks()
     
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08F4799AC88630CBD25DF832 /* Pods_THK_IM_IOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */; };
+		A02578BF2AA2F23100A66CEF /* IMCoreMsgDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578BE2AA2F23100A66CEF /* IMCoreMsgDefines.swift */; };
 		A0C431DD2A909C1700A84D4A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0C431DC2A909C1600A84D4A /* Images.xcassets */; };
 		A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* LiveManager.swift */; };
 		A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DF2A909C3100A84D4A /* LiveController.swift */; };
@@ -121,7 +122,6 @@
 		A0D68BDD2A888679004D11A5 /* Date+TimeStamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B3A2A888679004D11A5 /* Date+TimeStamp.swift */; };
 		A0D68BDE2A888679004D11A5 /* ObservableType+Compose.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B3B2A888679004D11A5 /* ObservableType+Compose.swift */; };
 		A0D68BE02A888679004D11A5 /* CommonModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B3E2A888679004D11A5 /* CommonModule.swift */; };
-		A0D68BE12A888679004D11A5 /* CommonSubType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B3F2A888679004D11A5 /* CommonSubType.swift */; };
 		A0D68BE22A888679004D11A5 /* UserModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B402A888679004D11A5 /* UserModule.swift */; };
 		A0D68BE32A888679004D11A5 /* DefaultMessageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B422A888679004D11A5 /* DefaultMessageModule.swift */; };
 		A0D68BE42A888679004D11A5 /* DefaultUserModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B432A888679004D11A5 /* DefaultUserModule.swift */; };
@@ -132,10 +132,6 @@
 		A0D68BEA2A888679004D11A5 /* VideoMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B4A2A888679004D11A5 /* VideoMsgProcessor.swift */; };
 		A0D68BEB2A888679004D11A5 /* AudioMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B4B2A888679004D11A5 /* AudioMsgProcessor.swift */; };
 		A0D68BEC2A888679004D11A5 /* ImageMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B4C2A888679004D11A5 /* ImageMsgProcessor.swift */; };
-		A0D68BED2A888679004D11A5 /* ExtData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B4E2A888679004D11A5 /* ExtData.swift */; };
-		A0D68BEE2A888679004D11A5 /* ImageMsgBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B4F2A888679004D11A5 /* ImageMsgBody.swift */; };
-		A0D68BEF2A888679004D11A5 /* AudioMsgBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B502A888679004D11A5 /* AudioMsgBody.swift */; };
-		A0D68BF02A888679004D11A5 /* VideoMsgBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B512A888679004D11A5 /* VideoMsgBody.swift */; };
 		A0D68BF12A888679004D11A5 /* BaseMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B522A888679004D11A5 /* BaseMsgProcessor.swift */; };
 		A0D68BF22A888679004D11A5 /* UnSupportMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B532A888679004D11A5 /* UnSupportMsgProcessor.swift */; };
 		A0D68BF32A888679004D11A5 /* TextMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B542A888679004D11A5 /* TextMsgProcessor.swift */; };
@@ -156,11 +152,9 @@
 		A0D68C032A888679004D11A5 /* DefaultStorageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B692A888679004D11A5 /* DefaultStorageModule.swift */; };
 		A0D68C042A888679004D11A5 /* StorageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B6A2A888679004D11A5 /* StorageModule.swift */; };
 		A0D68C052A888679004D11A5 /* DefaultSignalModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B6D2A888679004D11A5 /* DefaultSignalModule.swift */; };
-		A0D68C062A888679004D11A5 /* SignalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B6E2A888679004D11A5 /* SignalType.swift */; };
+		A0D68C062A888679004D11A5 /* SignalDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B6E2A888679004D11A5 /* SignalDefines.swift */; };
 		A0D68C072A888679004D11A5 /* SignalModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B6F2A888679004D11A5 /* SignalModule.swift */; };
-		A0D68C082A888679004D11A5 /* ConnectStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B702A888679004D11A5 /* ConnectStatus.swift */; };
 		A0D68C092A888679004D11A5 /* SignalListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B712A888679004D11A5 /* SignalListener.swift */; };
-		A0D68C0A2A888679004D11A5 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B722A888679004D11A5 /* Signal.swift */; };
 		A0EA42E62A94904400F64A90 /* IMDatabaseDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42E52A94904400F64A90 /* IMDatabaseDefines.swift */; };
 		A0EA42E92A94920300F64A90 /* DefaultMessageDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42E82A94920300F64A90 /* DefaultMessageDao.swift */; };
 		A0EA42EB2A94925600F64A90 /* DefaultUserDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42EA2A94925600F64A90 /* DefaultUserDao.swift */; };
@@ -178,6 +172,7 @@
 		00B256D621B64DD52DDF517D /* Pods-THK-IM-IOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.debug.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.debug.xcconfig"; sourceTree = "<group>"; };
 		12A71C20EF80882B33F43851 /* Pods-THK-IM-IOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.release.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.release.xcconfig"; sourceTree = "<group>"; };
 		34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_THK_IM_IOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A02578BE2AA2F23100A66CEF /* IMCoreMsgDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCoreMsgDefines.swift; sourceTree = "<group>"; };
 		A0C431DC2A909C1600A84D4A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A0C431DE2A909C3000A84D4A /* LiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveManager.swift; path = API/LiveManager.swift; sourceTree = "<group>"; };
 		A0C431DF2A909C3100A84D4A /* LiveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveController.swift; path = API/LiveController.swift; sourceTree = "<group>"; };
@@ -293,7 +288,6 @@
 		A0D68B3A2A888679004D11A5 /* Date+TimeStamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+TimeStamp.swift"; sourceTree = "<group>"; };
 		A0D68B3B2A888679004D11A5 /* ObservableType+Compose.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObservableType+Compose.swift"; sourceTree = "<group>"; };
 		A0D68B3E2A888679004D11A5 /* CommonModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonModule.swift; sourceTree = "<group>"; };
-		A0D68B3F2A888679004D11A5 /* CommonSubType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonSubType.swift; sourceTree = "<group>"; };
 		A0D68B402A888679004D11A5 /* UserModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModule.swift; sourceTree = "<group>"; };
 		A0D68B422A888679004D11A5 /* DefaultMessageModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultMessageModule.swift; sourceTree = "<group>"; };
 		A0D68B432A888679004D11A5 /* DefaultUserModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultUserModule.swift; sourceTree = "<group>"; };
@@ -304,10 +298,6 @@
 		A0D68B4A2A888679004D11A5 /* VideoMsgProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoMsgProcessor.swift; sourceTree = "<group>"; };
 		A0D68B4B2A888679004D11A5 /* AudioMsgProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioMsgProcessor.swift; sourceTree = "<group>"; };
 		A0D68B4C2A888679004D11A5 /* ImageMsgProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageMsgProcessor.swift; sourceTree = "<group>"; };
-		A0D68B4E2A888679004D11A5 /* ExtData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtData.swift; sourceTree = "<group>"; };
-		A0D68B4F2A888679004D11A5 /* ImageMsgBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageMsgBody.swift; sourceTree = "<group>"; };
-		A0D68B502A888679004D11A5 /* AudioMsgBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioMsgBody.swift; sourceTree = "<group>"; };
-		A0D68B512A888679004D11A5 /* VideoMsgBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoMsgBody.swift; sourceTree = "<group>"; };
 		A0D68B522A888679004D11A5 /* BaseMsgProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMsgProcessor.swift; sourceTree = "<group>"; };
 		A0D68B532A888679004D11A5 /* UnSupportMsgProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnSupportMsgProcessor.swift; sourceTree = "<group>"; };
 		A0D68B542A888679004D11A5 /* TextMsgProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextMsgProcessor.swift; sourceTree = "<group>"; };
@@ -328,11 +318,9 @@
 		A0D68B692A888679004D11A5 /* DefaultStorageModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultStorageModule.swift; sourceTree = "<group>"; };
 		A0D68B6A2A888679004D11A5 /* StorageModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageModule.swift; sourceTree = "<group>"; };
 		A0D68B6D2A888679004D11A5 /* DefaultSignalModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultSignalModule.swift; sourceTree = "<group>"; };
-		A0D68B6E2A888679004D11A5 /* SignalType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalType.swift; sourceTree = "<group>"; };
+		A0D68B6E2A888679004D11A5 /* SignalDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalDefines.swift; sourceTree = "<group>"; };
 		A0D68B6F2A888679004D11A5 /* SignalModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalModule.swift; sourceTree = "<group>"; };
-		A0D68B702A888679004D11A5 /* ConnectStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectStatus.swift; sourceTree = "<group>"; };
 		A0D68B712A888679004D11A5 /* SignalListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalListener.swift; sourceTree = "<group>"; };
-		A0D68B722A888679004D11A5 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		A0EA42E52A94904400F64A90 /* IMDatabaseDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMDatabaseDefines.swift; sourceTree = "<group>"; };
 		A0EA42E82A94920300F64A90 /* DefaultMessageDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMessageDao.swift; sourceTree = "<group>"; };
 		A0EA42EA2A94925600F64A90 /* DefaultUserDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultUserDao.swift; sourceTree = "<group>"; };
@@ -850,6 +838,7 @@
 				A0D68B6B2A888679004D11A5 /* Signal */,
 				A0EA42EE2A94B06900F64A90 /* IMCoreDefines.swift */,
 				A0D68B662A888679004D11A5 /* IMCoreManager.swift */,
+				A02578BE2AA2F23100A66CEF /* IMCoreMsgDefines.swift */,
 			);
 			path = IMCore;
 			sourceTree = "<group>";
@@ -868,7 +857,6 @@
 			children = (
 				A0D68B412A888679004D11A5 /* Internal */,
 				A0D68B3E2A888679004D11A5 /* CommonModule.swift */,
-				A0D68B3F2A888679004D11A5 /* CommonSubType.swift */,
 				A0D68B402A888679004D11A5 /* UserModule.swift */,
 				A0EA42F22A94B49100F64A90 /* ContactorModule.swift */,
 				A0EA42F32A94B49100F64A90 /* GroupModule.swift */,
@@ -892,7 +880,6 @@
 		A0D68B492A888679004D11A5 /* Processor */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B4D2A888679004D11A5 /* Body */,
 				A0D68B4A2A888679004D11A5 /* VideoMsgProcessor.swift */,
 				A0D68B4B2A888679004D11A5 /* AudioMsgProcessor.swift */,
 				A0D68B4C2A888679004D11A5 /* ImageMsgProcessor.swift */,
@@ -901,17 +888,6 @@
 				A0D68B542A888679004D11A5 /* TextMsgProcessor.swift */,
 			);
 			path = Processor;
-			sourceTree = "<group>";
-		};
-		A0D68B4D2A888679004D11A5 /* Body */ = {
-			isa = PBXGroup;
-			children = (
-				A0D68B4E2A888679004D11A5 /* ExtData.swift */,
-				A0D68B4F2A888679004D11A5 /* ImageMsgBody.swift */,
-				A0D68B502A888679004D11A5 /* AudioMsgBody.swift */,
-				A0D68B512A888679004D11A5 /* VideoMsgBody.swift */,
-			);
-			path = Body;
 			sourceTree = "<group>";
 		};
 		A0D68B552A888679004D11A5 /* Fileloader */ = {
@@ -957,11 +933,9 @@
 			isa = PBXGroup;
 			children = (
 				A0D68B6C2A888679004D11A5 /* Internal */,
-				A0D68B6E2A888679004D11A5 /* SignalType.swift */,
+				A0D68B6E2A888679004D11A5 /* SignalDefines.swift */,
 				A0D68B6F2A888679004D11A5 /* SignalModule.swift */,
-				A0D68B702A888679004D11A5 /* ConnectStatus.swift */,
 				A0D68B712A888679004D11A5 /* SignalListener.swift */,
-				A0D68B722A888679004D11A5 /* Signal.swift */,
 			);
 			path = Signal;
 			sourceTree = "<group>";
@@ -1152,7 +1126,6 @@
 				A0D68BB62A888679004D11A5 /* IMMessageReverseLayout.swift in Sources */,
 				A0EA42F12A94B3BE00F64A90 /* FileLoaderState.swift in Sources */,
 				A0D68C072A888679004D11A5 /* SignalModule.swift in Sources */,
-				A0D68BF02A888679004D11A5 /* VideoMsgBody.swift in Sources */,
 				A0D68BBC2A888679004D11A5 /* IMMoreCell.swift in Sources */,
 				A0EA42FD2A99A60200F64A90 /* ImageCacheManager.swift in Sources */,
 				A0D68BF92A888679004D11A5 /* FileLoaderListener.swift in Sources */,
@@ -1163,12 +1136,9 @@
 				A0D68BB32A888679004D11A5 /* IMBaseFunctionCellProvider.swift in Sources */,
 				A0D68BAD2A888679004D11A5 /* IMUnicodeEmojiCell.swift in Sources */,
 				A0D68B7B2A888679004D11A5 /* MessageBean.swift in Sources */,
-				A0D68BE12A888679004D11A5 /* CommonSubType.swift in Sources */,
 				A0D68B7D2A888679004D11A5 /* SessionBean.swift in Sources */,
 				A0D68B742A888679004D11A5 /* AudioUtils.swift in Sources */,
-				A0D68C0A2A888679004D11A5 /* Signal.swift in Sources */,
 				A0D68BA12A888679004D11A5 /* IMAudioMsgCellProvider.swift in Sources */,
-				A0D68C082A888679004D11A5 /* ConnectStatus.swift in Sources */,
 				A0D68BC02A888679004D11A5 /* IMMsgSender.swift in Sources */,
 				A0D68BDA2A888679004D11A5 /* IMZoomImageView.swift in Sources */,
 				A0EA42E62A94904400F64A90 /* IMDatabaseDefines.swift in Sources */,
@@ -1216,8 +1186,8 @@
 				A0D68C012A888679004D11A5 /* WeakReference.swift in Sources */,
 				A0C431F62A909CCE00A84D4A /* CreateRoomBean.swift in Sources */,
 				A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */,
+				A02578BF2AA2F23100A66CEF /* IMCoreMsgDefines.swift in Sources */,
 				A0D68BEC2A888679004D11A5 /* ImageMsgProcessor.swift in Sources */,
-				A0D68BEF2A888679004D11A5 /* AudioMsgBody.swift in Sources */,
 				A0EA42ED2A94928400F64A90 /* DefaultSessionDao.swift in Sources */,
 				A0D68B7F2A888679004D11A5 /* ListBean.swift in Sources */,
 				A0D68BF32A888679004D11A5 /* TextMsgProcessor.swift in Sources */,
@@ -1228,7 +1198,6 @@
 				A0D68BB12A888679004D11A5 /* IMBaseEmojiControllerProvider.swift in Sources */,
 				A0D68BAF2A888679004D11A5 /* IMCameraFunctionProvider.swift in Sources */,
 				A0D68C032A888679004D11A5 /* DefaultStorageModule.swift in Sources */,
-				A0D68BED2A888679004D11A5 /* ExtData.swift in Sources */,
 				A0D68B972A888679004D11A5 /* MessageDao.swift in Sources */,
 				A0D68BB02A888679004D11A5 /* IMPhotoFunctionProvider.swift in Sources */,
 				A0EA42F42A94B49100F64A90 /* ContactorModule.swift in Sources */,
@@ -1253,11 +1222,10 @@
 				A0D68BC32A888679004D11A5 /* CellPosition.swift in Sources */,
 				A0D68B822A888679004D11A5 /* IMMessageApi.swift in Sources */,
 				A0D68B932A888679004D11A5 /* User.swift in Sources */,
-				A0D68C062A888679004D11A5 /* SignalType.swift in Sources */,
+				A0D68C062A888679004D11A5 /* SignalDefines.swift in Sources */,
 				A0C431E82A909CB200A84D4A /* Defines.swift in Sources */,
 				A0C431FC2A909D2500A84D4A /* UIRtcMsgCell.swift in Sources */,
 				A0D68BE92A888679004D11A5 /* BaseModule.swift in Sources */,
-				A0D68BEE2A888679004D11A5 /* ImageMsgBody.swift in Sources */,
 				A0D68BE42A888679004D11A5 /* DefaultUserModule.swift in Sources */,
 				A0D68BBD2A888679004D11A5 /* IMEmojiView.swift in Sources */,
 				A0D68B9F2A888679004D11A5 /* IMTimeLineMsgCellProvider.swift in Sources */,

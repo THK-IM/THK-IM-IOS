@@ -10,12 +10,16 @@ import WebRTC
 
 class RemoteParticipant: BaseParticipant {
     
+    private let audioEnable: Bool
+    private let videoEnable: Bool
     private let subStreamKey: String
     private var streamKey: String? = nil
     
-    init(uId: String, roomId: String, subStreamKey: String) {
+    init(uId: String, roomId: String, role: Role, subStreamKey: String, audioEnable: Bool, videoEnable: Bool) {
         self.subStreamKey = subStreamKey
-        super.init(uId: uId, roomId: roomId)
+        self.audioEnable = audioEnable
+        self.videoEnable = videoEnable
+        super.init(uId: uId, roomId: roomId, role: role)
     }
     
     override func initPeerConnection() {
@@ -23,12 +27,16 @@ class RemoteParticipant: BaseParticipant {
         guard let p = self.peerConnection else {
             return
         }
-        let audioTransceiver = RTCRtpTransceiverInit()
-        audioTransceiver.direction = .recvOnly
-        p.addTransceiver(of: .audio, init: audioTransceiver)
-        let videoTransceiver = RTCRtpTransceiverInit()
-        videoTransceiver.direction = .recvOnly
-        p.addTransceiver(of: .video, init: videoTransceiver)
+        if self.audioEnable && role == Role.Broadcaster {
+            let audioTransceiver = RTCRtpTransceiverInit()
+            audioTransceiver.direction = .recvOnly
+            p.addTransceiver(of: .audio, init: audioTransceiver)
+        }
+        if self.videoEnable && role == Role.Broadcaster {
+            let videoTransceiver = RTCRtpTransceiverInit()
+            videoTransceiver.direction = .recvOnly
+            p.addTransceiver(of: .video, init: videoTransceiver)
+        }
         
         self.startPeerConnection()
     }

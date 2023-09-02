@@ -13,7 +13,6 @@ class LocalParticipant: BaseParticipant {
     
     private let audioEnable: Bool
     private let videoEnable: Bool
-    let role: Role
     var innerDataChannel: RTCDataChannel?
     private var pushStreamKey: String? = nil
     private var videoCapturer: RTCCameraVideoCapturer?
@@ -22,8 +21,7 @@ class LocalParticipant: BaseParticipant {
     init(uId: String, roomId: String, role: Role, audioEnable: Bool = true, videoEnable: Bool = true) {
         self.audioEnable = audioEnable
         self.videoEnable = videoEnable
-        self.role = role
-        super.init(uId: uId, roomId: roomId)
+        super.init(uId: uId, roomId: roomId, role: role)
     }
     
     
@@ -62,7 +60,7 @@ class LocalParticipant: BaseParticipant {
             self.videoCapturer = RTCCameraVideoCapturer()
             videoCapturer?.delegate = videoSource
             
-            var format = RTCCameraVideoCapturer.supportedFormats(for: currentDevice!).first
+            let format = RTCCameraVideoCapturer.supportedFormats(for: currentDevice!).first
 //            let formats = RTCCameraVideoCapturer.supportedFormats(for: currentDevice!)
 //            for f in formats {
 //                if #available(iOS 16.0, *) {
@@ -85,13 +83,13 @@ class LocalParticipant: BaseParticipant {
             
             videoCapturer?.startCapture(with: currentDevice!, format: format!, fps: Int(fps))
             addVideoTrack(track: videoTrack)
-            
-            let dcConfig = RTCDataChannelConfiguration()
-            dcConfig.isOrdered = true
-            dcConfig.maxRetransmits = 3
-            self.innerDataChannel = p.dataChannel(forLabel: "", configuration: dcConfig)
-            self.innerDataChannel?.delegate = self
         }
+        
+        let dcConfig = RTCDataChannelConfiguration()
+        dcConfig.isOrdered = true
+        dcConfig.maxRetransmits = 3
+        self.innerDataChannel = p.dataChannel(forLabel: "", configuration: dcConfig)
+        self.innerDataChannel?.delegate = self
         
         self.startPeerConnection()
     }

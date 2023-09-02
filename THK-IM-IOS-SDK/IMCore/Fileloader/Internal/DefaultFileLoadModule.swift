@@ -27,17 +27,21 @@ class DefaultFileLoadModule: FileLoaderModule {
         self.oSsClient = OSSClient(endpoint: oSsEndpoint, credentialProvider: credentialProvider)
     }
     
-    private func taskId(url: String, path: String, type: String) -> String {
-        return "\(type)/\(url)/\(path)"
+    func getTaskId(key: String, path: String, type: String) -> String {
+        return "\(type)/\(key)/\(path)"
     }
     
-    func download(url: String, path: String, loadListener: FileLoaderListener) -> String {
+    func getUploadKey(_ sId: Int64, _ uId: Int64, _ fileName: String, _ msgClientId: Int64) -> String {
+        return "im/session_\(sId)/\(uId)/\(msgClientId)_\(fileName)"
+    }
+    
+    func download(key: String, path: String, loadListener: FileLoaderListener) -> String {
         lock.lock()
         defer {lock.unlock()}
-        let taskId = self.taskId(url: url, path: path, type: "download")
+        let taskId = self.getTaskId(key: key, path: path, type: "download")
         var taskTuple = downloadTaskMap[taskId]
         if (taskTuple == nil) {
-            let dTask = DownloadTask(taskId: taskId, path: path, url: url, fileModule: self)
+            let dTask = DownloadTask(taskId: taskId, path: path, url: key, fileModule: self)
             dTask.start()
             downloadTaskMap[taskId] = (dTask, [loadListener])
         } else {
@@ -49,7 +53,7 @@ class DefaultFileLoadModule: FileLoaderModule {
     func upload(key: String, path: String, loadListener: FileLoaderListener) -> String {
         lock.lock()
         defer {lock.unlock()}
-        let taskId = self.taskId(url: key, path: path, type: "upload")
+        let taskId = self.getTaskId(key: key, path: path, type: "upload")
         var taskTuple = uploadTaskMap[taskId]
         if (taskTuple == nil) {
             let dTask = UploadTask(taskId: taskId, path: path, url: key, fileModule: self)

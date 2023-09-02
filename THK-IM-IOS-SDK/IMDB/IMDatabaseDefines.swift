@@ -21,9 +21,10 @@ public enum SessionType: Int {
  */
 public enum MsgSendStatus: Int {
     case Init = 0,
-         Sending = 1,
-         Failed = 2,
-         Success = 3
+         Uploading = 1,
+         Sending = 2,
+         Failed = 3,
+         Success = 4
 }
 
 /**

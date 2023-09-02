@@ -14,7 +14,7 @@ import CocoaLumberjack
 class Room: NSObject {
     private let id: String
     private let uId: String
-    private let mode: Mode
+    let mode: Mode
     
     private var observers = [RoomObserver]()
     private var localParticipant: LocalParticipant? = nil
@@ -41,7 +41,13 @@ class Room: NSObject {
     
     private func initRemoteParticipants(members: Array<Member>) {
         for m in members {
-            let p = RemoteParticipant(uId: m.uid, roomId: id, subStreamKey: m.streamKey)
+            let role = m.role == Role.Broadcaster.rawValue ? Role.Broadcaster: Role.Audience
+            let audioEnable = mode == Mode.Audio || mode == Mode.Video
+            let videoEnable = mode == Mode.Video
+            let p = RemoteParticipant(
+                uId: m.uid, roomId: id, role: role, subStreamKey: m.streamKey,
+                audioEnable: audioEnable, videoEnable: videoEnable
+            )
             self.remoteParticipants.append(p)
         }
     }

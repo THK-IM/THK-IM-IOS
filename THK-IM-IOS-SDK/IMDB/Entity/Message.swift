@@ -27,10 +27,10 @@ public final class Message: TableCodable {
     var operateStatus: Int = MsgOperateStatus.Init.rawValue
     // 引用消息Id
     var referMsgId: Int64? = nil
-    // 消息@人列表, uId1#uId2
+    // 消息@人列表, uId1#uId2 || all所有人
     var atUsers: String? = nil
-    // 自定义扩展数据 推荐使用json结构存储
-    var extData: String? = nil
+    // 消息内容 本地数据 json格式
+    var data: String = ""
     // 消息创建时间
     var cTime: Int64
     // 消息最近修改时间
@@ -39,8 +39,8 @@ public final class Message: TableCodable {
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Message
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
-            BindMultiPrimary(id, sessionId, fromUId, onConflict: ConflictAction.Ignore)
-            BindMultiUnique(sessionId, msgId, onConflict: ConflictAction.Ignore)
+            BindMultiPrimary(id, sessionId, fromUId, onConflict: ConflictAction.Replace)
+            BindMultiUnique(sessionId, msgId, onConflict: ConflictAction.Replace)
             BindIndex(sessionId, cTime, namedWith: "message_session_id_create_time_index", isUnique: false)
         }
         case id = "id"
@@ -53,25 +53,25 @@ public final class Message: TableCodable {
         case operateStatus = "operate_status"
         case referMsgId = "refer_msg_id"
         case atUsers = "at_users"
-        case extData = "ext_data"
+        case data = "data"
         case cTime = "c_time"
         case mTime = "m_time"
     }
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String, sendStatus: Int, operateStatus: Int, referMsgId: Int64? = nil, atUsers: String? = nil, extData: String? = nil, cTime: Int64, mTime: Int64) {
+    init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String, sendStatus: Int, operateStatus: Int, referMsgId: Int64? = nil, atUsers: String? = nil, data: String = "", cTime: Int64, mTime: Int64) {
         self.id = id
         self.sessionId = sessionId
         self.fromUId = fromUId
         self.msgId = msgId
         self.type = type
         self.content = content
+        self.data = data
         self.sendStatus = sendStatus
         self.operateStatus = operateStatus
         self.referMsgId = referMsgId
         self.atUsers = atUsers
-        self.extData = extData
         self.cTime = cTime
         self.mTime = mTime
     }

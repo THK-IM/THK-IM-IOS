@@ -133,20 +133,7 @@ class DefaultStorageModule : StorageModule {
         return "\(rootPath)/avatar/\(type)/user-\(id).\(ext)"
     }
     
-    func allocSessionFilePath(
-        _ sId: Int64,
-        _ uId: Int64,
-        _ fileName: String, _ format: String) -> (String, String) {
-        let localPath = self.allocLocalFilePath(sId, uId, fileName, format)
-        let serverPath = self.allocServerFilePath(sId, uId, fileName)
-        return (localPath, serverPath)
-    }
-    
-    func allocServerFilePath(_ sId: Int64, _ uId: Int64, _ fileName: String) -> String {
-        return "im/session_\(sId)/\(uId)/\(IMCoreManager.shared.severTime)_\(fileName)"
-    }
-    
-    func allocLocalFilePath(_ sId: Int64, _ uId: Int64, _ fileName: String, _ format: String) -> String {
+    func allocSessionFilePath(_ sId: Int64, _ uId: Int64, _ fileName: String, _ format: String) -> String {
         let fileRootPath = "\(getSessionRootPath(sId))/\(uId)/\(format)"
         let fileManager = FileManager.default
         var isDir: ObjCBool = false
@@ -197,7 +184,7 @@ class DefaultStorageModule : StorageModule {
         return "\(rootPath)/session-\(sId)"
     }
     
-    func isAssignedPath(_ path: String, _ fileName: String, _ format: String, _ sId: Int64, _ fUId: Int64) -> Bool {
+    func isAssignedPath(_ path: String, _ format: String, _ sId: Int64, _ fUId: Int64) -> Bool {
         let p = "\(getSessionRootPath(sId))/\(fUId)/\(format)"
         return path.starts(with: p)
     }

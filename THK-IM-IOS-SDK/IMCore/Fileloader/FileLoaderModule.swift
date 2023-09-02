@@ -11,17 +11,41 @@ import Foundation
 protocol FileLoaderModule: AnyObject {
     
     /**
+     * 获取任务id
+     * @param key 任务key
+     * @param path 本地路径
+     * @param type 类型
+     * @return 任务id
+     */
+    func getTaskId(key: String, path: String, type: String) -> String
+    
+    /**
+     * 获取文件上传key
+     * @param sId 会话id
+     * @param uId 用户id
+     * @param fileName 文件名
+     * @param msgClientId 客户端消息id
+     * @return 任务id
+     */
+    func getUploadKey(
+        _ sId: Int64,
+        _ uId: Int64,
+        _ fileName: String,
+        _ msgClientId: Int64
+    ) -> String
+    
+    /**
      *  下载
-     * @param url 网路地址
+     * @param key 下载key, 传入网路地址
      * @param path 本地路径
      * @param listener 进度监听器
      * @return 任务id
      */
-    func download(url: String, path: String, loadListener: FileLoaderListener) -> String
+    func download(key: String, path: String, loadListener: FileLoaderListener) -> String
     
     /**
      *  上传
-     * @param key 对象存储的key
+     * @param key 上传key,传入空串
      * @param path 本地路径
      * @param listener 进度监听器
      * @return 任务id

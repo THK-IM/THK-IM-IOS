@@ -44,37 +44,18 @@ protocol StorageModule : AnyObject {
      */
     func allocAvatarPath(_ id: Int64, _ avatarUrl: String, _ type: Int) -> String
     
+
+    
     /**
      * 申请会话下文件存放路径，函数内不会创建文件
-     * @return   pair  第一个结果是文件保存的路径 第二个结果是阿里云上传时的key
-     * /{application}/{files}/im/{uId}/session-${uId}/{format}/xxx.jpeg
-     * 文件名重复返回 /{application}/{files}/im/{uId}/session-${uId}/{format}/xxx.1.jpeg
+     * @return  ex: /{application}/{files}/im/{uId}/session-${uId}/{format}/xxx.jpeg
+     *          文件名重复返回 /{application}/{files}/im/{uId}/session-${uId}/{format}/xxx.1.jpeg
      * @param sId 会话id
      * @param uId 用户id
      * @param fileName 文件名 12.jpeg
      * @param format 文件类型，img(包含png/jpeg/gif等格式)/video(spx)/voice/file(包含doc/ppt/txt/等格式)
      */
     func allocSessionFilePath(
-        _ sId: Int64,
-        _ uId: Int64,
-        _ fileName: String,
-        _ format: String
-    ) -> (String, String)
-    
-    
-    /**
-     * 申请文件服务器上传key
-     */
-    func allocServerFilePath(
-        _ sId: Int64,
-        _ uId: Int64,
-        _ fileName: String
-    ) -> String
-    
-    /**
-     * 申请本地文件路径
-     */
-    func allocLocalFilePath(
         _ sid: Int64,
         _ uId: Int64,
         _ fileName: String,
@@ -86,7 +67,6 @@ protocol StorageModule : AnyObject {
      */
     func isAssignedPath(
         _ path: String,
-        _ fileName: String,
         _ format: String,
         _ sId: Int64,
         _ fUId: Int64
@@ -98,7 +78,7 @@ protocol StorageModule : AnyObject {
     func getSessionCacheFiles(_ format: String, _ sId: Int64) -> Array<String>
     
     /**
-     * 获取session路径
+     * 获取session下缓存目录大小
      */
     func getSessionCacheSize(_ sId: Int64) -> Int64
 }
