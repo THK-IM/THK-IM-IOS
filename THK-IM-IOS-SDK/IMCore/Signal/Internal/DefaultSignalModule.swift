@@ -1,6 +1,6 @@
 //
 //  DefaultSignalModule.swift
-//  demo
+//  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/20.
 //
@@ -36,7 +36,9 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
     }
     
     func updateToken(_ token: String) {
-        
+        self.token = token
+        self.disconnect("update token")
+        self.connect()
     }
     
     func connect() {
@@ -52,8 +54,8 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
         self.onStateChange(SignalStatus.Connecting)
         var request = URLRequest(url: URL(string: self.webSocketUrl)!)
         request.timeoutInterval = 5.0
-        request.setValue(self.token, forHTTPHeaderField: "uid")
-        request.setValue("0", forHTTPHeaderField: "platform")
+        request.setValue(self.token, forHTTPHeaderField: "token")
+        request.setValue("Ios", forHTTPHeaderField: "platform")
         self.webSocketClient = WebSocket(request: request)
         self.webSocketClient?.delegate = self
         self.webSocketClient?.connect()
@@ -102,7 +104,7 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
                 return
             }
             if sf.status == SignalStatus.Connected {
-                sf.sendMessage(Signal.heatBeat)
+                sf.sendSignal(Signal.heatBeat)
                 sf.startHeatBeatTask()
             }
         }
@@ -149,11 +151,11 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
     }
     
     
-    func sendMessage(_ message: String) {
+    func sendSignal(_ signal: String) {
         lock.lock()
         defer { lock.unlock() }
         if self.status == SignalStatus.Connected {
-            self.webSocketClient?.write(string: message)
+            self.webSocketClient?.write(string: signal)
         }
     }
     
@@ -185,8 +187,6 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
             DDLogDebug("DefaultSignalModule: viabilityChanged: \(viability)")
             if viability == false {
                 onStateChange(SignalStatus.DisConnected)
-            } else {
-                self.retryTimes = 0
             }
             break
         case .reconnectSuggested(_):

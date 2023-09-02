@@ -23,9 +23,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
     override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
         do {
             var entity = message
-            guard let storageModule = IMCoreManager.shared.storageModule else {
-                return Observable.error(CocoaError.init(.executableLoad))
-            }
+            let storageModule = IMCoreManager.shared.storageModule
             var imageData = try JSONDecoder().decode(
                 IMImageData.self,
                 from: entity.data.data(using: .utf8) ?? Data()
@@ -105,12 +103,8 @@ class ImageMsgProcessor : BaseMsgProcessor {
     
     
     override func uploadObservable(_ entity: Message) -> Observable<Message>? {
-        guard let storageModule = IMCoreManager.shared.storageModule else {
-            return Observable.error(CocoaError.init(.executableLoad))
-        }
-        guard let fileLoadModule = IMCoreManager.shared.fileLoadModule else {
-            return Observable.error(CocoaError.init(.executableLoad))
-        }
+        let storageModule = IMCoreManager.shared.storageModule
+        let fileLoadModule = IMCoreManager.shared.fileLoadModule
         return self.uploadThumbImage(fileLoadModule, storageModule, entity)
             .flatMap({ (msg) -> Observable<Message> in
                 return self.uploadOriginImage(fileLoadModule, storageModule, msg)

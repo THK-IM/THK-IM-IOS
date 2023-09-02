@@ -244,6 +244,13 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
     
     func insertMessage(_ message: Message) {
         let tableView = self.messageTableView
+        let pos = findPosition(message)
+        if (pos != -1) {
+            // 老消息，替换reload
+            self.messages[pos] = message
+            tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
+            return 
+        }
         let insertPos = findInsertPosition(message)
         if (insertPos > 1){
             lastMessageTime = self.messages[insertPos-1].cTime
@@ -264,15 +271,15 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
         self.scrollToBottom(0.2)
     }
     
-    func updateMessage(_ message: Message) {
-        let tableView = self.messageTableView
-        let pos = findPosition(message)
-        if (pos != -1) {
-            // 老消息，替换reload
-            self.messages[pos] = message
-            tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
-        }
-    }
+//    func updateMessage(_ message: Message) {
+//        let tableView = self.messageTableView
+//        let pos = findPosition(message)
+//        if (pos != -1) {
+//            // 老消息，替换reload
+//            self.messages[pos] = message
+//            tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
+//        }
+//    }
     
     func deleteMessage(_ message: Message) {
         let tableView = self.messageTableView

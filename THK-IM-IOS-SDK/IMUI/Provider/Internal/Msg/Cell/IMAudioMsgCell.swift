@@ -51,9 +51,7 @@ class IMAudioMsgCell: BaseMsgCell {
     
     private func playAudio(_ path: String) {
         // 每次debug运行时 document目录位置会改变，适配一下
-        guard let realPath = IMCoreManager.shared.storageModule?.sandboxFilePath(path) else {
-            return
-        }
+        let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(path)
         let success = OggOpusAudioPlayer.shared.startPlaying(realPath) {
             [weak self] db, duration ,path, stopped in
             guard let sf = self else {
@@ -74,9 +72,7 @@ class IMAudioMsgCell: BaseMsgCell {
     }
     
     private func unregister() {
-        guard let fileModule = IMCoreManager.shared.fileLoadModule else {
-            return
-        }
+        let fileModule = IMCoreManager.shared.fileLoadModule
         guard let downloadListener = self.downloadListener else {
             return
         }

@@ -38,15 +38,17 @@ public class BaseMsgProcessor {
                 SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
             } else {
                 // 数据库存在，更新本地数据库数据
-                msg.data = dbMsg!.data
-                msg.operateStatus = dbMsg!.operateStatus
-                msg.msgId = dbMsg!.msgId
-                msg.sendStatus = MsgSendStatus.Success.rawValue
-                try insertOrUpdateDb(msg)
+                if dbMsg!.sendStatus != MsgSendStatus.Success.rawValue {
+                    msg.data = dbMsg!.data
+                    msg.operateStatus = dbMsg!.operateStatus
+                    msg.msgId = dbMsg!.msgId
+                    msg.sendStatus = MsgSendStatus.Success.rawValue
+                    try insertOrUpdateDb(msg)
+                }
             }
             IMCoreManager.shared.getMessageModule().ackMessageToCache(msg.sessionId, msg.msgId)
         } catch let error {
-            DDLogError("Received New Msg \(error)")
+            DDLogError("Received NewMsg \(error)")
         }
     }
     
@@ -61,9 +63,15 @@ public class BaseMsgProcessor {
     }
     
     open func buildSendMsg(_ c :Codable, _ sessionId: Int64, _ atUIdStr: String? = nil, _ rMsgId: Int64? = nil) throws -> Message {
-        let data = try JSONEncoder().encode(c)
-        guard let body = String(data: data, encoding: .utf8) else {
-            throw CocoaError.init(.coderInvalidValue)
+        var body = ""
+        if (c is String) {
+            body = c as! String
+        } else {
+            let data = try JSONEncoder().encode(c)
+            guard let jsonBody = String(data: data, encoding: .utf8) else {
+                throw CocoaError.init(.coderInvalidValue)
+            }
+            body = jsonBody
         }
         let clientId = IMCoreManager.shared.getMessageModule().generateNewMsgId()
         let now = IMCoreManager.shared.getCommonModule().getSeverTime()

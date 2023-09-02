@@ -13,22 +13,47 @@ import SwiftEventBus
 public class IMCoreManager: SignalListener {
     
     static let shared = IMCoreManager()
-    static let ApiEndpoint = "http://192.168.1.4:18000"
-    static let WsEndpoint = "ws://192.168.1.4:18002"
     
     private var moduleDic = [Int: BaseModule]()
     private var disposeBag = DisposeBag()
     
-    var fileLoadModule: FileLoaderModule?
-    var storageModule: StorageModule?
-    private var _api: IMApi?
+    private var _fileLoadModule: FileLoaderModule?
+    var fileLoadModule: FileLoaderModule {
+        set {
+            self._fileLoadModule = newValue
+        }
+        get {
+            return self._fileLoadModule!
+        }
+    }
     
-    var api : IMApi{
+    var _storageModule: StorageModule?
+    var storageModule: StorageModule {
+        set {
+            self._storageModule = newValue
+        }
+        get {
+            return self._storageModule!
+        }
+    }
+    
+    private var _api: IMApi?
+    var api: IMApi {
         set {
             self._api = newValue
         }
         get {
             return self._api!
+        }
+    }
+    
+    private var _signalModule: SignalModule?
+    var signalModule: SignalModule {
+        set {
+            self._signalModule = newValue
+        }
+        get {
+            return self._signalModule!
         }
     }
     
@@ -43,13 +68,14 @@ public class IMCoreManager: SignalListener {
         }
     }
     
+    
+    
+    private var _uId: Int64? = nil
     var uId: Int64 {
         get {
             return self._uId!
         }
     }
-    
-    private var _uId: Int64? = nil
     
     var severTime : Int64 {
         get {
@@ -57,32 +83,22 @@ public class IMCoreManager: SignalListener {
         }
     }
     
-    private var _signalModule: SignalModule?
-    private var signalModule: SignalModule {
-        get {
-            return self._signalModule!
-        }
-    }
-    
     private init() {}
     
-    func initApplication(_ app : UIApplication, _ uId :Int64, _ debug: Bool) {
+    private func initIMLog() {
         DDLog.add(DDOSLogger.sharedInstance) // Uses os_log
         let fileLogger: DDFileLogger = DDFileLogger() // File Logger
         fileLogger.rollingFrequency = 60 * 60 * 24 // 24 hours
         fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.add(fileLogger)
-        let wsUrl = String(format: "%@/ws", IMCoreManager.WsEndpoint)
+    }
+    
+    func initApplication(_ app : UIApplication, _ uId :Int64, _ debug: Bool) {
+        self.initIMLog()
         self._uId = uId
         self._database = IMDatabase(app, uId, debug)
+        self._storageModule = DefaultStorageModule(uId)
         
-        do {
-            try self._database?.messageDao.resetSendStatusFailed()
-        } catch {
-            DDLogError("initApplication: \(error)")
-        }
-        
-        self._signalModule = DefaultSignalModule(app, wsUrl, String(uId))
         self.registerModule(SignalType.User.rawValue, DefaultUserModule())
         self.registerModule(SignalType.Common.rawValue, DefaultCommonModule())
         self.registerModule(SignalType.Message.rawValue, DefaultMessageModule())
@@ -92,7 +108,11 @@ public class IMCoreManager: SignalListener {
         self.getMessageModule().registerMsgProcessor(AudioMsgProcessor())
         self.getMessageModule().registerMsgProcessor(VideoMsgProcessor())
         
-        self.storageModule = DefaultStorageModule(uId)
+        do {
+            try self._database?.messageDao.resetSendStatusFailed()
+        } catch {
+            DDLogError("initApplication: \(error)")
+        }
     }
     
     func connect() {

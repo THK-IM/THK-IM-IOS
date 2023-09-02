@@ -22,7 +22,7 @@ enum IMSessionApi {
 extension IMSessionApi: TargetType {
     
     var baseURL: URL {
-        return URL.init(string: "\(IMCoreManager.ApiEndpoint)/im/v3")!
+        return URL.init(string: "\(IMCoreManager.shared.api.endpoint())")!
     }
     
     var path: String {

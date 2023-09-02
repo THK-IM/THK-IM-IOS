@@ -22,9 +22,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
     
     override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
         do {
-            guard let storageModule = IMCoreManager.shared.storageModule else {
-                return Observable.error(CocoaError.init(.executableLoad))
-            }
+            let storageModule = IMCoreManager.shared.storageModule
             var audioData = try JSONDecoder().decode(
                 IMAudioData.self,
                 from: message.data.data(using: .utf8) ?? Data()
@@ -78,12 +76,8 @@ class AudioMsgProcessor : BaseMsgProcessor {
             if audioBody.url == nil {
                 return Observable.just(entity)
             }
-            guard let fileLoadModule = IMCoreManager.shared.fileLoadModule else {
-                return Observable.error(CocoaError.init(.executableLoad))
-            }
-            guard let storageModule = IMCoreManager.shared.storageModule else {
-                return Observable.error(CocoaError.init(.executableLoad))
-            }
+            let fileLoadModule = IMCoreManager.shared.fileLoadModule
+            let storageModule = IMCoreManager.shared.storageModule
             let audioData = try JSONDecoder().decode(
                 IMAudioData.self,
                 from: entity.data.data(using: .utf8) ?? Data()

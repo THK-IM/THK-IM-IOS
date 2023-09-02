@@ -11,6 +11,11 @@ import RxSwift
 protocol IMApi: AnyObject {
     
     /**
+     * 返回api地址
+     */
+    func endpoint() -> String
+    
+    /**
      * 获取修改时间为mTime之后的session列表
      */
     func getLatestModifiedSessions(_ uId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>>

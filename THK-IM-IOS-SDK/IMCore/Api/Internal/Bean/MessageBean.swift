@@ -57,9 +57,9 @@ class MessageBean: Codable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case clientId = "client_id"
-        case fUId = "from_u_id"
-        case sessionId = "session_id"
+        case clientId = "c_id"
+        case fUId = "f_u_id"
+        case sessionId = "s_id"
         case msgId = "msg_id"
         case type = "type"
         case body = "body"

@@ -30,7 +30,7 @@ class UploadTask: FileTask {
         request?.bucketName = fileLoadModule.oSsBucket
         request?.objectKey = self.url
         
-        let (_ , ext) = IMCoreManager.shared.storageModule!.getFileExt(self.path)
+        let (_ , ext) = IMCoreManager.shared.storageModule.getFileExt(self.path)
         let mimeType = MimeType.shared.mimeType(pathExtension: ext)
         request?.contentType = mimeType
         request?.uploadingFileURL = URL.init(fileURLWithPath: self.path)

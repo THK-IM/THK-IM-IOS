@@ -146,15 +146,13 @@ class IMVideoMsgCell: BaseMsgCell {
     }
     
     private func unregister() {
-        guard let fileModule = IMCoreManager.shared.fileLoadModule else {
-            return
-        }
         guard let downloadListener = self.downloadListener else {
             return
         }
         guard let taskId = self.taskId else {
             return
         }
+        let fileModule = IMCoreManager.shared.fileLoadModule
         fileModule.cancelDownloadListener(taskId: taskId, listener: downloadListener)
         self.taskId = nil
         self.downloadListener = nil

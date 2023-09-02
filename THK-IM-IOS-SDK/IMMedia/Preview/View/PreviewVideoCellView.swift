@@ -66,7 +66,7 @@ class PreviewVideoCellView : UICollectionViewCell {
             self.videoPlayView.initCover(media.thumbPath!)
         }
         if media.sourcePath != nil {
-            let realPath = IMCoreManager.shared.storageModule!.sandboxFilePath(media.sourcePath!)
+            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(media.sourcePath!)
             if FileManager.default.fileExists(atPath: realPath) {
                 self.play(path: realPath)
                 return
@@ -74,7 +74,7 @@ class PreviewVideoCellView : UICollectionViewCell {
         }
         
         if media.sourceUrl != nil && media.sourcePath != nil {
-            let realPath = IMCoreManager.shared.storageModule!.sandboxFilePath(media.sourcePath!)
+            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(media.sourcePath!)
             self.downloadMedia(media.sourceUrl!, path: realPath)
         }
     }
@@ -93,9 +93,7 @@ class PreviewVideoCellView : UICollectionViewCell {
     }
     
     func downloadMedia(_ url: String, path: String) {
-        guard let fileLoader = IMCoreManager.shared.fileLoadModule else {
-            return
-        }
+        let fileLoader = IMCoreManager.shared.fileLoadModule
         if self.taskId != nil && self.listener != nil {
             fileLoader.cancelDownloadListener(taskId: self.taskId!, listener: self.listener!)
         }

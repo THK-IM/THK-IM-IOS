@@ -176,7 +176,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 return
             }
             DDLogDebug("IMEvent: \(IMEvent.MsgUpdate.rawValue)")
-            self?.messageLayout.updateMessage(msg)
+            self?.messageLayout.insertMessage(msg)
         })
         
         SwiftEventBus.onMainThread(self, name: IMEvent.MsgDelete.rawValue, handler: { [weak self ]result in
@@ -285,7 +285,8 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
         guard let sessionId = self.session?.id else {
             return
         }
-        IMCoreManager.shared.getMessageModule().getMsgProcessor(type).sendMessage(body, sessionId)
+        let success = IMCoreManager.shared.getMessageModule().getMsgProcessor(type).sendMessage(body, sessionId)
+        DDLogInfo("sendMessage \(success)")
     }
     
     /// 显示消息多选视图
@@ -343,7 +344,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 do {
                     let asset = AVURLAsset(url: videoUrl!)
                     let videoData = try Data(contentsOf: asset.url)
-                    let storageModule = IMCoreManager.shared.storageModule!
+                    let storageModule = IMCoreManager.shared.storageModule
                     let (_, fName) = storageModule.getPathsFromFullPath(asset.url.absoluteString)
                     let (name, ext) = storageModule.getFileExt(fName)
                     let fileName = "\(name)_\(String().random(8)).\(ext)"
@@ -376,7 +377,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 }
                 do {
                     let videoData = try Data(contentsOf: urlAsset.url)
-                    let storageModule = IMCoreManager.shared.storageModule!
+                    let storageModule = IMCoreManager.shared.storageModule
                     let (_, fName) = storageModule.getPathsFromFullPath(urlAsset.url.absoluteString)
                     let (name, ext) = storageModule.getFileExt(fName)
                     let fileName = "\(name)_\(String().random(8)).\(ext)"

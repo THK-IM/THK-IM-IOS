@@ -56,29 +56,27 @@ class PreviewImageCellView : UICollectionViewCell {
             return
         }
         if media.sourcePath != nil {
-            let realPath = IMCoreManager.shared.storageModule!.sandboxFilePath(media.sourcePath!)
+            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(media.sourcePath!)
             if FileManager.default.fileExists(atPath: realPath) {
                 setImagePath(realPath)
                 return
             }
         } else if media.thumbPath != nil {
-            let realPath = IMCoreManager.shared.storageModule!.sandboxFilePath(media.thumbPath!)
+            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(media.thumbPath!)
             setImagePath(realPath)
         }
         
         // 下载原图
         if media.sourceUrl != nil {
-            let realPath = IMCoreManager.shared.storageModule!.sandboxFilePath(media.sourcePath!)
+            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(media.sourcePath!)
             self.downloadMedia(media.sourceUrl!, path: realPath)
         }
     }
     
     func downloadMedia(_ url: String, path: String) {
-        guard let fileLoader = IMCoreManager.shared.fileLoadModule else {
-            return
-        }
+        let fileLoadModule = IMCoreManager.shared.fileLoadModule
         if self.taskId != nil && self.listener != nil {
-            fileLoader.cancelDownloadListener(taskId: self.taskId!, listener: self.listener!)
+            fileLoadModule.cancelDownloadListener(taskId: self.taskId!, listener: self.listener!)
         }
         let listener = FileLoaderListener({ [weak self] progress, state, url, path in
             guard let sf = self else {
@@ -104,7 +102,7 @@ class PreviewImageCellView : UICollectionViewCell {
         }, {
             return true
         })
-        let taskId = fileLoader.download(key: url, path: path, loadListener: listener)
+        let taskId = fileLoadModule.download(key: url, path: path, loadListener: listener)
         self.taskId = taskId
         self.listener = listener
     }

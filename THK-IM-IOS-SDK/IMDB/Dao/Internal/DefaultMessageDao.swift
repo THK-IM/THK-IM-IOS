@@ -53,12 +53,12 @@ class DefaultMessageDao : MessageDao {
     }
     
     func insertMessages(_ messages: [Message]) throws {
-        try self.database?.insertOrIgnore(messages, intoTable: self.tableName)
+        try self.database?.insertOrReplace(messages, intoTable: self.tableName)
     }
     
     
     func insertMessages(_ messages: Message...) throws {
-        try self.database?.insertOrIgnore(messages, intoTable: self.tableName)
+        try self.database?.insertOrReplace(messages, intoTable: self.tableName)
     }
     
     func updateMessages(_ messages: Message...) throws {

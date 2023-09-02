@@ -55,6 +55,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
         textView1.backgroundColor = UIColor.red;
         textView1.setTitleColor(UIColor.white, for: .normal)
         textView1.rx.tap
+            .compose(DefaultRxTransformer.io2Main())
             .flatMap({ (value) -> Observable<Session> in
                 let entityId = Int64(arc4random() % 100000) + 2
                 return IMCoreManager.shared.getMessageModule().createSession(entityId, SessionType.Single.rawValue)
@@ -66,6 +67,8 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
                 } catch {
                     print(error)
                 }
+            }, onError: { error in
+                print(error)
             })
             .disposed(by: self.disposeBag)
         self.view.addSubview(textView1)

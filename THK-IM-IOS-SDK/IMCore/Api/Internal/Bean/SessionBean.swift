@@ -18,7 +18,7 @@ class SessionBean: Codable {
     var mTime: Int64
     
     enum CodingKeys: String, CodingKey {
-        case sessionId = "session_id"
+        case sessionId = "s_id"
         case type = "type"
         case entityId = "entity_id"
         case status = "status"

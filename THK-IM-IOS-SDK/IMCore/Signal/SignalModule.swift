@@ -13,7 +13,7 @@ protocol SignalModule : AnyObject {
     
     func connect()
     
-    func sendMessage(_ message: String)
+    func sendSignal(_ signal: String)
     
     func disconnect(_ reason: String)
     

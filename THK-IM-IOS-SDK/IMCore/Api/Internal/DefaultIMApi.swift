@@ -14,6 +14,16 @@ class DefaultIMApi: IMApi {
     private let messageApi = MoyaProvider<IMMessageApi>(plugins: [NetworkLoggerPlugin()])
     private let sessionApi = MoyaProvider<IMSessionApi>(plugins: [NetworkLoggerPlugin()])
     
+    private let _endpoint: String
+    
+    init(endpoint: String) {
+        self._endpoint = endpoint
+    }
+    
+    func endpoint() -> String {
+        return self._endpoint
+    }
+    
     func getLatestModifiedSessions(_ uId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
         return sessionApi.rx
             .request(.queryLatestSession(uId, 0, count, mTime))
@@ -42,6 +52,9 @@ class DefaultIMApi: IMApi {
     
     func createSession(_ sessionType: Int, _ entityId: Int64?, _ members: Set<Int64>) -> Observable<Session> {
         let reqBean = CreateSessionBean(type: sessionType, entityId: entityId, members: members)
+        if sessionType == SessionType.Single.rawValue {
+            reqBean.entityId = nil
+        }
         return sessionApi.rx
             .request(.createSession(reqBean))
             .asObservable()

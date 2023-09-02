@@ -40,20 +40,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             IMUnicodeEmojiControllerProvider(), IMUnicodeEmojiControllerProvider()
         )
         
-//        IMManager.shared.initApplication(application, 1, true)
-//        let ossBucket = "bucket"
-//        let ossEndpoint = "https://"
-//        let credentialProvider = OSSFederationCredentialProvider(federationTokenGetter: {
-//            let token = OSSFederationToken()
-//            token.tAccessKey = ""
-//            token.tSecretKey =  ""
-//            token.expirationTimeInGMTFormat = "2023-08-13T05:54:46Z"
-//            token.tToken = ""
-//            return token
-//        })
-//        IMManager.shared.fileLoadModule = DefaultFileLoadModule(ossBucket, ossEndpoint, credentialProvider)
+        let bucket = "bucket"
+        let endpoint = "https://"
+        let credentialProvider = OSSFederationCredentialProvider(federationTokenGetter: {
+            let token = OSSFederationToken()
+            token.tAccessKey = ""
+            token.tSecretKey =  ""
+            token.expirationTimeInGMTFormat = "2023-08-13T05:54:46Z"
+            token.tToken = ""
+            return token
+        })
         let debug = true
+        let uId = 1
         IMCoreManager.shared.initApplication(application, 1, debug)
+        IMCoreManager.shared.api = DefaultIMApi(endpoint: "http://192.168.1.6:10000")
+        IMCoreManager.shared.signalModule = DefaultSignalModule(application, "ws://192.168.1.6:20000/ws", "\(uId)")
+        IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule(bucket, endpoint, credentialProvider)
         IMCoreManager.shared.connect()
     }
     
