@@ -106,9 +106,7 @@ open class DefaultMessageModule : MessageModule {
             do {
                 var session = try IMCoreManager.shared.database.sessionDao.querySessionByEntityId(entityId, sessionType)
                 if (session == nil) {
-                    session = Session(
-                        id: 0, type: 0, entityId: 0, status: 0, unreadCount: 0, cTime: 0, mTime: 0
-                    )
+                    
                 }
                 observer.onNext(session!)
             } catch {
@@ -135,9 +133,7 @@ open class DefaultMessageModule : MessageModule {
             do {
                 var session = try IMCoreManager.shared.database.sessionDao.querySessionById(sessionId)
                 if (session == nil) {
-                    session = Session(
-                        id: 0, type: 0, entityId: 0, status: 0, unreadCount: 0, cTime: 0, mTime: 0
-                    )
+                    session = Session.emptySession()
                 }
                 observer.onNext(session!)
             } catch {
