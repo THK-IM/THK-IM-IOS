@@ -34,8 +34,7 @@ public class BaseMsgProcessor {
                         MsgOperateStatus.ServerRead.rawValue
                     msg.sendStatus = MsgSendStatus.Success.rawValue
                 }
-                try IMCoreManager.shared.database.messageDao.insertMessages(msg)
-                SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
+                try self.insertOrUpdateDb(msg)
             } else {
                 // 数据库存在，更新本地数据库数据
                 if dbMsg!.sendStatus != MsgSendStatus.Success.rawValue {
@@ -64,30 +63,39 @@ public class BaseMsgProcessor {
         return nil
     }
     
-    open func buildSendMsg(_ c :Codable, _ sessionId: Int64, _ atUIdStr: String? = nil, _ rMsgId: Int64? = nil) throws -> Message {
-        var body = ""
-        if (c is String) {
-            body = c as! String
+    open func buildSendMsg(_ body :Codable, _ sessionId: Int64, _ atUIdStr: String? = nil, _ rMsgId: Int64? = nil) throws -> Message {
+        var content = ""
+        var data = ""
+        if (body is String) {
+            content = body as! String
         } else {
-            let data = try JSONEncoder().encode(c)
-            guard let jsonBody = String(data: data, encoding: .utf8) else {
+            let jsonData = try JSONEncoder().encode(body)
+            guard let jsonBody = String(data: jsonData, encoding: .utf8) else {
                 throw CocoaError.init(.coderInvalidValue)
             }
-            body = jsonBody
+            data = jsonBody
         }
         let clientId = IMCoreManager.shared.getMessageModule().generateNewMsgId()
         let now = IMCoreManager.shared.getCommonModule().getSeverTime()
+        let operateStatus = MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+        // tips：msgId初始值给-clientId,发送成功后更新为服务端返回的msgId
         let msg = Message(
             id: clientId, sessionId: sessionId, fromUId: IMCoreManager.shared.uId, msgId: -clientId, type: messageType(),
-            content: body, sendStatus: MsgSendStatus.Init.rawValue, operateStatus: MsgOperateStatus.Init.rawValue,
-            cTime: now, mTime: now
+            content: content, sendStatus: MsgSendStatus.Init.rawValue, operateStatus: operateStatus, data: data, cTime: now, mTime: now
         )
         return msg
     }
     
-    open func sendMessage(_ c: Codable, _ sessionId: Int64, _ atUsers: String? = nil, _ rMsgId: Int64? = nil) -> Bool {
+    /**
+     * 发送消息,逻辑流程:
+     * 1、写入数据库,
+     * 2、消息处理，图片压缩/视频抽帧等
+     * 3、文件上传
+     * 4、调用api发送消息到服务器
+     */
+    open func sendMessage(_ body: Codable, _ sessionId: Int64, _ atUsers: String? = nil, _ rMsgId: Int64? = nil) -> Bool {
         do {
-            let originMsg = try self.buildSendMsg(c, sessionId, atUsers, rMsgId)
+            let originMsg = try self.buildSendMsg(body, sessionId, atUsers, rMsgId)
             self.resend(originMsg)
         } catch {
             DDLogError(error)
@@ -109,6 +117,7 @@ public class BaseMsgProcessor {
                 }
             })
             .flatMap({ (message) -> Observable<Message> in
+                originMsg = msg // 防止失败时缺失数据
                 // 消息内容上传
                 message.sendStatus = MsgSendStatus.Uploading.rawValue
                 do {
@@ -124,10 +133,10 @@ public class BaseMsgProcessor {
                 }
             })
             .flatMap({ (message) -> Observable<Message> in
+                originMsg = msg // 防止失败时缺失数据
                 // 消息发送到服务端
                 message.sendStatus = MsgSendStatus.Sending.rawValue
                 try self.insertOrUpdateDb(message, false)
-                originMsg = msg // 防止失败时缺失数据
                 return IMCoreManager.shared.api.sendMessageToServer(msg:message)
             })
             .compose(DefaultRxTransformer.io2Io())
@@ -175,7 +184,7 @@ public class BaseMsgProcessor {
         try IMCoreManager.shared.database.messageDao.updateSendStatus(
             msg.sessionId, msg.id, msg.fromUId, MsgSendStatus.Failed.rawValue
         )
-        SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
+        SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
         if msg.sendStatus == MsgSendStatus.Uploading.rawValue
             || msg.sendStatus == MsgSendStatus.Success.rawValue
             || msg.sendStatus == MsgSendStatus.Failed.rawValue {

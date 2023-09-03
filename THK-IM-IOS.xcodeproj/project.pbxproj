@@ -11,6 +11,7 @@
 		A02578BF2AA2F23100A66CEF /* IMCoreMsgDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578BE2AA2F23100A66CEF /* IMCoreMsgDefines.swift */; };
 		A02578C62AA4269B00A66CEF /* LiveApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C52AA4269B00A66CEF /* LiveApi.swift */; };
 		A02578C82AA427BD00A66CEF /* DefaultLiveApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */; };
+		A02578CA2AA4398E00A66CEF /* TableName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C92AA4398E00A66CEF /* TableName.swift */; };
 		A0C431DD2A909C1700A84D4A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0C431DC2A909C1600A84D4A /* Images.xcassets */; };
 		A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* LiveManager.swift */; };
 		A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DF2A909C3100A84D4A /* LiveController.swift */; };
@@ -177,6 +178,7 @@
 		A02578BE2AA2F23100A66CEF /* IMCoreMsgDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCoreMsgDefines.swift; sourceTree = "<group>"; };
 		A02578C52AA4269B00A66CEF /* LiveApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveApi.swift; sourceTree = "<group>"; };
 		A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLiveApi.swift; sourceTree = "<group>"; };
+		A02578C92AA4398E00A66CEF /* TableName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableName.swift; sourceTree = "<group>"; };
 		A0C431DC2A909C1600A84D4A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A0C431DE2A909C3000A84D4A /* LiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveManager.swift; path = API/LiveManager.swift; sourceTree = "<group>"; };
 		A0C431DF2A909C3100A84D4A /* LiveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveController.swift; path = API/LiveController.swift; sourceTree = "<group>"; };
@@ -595,6 +597,7 @@
 				A0D68ADB2A888678004D11A5 /* MessageDao.swift */,
 				A0D68ADC2A888678004D11A5 /* UserDao.swift */,
 				A0D68ADD2A888678004D11A5 /* SessionDao.swift */,
+				A02578C92AA4398E00A66CEF /* TableName.swift */,
 			);
 			path = Dao;
 			sourceTree = "<group>";
@@ -1253,6 +1256,7 @@
 				A0D68BA72A888679004D11A5 /* IMTextMsgCell.swift in Sources */,
 				A0D68BE02A888679004D11A5 /* CommonModule.swift in Sources */,
 				A0D68B7C2A888679004D11A5 /* CreateSessionBean.swift in Sources */,
+				A02578CA2AA4398E00A66CEF /* TableName.swift in Sources */,
 				A0EA42EB2A94925600F64A90 /* DefaultUserDao.swift in Sources */,
 				A0D68BBA2A888679004D11A5 /* IMSpeakView.swift in Sources */,
 				A0D68BD62A888679004D11A5 /* IMAVCache.swift in Sources */,

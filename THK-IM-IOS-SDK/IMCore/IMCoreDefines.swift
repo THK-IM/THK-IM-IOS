@@ -6,14 +6,13 @@
 //
 
 import Foundation
-import RxSwift
 
 /**
  * IM事件
  */
 public enum IMEvent: String {
     case OnlineStatusUpdate = "IMEventOnlineStatusUpdate",
-         MsgsNew = "IMEventMsgsNew",
+         BatchMsgNew = "IMEventBatchMsgNew",
          MsgNew = "IMEventMsgNew",
          MsgUpdate = "IMEventMsgUpdate",
          MsgDelete = "IMEventMsgDelete",

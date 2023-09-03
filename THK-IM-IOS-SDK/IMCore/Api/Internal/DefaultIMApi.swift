@@ -75,6 +75,9 @@ class DefaultIMApi: IMApi {
                 msg.msgId = bean.msgId
                 msg.cTime = bean.cTime
                 msg.sendStatus = MsgSendStatus.Success.rawValue
+                msg.operateStatus = MsgOperateStatus.Ack.rawValue
+                            | MsgOperateStatus.ClientRead.rawValue
+                            | MsgOperateStatus.ServerRead.rawValue
                 return Observable.just(msg)
             })
     }

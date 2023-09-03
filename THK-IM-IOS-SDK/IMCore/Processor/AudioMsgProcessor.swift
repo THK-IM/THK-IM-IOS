@@ -24,7 +24,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
         do {
             let storageModule = IMCoreManager.shared.storageModule
             var audioData = try JSONDecoder().decode(
-                IMAudioData.self,
+                IMAudioMsgData.self,
                 from: message.data.data(using: .utf8) ?? Data()
             )
             if audioData.path == nil || audioData.duration == nil  {
@@ -33,22 +33,21 @@ class AudioMsgProcessor : BaseMsgProcessor {
             var entity = message
             // 1 检查文件所在目录，如果非IM目录，拷贝到IM目录下
             try self.checkDir(storageModule, &audioData, &entity)
-            
-            return Observable.just(message)
+    
+            return Observable.just(entity)
         } catch {
             DDLogInfo(error)
             return Observable.error(error)
         }
     }
     
-    private func checkDir(_ storageModule: StorageModule, _ imageData: inout IMAudioData, _ entity: inout Message) throws {
+    private func checkDir(_ storageModule: StorageModule, _ audioData: inout IMAudioMsgData, _ entity: inout Message) throws {
         let isAssignedPath = storageModule.isAssignedPath(
-            imageData.path!,
+            audioData.path!,
             IMFileFormat.Image.rawValue,
-            entity.sessionId,
-            entity.fromUId
+            entity.sessionId
         )
-        let (_, name) = storageModule.getPathsFromFullPath(imageData.path!)
+        let (_, name) = storageModule.getPathsFromFullPath(audioData.path!)
         if !isAssignedPath {
             let dePath = storageModule.allocSessionFilePath(
                 entity.sessionId,
@@ -56,9 +55,9 @@ class AudioMsgProcessor : BaseMsgProcessor {
                 name,
                 IMFileFormat.Audio.rawValue
             )
-            try storageModule.copyFile(imageData.path!, dePath)
-            imageData.path = dePath
-            let d = try JSONEncoder().encode(imageData)
+            try storageModule.copyFile(audioData.path!, dePath)
+            audioData.path = dePath
+            let d = try JSONEncoder().encode(audioData)
             entity.data = String(data: d, encoding: .utf8)!
         }
     }
@@ -73,13 +72,10 @@ class AudioMsgProcessor : BaseMsgProcessor {
                 IMAudioMsgBody.self,
                 from: entity.content.data(using: .utf8) ?? Data()
             )
-            if audioBody.url == nil {
-                return Observable.just(entity)
-            }
             let fileLoadModule = IMCoreManager.shared.fileLoadModule
             let storageModule = IMCoreManager.shared.storageModule
             let audioData = try JSONDecoder().decode(
-                IMAudioData.self,
+                IMAudioMsgData.self,
                 from: entity.data.data(using: .utf8) ?? Data()
             )
             if audioData.path == nil || audioData.duration == nil  {
@@ -102,14 +98,16 @@ class AudioMsgProcessor : BaseMsgProcessor {
                             FileLoaderState.Wait.rawValue,
                             FileLoaderState.Init.rawValue,
                             FileLoaderState.Ing.rawValue:
-                            let progress = IMUploadProgress(uploadKey, state, progress)
-                            SwiftEventBus.post(IMEvent.MsgUploadProgressUpdate.rawValue, sender: progress)
+                            SwiftEventBus.post(
+                                IMEvent.MsgUploadProgressUpdate.rawValue,
+                                sender: IMUploadProgress(uploadKey, state, progress)
+                            )
                             break
                         case
                             FileLoaderState.Success.rawValue:
                             do {
                                 audioBody.url = url
-                                audioBody.duration = audioData.duration
+                                audioBody.duration = audioData.duration!
                                 let content = try JSONEncoder().encode(audioBody)
                                 entity.content = String(data: content, encoding: .utf8)!
                                 entity.sendStatus = MsgSendStatus.Sending.rawValue

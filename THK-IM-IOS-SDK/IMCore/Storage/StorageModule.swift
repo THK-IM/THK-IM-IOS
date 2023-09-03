@@ -68,8 +68,7 @@ protocol StorageModule : AnyObject {
     func isAssignedPath(
         _ path: String,
         _ format: String,
-        _ sId: Int64,
-        _ fUId: Int64
+        _ sId: Int64
     ) -> Bool
     
     /**

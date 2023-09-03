@@ -78,7 +78,7 @@ class DefaultStorageModule : StorageModule {
             let path = fullPath[..<biasIndex]
             return (String(path), String(name))
         } else {
-            return (fullPath, "")
+            return ("", fullPath)
         }
     }
     
@@ -184,8 +184,8 @@ class DefaultStorageModule : StorageModule {
         return "\(rootPath)/session-\(sId)"
     }
     
-    func isAssignedPath(_ path: String, _ format: String, _ sId: Int64, _ fUId: Int64) -> Bool {
-        let p = "\(getSessionRootPath(sId))/\(fUId)/\(format)"
+    func isAssignedPath(_ path: String, _ format: String, _ sId: Int64) -> Bool {
+        let p = "\(getSessionRootPath(sId))/\(format)"
         return path.starts(with: p)
     }
     

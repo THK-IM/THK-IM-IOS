@@ -9,22 +9,22 @@ import Foundation
 
 public class IMCommonMsgData: Codable {
     // 回复当前消息的消息id数组
-    var replyMsgIds: Array<Int64>?
+    var replyMsgIds: Set<Int64>?
     // 已读用户
-    var readUIds: Array<Int64>?
+    var readUIds: Set<Int64>?
     
     enum CodingKeys: String, CodingKey {
         case replyMsgIds = "reply_msg_ids"
         case readUIds = "read_u_ids"
     }
     
-    init(replyMsgIds: Array<Int64>? = nil, readUIds: Array<Int64>? = nil) {
+    init(replyMsgIds: Set<Int64>? = nil, readUIds: Set<Int64>? = nil) {
         self.replyMsgIds = replyMsgIds
         self.readUIds = readUIds
     }
 }
 
-public class IMAudioData: IMCommonMsgData {
+public class IMAudioMsgData: IMCommonMsgData {
     var path: String?
     var duration: Int?
     var played: Bool
@@ -59,47 +59,47 @@ public class IMAudioData: IMCommonMsgData {
     }
 }
 
-public class IMImageData: IMCommonMsgData {
-    var path: String?
-    var thumbnailPath: String?
+public class IMImageMsgData: IMCommonMsgData {
     var width: Int?
     var height: Int?
+    var path: String?
+    var thumbnailPath: String?
     
     enum CodingKeys: String, CodingKey {
-        case path = "path"
-        case thumbnailPath = "thumbnail_path"
         case width = "width"
         case height = "height"
+        case path = "path"
+        case thumbnailPath = "thumbnail_path"
     }
     
-    init(path: String? = nil, thumbnailPath: String? = nil, width: Int?, height: Int?) {
-        self.path = path
-        self.thumbnailPath = thumbnailPath
+    init(width: Int?, height: Int?, path: String? = nil, thumbnailPath: String? = nil) {
         self.width = width
         self.height = height
+        self.path = path
+        self.thumbnailPath = thumbnailPath
         super.init()
     }
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.path = try container.decode(String?.self, forKey: .path)
-        self.thumbnailPath = try container.decode(String?.self, forKey: .thumbnailPath)
         self.width = try container.decode(Int?.self, forKey: .width)
         self.height = try container.decode(Int?.self, forKey: .height)
+        self.path = try container.decode(String?.self, forKey: .path)
+        self.thumbnailPath = try container.decode(String?.self, forKey: .thumbnailPath)
         try super.init(from: decoder)
     }
     
     public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(path, forKey: .path)
-        try container.encode(thumbnailPath, forKey: .thumbnailPath)
         try container.encode(width, forKey: .width)
         try container.encode(height, forKey: .height)
+        try container.encode(path, forKey: .path)
+        try container.encode(thumbnailPath, forKey: .thumbnailPath)
         try super.encode(to: encoder)
     }
 }
 
-public class IMVideoData: IMCommonMsgData {
+public class IMVideoMsgData: IMCommonMsgData {
     var duration: Int? = 0
     var width: Int? = 0
     var height: Int? = 0
@@ -146,15 +146,15 @@ public class IMVideoData: IMCommonMsgData {
 
 public class IMAudioMsgBody: Codable {
     
-    var duration: Int?
-    var url: String?
+    var duration: Int
+    var url: String
     
     enum CodingKeys: String, CodingKey {
         case duration = "duration"
         case url = "url"
     }
     
-    init(duration: Int? = 0, url: String? = nil) {
+    init(duration: Int, url: String) {
         self.duration = duration
         self.url = url
     }
@@ -162,10 +162,10 @@ public class IMAudioMsgBody: Codable {
 
 public class IMImageMsgBody: Codable {
     
-    var width: Int?
-    var height: Int?
-    var thumbnailUrl: String?
-    var url: String?
+    var width: Int
+    var height: Int
+    var thumbnailUrl: String
+    var url: String
     
     enum CodingKeys: String, CodingKey {
         case width = "width"
@@ -174,7 +174,7 @@ public class IMImageMsgBody: Codable {
         case thumbnailUrl = "thumbnail_url"
     }
     
-    init(width: Int? = nil, height: Int? = nil, thumbnailUrl: String? = nil, url: String? = nil) {
+    init(width: Int, height: Int, thumbnailUrl: String, url: String) {
         self.width = width
         self.height = height
         self.thumbnailUrl = thumbnailUrl
@@ -184,11 +184,11 @@ public class IMImageMsgBody: Codable {
 
 public class IMVideoMsgBody: Codable {
     
-    var duration: Int?
-    var width: Int?
-    var height: Int?
-    var thumbnailUrl: String?
-    var url: String?
+    var duration: Int
+    var width: Int
+    var height: Int
+    var thumbnailUrl: String
+    var url: String
     
     enum CodingKeys: String, CodingKey {
         case duration = "duration"
@@ -198,7 +198,7 @@ public class IMVideoMsgBody: Codable {
         case thumbnailUrl = "thumbnail_url"
     }
     
-    init(duration: Int? = 0, width: Int? = 0, height: Int? = 0, thumbnailUrl: String? = nil, url: String? = nil) {
+    init(duration: Int, width: Int, height: Int, thumbnailUrl: String, url: String) {
         self.duration = duration
         self.width = width
         self.height = height

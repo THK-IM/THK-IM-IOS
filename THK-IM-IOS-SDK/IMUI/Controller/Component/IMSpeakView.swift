@@ -188,7 +188,7 @@ class IMSpeakView: UILabel {
     
     func sendVoiceMsg(duration: Int, path: String) {
         do {
-            let audioBody = IMAudioMsgBody(duration: duration)
+            let audioBody = IMAudioMsgData(path: path, duration: duration, played: true)
             let d = try JSONEncoder().encode(audioBody)
             guard let content = String(data: d, encoding: .utf8) else {
                 return

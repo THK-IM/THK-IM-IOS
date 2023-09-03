@@ -17,6 +17,25 @@ public enum SessionType: Int {
 }
 
 /**
+ * session 禁言
+ */
+public enum SessionMuted: Int {
+    case Normal = 0,
+         All = 1,
+         MySelf = 2
+}
+
+/**
+ * session  消息提示
+ */
+public enum SessionPrompt: Int {
+    case Normal = 0,
+         Reject = 1,
+         Silent = 2
+        
+}
+
+/**
  * 消息发送状态
  */
 public enum MsgSendStatus: Int {
@@ -64,14 +83,4 @@ public enum SexType: Int {
          Women = 2,
          Machine = 3,
          Ai = 4
-}
-
-/**
- * 表名
- */
-public enum TableName: String {
-    case Message = "message",
-         Session = "session",
-         User = "user"
-         
 }

@@ -57,7 +57,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
         textView1.rx.tap
             .compose(DefaultRxTransformer.io2Main())
             .flatMap({ (value) -> Observable<Session> in
-                let entityId = Int64(arc4random() % 100000) + 2
+                let entityId = Int64(arc4random() % 100000) + 100
                 return IMCoreManager.shared.getMessageModule().createSession(entityId, SessionType.Single.rawValue)
             })
             .subscribe(onNext: { data in
@@ -69,8 +69,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
                 }
             }, onError: { error in
                 print(error)
-            })
-            .disposed(by: self.disposeBag)
+            }).disposed(by: self.disposeBag)
         self.view.addSubview(textView1)
         
         let textView2 = UIButton(type: .custom)
@@ -106,8 +105,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
                 } else {
                     textView2.setTitle("录音", for: .normal)
                 }
-            })
-            .disposed(by: self.disposeBag)
+            }).disposed(by: self.disposeBag)
         self.view.addSubview(textView2)
         
         let textView3 = UIButton(type: .custom)
@@ -187,8 +185,12 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
             .compose(DefaultRxTransformer.io2Main())
             .subscribe(onNext: { [weak self] in
                 do {
-                    let msgs = try IMCoreManager.shared.database.messageDao.queryMessageBySidAndBeforeCTime(1682166592156209152, [MsgType.IMAGE.rawValue], Date().timeMilliStamp, 10)
-                    print(msgs)
+                    let msgs = try IMCoreManager.shared.database.sessionDao.querySessions(100, IMCoreManager.shared.severTime)
+                    if (msgs != nil) {
+                        for m in msgs! {
+                            print("\(m.id) \(m.entityId) \(m.id)")
+                        }
+                    }
                 } catch {
                     print(error)
                 }

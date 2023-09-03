@@ -73,7 +73,7 @@ open class DefaultMessageModule : MessageModule {
 
                    // 更新每个session的最后一条消息
                    for (sid, msgs) in sessionMsgs {
-                       SwiftEventBus.post(IMEvent.MsgsNew.rawValue, sender: (sid, msgs))
+                       SwiftEventBus.post(IMEvent.BatchMsgNew.rawValue, sender: (sid, msgs))
                        let lastMsg = msgs.last
                        if lastMsg != nil {
                            self.processSessionByMessage(lastMsg!)
@@ -106,7 +106,7 @@ open class DefaultMessageModule : MessageModule {
             do {
                 var session = try IMCoreManager.shared.database.sessionDao.querySessionByEntityId(entityId, sessionType)
                 if (session == nil) {
-                    
+                    session = Session.emptySession()
                 }
                 observer.onNext(session!)
             } catch {

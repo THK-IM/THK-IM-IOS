@@ -23,15 +23,15 @@ class VideoMsgProcessor : BaseMsgProcessor {
     
     override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
         do {
-            var entity = message
             let storageModule = IMCoreManager.shared.storageModule
             var videoData = try JSONDecoder().decode(
-                IMVideoData.self,
-                from: entity.data.data(using: .utf8) ?? Data()
+                IMVideoMsgData.self,
+                from: message.data.data(using: .utf8) ?? Data()
             )
             if videoData.path == nil {
                 return Observable.error(CocoaError.init(.fileNoSuchFile))
             }
+            var entity = message
             // 1 检查文件所在目录，如果非IM目录，拷贝到IM目录下
             try self.checkDir(storageModule, &videoData, &entity)
             
@@ -46,12 +46,11 @@ class VideoMsgProcessor : BaseMsgProcessor {
         }
     }
     
-    private func checkDir(_ storageModule: StorageModule, _ videoData: inout IMVideoData, _ entity: inout Message) throws {
+    private func checkDir(_ storageModule: StorageModule, _ videoData: inout IMVideoMsgData, _ entity: inout Message) throws {
         let isAssignedPath = storageModule.isAssignedPath(
             videoData.path!,
             IMFileFormat.Image.rawValue,
-            entity.sessionId,
-            entity.fromUId
+            entity.sessionId
         )
         let (_, name) = storageModule.getPathsFromFullPath(videoData.path!)
         if !isAssignedPath {
@@ -72,7 +71,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
         return ImageCompressor.Options(maxWidth: 160, maxHeight: 400, maxSize: 100*1024, quality: 0.9)
     }
     
-    open func extractVideoFrame(_ storageModule: StorageModule, _ videoData: inout IMVideoData, _ entity: inout Message) throws {
+    open func extractVideoFrame(_ storageModule: StorageModule, _ videoData: inout IMVideoMsgData, _ entity: inout Message) throws {
         let path = storageModule.sandboxFilePath(videoData.path!)
         // 从视频文件中解析第一帧图片
         let asset = AVURLAsset(url: NSURL.fileURL(withPath: path))
@@ -126,11 +125,8 @@ class VideoMsgProcessor : BaseMsgProcessor {
                 IMVideoMsgBody.self,
                 from: entity.content.data(using: .utf8) ?? Data()
             )
-            if videoBody.url != nil {
-                return Observable.just(entity)
-            }
             let videoData = try JSONDecoder().decode(
-                IMVideoData.self,
+                IMVideoMsgData.self,
                 from: entity.data.data(using: .utf8) ?? Data()
             )
             guard var thumbPath = videoData.thumbnailPath else {
@@ -148,8 +144,10 @@ class VideoMsgProcessor : BaseMsgProcessor {
                             FileLoaderState.Wait.rawValue,
                             FileLoaderState.Init.rawValue,
                             FileLoaderState.Ing.rawValue:
-                            let progress = IMUploadProgress(uploadKey, state, progress)
-                            SwiftEventBus.post(IMEvent.MsgUploadProgressUpdate.rawValue, sender: progress)
+                            SwiftEventBus.post(
+                                IMEvent.MsgUploadProgressUpdate.rawValue,
+                                sender: IMUploadProgress(uploadKey, state, progress)
+                            )
                         case FileLoaderState.Success.rawValue:
                             do {
                                 videoBody.thumbnailUrl = url
@@ -192,11 +190,8 @@ class VideoMsgProcessor : BaseMsgProcessor {
                 IMVideoMsgBody.self,
                 from: entity.content.data(using: .utf8) ?? Data()
             )
-            if videoBody.url != nil {
-                return Observable.just(entity)
-            }
             let videoData = try JSONDecoder().decode(
-                IMVideoData.self,
+                IMVideoMsgData.self,
                 from: entity.data.data(using: .utf8) ?? Data()
             )
             guard var videoPath = videoData.path else {
@@ -214,15 +209,17 @@ class VideoMsgProcessor : BaseMsgProcessor {
                             FileLoaderState.Wait.rawValue,
                             FileLoaderState.Init.rawValue,
                             FileLoaderState.Ing.rawValue:
-                            let progress = IMUploadProgress(uploadKey, state, progress)
-                            SwiftEventBus.post(IMEvent.MsgUploadProgressUpdate.rawValue, sender: progress)
+                            SwiftEventBus.post(
+                                IMEvent.MsgUploadProgressUpdate.rawValue,
+                                sender: IMUploadProgress(uploadKey, state, progress)
+                            )
                         case
                             FileLoaderState.Success.rawValue:
                             do {
                                 videoBody.url = url
-                                videoBody.width = videoData.width
-                                videoBody.height = videoData.height
-                                videoBody.duration = videoData.duration
+                                videoBody.width = videoData.width!
+                                videoBody.height = videoData.height!
+                                videoBody.duration = videoData.duration!
                                 let d = try JSONEncoder().encode(videoBody)
                                 entity.content = String(data: d, encoding: .utf8)!
                                 observer.onNext(entity)

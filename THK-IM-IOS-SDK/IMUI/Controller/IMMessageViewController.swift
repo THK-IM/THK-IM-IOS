@@ -148,7 +148,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     }
     
     func registerMsgEvent() {
-        SwiftEventBus.onMainThread(self, name: IMEvent.MsgsNew.rawValue, handler: { [weak self ] result in
+        SwiftEventBus.onMainThread(self, name: IMEvent.BatchMsgNew.rawValue, handler: { [weak self ] result in
             guard let tuple = result?.object as? (Int64, Array<Message>) else {
                 return
             }

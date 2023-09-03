@@ -51,8 +51,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return token
         })
         let debug = true
-        let uId = 1
-        IMCoreManager.shared.initApplication(application, 1, debug)
+        let uId : Int64 = 15498
+        IMCoreManager.shared.initApplication(application, uId, debug)
         IMCoreManager.shared.api = DefaultIMApi(endpoint: "http://192.168.1.6:10000")
         IMCoreManager.shared.signalModule = DefaultSignalModule(application, "ws://192.168.1.6:20000/ws", "\(uId)")
         IMCoreManager.shared.fileLoadModule = OSSFileLoadModule(bucket, endpoint, credentialProvider)
