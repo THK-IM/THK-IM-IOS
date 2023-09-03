@@ -19,7 +19,7 @@ class AckMsgBean: Codable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case sessionId = "session_id"
+        case sessionId = "s_id"
         case uId = "u_id"
         case msgIds = "msg_ids"
     }

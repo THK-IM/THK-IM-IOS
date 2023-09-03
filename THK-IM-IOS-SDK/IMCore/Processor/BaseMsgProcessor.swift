@@ -45,8 +45,10 @@ public class BaseMsgProcessor {
                     msg.sendStatus = MsgSendStatus.Success.rawValue
                     try insertOrUpdateDb(msg)
                 }
+                if dbMsg!.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                    IMCoreManager.shared.getMessageModule().ackMessageToCache(msg.sessionId, msg.msgId)
+                }
             }
-            IMCoreManager.shared.getMessageModule().ackMessageToCache(msg.sessionId, msg.msgId)
         } catch let error {
             DDLogError("Received NewMsg \(error)")
         }

@@ -1,5 +1,5 @@
 //
-//  UploadTask.swift
+//  OSSUploadTask.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/5.
@@ -8,7 +8,7 @@
 import Foundation
 import AliyunOSSiOS
 
-class UploadTask: FileTask {
+class OSSUploadTask: OSSLoadTask {
     
     private var request: OSSPutObjectRequest?
     override func notify(progress: Int, state: Int) {

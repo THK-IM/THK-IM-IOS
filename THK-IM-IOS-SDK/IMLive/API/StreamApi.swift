@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-enum LiveApi {
+enum StreamApi {
     /// 请求推流
     case requestPublish(_ bean: PublishReqBean)
     /// 请求拉流
@@ -16,7 +16,7 @@ enum LiveApi {
 }
 
 
-extension LiveApi: TargetType {
+extension StreamApi: TargetType {
     
     var baseURL: URL {
         return URL.init(string: "\(LiveManager.shared.endpoint())/stream")!

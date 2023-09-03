@@ -1,5 +1,5 @@
 //
-//  DefaultFileLoadModule.swift
+//  OSSFileLoadModule.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/5.
@@ -9,10 +9,10 @@ import Foundation
 import AliyunOSSiOS
 import CocoaLumberjack
 
-class DefaultFileLoadModule: FileLoaderModule {
+class OSSFileLoadModule: FileLoaderModule {
     
-    private var downloadTaskMap = [String: (FileTask, Array<FileLoaderListener>)]()
-    private var uploadTaskMap = [String: (FileTask, Array<FileLoaderListener>)]()
+    private var downloadTaskMap = [String: (OSSLoadTask, Array<FileLoaderListener>)]()
+    private var uploadTaskMap = [String: (OSSLoadTask, Array<FileLoaderListener>)]()
     private let lock = NSLock()
     
     let oSsBucket: String
@@ -41,7 +41,7 @@ class DefaultFileLoadModule: FileLoaderModule {
         let taskId = self.getTaskId(key: key, path: path, type: "download")
         var taskTuple = downloadTaskMap[taskId]
         if (taskTuple == nil) {
-            let dTask = DownloadTask(taskId: taskId, path: path, url: key, fileModule: self)
+            let dTask = OSSDownloadTask(taskId: taskId, path: path, url: key, fileModule: self)
             dTask.start()
             downloadTaskMap[taskId] = (dTask, [loadListener])
         } else {
@@ -56,7 +56,7 @@ class DefaultFileLoadModule: FileLoaderModule {
         let taskId = self.getTaskId(key: key, path: path, type: "upload")
         var taskTuple = uploadTaskMap[taskId]
         if (taskTuple == nil) {
-            let dTask = UploadTask(taskId: taskId, path: path, url: key, fileModule: self)
+            let dTask = OSSLoadTask(taskId: taskId, path: path, url: key, fileModule: self)
             dTask.start()
             uploadTaskMap[taskId] = (dTask, [loadListener])
         } else {

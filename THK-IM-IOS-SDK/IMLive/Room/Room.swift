@@ -19,8 +19,6 @@ class Room: NSObject {
     private var observers = [RoomObserver]()
     private var localParticipant: LocalParticipant? = nil
     private var remoteParticipants = [RemoteParticipant]()
-    
-    let liveApi = MoyaProvider<LiveApi>(plugins: [NetworkLoggerPlugin()])
      
     init(id: String, uId: String, mode: Mode, role: Role, members: Array<Member>) {
         self.id = id

@@ -16,7 +16,6 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     let uId: String
     let roomId: String
     let role: Role
-    let liveApi = MoyaProvider<LiveApi>(plugins: [NetworkLoggerPlugin()])
     let disposeBag = DisposeBag()
     var peerConnection: RTCPeerConnection?
     private var audioTracks = [RTCAudioTrack]()

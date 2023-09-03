@@ -85,7 +85,7 @@ class DefaultMessageDao : MessageDao {
     }
     
     func updateMessageOperationStatus(_ sessionId: Int64, _ msgIds: [Int64], _ operateStatus: Int) throws {
-        let operateStatusColumn = Column(named: "operateStatus")
+        let operateStatusColumn = Column(named: "operate_status")
         let expression1 = Expression(with: operateStatusColumn)
         let expression2 = Expression(with: operateStatus)
         let expression3 = expression1 | expression2
@@ -106,8 +106,7 @@ class DefaultMessageDao : MessageDao {
             .set(Message.Properties.sendStatus)
             .to(MsgSendStatus.Failed.rawValue)
             .where(
-                Message.Properties.sendStatus == MsgSendStatus.Init.rawValue ||
-                Message.Properties.sendStatus == MsgSendStatus.Sending.rawValue
+                Message.Properties.sendStatus != MsgSendStatus.Success.rawValue
             )
         try self.database?.exec(update)
     }

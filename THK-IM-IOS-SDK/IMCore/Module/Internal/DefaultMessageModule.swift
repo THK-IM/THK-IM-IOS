@@ -253,6 +253,13 @@ open class DefaultMessageModule : MessageModule {
     
     private func ackMessageSuccess(_ sessionId: Int64, _ msgIds: Set<Int64>) {
         ackLock.lock()
+        do {
+            try IMCoreManager.shared.database
+                .messageDao
+                .updateMessageOperationStatus(sessionId, msgIds.compactMap({$0}), MsgOperateStatus.Ack.rawValue)
+        } catch {
+            DDLogError("ackMessageSuccess error: \(error)")
+        }
         var messageIds = needAckDic[sessionId]
         if messageIds != nil {
             for id in msgIds {

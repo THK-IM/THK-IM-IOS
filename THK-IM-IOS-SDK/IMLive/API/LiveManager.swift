@@ -14,10 +14,20 @@ class LiveManager {
     
     static let shared = LiveManager()
     
+    private var _liveApi: LiveApi
+    var liveApi: LiveApi {
+        set {
+            self._liveApi = newValue
+        }
+        get {
+            return self._liveApi
+        }
+    }
+    
     private var room: Room?
-    let roomApi = MoyaProvider<RoomApi>(plugins: [NetworkLoggerPlugin()])
     let factory:RTCPeerConnectionFactory
     private init() {
+        self._liveApi = DefaultLiveApi()
         RTCPeerConnectionFactory.initialize()
         let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
         let videoDecoderFactory = RTCDefaultVideoDecoderFactory()
@@ -41,10 +51,7 @@ class LiveManager {
     func createRoom(mode: Mode) -> Observable<Room> {
         room?.destroy()
         let uId = selfId()
-        return roomApi.rx
-            .request(.createRoom(CreateRoomReqBean(id: uId, mode: mode.rawValue)))
-            .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(CreateRoomResBean.self))
+        return self.liveApi.createRoom(CreateRoomReqBean(id: uId, mode: mode.rawValue))
             .flatMap{ resBean -> Observable<Room> in
                 let room = Room(id: resBean.id, uId: uId, mode: mode, role: Role.Broadcaster, members: resBean.members)
                 self.room = room
@@ -55,10 +62,8 @@ class LiveManager {
     func joinRoom(roomId: String, role: Role, token: String) -> Observable<Room> {
         room?.destroy()
         let uId = selfId()
-        return roomApi.rx
-            .request(.joinRoom(JoinRoomReqBean(roomId: roomId, uid: uId, role: role.rawValue, token: token)))
-            .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(JoinRoomResBean.self))
+        return self.liveApi
+            .joinRoom(JoinRoomReqBean(roomId: roomId, uid: uId, role: role.rawValue, token: token))
             .flatMap{ [weak self ] resBean -> Observable<Room> in
                 guard let sf = self else {
                     return Observable.error(CocoaError.init(CocoaError.executableRuntimeMismatch))

@@ -1,5 +1,5 @@
 //
-//  LoadTask.swift
+//  OSSLoadTask.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/5.
@@ -8,23 +8,18 @@
 import Foundation
 import CocoaLumberjack
 
-class FileTask {
+class OSSLoadTask{
     
     let taskId: String
     let path: String
     let url: String
-    let fileModuleReference: WeakReference<DefaultFileLoadModule>
+    let fileModuleReference: WeakReference<OSSFileLoadModule>
     
-    init(taskId : String, path: String, url: String, fileModule: DefaultFileLoadModule) {
+    init(taskId : String, path: String, url: String, fileModule: OSSFileLoadModule) {
         self.taskId = taskId
         self.path = path
         self.url = url
         self.fileModuleReference = WeakReference(value: fileModule)
-        DDLogDebug("SwiftObj init FileTask")
-    }
-    
-    deinit {
-        DDLogDebug("SwiftObj deinit FileTask")
     }
     
     func start() {

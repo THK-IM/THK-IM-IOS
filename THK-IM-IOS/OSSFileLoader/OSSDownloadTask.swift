@@ -1,5 +1,5 @@
 //
-//  DownloadTask.swift
+//  OSSDownloadTask.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/5.
@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 import CocoaLumberjack
 
-class DownloadTask : FileTask {
+class OSSDownloadTask : OSSLoadTask {
     
     private var request: DownloadRequest?
     private var resumeData: Data?

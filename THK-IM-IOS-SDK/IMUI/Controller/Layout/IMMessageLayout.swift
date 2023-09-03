@@ -218,7 +218,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
         tableView.insertRows(at: paths, with: .none)
         tableView.scrollToRow(
             at: IndexPath(row: messagesWithTimeLine.count-1, section: 0),
-            at: .top,
+            at: .none,
             animated: false
         )
         UIView.setAnimationsEnabled(true)
@@ -249,7 +249,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
             // 老消息，替换reload
             self.messages[pos] = message
             tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
-            return 
+            return
         }
         let insertPos = findInsertPosition(message)
         if (insertPos > 1){
