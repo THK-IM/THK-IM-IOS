@@ -10,6 +10,15 @@ import WCDBSwift
 
 class DefaultMessageDao : MessageDao {
     
+    
+    weak var database: Database?
+    let tableName: String
+    
+    init(_ database: Database, _ tableName: String) {
+        self.database = database
+        self.tableName = tableName
+    }
+    
     func findMessageCountBySid(_ sessionId: Int64) throws -> Int64 {
         return try self.database!.getValue(
             on: Message.Properties.msgId.count(),
@@ -100,6 +109,9 @@ class DefaultMessageDao : MessageDao {
         try self.database?.exec(update)
     }
     
+    /**
+     * 重置消息发送状态为失败
+     */
     func resetSendStatusFailed() throws {
         let update = StatementUpdate()
             .update(table:self.tableName)
@@ -109,6 +121,21 @@ class DefaultMessageDao : MessageDao {
                 Message.Properties.sendStatus != MsgSendStatus.Success.rawValue
             )
         try self.database?.exec(update)
+    }
+    
+    
+    /**
+     * 获取session下的未读数
+     */
+    func getUnReadCount(_ sessionId: Int64, _ operateStatus: Int) throws -> Int64 {
+        guard let res = try self.database?.getValue(
+            on: Message.Properties.id.count(),
+            fromTable: self.tableName,
+            where: Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0
+        ).int64Value else {
+            return 0
+        }
+        return res
     }
     
     
@@ -190,15 +217,6 @@ class DefaultMessageDao : MessageDao {
             orderBy: [Message.Properties.cTime.order(Order.ascending)],
             limit: count
         )
-    }
-    
-    
-    weak var database: Database?
-    let tableName: String
-    
-    init(_ database: Database, _ tableName: String) {
-        self.database = database
-        self.tableName = tableName
     }
     
 }

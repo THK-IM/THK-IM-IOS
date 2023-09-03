@@ -26,7 +26,7 @@ public final class Session: TableCodable {
     // session状态
     var status: Int
     // 未读数
-    var unreadCount: Int = 0
+    var unreadCount: Int64 = 0
     // 草稿
     var draft: String?
     // 最近一条消息
@@ -67,7 +67,7 @@ public final class Session: TableCodable {
     
     
     init(id: Int64, type: Int, entityId: Int64, name: String, remark: String, mute: Int, role: Int, status: Int,
-         unreadCount: Int, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64? = nil,
+         unreadCount: Int64, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64? = nil,
          extData: String? = nil, cTime: Int64, mTime: Int64) {
         self.id = id
         self.type = type

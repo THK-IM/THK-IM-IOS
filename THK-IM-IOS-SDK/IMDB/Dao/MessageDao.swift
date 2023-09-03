@@ -65,6 +65,11 @@ protocol MessageDao {
     func resetSendStatusFailed() throws
     
     /**
+     * 获取session下的未读数
+     */
+    func getUnReadCount(_ sessionId: Int64, _ operateStatus: Int) throws -> Int64
+    
+    /**
      * 更新消息发送状态
      */
     func updateSendStatus(_ sessionId: Int64, _ id: Int64, _ fromUserId: Int64, _ status: Int) throws

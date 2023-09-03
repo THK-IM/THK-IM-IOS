@@ -189,6 +189,8 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
                     if (msgs != nil) {
                         for m in msgs! {
                             print("\(m.id) \(m.entityId) \(m.id)")
+                            let count = try IMCoreManager.shared.database.messageDao.getUnReadCount(m.id, MsgOperateStatus.ClientRead.rawValue)
+                            print("count: \(count)")
                         }
                     }
                 } catch {

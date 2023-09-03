@@ -323,21 +323,22 @@ open class DefaultMessageModule : MessageModule {
     }
     
     func processSessionByMessage(_ msg: Message) {
-        let sessionDao = IMCoreManager.shared.database.sessionDao
         self.getSession(msg.sessionId)
             .compose(DefaultRxTransformer.io2Io())
             .subscribe(
                 onNext: { s in
-                    if s.mTime < msg.cTime {
-                        let processor = self.getMsgProcessor(msg.type)
-                        s.lastMsg = processor.getSessionDesc(msg: msg)
-                        s.mTime = msg.cTime
-                        do {
-                            try sessionDao.updateSessions(s)
-                            SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
-                        } catch {
-                            DDLogError(error)
-                        }
+                    let processor = self.getMsgProcessor(msg.type)
+                    s.lastMsg = processor.getSessionDesc(msg: msg)
+                    s.mTime = msg.cTime
+                    do {
+                        let unReadCount = try IMCoreManager.shared.database.messageDao.getUnReadCount(
+                            msg.sessionId, MsgOperateStatus.ClientRead.rawValue
+                        )
+                        s.unreadCount = unReadCount
+                        try IMCoreManager.shared.database.sessionDao.insertSessions(s)
+                        SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
+                    } catch {
+                        DDLogError(error)
                     }
                 },
                 onError: { error in
