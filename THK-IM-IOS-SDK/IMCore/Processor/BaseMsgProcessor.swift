@@ -35,6 +35,7 @@ public class BaseMsgProcessor {
                     msg.sendStatus = MsgSendStatus.Success.rawValue
                 }
                 try self.insertOrUpdateDb(msg)
+                IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
             } else {
                 // 数据库存在，更新本地数据库数据
                 if dbMsg!.sendStatus != MsgSendStatus.Success.rawValue {
@@ -46,6 +47,9 @@ public class BaseMsgProcessor {
                 }
                 if dbMsg!.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                     IMCoreManager.shared.getMessageModule().ackMessageToCache(msg.sessionId, msg.msgId)
+                }
+                if dbMsg!.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 {
+                    IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
                 }
             }
         } catch let error {

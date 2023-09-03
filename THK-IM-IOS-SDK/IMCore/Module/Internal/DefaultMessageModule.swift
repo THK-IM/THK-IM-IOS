@@ -194,7 +194,6 @@ open class DefaultMessageModule : MessageModule {
     func onNewMessage(_ msg: Message) {
         msgLock.lock()
         getMsgProcessor(msg.type).received(msg)
-        processSessionByMessage(msg)
         msgLock.unlock()
     }
     
