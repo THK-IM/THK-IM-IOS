@@ -63,7 +63,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
             .subscribe(onNext: { data in
                 print(data)
                 do {
-                    try IMCoreManager.shared.database.sessionDao.insertSessions(data)
+                    try IMCoreManager.shared.database.sessionDao.insertOrUpdateSessions(data)
                 } catch {
                     print(error)
                 }

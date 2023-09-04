@@ -56,7 +56,10 @@ open class DefaultMessageModule : MessageModule {
                    var sessionMsgs = [Int64: [Message]]()
                    for msg in messageArray {
                        if msg.fromUId == IMCoreManager.shared.uId {
-                           msg.operateStatus = msg.operateStatus | MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+                           msg.operateStatus = msg.operateStatus |
+                                               MsgOperateStatus.Ack.rawValue |
+                                               MsgOperateStatus.ClientRead.rawValue |
+                                               MsgOperateStatus.ServerRead.rawValue
                        }
                        msg.sendStatus = MsgSendStatus.Success.rawValue
                        if sessionMsgs[msg.sessionId] == nil {
@@ -88,12 +91,15 @@ open class DefaultMessageModule : MessageModule {
 
                if (messageArray.last != nil) {
                    let severTime = messageArray.last!.cTime
-                   _ = self.setOfflineMsgSyncTime(severTime)
+                   let success = self.setOfflineMsgSyncTime(severTime)
+                   if (success) {
+                       if (messageArray.count >= count) {
+                           self.syncOfflineMessages()
+                       }
+                   }
                }
 
-               if (messageArray.count >= count) {
-                   self.syncOfflineMessages()
-               }
+               
            })
            .disposed(by: disposeBag)
     }
@@ -334,7 +340,7 @@ open class DefaultMessageModule : MessageModule {
                             msg.sessionId, MsgOperateStatus.ClientRead.rawValue
                         )
                         s.unreadCount = unReadCount
-                        try IMCoreManager.shared.database.sessionDao.insertSessions(s)
+                        try IMCoreManager.shared.database.sessionDao.insertOrUpdateSessions(s)
                         SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
                     } catch {
                         DDLogError(error)

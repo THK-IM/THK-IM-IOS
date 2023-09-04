@@ -18,7 +18,12 @@ protocol SessionDao {
     /**
      * 批量插入session
      */
-    func insertSessions(_ sessions: Session...) throws
+    func insertOrUpdateSessions(_ sessions: Session...) throws
+    
+    /**
+     * 批量插入session
+     */
+    func insertOrIgnoreSessions(_ sessions: Session...) throws
     
     /**
      * 通过sessionId查询session
