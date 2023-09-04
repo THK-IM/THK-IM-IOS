@@ -50,11 +50,8 @@ class DefaultIMApi: IMApi {
             })
     }
     
-    func createSession(_ sessionType: Int, _ entityId: Int64?, _ members: Set<Int64>) -> Observable<Session> {
-        let reqBean = CreateSessionBean(type: sessionType, entityId: entityId, members: members)
-        if sessionType == SessionType.Single.rawValue {
-            reqBean.entityId = nil
-        }
+    func createSession(_ uId: Int64, _ sessionType: Int, _ entityId: Int64, _ members: Set<Int64>?) -> Observable<Session> {
+        let reqBean = CreateSessionBean(uId: uId, type: sessionType, entityId: entityId, members: members)
         return sessionApi.rx
             .request(.createSession(reqBean))
             .asObservable()
@@ -113,7 +110,6 @@ class DefaultIMApi: IMApi {
     }
     
     func revokeMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64) -> Observable<Bool> {
-        // TODO
         var msgIds = Set<Int64>()
         msgIds.insert(msgId)
         let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
@@ -131,7 +127,6 @@ class DefaultIMApi: IMApi {
     }
     
     func reeditMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64, _ body: String) -> Observable<Bool> {
-        // TODO
         var msgIds = Set<Int64>()
         msgIds.insert(msgId)
         let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
@@ -149,7 +144,6 @@ class DefaultIMApi: IMApi {
     }
     
     func deleteMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Bool> {
-        // TODO
         let reqBean = DeleteMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
             .request(.deleteMsgs(reqBean))

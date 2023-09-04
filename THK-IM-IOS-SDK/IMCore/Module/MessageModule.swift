@@ -32,9 +32,9 @@ protocol MessageModule : BaseModule {
     func syncLatestSessionsFromServer(_ lastSyncTime: Int, _ count: Int)
     
     /**
-     * 创建entityId和sessionType对应的session, 先查本地数据库后查服务端
+     * 先查本地数据库后查服务端
      */
-    func createSession(_ entityId: Int64, _ sessionType: Int) -> Observable<Session>
+    func createSingleSession(_ entityId: Int64) -> Observable<Session>
     
     /**
      * 获取session, 先查本地数据库后查服务端

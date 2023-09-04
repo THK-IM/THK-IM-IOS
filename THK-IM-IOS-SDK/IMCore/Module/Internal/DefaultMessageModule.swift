@@ -48,7 +48,8 @@ open class DefaultMessageModule : MessageModule {
     func syncOfflineMessages() {
         let lastTime = self.getOfflineMsgLastSyncTime()
         let count = 200
-        IMCoreManager.shared.api.getLatestMessages(lastTime, 0, count)
+        let uId = IMCoreManager.shared.uId
+        IMCoreManager.shared.api.getLatestMessages(uId, lastTime, count)
            .compose(DefaultRxTransformer.io2Io())
            .subscribe(onNext: { messageArray in
                do {
@@ -64,11 +65,13 @@ open class DefaultMessageModule : MessageModule {
                        sessionMsgs[msg.sessionId]?.append(msg)
                    }
                    // 批量插入消息
-                   try IMCoreManager.shared.database.messageDao.insertMessages(messageArray)
+                   try IMCoreManager.shared.database.messageDao.insertOrIgnoreMessages(messageArray)
 
                    // 插入ack
                    for msg in messageArray {
-                       self.ackMessageToCache(msg.sessionId, msg.msgId)
+                       if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                           self.ackMessageToCache(msg.sessionId, msg.msgId)
+                       }
                    }
 
                    // 更新每个session的最后一条消息
@@ -83,8 +86,8 @@ open class DefaultMessageModule : MessageModule {
                    DDLogError(error)
                }
 
-               if (messageArray.count > 0) {
-                   let severTime = IMCoreManager.shared.severTime
+               if (messageArray.last != nil) {
+                   let severTime = messageArray.last!.cTime
                    _ = self.setOfflineMsgSyncTime(severTime)
                }
 
@@ -101,7 +104,8 @@ open class DefaultMessageModule : MessageModule {
     
     
     
-    func createSession(_ entityId: Int64, _ sessionType: Int) -> Observable<Session> {
+    func createSingleSession(_ entityId: Int64) -> Observable<Session> {
+        let sessionType = SessionType.Single.rawValue
         return Observable.create({observer -> Disposable in
             do {
                 var session = try IMCoreManager.shared.database.sessionDao.querySessionByEntityId(entityId, sessionType)
@@ -118,12 +122,8 @@ open class DefaultMessageModule : MessageModule {
             if (session.id > 0) {
                 return Observable.just(session)
             } else {
-                var members = Set<Int64>()
-                members.insert(IMCoreManager.shared.uId)
-                if sessionType == SessionType.Single.rawValue {
-                    members.insert(entityId)
-                }
-                return IMCoreManager.shared.api.createSession(sessionType, entityId, members)
+                let uId = IMCoreManager.shared.uId
+                return IMCoreManager.shared.api.createSession(uId, sessionType, entityId, nil)
             }
         })
     }

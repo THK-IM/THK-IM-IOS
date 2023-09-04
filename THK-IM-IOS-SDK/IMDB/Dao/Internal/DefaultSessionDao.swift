@@ -36,7 +36,7 @@ class DefaultSessionDao : SessionDao {
     }
     
     func insertSessions(_ sessions: Session...) throws {
-        try self.database?.insertOrIgnore(sessions, intoTable: self.tableName)
+        try self.database?.insertOrReplace(sessions, intoTable: self.tableName)
     }
     
     func querySessionById(_ sId: Int64) throws -> Session? {

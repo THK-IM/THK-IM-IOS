@@ -58,7 +58,7 @@ extension IMMessageApi: TargetType {
         case let .sendMsg(bean):
             return .requestJSONEncodable(bean)
         case let .queryLatestMsg(uId, offset, count, cTime):
-            let urlParameters = ["u_id": uId, "offset": offset, "size": count, "c_time": cTime] as [String : Any]
+            let urlParameters = ["u_id": uId, "offset": offset, "count": count, "c_time": cTime] as [String : Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         case let .ackMsgs(bean):
             return .requestJSONEncodable(bean)

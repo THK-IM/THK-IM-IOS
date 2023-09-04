@@ -38,7 +38,6 @@ open class DefaultCommonModule : CommonModule {
         }
     }
     
-    
     func onSignalReceived(_ subType: Int, _ body: String) {
         if subType == CommonSubType.PONG.rawValue {
             IMCoreManager.shared.getMessageModule().ackMessagesToServer()

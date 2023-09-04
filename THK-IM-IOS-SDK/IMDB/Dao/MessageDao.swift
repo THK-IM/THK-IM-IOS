@@ -37,12 +37,12 @@ protocol MessageDao {
     /**
      * 批量插入消息
      */
-    func insertMessages(_ messages: [Message]) throws
+    func insertOrReplaceMessages(_ messages: [Message]) throws
     
     /**
      * 插入消息
      */
-    func insertMessages(_ messages: Message...) throws
+    func insertOrIgnoreMessages(_ messages: [Message]) throws
     
     /**
      * 批量更新消息

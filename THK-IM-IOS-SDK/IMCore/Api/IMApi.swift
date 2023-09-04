@@ -28,7 +28,7 @@ protocol IMApi: AnyObject {
     /**
      * 创建会话
      */
-    func createSession(_ sessionType: Int, _ entityId: Int64?, _ members: Set<Int64>) -> Observable<Session>
+    func createSession(_ uId: Int64, _ sessionType: Int, _ entityId: Int64, _ members: Set<Int64>?) -> Observable<Session>
     
     /**
      * 发送消息到服务端

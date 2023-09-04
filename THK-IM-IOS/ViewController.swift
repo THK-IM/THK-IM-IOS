@@ -58,7 +58,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
             .compose(DefaultRxTransformer.io2Main())
             .flatMap({ (value) -> Observable<Session> in
                 let entityId = Int64(arc4random() % 100000) + 100
-                return IMCoreManager.shared.getMessageModule().createSession(entityId, SessionType.Single.rawValue)
+                return IMCoreManager.shared.getMessageModule().createSingleSession(entityId)
             })
             .subscribe(onNext: { data in
                 print(data)
@@ -185,14 +185,23 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
             .compose(DefaultRxTransformer.io2Main())
             .subscribe(onNext: { [weak self] in
                 do {
-                    let msgs = try IMCoreManager.shared.database.sessionDao.querySessions(100, IMCoreManager.shared.severTime)
-                    if (msgs != nil) {
-                        for m in msgs! {
-                            print("\(m.id) \(m.entityId) \(m.id)")
-                            let count = try IMCoreManager.shared.database.messageDao.getUnReadCount(m.id, MsgOperateStatus.ClientRead.rawValue)
-                            print("count: \(count)")
-                        }
-                    }
+//                    let msgs = try IMCoreManager.shared.database.sessionDao.querySessions(100, IMCoreManager.shared.severTime)
+//                    if (msgs != nil) {
+//                        for m in msgs! {
+//                            print("\(m.id) \(m.entityId) \(m.id)")
+//                            let count = try IMCoreManager.shared.database.messageDao.getUnReadCount(m.id, MsgOperateStatus.ClientRead.rawValue)
+//                            print("count: \(count)")
+//                        }
+//                    }
+                    
+                    let msgDao = IMCoreManager.shared.database.messageDao
+                    let message = Message(id: 1, sessionId: 1, fromUId: 1, msgId: 1, type: 1, content: "fsfdsf", sendStatus: MsgSendStatus.Success.rawValue, operateStatus: 1, cTime: Date().timeMilliStamp, mTime: Date().timeMilliStamp)
+                    try msgDao.insertOrReplaceMessages([message])
+                    message.msgId = 2
+                    message.content = "fsfafa"
+                    try msgDao.insertOrIgnoreMessages([message])
+                    let dbMsg = try msgDao.findMessage(1, 1, 1)
+                    print(dbMsg)
                 } catch {
                     print(error)
                 }

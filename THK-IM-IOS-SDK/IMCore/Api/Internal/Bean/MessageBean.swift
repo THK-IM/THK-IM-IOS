@@ -15,6 +15,7 @@ class MessageBean: Codable {
     var msgId: Int64  = 0
     var type: Int = 0
     var body: String = ""
+    var status: Int? = nil
     var rMsgId: Int64? = nil
     var atUsers: String? = nil
     var cTime: Int64 = 0
@@ -40,6 +41,7 @@ class MessageBean: Codable {
         self.type = try container.decodeIfPresent(Int.self, forKey: .type) ?? 0
         self.body = try container.decodeIfPresent(String.self, forKey: .body) ?? ""
         self.rMsgId = try container.decodeIfPresent(Int64.self, forKey: .rMsgId)
+        self.status = try container.decodeIfPresent(Int.self, forKey: .status) ?? 0
         self.atUsers = try container.decodeIfPresent(String.self, forKey: .atUsers)
         self.cTime = try container.decodeIfPresent(Int64.self, forKey: .cTime) ?? 0
     }
@@ -63,6 +65,7 @@ class MessageBean: Codable {
         case msgId = "msg_id"
         case type = "type"
         case body = "body"
+        case status = "status"
         case rMsgId = "r_msg_id"
         case atUsers = "at_users"
         case cTime = "c_time"

@@ -170,7 +170,7 @@ public class BaseMsgProcessor {
      * 【插入或更新消息状态】
      */
     open func insertOrUpdateDb(_ msg: Message, _ notify: Bool = true) throws {
-        try IMCoreManager.shared.database.messageDao.insertMessages(msg)
+        try IMCoreManager.shared.database.messageDao.insertOrReplaceMessages([msg])
         if notify {
             SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
         }

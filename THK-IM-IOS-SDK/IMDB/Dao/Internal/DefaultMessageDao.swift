@@ -61,13 +61,12 @@ class DefaultMessageDao : MessageDao {
         return try self.queryMessageBySidAndAfterCTime(sessionId, types, time, count)
     }
     
-    func insertMessages(_ messages: [Message]) throws {
+    func insertOrReplaceMessages(_ messages: [Message]) throws {
         try self.database?.insertOrReplace(messages, intoTable: self.tableName)
     }
     
-    
-    func insertMessages(_ messages: Message...) throws {
-        try self.database?.insertOrReplace(messages, intoTable: self.tableName)
+    func insertOrIgnoreMessages(_ messages: [Message]) throws {
+        try self.database?.insertOrIgnore(messages, intoTable: self.tableName)
     }
     
     func updateMessages(_ messages: Message...) throws {
