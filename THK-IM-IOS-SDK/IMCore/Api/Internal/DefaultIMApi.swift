@@ -79,83 +79,48 @@ class DefaultIMApi: IMApi {
             })
     }
     
-    func ackMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Bool> {
+    func ackMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
         let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
             .request(.ackMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2ErrorBean())
-            .flatMap({ (bean) -> Observable<Bool> in
-                if bean.code >= 200 && bean.code < 300 {
-                    return Observable.just(true)
-                } else {
-                    return Observable.just(false)
-                }
-            })
+            .compose(DefaultRxTransformer.response2Void())
     }
     
-    func readMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Bool> {
+    func readMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
         let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
             .request(.ackMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2ErrorBean())
-            .flatMap({ (bean) -> Observable<Bool> in
-                if bean.code >= 200 && bean.code < 300 {
-                    return Observable.just(true)
-                } else {
-                    return Observable.just(false)
-                }
-            })
+            .compose(DefaultRxTransformer.response2Void())
     }
     
-    func revokeMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64) -> Observable<Bool> {
+    func revokeMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64) -> Observable<Void> {
         var msgIds = Set<Int64>()
         msgIds.insert(msgId)
         let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
             .request(.ackMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2ErrorBean())
-            .flatMap({ (bean) -> Observable<Bool> in
-                if bean.code >= 200 && bean.code < 300 {
-                    return Observable.just(true)
-                } else {
-                    return Observable.just(false)
-                }
-            })
+            .compose(DefaultRxTransformer.response2Void())
     }
     
-    func reeditMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64, _ body: String) -> Observable<Bool> {
+    func reeditMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64, _ body: String) -> Observable<Void> {
         var msgIds = Set<Int64>()
         msgIds.insert(msgId)
         let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
             .request(.ackMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2ErrorBean())
-            .flatMap({ (bean) -> Observable<Bool> in
-                if bean.code >= 200 && bean.code < 300 {
-                    return Observable.just(true)
-                } else {
-                    return Observable.just(false)
-                }
-            })
+            .compose(DefaultRxTransformer.response2Void())
     }
     
-    func deleteMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Bool> {
+    func deleteMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
         let reqBean = DeleteMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
             .request(.deleteMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2ErrorBean())
-            .flatMap({ (bean) -> Observable<Bool> in
-                if bean.code >= 200 && bean.code < 300 {
-                    return Observable.just(true)
-                } else {
-                    return Observable.just(false)
-                }
-            })
+            .compose(DefaultRxTransformer.response2Void())
     }
     
     func getLatestMessages(_ uId: Int64, _ cTime: Int64, _ count: Int) -> Observable<Array<Message>> {

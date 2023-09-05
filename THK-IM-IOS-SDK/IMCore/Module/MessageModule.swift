@@ -79,23 +79,23 @@ protocol MessageModule : BaseModule {
     /**
      * 标记消息已读
      */
-    func readMessages(_ sessionId: Int64, _ msgIds: [Int64]?) -> Observable<Bool>
+    func readMessages(_ sessionId: Int64, _ msgIds: [Int64]?) -> Observable<Void>
     
     /**
      * 撤回消息
      */
-    func revokeMessage(_ message: Message) -> Observable<Bool>
+    func revokeMessage(_ message: Message) -> Observable<Void>
     
     
     /**
      * 重新编辑消息
      */
-    func reeditMessage(_ message: Message) -> Observable<Bool>
+    func reeditMessage(_ message: Message) -> Observable<Void>
     
     /**
      * 消息ack:需要ack的消息存入客户端缓存,批量按sessionId进行ack
      */
-    func ackMessageToCache(_ sessionId: Int64, _ msgId: Int64)
+    func ackMessageToCache(_ msg: Message)
     
     /**
      * 消息ack:发送到服务端
@@ -105,7 +105,7 @@ protocol MessageModule : BaseModule {
     /**
      * 批量删除多条消息
      */
-    func deleteMessages(_ sessionId: Int64, _ messages: Array<Message>, _ deleteServer: Bool) -> Observable<Bool>
+    func deleteMessages(_ sessionId: Int64, _ messages: Array<Message>, _ deleteServer: Bool) -> Observable<Void>
     
     
     /**

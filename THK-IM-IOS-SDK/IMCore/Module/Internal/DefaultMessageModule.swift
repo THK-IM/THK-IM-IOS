@@ -68,12 +68,14 @@ open class DefaultMessageModule : MessageModule {
                        sessionMsgs[msg.sessionId]?.append(msg)
                    }
                    // 批量插入消息
-                   try IMCoreManager.shared.database.messageDao.insertOrIgnoreMessages(messageArray)
+                   if messageArray.count > 0 {
+                       try IMCoreManager.shared.database.messageDao.insertOrIgnoreMessages(messageArray)
+                   }
 
                    // 插入ack
                    for msg in messageArray {
                        if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
-                           self.ackMessageToCache(msg.sessionId, msg.msgId)
+                           self.ackMessageToCache(msg)
                        }
                    }
 
@@ -228,27 +230,31 @@ open class DefaultMessageModule : MessageModule {
         return IMCoreManager.shared.api.sendMessageToServer(msg: message)
     }
     
-    func readMessages(_ sessionId: Int64, _ msgIds: [Int64]?) -> Observable<Bool> {
+    func readMessages(_ sessionId: Int64, _ msgIds: [Int64]?) -> Observable<Void> {
         // TODO
-        return Observable.just(true)
+        return Observable.empty()
     }
     
-    func revokeMessage(_ message: Message) -> Observable<Bool> {
+    func revokeMessage(_ message: Message) -> Observable<Void> {
         // TODO
-        return Observable.just(true)
+        return Observable.empty()
     }
     
-    func reeditMessage(_ message: Message) -> Observable<Bool> {
+    func reeditMessage(_ message: Message) -> Observable<Void> {
         // TODO
-        return Observable.just(true)
+        return Observable.empty()
     }
     
-    func ackMessageToCache(_ sessionId: Int64, _ msgId: Int64) {
+    func ackMessageToCache(_ msg: Message) {
         ackLock.lock()
-        if self.needAckDic[sessionId] == nil {
-            self.needAckDic[sessionId] = Set()
+        if msg.sessionId > 0 && msg.msgId > 0 {
+            if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                if self.needAckDic[msg.sessionId] == nil {
+                    self.needAckDic[msg.sessionId] = Set()
+                }
+                self.needAckDic[msg.sessionId]!.insert(msg.msgId)
+            }
         }
-        self.needAckDic[sessionId]!.insert(msgId)
         ackLock.unlock()
     }
     
@@ -276,13 +282,11 @@ open class DefaultMessageModule : MessageModule {
         IMCoreManager.shared.api.ackMessages(IMCoreManager.shared.uId, sessionId, msgIds)
             .compose(DefaultRxTransformer.io2Io())
             .subscribe(
-                onNext: { success in
-                    if success {
-                        self.ackMessageSuccess(sessionId, msgIds)
-                    }
-                },
                 onError: { error in
                     DDLogError(error)
+                },
+                onCompleted: {
+                    self.ackMessageSuccess(sessionId, msgIds)
                 }
             ).disposed(by: disposeBag)
     }
@@ -291,30 +295,30 @@ open class DefaultMessageModule : MessageModule {
         ackLock.lock()
         for (k, v) in self.needAckDic {
             if v.count > 0 {
+                print("ackMessagesToServer \(k)")
                 self.ackServerMessage(k, v)
             }
         }
         ackLock.unlock()
     }
     
-    private func deleteServerMessages(_ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Bool> {
+    private func deleteServerMessages(_ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
         return IMCoreManager.shared.api.deleteMessages(IMCoreManager.shared.uId, sessionId, msgIds)
     }
 
-    private func deleteLocalMessages(_ messages: Array<Message>) -> Observable<Bool> {
+    private func deleteLocalMessages(_ messages: Array<Message>) -> Observable<Void> {
         return Observable.create({observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.messageDao.deleteMessages(messages)
-                observer.onNext(true)
+                observer.onCompleted()
             } catch {
-                observer.onNext(false)
+                observer.onError(error)
             }
-            observer.onCompleted()
             return Disposables.create()
         })
     }
     
-    func deleteMessages(_ sessionId: Int64, _ messages: Array<Message>, _ deleteServer: Bool) -> Observable<Bool> {
+    func deleteMessages(_ sessionId: Int64, _ messages: Array<Message>, _ deleteServer: Bool) -> Observable<Void> {
         if (deleteServer) {
             var ids = Set<Int64>()
             for message in messages {

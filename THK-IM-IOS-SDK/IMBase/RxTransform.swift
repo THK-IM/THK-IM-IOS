@@ -47,14 +47,14 @@ class RxTransformer {
         })
     }
     
-    func response2ErrorBean() -> ObservableTransformer<Response, ErrorBean> {
+    func response2Void() -> ObservableTransformer<Response, Void> {
         return ObservableTransformer({ upstream in
-            upstream.flatMap({ (response) -> Observable<ErrorBean> in
+            upstream.flatMap({ (response) -> Observable<Void> in
                 if (response.statusCode >= 200 && response.statusCode < 300) {
-                    return Observable.just(ErrorBean(code: response.statusCode, message: "success"))
+                    return Observable.empty()
                 } else {
                     let errorBean = try JSONDecoder().decode(ErrorBean.self, from: response.data)
-                    return Observable.just(errorBean)
+                    return Observable.error(Exception.IMHttp(errorBean.code, errorBean.message))
                 }
             })
         })
