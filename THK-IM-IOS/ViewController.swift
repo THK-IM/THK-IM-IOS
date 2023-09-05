@@ -185,6 +185,9 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
             .compose(DefaultRxTransformer.io2Main())
             .subscribe(onNext: { [weak self] in
                 do {
+                    guard let sf = self else {
+                        return
+                    }
 //                    let msgs = try IMCoreManager.shared.database.sessionDao.querySessions(100, IMCoreManager.shared.severTime)
 //                    if (msgs != nil) {
 //                        for m in msgs! {
@@ -209,5 +212,6 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
             .disposed(by: self.disposeBag)
         self.view.addSubview(textView6)
     }
+    
 }
 

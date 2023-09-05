@@ -327,6 +327,7 @@ open class DefaultMessageModule : MessageModule {
                 }
             }
             return self.deleteServerMessages(sessionId, ids)
+                .concat(self.deleteLocalMessages(messages))
         }
         return self.deleteLocalMessages(messages)
     }
