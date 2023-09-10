@@ -198,7 +198,8 @@ class OGGEncoder {
             // construct ogg packet with opus frame
             var packet = ogg_packet()
             granulePosition += Int64(frameSize * 48000 / opusRate)
-            packet.packet = UnsafeMutablePointer<UInt8>(mutating: opus)
+            let unsafeMutableRawBufferPointer = opus.withUnsafeMutableBufferPointer { $0 }
+            packet.packet = unsafeMutableRawBufferPointer.baseAddress
             packet.bytes = Int(numBytes)
             packet.b_o_s = 0
             packet.e_o_s = 0
@@ -247,18 +248,20 @@ class OGGEncoder {
 
         // encode an opus frame
         var opus = [UInt8](repeating: 0, count: Int(maxFrameSize))
-        var numBytes: opus_int32 = 0
-        try pcmCache.withUnsafeBytes { (cache: UnsafePointer<Int16>) in
-            numBytes = opus_encode(encoder, cache, frameSize, &opus, maxFrameSize)
-            guard numBytes >= 0 else {
-                throw OpusError.internalError
-            }
+        let samples = pcmCache.withUnsafeBytes {
+            Array(UnsafeBufferPointer<Int16>(start: $0.baseAddress!.assumingMemoryBound(to: Int16.self), count: pcmCache.count/MemoryLayout<Int16>.size))
+        }
+        let numBytes = opus_encode(encoder, samples, frameSize, &opus, maxFrameSize)
+        if (numBytes < 0) {
+            throw OggError.internalError
         }
 
         // construct ogg packet with opus frame
         var packet = ogg_packet()
         granulePosition += Int64(frameSize * 48000 / opusRate)
-        packet.packet = UnsafeMutablePointer<UInt8>(mutating: opus)
+//        packet.packet = UnsafeMutablePointer<UInt8>(mutating: opus)
+        let unsafeMutableRawBufferPointer = opus.withUnsafeMutableBufferPointer { $0 }
+        packet.packet = unsafeMutableRawBufferPointer.baseAddress
         packet.bytes = Int(numBytes)
         packet.b_o_s = 0
         packet.e_o_s = 0
@@ -295,17 +298,19 @@ class OGGEncoder {
 
         // encode an opus frame
         var opus = [UInt8](repeating: 0, count: Int(maxFrameSize))
-        var numBytes: opus_int32 = 0
-        try pcmCache.withUnsafeBytes { (cache: UnsafePointer<Int16>) in
-            numBytes = opus_encode(encoder, cache, frameSize, &opus, maxFrameSize)
-            guard numBytes >= 0 else {
-                throw OpusError.internalError
-            }
+        let samples = pcmCache.withUnsafeBytes {
+            Array(UnsafeBufferPointer<Int16>(start: $0.baseAddress!.assumingMemoryBound(to: Int16.self), count: pcmCache.count/MemoryLayout<Int16>.size))
+        }
+        let numBytes = opus_encode(encoder, samples, frameSize, &opus, maxFrameSize)
+        if (numBytes < 0) {
+            throw OggError.internalError
         }
 
         // construct ogg packet with opus frame
         var packet = ogg_packet()
-        packet.packet = UnsafeMutablePointer<UInt8>(mutating: opus)
+//        packet.packet = UnsafeMutablePointer<UInt8>(mutating: opus)
+        let unsafeMutableRawBufferPointer = opus.withUnsafeMutableBufferPointer { $0 }
+        packet.packet = unsafeMutableRawBufferPointer.baseAddress
         packet.bytes = Int(numBytes)
         packet.b_o_s = 0
         packet.e_o_s = 1

@@ -494,8 +494,8 @@
 			children = (
 				A0D68AAE2A888678004D11A5 /* OpusCodec */,
 				A0D68AAC2A888678004D11A5 /* OggOpusAudioPlayer.swift */,
-				A0D68AAD2A888678004D11A5 /* AudioUtils.swift */,
 				A0D68AB22A888678004D11A5 /* OggOpusAudioRecorder.swift */,
+				A0D68AAD2A888678004D11A5 /* AudioUtils.swift */,
 			);
 			path = IMAudio;
 			sourceTree = "<group>";

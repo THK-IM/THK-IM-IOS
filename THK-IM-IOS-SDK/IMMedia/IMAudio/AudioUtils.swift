@@ -9,17 +9,29 @@ import Foundation
 import AVFoundation
 import Accelerate
 
-func calculateDecibel(from data: Data) -> Float {
-    guard let int16Array = getInt16Array(from: data) else { return -1 }
-    let sum = int16Array.reduce(0, { $0 + Int($1) })
-    let averagePower = Float(sum) / Float(int16Array.count)
-    let dB = 20 * log10(abs(averagePower) / 1.0)
-    return dB
+func calculateDecibel(from data: Data) -> Double {
+    // 将 PCM 数据转换为 Int16 数组
+    let samples = data.withUnsafeBytes {
+        Array(UnsafeBufferPointer<Int16>(start: $0.baseAddress!.assumingMemoryBound(to: Int16.self), count: data.count/MemoryLayout<Int16>.size))
+    }
+    
+    var totalAmplitude: Int64 = 0
+    let numSamples = samples.count
+    
+    for sample in samples {
+        totalAmplitude += Int64(abs(sample))
+    }
+    
+    let averageAmplitude = Double(totalAmplitude) / Double(numSamples)
+    if averageAmplitude < 0 {
+        return 0.0
+    }
+    return 20 * log10(averageAmplitude)
 }
 
-func getInt16Array(from data: Data) -> [Int16]? {
-    let count = data.count / MemoryLayout<Int16>.size
-    var int16Array = [Int16](repeating: 0, count: count)
-    (data as NSData).getBytes(&int16Array, length:count * MemoryLayout<Int16>.size)
-    return int16Array
+func getInt8Array(from data: Data) -> [Int8]? {
+    let count = data.count / MemoryLayout<Int8>.size
+    var int8Array = [Int8](repeating: 0, count: count)
+    (data as NSData).getBytes(&int8Array, length:count * MemoryLayout<Int8>.size)
+    return int8Array
 }

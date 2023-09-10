@@ -8,7 +8,7 @@
 import AVFoundation
 import CocoaLumberjack
 
-typealias AudioCallback = (_ db: Float, _ duration: Int, _ path: String, _ stopped: Bool) -> Void
+typealias AudioCallback = (_ db: Double, _ duration: Int, _ path: String, _ stopped: Bool) -> Void
 
 class OggOpusAudioRecorder {
     
@@ -73,12 +73,6 @@ class OggOpusAudioRecorder {
     
     // 停止录音
     func stopRecording() {
-        if isRecording() {
-            if self._callback != nil && self._filePath != nil {
-                let now = Date().timeMilliStamp
-                self._callback!(0, Int(now - (self._startTimestamp ?? now)), self._filePath!, true)
-            }
-        }
         DispatchQueue.global().async { [weak self] in
             self?.releaseAudioQueue()
         }
@@ -97,7 +91,6 @@ class OggOpusAudioRecorder {
             return
         }
         let recorder = Unmanaged<OggOpusAudioRecorder>.fromOpaque(userData).takeUnretainedValue()
-        
         let audioPCMData = NSData(
             bytes: inBuffer.pointee.mAudioData,
             length: Int(inBuffer.pointee.mAudioDataByteSize)
@@ -165,7 +158,7 @@ class OggOpusAudioRecorder {
         }
         
         // 准备录音队列缓冲区
-        for _ in 0..<3 {
+        for _ in 0..<1 {
             var bufferRef : AudioQueueBufferRef? = nil
             status = AudioQueueAllocateBuffer(
                 _audioQueue!,
@@ -245,6 +238,10 @@ class OggOpusAudioRecorder {
             _fileHandle!.write(oggData)
             do {
                 try _fileHandle!.close()
+                if self._callback != nil && self._filePath != nil {
+                    let now = Date().timeMilliStamp
+                    self._callback!(0, Int(now - (self._startTimestamp ?? now)), self._filePath!, true)
+                }
             } catch {
                 DDLogError("[\(LogTag)] error: \(error)")
             }

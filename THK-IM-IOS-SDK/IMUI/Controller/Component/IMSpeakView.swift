@@ -13,7 +13,7 @@ class IMSpeakView: UILabel {
     weak var sender: IMMsgSender?
     
     private var hasTouchOutside = false
-    private var recordingDb: Float = 0.0
+    private var recordingDb: Double = 0.0
     
     private lazy var rootView: UIView = {
         var root = self.superview

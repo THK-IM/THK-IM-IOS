@@ -89,7 +89,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
                     let _ = OggOpusAudioRecorder.shared.startRecording(filePath, 60) {
                         db, duration, path, stopped in
                         DDLogDebug(
-                            "recording: callback \(db), \(duration) \(path), \(stopped), \(Thread.current) ")
+                            "recording: callback \(db), \(stopped) ")
                         if stopped {
                             DispatchQueue.main.async {
                                 textView2.setTitle("录音", for: .normal)
