@@ -14,7 +14,7 @@ class OggOpusAudioPlayer {
     
     private let LogTag = "OggOpusAudioPlayer"
     private let lock = NSLock()
-    private let callbackInterval = 200 // 单位ms
+    private let callbackInterval = 100 // 单位ms
     private var _audioFormat = AudioStreamBasicDescription()
     
     private var _callback : AudioCallback?
@@ -48,10 +48,8 @@ class OggOpusAudioPlayer {
     }
     
     let audioPlayAQOutputCallback : AudioQueueOutputCallback = { (userData, audioQueueRef, audioQueueBufferRef) in
-        
         if (userData != nil) {
             let player = Unmanaged<OggOpusAudioPlayer>.fromOpaque(userData!).takeUnretainedValue()
-            
             for i in 0..<player.buffers.count {
                 if (player.buffers[i] == audioQueueBufferRef) {
                     player.idleBufferTag[i] = true
@@ -59,10 +57,9 @@ class OggOpusAudioPlayer {
             }
             player.playPCMData()
         }
-        
     }
     
-    private func initPlaying(_ filePath: String) -> Bool {
+    private func initPlaying() -> Bool {
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 AVAudioSession.Category.playAndRecord,
@@ -198,7 +195,7 @@ class OggOpusAudioPlayer {
         if (self.isPlaying()) {
             return false
         }
-        if (!initPlaying(filePath)) {
+        if (!initPlaying()) {
             releasePlaying()
             return false
         } else {

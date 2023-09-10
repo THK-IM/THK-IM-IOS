@@ -30,8 +30,7 @@ class OggOpusAudioRecorder {
     // 定义一个 AudioStreamBasicDescription 对象
     private var _audioFormat = AudioStreamBasicDescription()
     
-    private let lock = NSLock()
-    
+    private let _bufferCount: UInt32
     private init() {
         // 配置录音格式 48KHz双声道
         _audioFormat.mSampleRate = 16000
@@ -43,6 +42,7 @@ class OggOpusAudioRecorder {
         _audioFormat.mBytesPerFrame = _audioFormat.mChannelsPerFrame * (_audioFormat.mBitsPerChannel / 8)
         _audioFormat.mBytesPerPacket = _audioFormat.mBytesPerFrame * _audioFormat.mFramesPerPacket
         _audioFormat.mReserved = 0
+        _bufferCount = _audioFormat.mBytesPerPacket * UInt32((_audioFormat.mSampleRate/10))
     }
     
     func startRecording(
@@ -73,34 +73,41 @@ class OggOpusAudioRecorder {
     
     // 停止录音
     func stopRecording() {
-        DispatchQueue.global().async { [weak self] in
-            self?.releaseAudioQueue()
-        }
+        DispatchQueue.global().asyncAfter(deadline: .now()+1, execute: {[weak self] in
+            self?._audioQueue = nil
+        })
     }
     
     // 录音回调函数
-    private let audioInputCallback: AudioQueueInputCallback = { (inUserData, inAQ, inBuffer, _, _, _) in
+    private let audioInputCallback: AudioQueueInputCallback = { (inUserData, inAQ, inBuffer, _, numPackets, _) in
         if inBuffer.pointee.mAudioDataByteSize == 0 {
             return
-        }
-        defer {
-            // 重新排队缓冲区
-            AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, nil)
         }
         guard let userData = inUserData else {
             return
         }
         let recorder = Unmanaged<OggOpusAudioRecorder>.fromOpaque(userData).takeUnretainedValue()
-        let audioPCMData = NSData(
-            bytes: inBuffer.pointee.mAudioData,
-            length: Int(inBuffer.pointee.mAudioDataByteSize)
-        )
-        recorder.processPCMData(audioPCMData as Data)
+        if (recorder.isRecording() == false) {
+            var status = AudioQueueStop(inAQ, true)
+            DDLogInfo("audioInputCallback stop: \(status)")
+            if status == noErr {
+                // 释放录音队列
+                status = AudioQueueDispose(inAQ, true)
+                DDLogInfo("audioInputCallback stop: \(status)")
+            }
+            recorder.stopped()
+        } else {
+             let audioPCMData = NSData(
+                 bytes: inBuffer.pointee.mAudioData,
+                 length: Int(inBuffer.pointee.mAudioDataByteSize)
+             )
+             recorder.processPCMData(audioPCMData as Data)
+             // 重新排队缓冲区
+             AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, nil)
+        }
     }
     
     private func initAudioQueue(_ filePath: String) -> Bool {
-        lock.lock()
-        defer {lock.unlock()}
         if AVAudioSession.sharedInstance().recordPermission == .denied {
             return false
         }
@@ -158,11 +165,11 @@ class OggOpusAudioRecorder {
         }
         
         // 准备录音队列缓冲区
-        for _ in 0..<1 {
+        for _ in 0..<3 {
             var bufferRef : AudioQueueBufferRef? = nil
             status = AudioQueueAllocateBuffer(
                 _audioQueue!,
-                _audioFormat.mBytesPerPacket * UInt32((_audioFormat.mSampleRate/10)),
+                _bufferCount,
                 &bufferRef)
             
             if status != noErr || bufferRef == nil  {
@@ -186,25 +193,7 @@ class OggOpusAudioRecorder {
         return true
     }
     
-    private func releaseAudioQueue() {
-        sleep(1) // 停止前等待写入缓冲
-        if (_audioQueue != nil) {
-            let status = AudioQueueStop(_audioQueue!, true)
-            if status == noErr {
-                // 释放录音队列
-                _ = AudioQueueDispose(_audioQueue!, true)
-            }
-        }
-        _audioQueue = nil
-        sleep(1) // 停止后等缓冲写入文件
-        stopped()
-    }
-    
     private func processPCMData(_ audioPCMData: Data) {
-        if (!isRecording()) {
-            return
-        }
-        lock.lock()
         if (_startTimestamp == nil) {
             _startTimestamp = Date().timeMilliStamp
         }
@@ -212,7 +201,7 @@ class OggOpusAudioRecorder {
         if (_callback != nil && _filePath != nil) {
             if (now - lastCallbackTime) > callbackInterval {
                 // 计算分贝并回调
-                let db = calculateDecibel(from: audioPCMData)
+                let db = calculateDecibel(from: audioPCMData.subdata(in: 0..<256))
                 self._callback!(db, Int(now - _startTimestamp!), _filePath!, false)
                 lastCallbackTime = now
             }
@@ -222,7 +211,6 @@ class OggOpusAudioRecorder {
         } catch {
             DDLogError("[\(LogTag)] error: \(error)")
         }
-        lock.unlock()
         if (_startTimestamp != nil && _maxDuration != nil) {
             if (now - _startTimestamp! >= _maxDuration! * 1000) {
                 stopRecording()
@@ -231,19 +219,17 @@ class OggOpusAudioRecorder {
     }
     
     private func stopped() {
-        lock.lock()
-        defer {lock.unlock()}
         if (_oggEncoder != nil && _fileHandle != nil) {
             let oggData = self._oggEncoder!.bitstream()
             _fileHandle!.write(oggData)
             do {
                 try _fileHandle!.close()
-                if self._callback != nil && self._filePath != nil {
-                    let now = Date().timeMilliStamp
-                    self._callback!(0, Int(now - (self._startTimestamp ?? now)), self._filePath!, true)
-                }
             } catch {
                 DDLogError("[\(LogTag)] error: \(error)")
+            }
+            if self._callback != nil && self._filePath != nil {
+                let now = Date().timeMilliStamp
+                self._callback!(0, Int(now - (self._startTimestamp ?? now)), self._filePath!, true)
             }
         }
         _oggEncoder = nil
