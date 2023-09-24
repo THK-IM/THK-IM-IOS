@@ -112,6 +112,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
                                 entity.content = String(data: content, encoding: .utf8)!
                                 entity.sendStatus = MsgSendStatus.Sending.rawValue
                                 observer.onNext(entity)
+                                observer.onCompleted()
                             } catch {
                                 DDLogError(error)
                                 observer.onError(error)
@@ -119,7 +120,6 @@ class AudioMsgProcessor : BaseMsgProcessor {
                             break
                         default:
                             observer.onError(CocoaError.init(.coderInvalidValue))
-                            observer.onCompleted()
                             break
                         }
                     },

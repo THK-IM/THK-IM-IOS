@@ -155,15 +155,14 @@ class VideoMsgProcessor : BaseMsgProcessor {
                                 entity.content = String(data: d, encoding: .utf8)!
                                 try self?.insertOrUpdateDb(entity, false) // 插入数据库不更新ui,防止数据丢失
                                 observer.onNext(entity)
+                                observer.onCompleted()
                             } catch {
                                 DDLogError(error)
                                 observer.onError(error)
                             }
-                            observer.onCompleted()
                             break
                         default:
                             observer.onError(CocoaError.init(.executableLoad))
-                            observer.onCompleted()
                             break
                         }
                     },
@@ -223,15 +222,14 @@ class VideoMsgProcessor : BaseMsgProcessor {
                                 let d = try JSONEncoder().encode(videoBody)
                                 entity.content = String(data: d, encoding: .utf8)!
                                 observer.onNext(entity)
+                                observer.onCompleted()
                             } catch {
                                 DDLogError(error)
                                 observer.onError(error)
                             }
-                            observer.onCompleted()
                             break
                         default:
                             observer.onError(CocoaError.init(.executableLoad))
-                            observer.onCompleted()
                             break
                         }
                     },

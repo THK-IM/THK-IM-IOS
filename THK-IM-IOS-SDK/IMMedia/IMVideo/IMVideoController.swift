@@ -17,7 +17,7 @@ class IMVideoController: UIViewController {
         self.playerView.frame = self.view.frame
         
         // TODO add your video url
-        playerView.initDataSource(URL(string: ""))
+        playerView.initDataSource(URL(string:""))
         playerView.prepare()
         playerView.play()
     }

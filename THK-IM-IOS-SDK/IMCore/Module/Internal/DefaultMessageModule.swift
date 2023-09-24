@@ -121,10 +121,10 @@ open class DefaultMessageModule : MessageModule {
                     session = Session.emptySession()
                 }
                 observer.onNext(session!)
+                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
-            observer.onCompleted()
             return Disposables.create()
         }).flatMap({ (session) -> Observable<Session> in
             if (session.id > 0) {
@@ -144,10 +144,10 @@ open class DefaultMessageModule : MessageModule {
                     session = Session.emptySession()
                 }
                 observer.onNext(session!)
+                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
-            observer.onCompleted()
             return Disposables.create()
         }).flatMap({ (session) -> Observable<Session> in
             if (session.id > 0) {
@@ -167,11 +167,11 @@ open class DefaultMessageModule : MessageModule {
                 } else {
                     observer.onNext(Array())
                 }
+                observer.onCompleted()
             } catch {
                 observer.onError(error)
                 DDLogError(error)
             }
-            observer.onCompleted()
             return Disposables.create()
         })
     }
@@ -185,11 +185,11 @@ open class DefaultMessageModule : MessageModule {
                 } else {
                     observer.onNext(Array())
                 }
+                observer.onCompleted()
             } catch {
                 observer.onError(error)
                 DDLogError(error)
             }
-            observer.onCompleted()
             return Disposables.create()
         })
     }
@@ -310,10 +310,10 @@ open class DefaultMessageModule : MessageModule {
         return Observable.create({observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.messageDao.deleteMessages(messages)
-                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
+            observer.onCompleted()
             return Disposables.create()
         })
     }

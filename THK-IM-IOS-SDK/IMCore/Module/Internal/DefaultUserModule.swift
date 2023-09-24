@@ -49,21 +49,23 @@ open class DefaultUserModule : UserModule {
                     observer.onError(CocoaError.error(CocoaError.featureUnsupported))
                 } else {
                     observer.onNext((self?.systemBubbleImage)!)
+                    observer.onCompleted()
                 }
             } else if id == IMCoreManager.shared.uId {
                 if self?.selfBubbleImage == nil {
                     observer.onError(CocoaError.error(CocoaError.featureUnsupported))
                 } else {
                     observer.onNext((self?.selfBubbleImage)!)
+                    observer.onCompleted()
                 }
             } else {
                 if self?.userDefaultImage == nil {
                     observer.onError(CocoaError.error(CocoaError.featureUnsupported))
                 } else {
                     observer.onNext((self?.userDefaultImage)!)
+                    observer.onCompleted()
                 }
             }
-            observer.onCompleted()
             return Disposables.create()
         })
     }

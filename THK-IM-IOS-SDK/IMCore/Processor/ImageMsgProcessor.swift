@@ -147,15 +147,14 @@ class ImageMsgProcessor : BaseMsgProcessor {
                                 entity.content = String(data: d, encoding: .utf8)!
                                 try self?.insertOrUpdateDb(entity, false)
                                 observer.onNext(entity)
+                                observer.onCompleted()
                             } catch {
                                 DDLogError(error)
                                 observer.onError(error)
                             }
-                            observer.onCompleted()
                             break
                         default:
                             observer.onError(CocoaError.init(.executableLoad))
-                            observer.onCompleted()
                             break
                         }
                     },
@@ -214,15 +213,14 @@ class ImageMsgProcessor : BaseMsgProcessor {
                                 let d = try JSONEncoder().encode(imageBody)
                                 entity.content = String(data: d, encoding: .utf8)!
                                 observer.onNext(entity)
+                                observer.onCompleted()
                             } catch {
                                 DDLogError(error)
                                 observer.onError(error)
                             }
-                            observer.onCompleted()
                             break
                         default:
                             observer.onError(CocoaError.init(.executableLoad))
-                            observer.onCompleted()
                             break
                         }
                     },
