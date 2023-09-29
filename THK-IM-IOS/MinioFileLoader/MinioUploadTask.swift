@@ -70,7 +70,6 @@ class MinioUploadTask: MinioLoadTask {
     }
     
     private func startUpload(params: UploadParams, fileName: String) {
-        print("upload startUpload \(params.params) ")
         let fileExisted = FileManager.default.isReadableFile(atPath: path)
         if (!fileExisted) {
             self.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
@@ -96,14 +95,12 @@ class MinioUploadTask: MinioLoadTask {
             to: params.url,
             method: method
         ).uploadProgress(queue: DispatchQueue.global()) { [weak self] progress in
-            print("upload progress \(progress.completedUnitCount) \(progress.totalUnitCount) ")
             guard let sf = self else {
                 return
             }
             let p: Int = Int(100 * progress.completedUnitCount / progress.totalUnitCount)
             sf.notify(progress: p, state: FileLoaderState.Ing.rawValue)
         }.responseData(queue: DispatchQueue.global()) { [weak self] response in
-             print("upload response \(response.result) ")
             guard let sf = self else {
                 return
             }
