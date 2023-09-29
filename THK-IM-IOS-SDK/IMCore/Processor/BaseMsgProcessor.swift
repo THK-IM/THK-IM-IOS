@@ -38,21 +38,22 @@ public class BaseMsgProcessor {
                 if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                     IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
                 }
-                IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
             } else {
                 // 数据库存在，更新本地数据库数据
                 if dbMsg!.sendStatus != MsgSendStatus.Success.rawValue {
                     msg.data = dbMsg!.data
-                    msg.operateStatus = dbMsg!.operateStatus
-                    msg.msgId = dbMsg!.msgId
+                    if (msg.fromUId == IMCoreManager.shared.uId) {
+                        // 如果发件人为自己，插入前补充消息状态为已接受并已读
+                        msg.operateStatus = msg.operateStatus |
+                            MsgOperateStatus.Ack.rawValue |
+                            MsgOperateStatus.ClientRead.rawValue |
+                            MsgOperateStatus.ServerRead.rawValue
+                    }
                     msg.sendStatus = MsgSendStatus.Success.rawValue
                     try insertOrUpdateDb(msg)
                 }
-                if dbMsg!.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                     IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
-                }
-                if dbMsg!.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 {
-                    IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
                 }
             }
         } catch let error {
@@ -71,10 +72,10 @@ public class BaseMsgProcessor {
     }
     
     open func buildSendMsg(_ body :Codable, _ sessionId: Int64, _ atUIdStr: String? = nil, _ rMsgId: Int64? = nil) throws -> Message {
-        var content = ""
+        var content: String? = nil
         var data = ""
         if (body is String) {
-            content = body as! String
+            content = body as! String?
         } else {
             let jsonData = try JSONEncoder().encode(body)
             guard let jsonBody = String(data: jsonData, encoding: .utf8) else {
@@ -103,7 +104,7 @@ public class BaseMsgProcessor {
     open func sendMessage(_ body: Codable, _ sessionId: Int64, _ atUsers: String? = nil, _ rMsgId: Int64? = nil) -> Bool {
         do {
             let originMsg = try self.buildSendMsg(body, sessionId, atUsers, rMsgId)
-            self.resend(originMsg)
+            self.send(originMsg)
         } catch {
             DDLogError(error)
             return false
@@ -112,9 +113,20 @@ public class BaseMsgProcessor {
     }
     
     open func resend(_ msg: Message) {
+        send(msg, resend: true)
+    }
+    
+    open func send(_ msg: Message, resend: Bool = false) {
         var originMsg = msg
         Observable.just(msg)
             .flatMap({ (message) -> Observable<Message> in
+                if (!resend) {
+                    do {
+                        try self.insertOrUpdateDb(message)
+                    } catch let error {
+                        return Observable.error(error)
+                    }
+                }
                 // 消息二次处理
                 let reprocessingObservable = self.reprocessingObservable(message)
                 if reprocessingObservable != nil {
@@ -129,7 +141,7 @@ public class BaseMsgProcessor {
                 message.sendStatus = MsgSendStatus.Uploading.rawValue
                 do {
                     try self.insertOrUpdateDb(message)
-                } catch let error {
+                } catch {
                     return Observable.error(error)
                 }
                 let uploadObservable = self.uploadObservable(message)
@@ -172,15 +184,17 @@ public class BaseMsgProcessor {
     /**
      * 【插入或更新消息状态】
      */
-    open func insertOrUpdateDb(_ msg: Message, _ notify: Bool = true) throws {
+    open func insertOrUpdateDb(_ msg: Message, _ notify: Bool = true, _ notifySession: Bool = true) throws {
         try IMCoreManager.shared.database.messageDao.insertOrReplaceMessages([msg])
         if notify {
             SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
         }
-        if msg.sendStatus == MsgSendStatus.Uploading.rawValue
-            || msg.sendStatus == MsgSendStatus.Success.rawValue
-            || msg.sendStatus == MsgSendStatus.Failed.rawValue {
-            IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
+        if notify && notifySession {
+            if msg.sendStatus == MsgSendStatus.Uploading.rawValue
+                || msg.sendStatus == MsgSendStatus.Success.rawValue
+                || msg.sendStatus == MsgSendStatus.Failed.rawValue {
+                IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
+            }
         }
     }
     
@@ -225,7 +239,10 @@ public class BaseMsgProcessor {
      * 该消息在session上的描述
      */
     open func getSessionDesc(msg: Message) -> String {
-        return msg.content
+        if (msg.content != nil) {
+            return msg.content!
+        }
+        return ""
     }
     
     open func reset() {

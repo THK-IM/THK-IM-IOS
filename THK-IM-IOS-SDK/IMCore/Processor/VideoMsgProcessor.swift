@@ -47,20 +47,20 @@ class VideoMsgProcessor : BaseMsgProcessor {
     }
     
     private func checkDir(_ storageModule: StorageModule, _ videoData: inout IMVideoMsgData, _ entity: inout Message) throws {
+        let realPath = storageModule.sandboxFilePath(videoData.path!)
         let isAssignedPath = storageModule.isAssignedPath(
-            videoData.path!,
+            realPath,
             IMFileFormat.Image.rawValue,
             entity.sessionId
         )
-        let (_, name) = storageModule.getPathsFromFullPath(videoData.path!)
+        let (_, name) = storageModule.getPathsFromFullPath(realPath)
         if !isAssignedPath {
             let dePath = storageModule.allocSessionFilePath(
                 entity.sessionId,
-                IMCoreManager.shared.uId,
                 name,
                 IMFileFormat.Video.rawValue
             )
-            try storageModule.copyFile(videoData.path!, dePath)
+            try storageModule.copyFile(realPath, dePath)
             videoData.path = dePath
             let d = try JSONEncoder().encode(videoData)
             entity.data = String(data: d, encoding: .utf8)!
@@ -93,7 +93,6 @@ class VideoMsgProcessor : BaseMsgProcessor {
         let coverThumbName = "\(name)_thumb.\(ext)"
         let coverThumbPath = storageModule.allocSessionFilePath(
             entity.sessionId,
-            entity.fromUId,
             coverThumbName,
             IMFileFormat.Image.rawValue
         )
@@ -118,13 +117,19 @@ class VideoMsgProcessor : BaseMsgProcessor {
             })
     }
     
-    open func uploadCover(_ fileLoadModule: FileLoaderModule, _ storageModule: StorageModule,
+    open func uploadCover(_ fileLoadModule: FileLoadModule, _ storageModule: StorageModule,
                                _ entity: Message) -> Observable<Message> {
         do {
-            let videoBody = try JSONDecoder().decode(
-                IMVideoMsgBody.self,
-                from: entity.content.data(using: .utf8) ?? Data()
-            )
+            var videoBody = IMVideoMsgBody()
+            if (entity.content != nil) {
+                videoBody = try JSONDecoder().decode(
+                    IMVideoMsgBody.self,
+                    from: entity.content!.data(using: .utf8) ?? Data()
+                )
+            }
+            if (videoBody.thumbnailUrl != nil) {
+                return Observable.just(entity)
+            }
             let videoData = try JSONDecoder().decode(
                 IMVideoMsgData.self,
                 from: entity.data.data(using: .utf8) ?? Data()
@@ -132,10 +137,12 @@ class VideoMsgProcessor : BaseMsgProcessor {
             guard var thumbPath = videoData.thumbnailPath else {
                 return Observable.error(CocoaError.init(.fileNoSuchFile))
             }
-            thumbPath = storageModule.sandboxFilePath(thumbPath)
-            let (_, thumbName) = storageModule.getPathsFromFullPath(thumbPath)
-            let uploadKey = storageModule.allocSessionFilePath(
-                entity.sessionId, entity.fromUId, thumbName, IMFileFormat.Image.rawValue)
+            
+            let realThumbPath = storageModule.sandboxFilePath(thumbPath)
+            let (_, thumbName) = storageModule.getPathsFromFullPath(realThumbPath)
+            let uploadKey = IMCoreManager.shared.fileLoadModule.getUploadKey(
+                entity.sessionId, entity.fromUId, thumbName, entity.id
+            )
             return Observable.create({ observer -> Disposable in
                 let loadListener = FileLoaderListener(
                     {[weak self] progress, state, url, path in
@@ -145,7 +152,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                             FileLoaderState.Init.rawValue,
                             FileLoaderState.Ing.rawValue:
                             SwiftEventBus.post(
-                                IMEvent.MsgUploadProgressUpdate.rawValue,
+                                IMEvent.MsgLoadProgressUpdate.rawValue,
                                 sender: IMUploadProgress(uploadKey, state, progress)
                             )
                         case FileLoaderState.Success.rawValue:
@@ -171,7 +178,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                     })
                 _ = fileLoadModule.upload(
                     key: uploadKey,
-                    path: thumbPath,
+                    path: realThumbPath,
                     loadListener: loadListener
                 )
                 return Disposables.create()
@@ -182,36 +189,44 @@ class VideoMsgProcessor : BaseMsgProcessor {
         }
     }
     
-    open func uploadVideo(_ fileLoadModule: FileLoaderModule, _ storageModule: StorageModule,
+    open func uploadVideo(_ fileLoadModule: FileLoadModule, _ storageModule: StorageModule,
                                _ entity: Message) -> Observable<Message> {
         do {
-            let videoBody = try JSONDecoder().decode(
-                IMVideoMsgBody.self,
-                from: entity.content.data(using: .utf8) ?? Data()
-            )
+            var videoBody = IMVideoMsgBody()
+            if (entity.content != nil) {
+                videoBody = try JSONDecoder().decode(
+                    IMVideoMsgBody.self,
+                    from: entity.content!.data(using: .utf8) ?? Data()
+                )
+            }
+            if (videoBody.url != nil) {
+                return Observable.just(entity)
+            }
             let videoData = try JSONDecoder().decode(
                 IMVideoMsgData.self,
                 from: entity.data.data(using: .utf8) ?? Data()
             )
-            guard var videoPath = videoData.path else {
+            guard let videoPath = videoData.path else {
                 return Observable.error(CocoaError.init(.fileNoSuchFile))
             }
-            videoPath = storageModule.sandboxFilePath(videoPath)
-            let (_, originName) = storageModule.getPathsFromFullPath(videoPath)
-            let uploadKey = storageModule.allocSessionFilePath(
-                entity.sessionId, entity.fromUId, originName, IMFileFormat.Video.rawValue)
+            let realVideoPath = storageModule.sandboxFilePath(videoPath)
+            let (_, originName) = storageModule.getPathsFromFullPath(realVideoPath)
+            let uploadKey = IMCoreManager.shared.fileLoadModule.getUploadKey(
+                entity.sessionId, entity.fromUId, originName, entity.id
+            )
             return Observable.create({ observer -> Disposable in
                 let loadListener = FileLoaderListener(
                     {progress, state, url, path in
+                        SwiftEventBus.post(
+                            IMEvent.MsgLoadProgressUpdate.rawValue,
+                            sender: IMUploadProgress(uploadKey, state, progress)
+                        )
                         switch(state) {
                         case
                             FileLoaderState.Wait.rawValue,
                             FileLoaderState.Init.rawValue,
                             FileLoaderState.Ing.rawValue:
-                            SwiftEventBus.post(
-                                IMEvent.MsgUploadProgressUpdate.rawValue,
-                                sender: IMUploadProgress(uploadKey, state, progress)
-                            )
+                            break
                         case
                             FileLoaderState.Success.rawValue:
                             do {
@@ -239,7 +254,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                 )
                 _ = fileLoadModule.upload(
                     key: uploadKey,
-                    path: videoPath,
+                    path: realVideoPath,
                     loadListener: loadListener
                 )
                 return Disposables.create()

@@ -8,7 +8,7 @@
 import Foundation
 
 
-protocol FileLoaderModule: AnyObject {
+protocol FileLoadModule: AnyObject {
     
     /**
      * 获取任务id
@@ -33,6 +33,11 @@ protocol FileLoaderModule: AnyObject {
         _ fileName: String,
         _ msgClientId: Int64
     ) -> String
+    
+    /**
+     * 从上传key中解析出 sId, uId, fileName
+     */
+    func parserUploadKey(key: String) -> (Int64, Int64, String)?
     
     /**
      *  下载

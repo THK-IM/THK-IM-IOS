@@ -281,7 +281,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     }
     
     
-    func sendMessage(_ type: Int, _ body: String) {
+    func sendMessage(_ type: Int, _ body: Codable) {
         guard let sessionId = self.session?.id else {
             return
         }
@@ -349,7 +349,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                     let (name, ext) = storageModule.getFileExt(fName)
                     let fileName = "\(name)_\(String().random(8)).\(ext)"
                     let path = storageModule.allocSessionFilePath(
-                        (sf.session?.id)!, IMCoreManager.shared.uId, fileName, "video")
+                        (sf.session?.id)!, fileName, "video")
                     try storageModule.saveMediaDataInto(path, videoData)
                     try sf.sendVideo(path)
                 } catch {
@@ -382,7 +382,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                     let (name, ext) = storageModule.getFileExt(fName)
                     let fileName = "\(name)_\(String().random(8)).\(ext)"
                     let path = storageModule.allocSessionFilePath(
-                        (self?.session?.id)!, IMCoreManager.shared.uId, fileName, "video")
+                        (self?.session?.id)!, fileName, "video")
                     try storageModule.saveMediaDataInto(path, videoData)
                     try self?.sendVideo(path, r.image, Int(r.asset.duration))
                 } catch {
@@ -413,26 +413,20 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     }
     
     private func sendImage(_ image: UIImage) throws {
-//        guard let storageModule = IMCoreManager.shared.storageModule else {
-//            return
-//        }
-//        var data = image.pngData()
-//        if (data == nil) {
-//            data = image.jpegData(compressionQuality: 1)
-//        }
-//        if (data != nil) {
-//            let ext = data!.detectImageType().rawValue
-//            let fileName = "\(String().random(8)).\(ext)"
-//            let localPath = storageModule.allocSessionFilePath((self.session?.id)!, IMCoreManager.shared.uId, fileName, "img")
-//            try IMCoreManager.shared.storageModule?.saveMediaDataInto(localPath, data!)
-//
-//            let imageBody = ImageMsgBody()
-//            imageBody.width = Int(image.size.width)
-//            imageBody.height = Int(image.size.height)
-//            imageBody.path = localPath
-//            let d = try JSONEncoder().encode(imageBody)
-//            self.sendMessage(MsgType.IMAGE.rawValue, String(data: d, encoding: .utf8)!)
-//        }
+        var data = image.pngData()
+        if (data == nil) {
+            data = image.jpegData(compressionQuality: 1)
+        }
+        if (data != nil) {
+            let ext = data!.detectImageType().rawValue
+            let fileName = "\(String().random(8)).\(ext)"
+            let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath((self.session?.id)!, fileName, "img")
+            try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data!)
+
+            let imageData = IMImageMsgData(width: Int(image.size.width), height: Int(image.size.height),
+                                           path: localPath, thumbnailPath: nil)
+            self.sendMessage(MsgType.IMAGE.rawValue, imageData)
+        }
     }
     
     private func msgToMedia(msg: Message) -> Media? {

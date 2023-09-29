@@ -1,25 +1,31 @@
 //
-//  OSSDownloadTask.swift
+//  MinioDownloadTask.swift
 //  THK-IM-IOS
 //
-//  Created by vizoss on 2023/6/5.
+//  Created by vizoss on 2023/9/29.
+//  Copyright © 2023 THK. All rights reserved.
 //
 
 import Foundation
 import Alamofire
 import CocoaLumberjack
 
-class OSSDownloadTask : OSSLoadTask {
+class MinioDownloadTask: MinioLoadTask {
     
     private var request: DownloadRequest?
     
     override func start() {
-        super.start()
+        guard let fileLoadModule = self.fileModuleReference.value else {
+            return
+        }
         let tempFilePath = self.path + ".tmp"
         let tempFileURL = NSURL(fileURLWithPath: tempFilePath) as URL
         let fileUrl = NSURL(fileURLWithPath: self.path) as URL
         self.notify(progress: 0, state: FileLoaderState.Init.rawValue)
-        self.request = AF.download(url, to: { _, response in
+        
+        var headers = HTTPHeaders()
+        headers.add(name: "Token", value: fileLoadModule.token)
+        self.request = AF.download(url, headers: headers, to: { _, response in
             return (tempFileURL, [.removePreviousFile, .createIntermediateDirectories])
         }).downloadProgress(queue: DispatchQueue.global()) { [weak self] progress in
                 guard let sf = self else {
@@ -34,7 +40,7 @@ class OSSDownloadTask : OSSLoadTask {
                 }
                 switch response.result {
                 case .success:
-                    if !FileManager.default.fileExists(atPath: sf.path) {
+                    if !FileManager.default.fileExists(atPath: tempFilePath) {
                         do {
                             try FileManager.default.moveItem(at: tempFileURL, to: fileUrl)
                             sf.notify(progress: 100, state: FileLoaderState.Success.rawValue)
@@ -52,10 +58,10 @@ class OSSDownloadTask : OSSLoadTask {
                 }
             }
         
+        
     }
     
     override func cancel() {
-        super.cancel()
         if (self.request != nil) {
             if (!self.request!.isCancelled && !self.request!.isFinished) {
                 self.request!.cancel()
@@ -64,3 +70,4 @@ class OSSDownloadTask : OSSLoadTask {
     }
     
 }
+

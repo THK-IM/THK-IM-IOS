@@ -46,20 +46,20 @@ class ImageMsgProcessor : BaseMsgProcessor {
     }
     
     private func checkDir(_ storageModule: StorageModule, _ imageData: inout IMImageMsgData, _ entity: inout Message) throws {
+        let realPath = storageModule.sandboxFilePath(imageData.path!)
         let isAssignedPath = storageModule.isAssignedPath(
-            imageData.path!,
+            realPath,
             IMFileFormat.Image.rawValue,
             entity.sessionId
         )
-        let (_, name) = storageModule.getPathsFromFullPath(imageData.path!)
+        let (_, name) = storageModule.getPathsFromFullPath(realPath)
         if !isAssignedPath {
             let dePath = storageModule.allocSessionFilePath(
                 entity.sessionId,
-                IMCoreManager.shared.uId,
                 name,
                 IMFileFormat.Image.rawValue
             )
-            try storageModule.copyFile(imageData.path!, dePath)
+            try storageModule.copyFile(realPath, dePath)
             imageData.path = dePath
             let d = try JSONEncoder().encode(imageData)
             entity.data = String(data: d, encoding: .utf8)!
@@ -81,7 +81,6 @@ class ImageMsgProcessor : BaseMsgProcessor {
         let thumbName = "\(name)_thumb.\(ext)"
         let thumbPath = storageModule.allocSessionFilePath(
             entity.sessionId,
-            entity.fromUId,
             thumbName,
             IMFileFormat.Image.rawValue
         )
@@ -110,13 +109,20 @@ class ImageMsgProcessor : BaseMsgProcessor {
             })
     }
     
-    open func uploadThumbImage(_ fileLoadModule: FileLoaderModule, _ storageModule: StorageModule,
+    open func uploadThumbImage(_ fileLoadModule: FileLoadModule, _ storageModule: StorageModule,
                                _ entity: Message) -> Observable<Message> {
         do {
-            let imageBody = try JSONDecoder().decode(
-                IMImageMsgBody.self,
-                from: entity.content.data(using: .utf8) ?? Data()
-            )
+            var imageBody = IMImageMsgBody()
+            if (entity.content != nil) {
+                imageBody = try JSONDecoder().decode(
+                    IMImageMsgBody.self,
+                    from: entity.content!.data(using: .utf8) ?? Data()
+                )
+            }
+            if (imageBody.thumbnailUrl != nil) {
+                return Observable.just(entity)
+            }
+            
             let imageData = try JSONDecoder().decode(
                 IMImageMsgData.self,
                 from: entity.data.data(using: .utf8) ?? Data()
@@ -126,23 +132,27 @@ class ImageMsgProcessor : BaseMsgProcessor {
             }
             thumbPath = storageModule.sandboxFilePath(thumbPath)
             let (_, thumbName) = storageModule.getPathsFromFullPath(thumbPath)
-            let uploadKey = storageModule.allocSessionFilePath(
-                entity.sessionId, entity.fromUId, thumbName, IMFileFormat.Image.rawValue)
+            let uploadKey = IMCoreManager.shared.fileLoadModule.getUploadKey(
+                entity.sessionId, entity.fromUId, thumbName, entity.id
+            )
             return Observable.create({ observer -> Disposable in
                 let loadListener = FileLoaderListener(
                     {[weak self] progress, state, url, path in
+                        SwiftEventBus.post(
+                            IMEvent.MsgLoadProgressUpdate.rawValue,
+                            sender: IMUploadProgress(uploadKey, state, progress)
+                        )
                         switch(state) {
                         case
                             FileLoaderState.Wait.rawValue,
                             FileLoaderState.Init.rawValue,
                             FileLoaderState.Ing.rawValue:
-                            SwiftEventBus.post(
-                                IMEvent.MsgUploadProgressUpdate.rawValue,
-                                sender: IMUploadProgress(uploadKey, state, progress)
-                            )
+                            break
                         case FileLoaderState.Success.rawValue:
                             do {
                                 imageBody.thumbnailUrl = url
+                                imageBody.width = imageData.width!
+                                imageBody.height = imageData.height!
                                 let d = try JSONEncoder().encode(imageBody)
                                 entity.content = String(data: d, encoding: .utf8)!
                                 try self?.insertOrUpdateDb(entity, false)
@@ -174,13 +184,20 @@ class ImageMsgProcessor : BaseMsgProcessor {
         }
     }
     
-    open func uploadOriginImage(_ fileLoadModule: FileLoaderModule, _ storageModule: StorageModule,
+    open func uploadOriginImage(_ fileLoadModule: FileLoadModule, _ storageModule: StorageModule,
                                _ entity: Message) -> Observable<Message> {
         do {
-            let imageBody = try JSONDecoder().decode(
-                IMImageMsgBody.self,
-                from: entity.content.data(using: .utf8) ?? Data()
-            )
+            var imageBody = IMImageMsgBody()
+            if (entity.content != nil) {
+                imageBody = try JSONDecoder().decode(
+                    IMImageMsgBody.self,
+                    from: entity.content!.data(using: .utf8) ?? Data()
+                )
+            }
+            if (imageBody.url != nil) {
+                return Observable.just(entity)
+            }
+            
             let imageData = try JSONDecoder().decode(
                 IMImageMsgData.self,
                 from: entity.data.data(using: .utf8) ?? Data()
@@ -190,20 +207,22 @@ class ImageMsgProcessor : BaseMsgProcessor {
             }
             originPath = storageModule.sandboxFilePath(originPath)
             let (_, originName) = storageModule.getPathsFromFullPath(originPath)
-            let uploadKey = storageModule.allocSessionFilePath(
-                entity.sessionId, entity.fromUId, originName, IMFileFormat.Image.rawValue)
+            let uploadKey = IMCoreManager.shared.fileLoadModule.getUploadKey(
+                entity.sessionId, entity.fromUId, originName, entity.id
+            )
             return Observable.create({ observer -> Disposable in
                 let loadListener = FileLoaderListener(
                     {progress, state, url, path in
+                        SwiftEventBus.post(
+                            IMEvent.MsgLoadProgressUpdate.rawValue,
+                            sender: IMUploadProgress(uploadKey, state, progress)
+                        )
                         switch(state) {
                         case
                             FileLoaderState.Wait.rawValue,
                             FileLoaderState.Init.rawValue,
                             FileLoaderState.Ing.rawValue:
-                            SwiftEventBus.post(
-                                IMEvent.MsgUploadProgressUpdate.rawValue,
-                                sender: IMUploadProgress(uploadKey, state, progress)
-                            )
+                            break
                         case
                             FileLoaderState.Success.rawValue:
                             do {

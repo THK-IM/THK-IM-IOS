@@ -21,6 +21,7 @@ class OSSUploadTask: OSSLoadTask {
     }
     
     override func start() {
+        super.start()
         self.notify(progress: 0, state: FileLoaderState.Init.rawValue)
         guard let fileLoadModule = self.fileModuleReference.value else {
             self.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
@@ -52,6 +53,7 @@ class OSSUploadTask: OSSLoadTask {
     }
     
     override func cancel() {
+        super.cancel()
         if (self.request != nil) {
             if (!self.request!.isCancelled) {
                 self.request!.cancel()

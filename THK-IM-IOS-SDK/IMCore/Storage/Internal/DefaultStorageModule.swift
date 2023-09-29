@@ -133,8 +133,8 @@ class DefaultStorageModule : StorageModule {
         return "\(rootPath)/avatar/\(type)/user-\(id).\(ext)"
     }
     
-    func allocSessionFilePath(_ sId: Int64, _ uId: Int64, _ fileName: String, _ format: String) -> String {
-        let fileRootPath = "\(getSessionRootPath(sId))/\(uId)/\(format)"
+    func allocSessionFilePath(_ sId: Int64,  _ fileName: String, _ format: String) -> String {
+        let fileRootPath = "\(getSessionRootPath(sId))/\(format)"
         let fileManager = FileManager.default
         var isDir: ObjCBool = false
         let exist = fileManager.fileExists(atPath: fileRootPath, isDirectory: &isDir)

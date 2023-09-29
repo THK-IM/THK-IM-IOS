@@ -160,7 +160,7 @@ class IMSpeakView: UILabel {
         }
         let fileName = "audio_\(String().random(8)).oga"
         let filePath = IMCoreManager.shared.storageModule
-            .allocSessionFilePath(session.id, IMCoreManager.shared.uId, fileName, "audio")
+            .allocSessionFilePath(session.id, fileName, "audio")
         return OggOpusAudioRecorder.shared.startRecording(filePath) {
             [weak self] db, duration, path, stopped in
             print("IMSpeakView recording: \(db), \(duration), \(stopped)")

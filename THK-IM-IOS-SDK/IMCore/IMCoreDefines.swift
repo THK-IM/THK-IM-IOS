@@ -16,10 +16,10 @@ public enum IMEvent: String {
          MsgNew = "IMEventMsgNew",
          MsgUpdate = "IMEventMsgUpdate",
          MsgDelete = "IMEventMsgDelete",
-         MsgUploadProgressUpdate = "MsgUploadProgressUpdate",
          SessionNew = "IMEventSessionNew",
          SessionUpdate = "IMEventSessionUpdate",
-         SessionDelete = "IMEventSessionDelete"
+         SessionDelete = "IMEventSessionDelete",
+         MsgLoadProgressUpdate = "IMEventMsgLoadStatusUpdate"
 }
 
 public enum IMFileFormat: String {

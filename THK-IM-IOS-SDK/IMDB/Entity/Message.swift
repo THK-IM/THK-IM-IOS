@@ -20,7 +20,7 @@ public final class Message: TableCodable {
     // 消息类型
     var type: Int = 0
     // 消息内容
-    var content: String
+    var content: String?
     // 消息发送状态,值标记
     var sendStatus: Int = MsgSendStatus.Init.rawValue
     // 消息操作状态 ack/read/revoke/update bit位标记
@@ -60,7 +60,7 @@ public final class Message: TableCodable {
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String, sendStatus: Int, operateStatus: Int, referMsgId: Int64? = nil, atUsers: String? = nil, data: String = "", cTime: Int64, mTime: Int64) {
+    init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String?, sendStatus: Int, operateStatus: Int, referMsgId: Int64? = nil, atUsers: String? = nil, data: String = "", cTime: Int64, mTime: Int64) {
         self.id = id
         self.sessionId = sessionId
         self.fromUId = fromUId

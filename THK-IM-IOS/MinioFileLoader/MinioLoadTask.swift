@@ -1,23 +1,23 @@
 //
-//  OSSLoadTask.swift
+//  MinioLoadTask.swift
 //  THK-IM-IOS
 //
-//  Created by vizoss on 2023/6/5.
+//  Created by vizoss on 2023/9/29.
+//  Copyright © 2023 THK. All rights reserved.
 //
 
 import Foundation
-import CocoaLumberjack
 
-class OSSLoadTask{
+class MinioLoadTask {
     
     let taskId: String
     let path: String
     let url: String
-    let fileModuleReference: WeakReference<OSSFileLoadModule>
+    let fileModuleReference: WeakReference<MinioFileLoadModule>
     
     private var running = true
     
-    init(taskId : String, path: String, url: String, fileModule: OSSFileLoadModule) {
+    init(taskId : String, path: String, url: String, fileModule: MinioFileLoadModule) {
         self.taskId = taskId
         self.path = path
         self.url = url
@@ -25,7 +25,7 @@ class OSSLoadTask{
     }
     
     func start() {
-        running = true
+        
     }
     
     func cancel() {
@@ -39,3 +39,4 @@ class OSSLoadTask{
         }
     }
 }
+

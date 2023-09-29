@@ -48,16 +48,14 @@ protocol StorageModule : AnyObject {
     
     /**
      * 申请会话下文件存放路径，函数内不会创建文件
-     * @return  ex: /{application}/{files}/im/{uId}/session-${uId}/{format}/xxx.jpeg
-     *          文件名重复返回 /{application}/{files}/im/{uId}/session-${uId}/{format}/xxx.1.jpeg
+     * @return  ex: /{application}/{files}/im/session-${uId}/{format}/xxx.jpeg
+     *          文件名重复返回 /{application}/{files}/im/session-${uId}/{format}/xxx.1.jpeg
      * @param sId 会话id
-     * @param uId 用户id
      * @param fileName 文件名 12.jpeg
      * @param format 文件类型，img(包含png/jpeg/gif等格式)/video(spx)/voice/file(包含doc/ppt/txt/等格式)
      */
     func allocSessionFilePath(
         _ sid: Int64,
-        _ uId: Int64,
         _ fileName: String,
         _ format: String
     ) -> String

@@ -1,32 +1,28 @@
 //
-//  OSSFileLoadModule.swift
+//  MinioFileLoadModule.swift
 //  THK-IM-IOS
 //
-//  Created by vizoss on 2023/6/5.
+//  Created by vizoss on 2023/9/29.
+//  Copyright © 2023 THK. All rights reserved.
 //
 
 import Foundation
-import AliyunOSSiOS
 import CocoaLumberjack
 
-class OSSFileLoadModule: FileLoadModule {
+
+class MinioFileLoadModule: FileLoadModule {
     
-    
-    private var downloadTaskMap = [String: (OSSLoadTask, Array<FileLoaderListener>)]()
-    private var uploadTaskMap = [String: (OSSLoadTask, Array<FileLoaderListener>)]()
+    private var downloadTaskMap = [String: (MinioLoadTask, Array<FileLoaderListener>)]()
+    private var uploadTaskMap = [String: (MinioLoadTask, Array<FileLoaderListener>)]()
     private let lock = NSLock()
+    var token: String
+    var endpoint: String
     
-    let oSsBucket: String
-    let oSsEndpoint: String
-    let credentialProvider: OSSCredentialProvider
-    let oSsClient: OSSClient
-    
-    init(_ oSsBucket: String, _ oSsEndpoint: String, _ credentialProvider: OSSCredentialProvider) {
-        self.oSsBucket = oSsBucket
-        self.oSsEndpoint = oSsEndpoint
-        self.credentialProvider = credentialProvider
-        self.oSsClient = OSSClient(endpoint: oSsEndpoint, credentialProvider: credentialProvider)
+    init(_ token: String, _ endpoint: String) {
+        self.token = token
+        self.endpoint = endpoint
     }
+    
     
     func getTaskId(key: String, path: String, type: String) -> String {
         return "\(type)/\(key)/\(path)"
@@ -60,7 +56,7 @@ class OSSFileLoadModule: FileLoadModule {
         let taskId = self.getTaskId(key: key, path: path, type: "download")
         var taskTuple = downloadTaskMap[taskId]
         if (taskTuple == nil) {
-            let dTask = OSSDownloadTask(taskId: taskId, path: path, url: key, fileModule: self)
+            let dTask = MinioDownloadTask(taskId: taskId, path: path, url: key, fileModule: self)
             dTask.start()
             downloadTaskMap[taskId] = (dTask, [loadListener])
         } else {
@@ -75,7 +71,7 @@ class OSSFileLoadModule: FileLoadModule {
         let taskId = self.getTaskId(key: key, path: path, type: "upload")
         var taskTuple = uploadTaskMap[taskId]
         if (taskTuple == nil) {
-            let dTask = OSSLoadTask(taskId: taskId, path: path, url: key, fileModule: self)
+            let dTask = MinioUploadTask(taskId: taskId, path: path, url: key, fileModule: self)
             dTask.start()
             uploadTaskMap[taskId] = (dTask, [loadListener])
         } else {

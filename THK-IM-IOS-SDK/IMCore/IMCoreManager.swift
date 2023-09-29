@@ -17,8 +17,8 @@ public class IMCoreManager: SignalListener {
     private var moduleDic = [Int: BaseModule]()
     private var disposeBag = DisposeBag()
     
-    private var _fileLoadModule: FileLoaderModule?
-    var fileLoadModule: FileLoaderModule {
+    private var _fileLoadModule: FileLoadModule?
+    var fileLoadModule: FileLoadModule {
         set {
             self._fileLoadModule = newValue
         }

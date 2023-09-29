@@ -26,7 +26,7 @@ class MessageBean: Codable {
         self.sessionId = msg.sessionId
         self.msgId = msg.msgId
         self.type = msg.type
-        self.body = msg.content
+        self.body = msg.content ?? ""
         self.rMsgId = msg.referMsgId
         self.atUsers = msg.atUsers
         self.cTime = msg.cTime

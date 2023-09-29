@@ -42,20 +42,20 @@ class AudioMsgProcessor : BaseMsgProcessor {
     }
     
     private func checkDir(_ storageModule: StorageModule, _ audioData: inout IMAudioMsgData, _ entity: inout Message) throws {
+        let realPath = storageModule.sandboxFilePath(audioData.path!)
         let isAssignedPath = storageModule.isAssignedPath(
-            audioData.path!,
+            realPath,
             IMFileFormat.Image.rawValue,
             entity.sessionId
         )
-        let (_, name) = storageModule.getPathsFromFullPath(audioData.path!)
+        let (_, name) = storageModule.getPathsFromFullPath(realPath)
         if !isAssignedPath {
             let dePath = storageModule.allocSessionFilePath(
                 entity.sessionId,
-                IMCoreManager.shared.uId,
                 name,
                 IMFileFormat.Audio.rawValue
             )
-            try storageModule.copyFile(audioData.path!, dePath)
+            try storageModule.copyFile(realPath, dePath)
             audioData.path = dePath
             let d = try JSONEncoder().encode(audioData)
             entity.data = String(data: d, encoding: .utf8)!
@@ -68,10 +68,17 @@ class AudioMsgProcessor : BaseMsgProcessor {
     
     func uploadAudio(_ entity: Message) -> Observable<Message> {
         do {
-            let audioBody = try JSONDecoder().decode(
-                IMAudioMsgBody.self,
-                from: entity.content.data(using: .utf8) ?? Data()
-            )
+            var audioBody = IMAudioMsgBody()
+            if (entity.content != nil) {
+                audioBody = try JSONDecoder().decode(
+                    IMAudioMsgBody.self,
+                    from: entity.content!.data(using: .utf8) ?? Data()
+                )
+            }
+            if (audioBody.url != nil) {
+                return Observable.just(entity)
+            }
+            
             let fileLoadModule = IMCoreManager.shared.fileLoadModule
             let storageModule = IMCoreManager.shared.storageModule
             let audioData = try JSONDecoder().decode(
@@ -81,7 +88,8 @@ class AudioMsgProcessor : BaseMsgProcessor {
             if audioData.path == nil || audioData.duration == nil  {
                 return Observable.error(CocoaError.init(.fileNoSuchFile))
             }
-            let (_, name) = storageModule.getPathsFromFullPath(audioData.path!)
+            let realPath = storageModule.sandboxFilePath(audioData.path!)
+            let (_, name) = storageModule.getPathsFromFullPath(realPath)
             
             let uploadKey = fileLoadModule.getUploadKey(
                 entity.sessionId,
@@ -93,15 +101,15 @@ class AudioMsgProcessor : BaseMsgProcessor {
             return Observable.create({observer -> Disposable in
                 let loaderListener = FileLoaderListener(
                     { progress, state, url, path in
+                        SwiftEventBus.post(
+                            IMEvent.MsgLoadProgressUpdate.rawValue,
+                            sender: IMUploadProgress(uploadKey, state, progress)
+                        )
                         switch(state) {
                         case
                             FileLoaderState.Wait.rawValue,
                             FileLoaderState.Init.rawValue,
                             FileLoaderState.Ing.rawValue:
-                            SwiftEventBus.post(
-                                IMEvent.MsgUploadProgressUpdate.rawValue,
-                                sender: IMUploadProgress(uploadKey, state, progress)
-                            )
                             break
                         case
                             FileLoaderState.Success.rawValue:
@@ -129,7 +137,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
                 )
                 _ = fileLoadModule.upload(
                     key: uploadKey,
-                    path: audioData.path!,
+                    path: realPath,
                     loadListener: loaderListener
                 )
                 return Disposables.create()
