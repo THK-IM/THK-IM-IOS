@@ -106,18 +106,18 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     }
     
     @objc private func cacheInfoUpdate(note: NSNotification) {
-        guard let url = self.url?.absoluteString else {
-            return
-        }
-        guard let cacheInfo = note.userInfo!["info"] as? IMAVCacheInfo else {
-            return
-        }
-        guard let cacheRemoteUrl = note.userInfo!["remoteUrl"] as? String else {
-            return
-        }
-        guard let cacheLocalPath = note.userInfo!["localPath"] as? String else {
-            return
-        }
+//        guard let url = self.url?.absoluteString else {
+//            return
+//        }
+//        guard let cacheInfo = note.userInfo!["info"] as? IMAVCacheInfo else {
+//            return
+//        }
+//        guard let cacheRemoteUrl = note.userInfo!["remoteUrl"] as? String else {
+//            return
+//        }
+//        guard let cacheLocalPath = note.userInfo!["localPath"] as? String else {
+//            return
+//        }
 //        print("cacheInfoUpdate \(cacheInfo.contentLength), \(cacheInfo.isFinished())")
 //        print("cacheInfoUpdate \(cacheRemoteUrl), \(cacheLocalPath)")
         if self.player.currentItem != nil {

@@ -19,7 +19,7 @@ public final class Message: TableCodable {
     var msgId: Int64 = 0
     // 消息类型
     var type: Int = 0
-    // 消息内容
+    // 消息内容, 服务端数据
     var content: String?
     // 消息发送状态,值标记
     var sendStatus: Int = MsgSendStatus.Init.rawValue
@@ -30,7 +30,7 @@ public final class Message: TableCodable {
     // 消息@人列表, uId1#uId2 || all所有人
     var atUsers: String? = nil
     // 消息内容 本地数据 json格式
-    var data: String = ""
+    var data: String?
     // 消息创建时间
     var cTime: Int64
     // 消息最近修改时间
@@ -60,7 +60,7 @@ public final class Message: TableCodable {
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String?, sendStatus: Int, operateStatus: Int, referMsgId: Int64? = nil, atUsers: String? = nil, data: String = "", cTime: Int64, mTime: Int64) {
+    init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String?, sendStatus: Int, operateStatus: Int, referMsgId: Int64? = nil, atUsers: String? = nil, data: String?, cTime: Int64, mTime: Int64) {
         self.id = id
         self.sessionId = sessionId
         self.fromUId = fromUId

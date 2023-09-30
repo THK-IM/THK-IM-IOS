@@ -19,7 +19,7 @@ public enum IMEvent: String {
          SessionNew = "IMEventSessionNew",
          SessionUpdate = "IMEventSessionUpdate",
          SessionDelete = "IMEventSessionDelete",
-         MsgLoadProgressUpdate = "IMEventMsgLoadStatusUpdate"
+         MsgLoadStatusUpdate = "IMEventMsgLoadStatusUpdate"
 }
 
 public enum IMFileFormat: String {
@@ -30,19 +30,24 @@ public enum IMFileFormat: String {
          Other = "other"
 }
 
-public class IMUploadProgress: Codable {
+
+
+public class IMLoadProgress: Codable {
     
+    var type: String
     var key: String
     var state: Int
     var progress: Int
     
-    init(_ key: String, _ state: Int, _ progress: Int) {
+    init(_ type: String, _ key: String, _ state: Int, _ progress: Int) {
+        self.type = type
         self.key = key
         self.state = state
         self.progress = progress
     }
     
     enum CodingKeys: String, CodingKey {
+        case type = "type"
         case key = "key"
         case state = "state"
         case progress = "progress"
@@ -50,6 +55,16 @@ public class IMUploadProgress: Codable {
 }
 
 
+
+public enum IMLoadType: String {
+    case Upload = "upload",
+         Download = "download"
+}
+
+public enum IMMsgResourceType: String {
+    case Thumbnail = "thumbnail",
+         Source = "source"
+}
 
 
 

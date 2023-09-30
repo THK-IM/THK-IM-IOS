@@ -34,7 +34,7 @@ class OSSDownloadTask : OSSLoadTask {
                 }
                 switch response.result {
                 case .success:
-                    if !FileManager.default.fileExists(atPath: sf.path) {
+                    if FileManager.default.fileExists(atPath: sf.path) {
                         do {
                             try FileManager.default.moveItem(at: tempFileURL, to: fileUrl)
                             sf.notify(progress: 100, state: FileLoaderState.Success.rawValue)

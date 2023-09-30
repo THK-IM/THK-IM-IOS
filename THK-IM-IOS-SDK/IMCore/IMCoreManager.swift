@@ -27,7 +27,7 @@ public class IMCoreManager: SignalListener {
         }
     }
     
-    var _storageModule: StorageModule?
+    private var _storageModule: StorageModule?
     var storageModule: StorageModule {
         set {
             self._storageModule = newValue

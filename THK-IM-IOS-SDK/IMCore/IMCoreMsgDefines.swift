@@ -163,17 +163,20 @@ public class IMAudioMsgBody: Codable {
     
     var duration: Int?
     var url: String?
+    var name: String?
     
     enum CodingKeys: String, CodingKey {
         case duration = "duration"
         case url = "url"
+        case name = "name"
     }
     
     init() {}
     
-    init(duration: Int?, url: String?) {
+    init(duration: Int?, url: String?, name: String?) {
         self.duration = duration
         self.url = url
+        self.name = name
     }
 }
 
@@ -183,21 +186,24 @@ public class IMImageMsgBody: Codable {
     var height: Int?
     var thumbnailUrl: String?
     var url: String?
+    var name: String?
     
     enum CodingKeys: String, CodingKey {
         case width = "width"
         case height = "height"
         case url = "url"
+        case name = "name"
         case thumbnailUrl = "thumbnail_url"
     }
     
     init() {}
     
-    init(width: Int?, height: Int?, thumbnailUrl: String?, url: String?) {
+    init(width: Int?, height: Int?, thumbnailUrl: String?, url: String?, name: String?) {
         self.width = width
         self.height = height
         self.thumbnailUrl = thumbnailUrl
         self.url = url
+        self.name = name
     }
 }
 
@@ -208,6 +214,7 @@ public class IMVideoMsgBody: Codable {
     var height: Int?
     var thumbnailUrl: String?
     var url: String?
+    var name: String?
     
     enum CodingKeys: String, CodingKey {
         case duration = "duration"
@@ -215,16 +222,18 @@ public class IMVideoMsgBody: Codable {
         case height = "height"
         case url = "url"
         case thumbnailUrl = "thumbnail_url"
+        case name = "name"
     }
     
     init() {}
     
-    init(duration: Int?, width: Int?, height: Int?, thumbnailUrl: String?, url: String?) {
+    init(duration: Int?, width: Int?, height: Int?, thumbnailUrl: String?, url: String?, name: String?) {
         self.duration = duration
         self.width = width
         self.height = height
         self.thumbnailUrl = thumbnailUrl
         self.url = url
+        self.name = name
     }
 }
 

@@ -142,7 +142,10 @@ class DefaultStorageModule : StorageModule {
             if isDir.boolValue {
                 let tuple = getFileExt(fileName)
                 let name = tuple.0
-                let ext =  ".\(tuple.1)"
+                var ext =  ".\(tuple.1)"
+                if (tuple.1.length == 0) {
+                    ext = ""
+                }
                 let fullPath = "\(fileRootPath)/\(name)"
                 var i: Int? = nil
                 while true {

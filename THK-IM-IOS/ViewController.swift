@@ -57,7 +57,8 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
         textView1.rx.tap
             .compose(DefaultRxTransformer.io2Main())
             .flatMap({ (value) -> Observable<Session> in
-                let entityId = Int64(arc4random() % 100000) + 100
+//                let entityId = Int64(arc4random() % 100000) + 100
+                let entityId = Int64(4)
                 return IMCoreManager.shared.getMessageModule().createSingleSession(entityId)
             })
             .subscribe(onNext: { data in
@@ -198,7 +199,8 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
 //                    }
                     
                     let msgDao = IMCoreManager.shared.database.messageDao
-                    let message = Message(id: 1, sessionId: 1, fromUId: 1, msgId: 1, type: 1, content: "fsfdsf", sendStatus: MsgSendStatus.Success.rawValue, operateStatus: 1, cTime: Date().timeMilliStamp, mTime: Date().timeMilliStamp)
+                    let message = Message(id: 1, sessionId: 1, fromUId: 1, msgId: 1, type: 1, content: "fsfdsf", sendStatus: MsgSendStatus.Success.rawValue, operateStatus: 1, data: nil,
+                        cTime: Date().timeMilliStamp, mTime: Date().timeMilliStamp)
                     try msgDao.insertOrReplaceMessages([message])
                     message.msgId = 2
                     message.content = "fsfafa"

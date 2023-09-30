@@ -22,12 +22,14 @@ class MinioDownloadTask: MinioLoadTask {
         let tempFileURL = NSURL(fileURLWithPath: tempFilePath) as URL
         let fileUrl = NSURL(fileURLWithPath: self.path) as URL
         self.notify(progress: 0, state: FileLoaderState.Init.rawValue)
-        
+        let redirector = Redirector(behavior: .follow)
         var headers = HTTPHeaders()
         headers.add(name: "Token", value: fileLoadModule.token)
         self.request = AF.download(url, headers: headers, to: { _, response in
             return (tempFileURL, [.removePreviousFile, .createIntermediateDirectories])
-        }).downloadProgress(queue: DispatchQueue.global()) { [weak self] progress in
+        })
+        .redirect(using: redirector)
+        .downloadProgress(queue: DispatchQueue.global()) { [weak self] progress in
                 guard let sf = self else {
                     return
                 }
@@ -40,7 +42,7 @@ class MinioDownloadTask: MinioLoadTask {
                 }
                 switch response.result {
                 case .success:
-                    if !FileManager.default.fileExists(atPath: tempFilePath) {
+                    if FileManager.default.fileExists(atPath: tempFilePath) {
                         do {
                             try FileManager.default.moveItem(at: tempFileURL, to: fileUrl)
                             sf.notify(progress: 100, state: FileLoaderState.Success.rawValue)

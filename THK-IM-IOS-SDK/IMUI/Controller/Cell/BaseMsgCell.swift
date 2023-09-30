@@ -154,11 +154,9 @@ open class BaseMsgCell : BaseCell {
     }
     
     private func showMessageStatus() {
-        DDLogDebug("showMessageStatus: start ")
         guard let message = self.message else {
             return
         }
-        DDLogDebug("showMessageStatus: " + message.sendStatus.description)
         switch message.sendStatus {
         case MsgSendStatus.Init.rawValue, MsgSendStatus.Sending.rawValue:
             self.cellWrapper.statusView()?.isHidden = false

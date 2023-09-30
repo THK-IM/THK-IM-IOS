@@ -28,25 +28,40 @@ class IMImageMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    override func cellHeight(_ message: Message, _ sessionType: Int) -> CGFloat {
-//        do {
-//            let imageBody = try JSONDecoder().decode(
-//                ImageMsgBody.self,
-//                from: message.content.data(using: .utf8) ?? Data())
-//            var calHeight = 20
-//            if (imageBody.width >= imageBody.height) {
-//                var calWidth = min(200, imageBody.width)
-//                calWidth = max(80, calWidth)
-//                calHeight += max(80, calWidth * imageBody.height / imageBody.width)
-//            } else if (imageBody.height > imageBody.width) {
-//                var height = min(200, imageBody.height)
-//                calHeight += max(80, height)
-//            }
-//            return CGFloat(calHeight) + self.cellHeightForSessionType(sessionType)
-//        } catch {
-//            DDLogError(error)
-//        }
-        return super.cellHeight(message, sessionType)
+    override func viewSize(_ message: Message) -> CGSize {
+        var width = 100
+        var height = 100
+        do {
+            if (message.content != nil) {
+                let imageBody = try JSONDecoder().decode(
+                    IMImageMsgBody.self,
+                    from: message.content!.data(using: .utf8) ?? Data())
+                if imageBody.height != nil && imageBody.width != nil {
+                    width = imageBody.width!
+                    height = imageBody.height!
+                }
+            } else if (message.data != nil) {
+                let imageData = try JSONDecoder().decode(
+                    IMImageMsgData.self,
+                    from: message.data!.data(using: .utf8) ?? Data())
+                if imageData.height != nil && imageData.width != nil {
+                    width = imageData.width!
+                    height = imageData.height!
+                }
+            }
+            if (width >= height) {
+                let calWidth = max(80, min(200, width))
+                let calHeight = max(80, calWidth * height / width)
+                return CGSize(width: calWidth, height: calHeight)
+            } else if (height > width) {
+                let calHeight = max(80, min(200, height))
+                let calWidth = max(80, calHeight * width / height)
+                return CGSize(width: calWidth, height: calHeight)
+            }
+        } catch {
+            DDLogError(error)
+        }
+        return super.viewSize(message)
     }
     
 }

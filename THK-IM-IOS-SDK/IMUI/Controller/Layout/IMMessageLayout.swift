@@ -78,8 +78,8 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let msg = self.messages[indexPath.row]
         let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
-        let height = provider.cellHeight(msg, self.session!.type)
-        return height
+        let size = provider.viewSize(msg)
+        return size.height + 20
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -257,6 +257,8 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
         } else {
             lastMessageTime = 0
         }
+        
+        UIView.setAnimationsEnabled(false)
         let timelineMsg = addTimelineMessage(message)
         if (timelineMsg != nil) {
             self.messages.insert(timelineMsg!, at: insertPos)
@@ -268,6 +270,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
             self.messages.insert(message, at: insertPos)
             tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
         }
+        UIView.setAnimationsEnabled(true)
         self.scrollToBottom(0.2)
     }
     
@@ -284,10 +287,12 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
     func deleteMessage(_ message: Message) {
         let tableView = self.messageTableView
         let pos = findPosition(message)
+        UIView.setAnimationsEnabled(false)
         if (pos != -1) {
             self.messages.remove(at: pos)
             tableView.deleteRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
         }
+        UIView.setAnimationsEnabled(true)
     }
     
     private func findPosition(_ message: Message) -> Int {

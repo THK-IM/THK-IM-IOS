@@ -22,10 +22,13 @@ class AudioMsgProcessor : BaseMsgProcessor {
     
     override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
         do {
+            if (message.data == nil) {
+                return Observable.error(CocoaError.init(.fileNoSuchFile))
+            }
             let storageModule = IMCoreManager.shared.storageModule
             var audioData = try JSONDecoder().decode(
                 IMAudioMsgData.self,
-                from: message.data.data(using: .utf8) ?? Data()
+                from: message.data!.data(using: .utf8) ?? Data()
             )
             if audioData.path == nil || audioData.duration == nil  {
                 return Observable.error(CocoaError.init(.fileNoSuchFile))
@@ -81,9 +84,12 @@ class AudioMsgProcessor : BaseMsgProcessor {
             
             let fileLoadModule = IMCoreManager.shared.fileLoadModule
             let storageModule = IMCoreManager.shared.storageModule
+            if (entity.data == nil) {
+                return Observable.error(CocoaError.init(.fileNoSuchFile))
+            }
             let audioData = try JSONDecoder().decode(
                 IMAudioMsgData.self,
-                from: entity.data.data(using: .utf8) ?? Data()
+                from: entity.data!.data(using: .utf8) ?? Data()
             )
             if audioData.path == nil || audioData.duration == nil  {
                 return Observable.error(CocoaError.init(.fileNoSuchFile))
@@ -102,8 +108,8 @@ class AudioMsgProcessor : BaseMsgProcessor {
                 let loaderListener = FileLoaderListener(
                     { progress, state, url, path in
                         SwiftEventBus.post(
-                            IMEvent.MsgLoadProgressUpdate.rawValue,
-                            sender: IMUploadProgress(uploadKey, state, progress)
+                            IMEvent.MsgLoadStatusUpdate.rawValue,
+                            sender: IMLoadProgress(IMLoadType.Upload.rawValue, uploadKey, state, progress)
                         )
                         switch(state) {
                         case
@@ -115,6 +121,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
                             FileLoaderState.Success.rawValue:
                             do {
                                 audioBody.url = url
+                                audioBody.name = name
                                 audioBody.duration = audioData.duration!
                                 let content = try JSONEncoder().encode(audioBody)
                                 entity.content = String(data: content, encoding: .utf8)!
@@ -146,6 +153,98 @@ class AudioMsgProcessor : BaseMsgProcessor {
             DDLogError(error)
             return Observable.error(error)
         }
+    }
+    
+    
+    override func downloadMsgContent(_ message: Message, resourceType: String) {
+        Observable<Message>.create({observer -> Disposable in
+            do {
+                var data = IMAudioMsgData()
+                if (message.data != nil) {
+                    data = try JSONDecoder().decode(
+                        IMAudioMsgData.self,
+                        from: message.data!.data(using: .utf8) ?? Data()
+                    )
+                }
+                var body = IMAudioMsgBody()
+                if (message.content != nil) {
+                    body = try JSONDecoder().decode(
+                        IMAudioMsgBody.self,
+                        from: message.content!.data(using: .utf8) ?? Data()
+                    )
+                }
+
+                var downloadUrl: String? = nil
+                let fileName = body.name
+                if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
+                    downloadUrl = body.url
+                } else {
+                    downloadUrl = body.url
+                }
+                if downloadUrl == nil || fileName == nil {
+                    observer.onError(CocoaError(.fileNoSuchFile))
+                } else {
+                    let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
+                        message.sessionId, fileName!, IMFileFormat.Image.rawValue)
+                    let loadListener = FileLoaderListener(
+                        {progress, state, url, path in
+                            SwiftEventBus.post(
+                                IMEvent.MsgLoadStatusUpdate.rawValue,
+                                sender: IMLoadProgress(IMLoadType.Download.rawValue, url, state, progress)
+                            )
+                            switch(state) {
+                            case
+                                FileLoaderState.Wait.rawValue,
+                                FileLoaderState.Init.rawValue,
+                                FileLoaderState.Ing.rawValue:
+                                break
+                            case
+                                FileLoaderState.Success.rawValue:
+                                do {
+                                    data.path = path
+                                    data.duration = body.duration
+                                    let d = try JSONEncoder().encode(data)
+                                    message.data = String(data: d, encoding: .utf8)!
+                                    observer.onNext(message)
+                                    observer.onCompleted()
+                                } catch {
+                                    DDLogError(error)
+                                    observer.onError(error)
+                                }
+                                break
+                            default:
+                                observer.onError(CocoaError.init(.executableLoad))
+                                break
+                            }
+                        },
+                        {
+                            return false
+                        }
+                    )
+                    _ = IMCoreManager.shared.fileLoadModule.download(
+                        key: downloadUrl!,
+                        path: localPath,
+                        loadListener: loadListener
+                    )
+                }
+            } catch {
+                DDLogError(error)
+                observer.onError(error)
+            }
+            
+            return Disposables.create()
+        })
+        .compose(DefaultRxTransformer.io2Io())
+        .subscribe(onNext: { msg in
+            do {
+                try self.insertOrUpdateDb(msg, true, false)
+            } catch let error {
+                DDLogError(error)
+            }
+        }, onError: { error in
+            DDLogError(error)
+        })
+        .disposed(by: disposeBag)
     }
     
 }

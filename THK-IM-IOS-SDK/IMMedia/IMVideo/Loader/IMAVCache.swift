@@ -329,7 +329,7 @@ class IMAVCache{
                 let (r1, _) = self.getNeedLoadRange(range)
                 if r1.count == 0 {
                     try tmpFile.seek(toOffset: UInt64(range.start))
-                    var length = Int(range.end - range.start) + 1
+                    let length = Int(range.end - range.start) + 1
 //                    if data.count + length > maxLength {
 //                        length = maxLength - data.count
 //                    }
