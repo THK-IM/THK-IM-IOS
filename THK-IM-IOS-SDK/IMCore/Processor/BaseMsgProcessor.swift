@@ -206,15 +206,17 @@ public class BaseMsgProcessor {
     /**
      * 【更新消息状态】用于在调用api发送消息失败时更新本地数据库消息状态
      */
-    open func updateFailedMsgStatus(_ msg: Message) throws {
+    open func updateFailedMsgStatus(_ msg: Message, _ notify: Bool = true) throws {
         try IMCoreManager.shared.database.messageDao.updateSendStatus(
             msg.sessionId, msg.id, msg.fromUId, MsgSendStatus.Failed.rawValue
         )
-        SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
-        if msg.sendStatus == MsgSendStatus.Uploading.rawValue
-            || msg.sendStatus == MsgSendStatus.Success.rawValue
-            || msg.sendStatus == MsgSendStatus.Failed.rawValue {
-            IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
+        if (notify) {
+            SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
+            if msg.sendStatus == MsgSendStatus.Uploading.rawValue
+                || msg.sendStatus == MsgSendStatus.Success.rawValue
+                || msg.sendStatus == MsgSendStatus.Failed.rawValue {
+                IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
+            }
         }
     }
     

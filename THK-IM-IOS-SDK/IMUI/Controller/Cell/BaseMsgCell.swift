@@ -39,7 +39,6 @@ open class BaseMsgCell : BaseCell {
     }
     
     func initMsgView() {
-        DDLogDebug("BaseMsgCell init")
         let msgContainerView = cellWrapper.containerView()
         self.bubbleView = UIImageView()
         msgContainerView.insertSubview(self.bubbleView!, at: 0)

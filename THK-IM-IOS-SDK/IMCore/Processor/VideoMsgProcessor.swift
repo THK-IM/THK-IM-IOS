@@ -71,7 +71,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
     }
     
     open func getImageCompressorOptions() -> ImageCompressor.Options {
-        return ImageCompressor.Options(maxWidth: 160, maxHeight: 400, maxSize: 100*1024, quality: 0.9)
+        return ImageCompressor.Options(maxSize: 100*1024, quality: 0.6)
     }
     
     open func extractVideoFrame(_ storageModule: StorageModule, _ videoData: inout IMVideoMsgData, _ entity: inout Message) throws {

@@ -70,7 +70,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
     }
     
     open func getImageCompressorOptions() -> ImageCompressor.Options {
-        return ImageCompressor.Options(maxWidth: 160, maxHeight: 400, maxSize: 100*1024, quality: 0.9)
+        return ImageCompressor.Options(maxSize: 100*1024, quality: 0.9)
     }
     
     open func compress(_ storageModule: StorageModule, _ imageData: inout IMImageMsgData, _ entity: inout Message) throws {

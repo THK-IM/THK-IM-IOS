@@ -13,7 +13,11 @@ import SwiftEventBus
 
 class IMImageMsgCell: BaseMsgCell {
     
-    private let view = UIImageView()
+    private let view: UIImageView = {
+        let v = UIImageView()
+        v.contentMode = .scaleToFill
+        return v
+    }()
     private var taskId: String?
     private var downloadListener: FileLoaderListener?
     
@@ -26,6 +30,7 @@ class IMImageMsgCell: BaseMsgCell {
         guard let msg = self.message else {
             return
         }
+        self.view.isHidden = true
         let size = IMUIManager.shared.getMsgCellProvider(msg.type).viewSize(msg)
         self.view.removeConstraints(self.view.constraints)
         self.view.snp.makeConstraints { make in
@@ -38,6 +43,7 @@ class IMImageMsgCell: BaseMsgCell {
                     IMImageMsgData.self,
                     from: msg.data!.data(using: .utf8) ?? Data())
                 if (data.thumbnailPath != nil) {
+                    self.view.isHidden = false
                     let path = IMCoreManager.shared.storageModule.sandboxFilePath(data.thumbnailPath!)
                     self.view.ca_setImagePathWithCorner(path: path, radius: 8.0)
                     return
