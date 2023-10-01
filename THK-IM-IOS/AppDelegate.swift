@@ -33,23 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func initIM(_ application: UIApplication) {
-        IMUIManager.shared.registerBottomFunctionProvider(
-            IMPhotoFunctionProvider(), IMCameraFunctionProvider()
-        )
-        IMUIManager.shared.registerEmojiControllerProvider(
-            IMUnicodeEmojiControllerProvider(), IMUnicodeEmojiControllerProvider()
-        )
-        
-//        let bucket = "bucket"
-//        let endpoint = "https://"
-//        let credentialProvider = OSSFederationCredentialProvider(federationTokenGetter: {
-//            let token = OSSFederationToken()
-//            token.tAccessKey = ""
-//            token.tSecretKey =  ""
-//            token.expirationTimeInGMTFormat = "2023-08-13T05:54:46Z"
-//            token.tToken = ""
-//            return token
-//        })
         let debug = true
         let uId : Int64 = 15498
         let endpoint = "http://192.168.1.3:10000"
@@ -57,9 +40,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IMCoreManager.shared.api = DefaultIMApi(endpoint: endpoint)
         IMCoreManager.shared.signalModule = DefaultSignalModule(application, "ws://192.168.1.3:20000/ws", "\(uId)")
         
-        
         IMCoreManager.shared.fileLoadModule = MinioFileLoadModule("\(uId)", endpoint)
+        IMUIManager.shared.initConfig()
+        
         IMCoreManager.shared.connect()
+        
     }
     
     

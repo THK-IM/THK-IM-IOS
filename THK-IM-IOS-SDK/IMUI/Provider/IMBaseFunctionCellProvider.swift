@@ -14,5 +14,5 @@ public protocol IMBaseFunctionCellProvider: AnyObject {
     
     func icon() -> UIImage?
     
-    func onFunction(sender: IMMsgSender?)
+    func click(sender: IMMsgSender?)
 }

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-open class IMUnicodeEmojiControllerProvider: IMBaseEmojiControllerProvider {
+open class IMUnicodeEmojiControllerProvider: IMBasePanelControllerProvider {
     
     public func icon(selected: Bool) -> UIImage {
         return UIImage(named: "chat_bar_emoji")!

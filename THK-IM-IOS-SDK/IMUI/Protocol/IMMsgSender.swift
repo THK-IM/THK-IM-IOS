@@ -36,8 +36,8 @@ public protocol IMMsgSender : AnyObject {
     /// 移动到最新消息
     func moveToLatestMessage()
     
-    /// 打开底部面本:type: 1表情 2更多
-    func showBottomPanel(_ type: Int)
+    /// 打开底部面本:position: 1表情 2更多
+    func showBottomPanel(_ position: Int)
     
     /// 关闭底部面板
     func closeBottomPanel()

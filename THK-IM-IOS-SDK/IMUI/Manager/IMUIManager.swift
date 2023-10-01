@@ -15,7 +15,7 @@ public class IMUIManager: NSObject {
     private var msgCellProviders = [Int:IMBaseMessageCellProvider]()
     private var sessionCellProviders = [Int:IMBaseSessionCellProvider]()
     private var bottomFunctionProviders = [IMBaseFunctionCellProvider]()
-    private var emojiControllerProviders = [IMBaseEmojiControllerProvider]()
+    private var emojiControllerProviders = [IMBasePanelControllerProvider]()
     
     private var cornerImageMap = [String: UIImage]()
     
@@ -23,6 +23,13 @@ public class IMUIManager: NSObject {
     
     private override init() {
         super.init()
+        
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(UnSupportMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(TextMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(ImageMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(AudioMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(VideoMsgProcessor())
+        
         self.registerMsgCellProviders(IMUnSupportMsgCellProvide())
         self.registerMsgCellProviders(IMTimeLineMsgCellProvider())
         self.registerMsgCellProviders(IMTextMsgCellProvider())
@@ -30,6 +37,13 @@ public class IMUIManager: NSObject {
         self.registerMsgCellProviders(IMAudioMsgCellProvider())
         self.registerMsgCellProviders(IMVideoMsgCellProvider())
         
+        
+        registerBottomFunctionProvider(
+            IMPhotoFunctionProvider(), IMCameraFunctionProvider()
+        )
+        registerEmojiControllerProvider(
+            IMUnicodeEmojiControllerProvider(), IMUnicodeEmojiControllerProvider()
+        )
         self.registerSessionCellProvider(IMDefaultSessionCellProvider())
     }
     
@@ -71,7 +85,7 @@ public class IMUIManager: NSObject {
         return bottomFunctionProviders
     }
     
-    func registerEmojiControllerProvider(_ ps: IMBaseEmojiControllerProvider...) {
+    func registerEmojiControllerProvider(_ ps: IMBasePanelControllerProvider...) {
         lock.lock()
         defer {lock.unlock()}
         for p in ps {
@@ -79,7 +93,7 @@ public class IMUIManager: NSObject {
         }
     }
     
-    func getEmojiControllerProviders() -> Array<IMBaseEmojiControllerProvider> {
+    func getEmojiControllerProviders() -> Array<IMBasePanelControllerProvider> {
         return emojiControllerProviders
     }
     
@@ -104,6 +118,10 @@ public class IMUIManager: NSObject {
             cornerImageMap[key] = image
         }
         return image!
+    }
+    
+    func initConfig() {
+        
     }
     
     

@@ -74,7 +74,7 @@ class IMMoreView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
         guard let s = sender else {
             return
         }
-        f.onFunction(sender: s)
+        f.click(sender: s)
     }
     
     

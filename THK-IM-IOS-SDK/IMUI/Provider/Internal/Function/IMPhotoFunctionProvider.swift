@@ -18,7 +18,7 @@ open class IMPhotoFunctionProvider: IMBaseFunctionCellProvider {
         return UIImage.init(named: "chat_bar_voice")
     }
     
-    public func onFunction(sender: IMMsgSender?) {
+    public func click(sender: IMMsgSender?) {
         sender?.choosePhoto()
     }
 }

@@ -13,7 +13,7 @@
 		A025290B2AC6CBA6001561A0 /* MinioUploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290A2AC6CBA6001561A0 /* MinioUploadTask.swift */; };
 		A025290D2AC6CD1F001561A0 /* MinioLoadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290C2AC6CD1F001561A0 /* MinioLoadTask.swift */; };
 		A025290F2AC6D7DB001561A0 /* UploadParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290E2AC6D7DB001561A0 /* UploadParams.swift */; };
-		A02578BF2AA2F23100A66CEF /* IMCoreMsgDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578BE2AA2F23100A66CEF /* IMCoreMsgDefines.swift */; };
+		A02578BF2AA2F23100A66CEF /* IMMsgBodyDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578BE2AA2F23100A66CEF /* IMMsgBodyDefines.swift */; };
 		A02578C62AA4269B00A66CEF /* LiveApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C52AA4269B00A66CEF /* LiveApi.swift */; };
 		A02578C82AA427BD00A66CEF /* DefaultLiveApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */; };
 		A02578CA2AA4398E00A66CEF /* TableName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C92AA4398E00A66CEF /* TableName.swift */; };
@@ -85,7 +85,7 @@
 		A0D68BAE2A888679004D11A5 /* IMUnicodeEmojiUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFA2A888678004D11A5 /* IMUnicodeEmojiUIController.swift */; };
 		A0D68BAF2A888679004D11A5 /* IMCameraFunctionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFC2A888678004D11A5 /* IMCameraFunctionProvider.swift */; };
 		A0D68BB02A888679004D11A5 /* IMPhotoFunctionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFD2A888678004D11A5 /* IMPhotoFunctionProvider.swift */; };
-		A0D68BB12A888679004D11A5 /* IMBaseEmojiControllerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFE2A888678004D11A5 /* IMBaseEmojiControllerProvider.swift */; };
+		A0D68BB12A888679004D11A5 /* IMBasePanelControllerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFE2A888678004D11A5 /* IMBasePanelControllerProvider.swift */; };
 		A0D68BB22A888679004D11A5 /* IMBaseMessageCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFF2A888678004D11A5 /* IMBaseMessageCellProvider.swift */; };
 		A0D68BB32A888679004D11A5 /* IMBaseFunctionCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B002A888678004D11A5 /* IMBaseFunctionCellProvider.swift */; };
 		A0D68BB42A888679004D11A5 /* IMMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B022A888678004D11A5 /* IMMessageViewController.swift */; };
@@ -185,7 +185,7 @@
 		A025290A2AC6CBA6001561A0 /* MinioUploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinioUploadTask.swift; sourceTree = "<group>"; };
 		A025290C2AC6CD1F001561A0 /* MinioLoadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinioLoadTask.swift; sourceTree = "<group>"; };
 		A025290E2AC6D7DB001561A0 /* UploadParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadParams.swift; sourceTree = "<group>"; };
-		A02578BE2AA2F23100A66CEF /* IMCoreMsgDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCoreMsgDefines.swift; sourceTree = "<group>"; };
+		A02578BE2AA2F23100A66CEF /* IMMsgBodyDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgBodyDefines.swift; sourceTree = "<group>"; };
 		A02578C52AA4269B00A66CEF /* LiveApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveApi.swift; sourceTree = "<group>"; };
 		A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLiveApi.swift; sourceTree = "<group>"; };
 		A02578C92AA4398E00A66CEF /* TableName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableName.swift; sourceTree = "<group>"; };
@@ -259,7 +259,7 @@
 		A0D68AFA2A888678004D11A5 /* IMUnicodeEmojiUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUnicodeEmojiUIController.swift; sourceTree = "<group>"; };
 		A0D68AFC2A888678004D11A5 /* IMCameraFunctionProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMCameraFunctionProvider.swift; sourceTree = "<group>"; };
 		A0D68AFD2A888678004D11A5 /* IMPhotoFunctionProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPhotoFunctionProvider.swift; sourceTree = "<group>"; };
-		A0D68AFE2A888678004D11A5 /* IMBaseEmojiControllerProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBaseEmojiControllerProvider.swift; sourceTree = "<group>"; };
+		A0D68AFE2A888678004D11A5 /* IMBasePanelControllerProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBasePanelControllerProvider.swift; sourceTree = "<group>"; };
 		A0D68AFF2A888678004D11A5 /* IMBaseMessageCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBaseMessageCellProvider.swift; sourceTree = "<group>"; };
 		A0D68B002A888678004D11A5 /* IMBaseFunctionCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBaseFunctionCellProvider.swift; sourceTree = "<group>"; };
 		A0D68B022A888678004D11A5 /* IMMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMessageViewController.swift; sourceTree = "<group>"; };
@@ -389,6 +389,18 @@
 				A025290E2AC6D7DB001561A0 /* UploadParams.swift */,
 			);
 			path = MinioFileLoader;
+			sourceTree = "<group>";
+		};
+		A02529102AC903CA001561A0 /* Processor */ = {
+			isa = PBXGroup;
+			children = (
+				A0D68B532A888679004D11A5 /* UnSupportMsgProcessor.swift */,
+				A0D68B4A2A888679004D11A5 /* VideoMsgProcessor.swift */,
+				A0D68B4B2A888679004D11A5 /* AudioMsgProcessor.swift */,
+				A0D68B4C2A888679004D11A5 /* ImageMsgProcessor.swift */,
+				A0D68B542A888679004D11A5 /* TextMsgProcessor.swift */,
+			);
+			path = Processor;
 			sourceTree = "<group>";
 		};
 		A02578C42AA41A3200A66CEF /* OSSFileLoader */ = {
@@ -628,6 +640,7 @@
 		A0D68ADE2A888678004D11A5 /* IMUI */ = {
 			isa = PBXGroup;
 			children = (
+				A0D68B102A888678004D11A5 /* Protocol */,
 				A0D68AE32A888678004D11A5 /* Resources */,
 				A0D68AE52A888678004D11A5 /* Provider */,
 				A0D68B012A888678004D11A5 /* Controller */,
@@ -658,7 +671,7 @@
 			isa = PBXGroup;
 			children = (
 				A0D68AE72A888678004D11A5 /* Internal */,
-				A0D68AFE2A888678004D11A5 /* IMBaseEmojiControllerProvider.swift */,
+				A0D68AFE2A888678004D11A5 /* IMBasePanelControllerProvider.swift */,
 				A0D68AFF2A888678004D11A5 /* IMBaseMessageCellProvider.swift */,
 				A0D68B002A888678004D11A5 /* IMBaseFunctionCellProvider.swift */,
 				A0D68AE62A888678004D11A5 /* IMBaseSessionCellProvider.swift */,
@@ -670,7 +683,7 @@
 			isa = PBXGroup;
 			children = (
 				A0D68AE82A888678004D11A5 /* Msg */,
-				A0D68AF72A888678004D11A5 /* Emoji */,
+				A0D68AF72A888678004D11A5 /* Panel */,
 				A0D68AFB2A888678004D11A5 /* Function */,
 			);
 			path = Internal;
@@ -679,6 +692,7 @@
 		A0D68AE82A888678004D11A5 /* Msg */ = {
 			isa = PBXGroup;
 			children = (
+				A02529102AC903CA001561A0 /* Processor */,
 				A0D68AED2A888678004D11A5 /* Cell */,
 				A0D68AE92A888678004D11A5 /* IMTimeLineMsgCellProvider.swift */,
 				A0D68AEA2A888678004D11A5 /* IMVideoMsgCellProvider.swift */,
@@ -704,14 +718,14 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
-		A0D68AF72A888678004D11A5 /* Emoji */ = {
+		A0D68AF72A888678004D11A5 /* Panel */ = {
 			isa = PBXGroup;
 			children = (
 				A0D68AF82A888678004D11A5 /* IMUnicodeEmojiControllerProvider.swift */,
 				A0D68AF92A888678004D11A5 /* IMUnicodeEmojiCell.swift */,
 				A0D68AFA2A888678004D11A5 /* IMUnicodeEmojiUIController.swift */,
 			);
-			path = Emoji;
+			path = Panel;
 			sourceTree = "<group>";
 		};
 		A0D68AFB2A888678004D11A5 /* Function */ = {
@@ -728,7 +742,6 @@
 			children = (
 				A0D68B032A888678004D11A5 /* Layout */,
 				A0D68B092A888678004D11A5 /* Component */,
-				A0D68B102A888678004D11A5 /* Protocol */,
 				A0D68B132A888678004D11A5 /* Cell */,
 				A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */,
 				A0D68B022A888678004D11A5 /* IMMessageViewController.swift */,
@@ -796,6 +809,7 @@
 		A0D68B1E2A888678004D11A5 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				A02578BE2AA2F23100A66CEF /* IMMsgBodyDefines.swift */,
 				A0D68B1F2A888678004D11A5 /* IMUIManager.swift */,
 			);
 			path = Manager;
@@ -882,7 +896,6 @@
 				A0D68B6B2A888679004D11A5 /* Signal */,
 				A0EA42EE2A94B06900F64A90 /* IMCoreDefines.swift */,
 				A0D68B662A888679004D11A5 /* IMCoreManager.swift */,
-				A02578BE2AA2F23100A66CEF /* IMCoreMsgDefines.swift */,
 			);
 			path = IMCore;
 			sourceTree = "<group>";
@@ -924,12 +937,7 @@
 		A0D68B492A888679004D11A5 /* Processor */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B4A2A888679004D11A5 /* VideoMsgProcessor.swift */,
-				A0D68B4B2A888679004D11A5 /* AudioMsgProcessor.swift */,
-				A0D68B4C2A888679004D11A5 /* ImageMsgProcessor.swift */,
 				A0D68B522A888679004D11A5 /* BaseMsgProcessor.swift */,
-				A0D68B532A888679004D11A5 /* UnSupportMsgProcessor.swift */,
-				A0D68B542A888679004D11A5 /* TextMsgProcessor.swift */,
 			);
 			path = Processor;
 			sourceTree = "<group>";
@@ -1223,7 +1231,7 @@
 				A0C431F62A909CCE00A84D4A /* CreateRoomBean.swift in Sources */,
 				A02529092AC6CB82001561A0 /* MinioDownloadTask.swift in Sources */,
 				A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */,
-				A02578BF2AA2F23100A66CEF /* IMCoreMsgDefines.swift in Sources */,
+				A02578BF2AA2F23100A66CEF /* IMMsgBodyDefines.swift in Sources */,
 				A025290D2AC6CD1F001561A0 /* MinioLoadTask.swift in Sources */,
 				A0D68BEC2A888679004D11A5 /* ImageMsgProcessor.swift in Sources */,
 				A0EA42ED2A94928400F64A90 /* DefaultSessionDao.swift in Sources */,
@@ -1233,7 +1241,7 @@
 				A0D68B752A888679004D11A5 /* OpusError.swift in Sources */,
 				A0D68BE62A888679004D11A5 /* CustomModule.swift in Sources */,
 				A0D68BFB2A888679004D11A5 /* Bubble.swift in Sources */,
-				A0D68BB12A888679004D11A5 /* IMBaseEmojiControllerProvider.swift in Sources */,
+				A0D68BB12A888679004D11A5 /* IMBasePanelControllerProvider.swift in Sources */,
 				A0D68BAF2A888679004D11A5 /* IMCameraFunctionProvider.swift in Sources */,
 				A0D68C032A888679004D11A5 /* DefaultStorageModule.swift in Sources */,
 				A0D68B972A888679004D11A5 /* MessageDao.swift in Sources */,

@@ -48,9 +48,8 @@ class IMBottomPanelLayout: UIView {
         return panelLayoutHeight
     }
     
-    // type: 1表情 2更多
-    func showBottomPanel(_ type: Int) {
-        if type == 1 {
+    func showBottomPanel(_ position: Int) {
+        if position == 0 {
             self.isEmojiPanelShow = true
             self.isMorePanelShow = false
             self.moreView.removeFromSuperview()

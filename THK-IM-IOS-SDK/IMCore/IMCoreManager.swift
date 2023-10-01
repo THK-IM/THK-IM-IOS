@@ -103,11 +103,6 @@ public class IMCoreManager: SignalListener {
         self.registerModule(SignalType.Common.rawValue, DefaultCommonModule())
         self.registerModule(SignalType.Message.rawValue, DefaultMessageModule())
         
-        self.getMessageModule().registerMsgProcessor(TextMsgProcessor())
-        self.getMessageModule().registerMsgProcessor(ImageMsgProcessor())
-        self.getMessageModule().registerMsgProcessor(AudioMsgProcessor())
-        self.getMessageModule().registerMsgProcessor(VideoMsgProcessor())
-        
         do {
             try self._database?.messageDao.resetSendStatusFailed()
         } catch {
