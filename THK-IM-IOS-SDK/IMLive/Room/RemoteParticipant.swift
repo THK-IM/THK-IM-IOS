@@ -50,7 +50,7 @@ class RemoteParticipant: BaseParticipant {
         
         LiveManager.shared.liveApi
             .playStream(PlayReqBean(uid: self.uId, roomId: self.roomId, offerSdp: offerBase64, streamKey: self.subStreamKey))
-            .compose(DefaultRxTransformer.io2Main())
+            .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] bean in
                 let data = Data(base64Encoded: bean.answerSdp) ?? Data()
                 let answer = String(data: data, encoding: .utf8) ?? ""

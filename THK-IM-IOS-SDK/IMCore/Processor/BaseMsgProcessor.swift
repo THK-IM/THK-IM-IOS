@@ -32,8 +32,8 @@ public class BaseMsgProcessor {
                         MsgOperateStatus.Ack.rawValue |
                         MsgOperateStatus.ClientRead.rawValue |
                         MsgOperateStatus.ServerRead.rawValue
-                    msg.sendStatus = MsgSendStatus.Success.rawValue
                 }
+                msg.sendStatus = MsgSendStatus.Success.rawValue
                 try self.insertOrUpdateDb(msg)
                 if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                     IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
@@ -163,7 +163,7 @@ public class BaseMsgProcessor {
                 try self.insertOrUpdateDb(message, false)
                 return IMCoreManager.shared.api.sendMessageToServer(msg:message)
             })
-            .compose(DefaultRxTransformer.io2Io())
+            .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { msg in
                 do {
                     try self.insertOrUpdateDb(msg)

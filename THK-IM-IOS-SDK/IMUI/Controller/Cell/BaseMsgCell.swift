@@ -118,7 +118,7 @@ open class BaseMsgCell : BaseCell {
             self.cellWrapper.avatarView()?.isHidden = false
             IMCoreManager.shared.getUserModule()
                 .getUserInfo(id: fUId)
-                .compose(DefaultRxTransformer.io2Main())
+                .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] user in
                     guard let sf = self else {
                         return
@@ -131,7 +131,7 @@ open class BaseMsgCell : BaseCell {
         if self.hasBubble() {
             IMCoreManager.shared.getUserModule()
                 .getUserChatBubble(id: fUId)
-                .compose(DefaultRxTransformer.io2Main())
+                .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] image in
                     guard let sf = self else {
                         return
@@ -192,10 +192,14 @@ open class BaseMsgCell : BaseCell {
         guard let msg = self.message else {
             return false
         }
-        guard let previousMsg = self.previousMessage else {
-            return false
-        }
-        return msg.fromUId != previousMsg.fromUId && msg.fromUId != 0
+        return msg.fromUId != 0
+//        guard let msg = self.message else {
+//            return false
+//        }
+//        guard let previousMsg = self.previousMessage else {
+//            return false
+//        }
+//        return msg.fromUId != previousMsg.fromUId && msg.fromUId != 0
     }
     
     /**

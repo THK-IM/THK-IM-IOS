@@ -50,7 +50,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         }
         IMCoreManager.shared.getMessageModule()
             .queryLocalSessions(20, latestSessionTime)
-            .compose(DefaultRxTransformer.io2Main())
+            .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self ]value in
                 self?.sessions.append(contentsOf: value)
                 self?.sessionTableView?.reloadData()

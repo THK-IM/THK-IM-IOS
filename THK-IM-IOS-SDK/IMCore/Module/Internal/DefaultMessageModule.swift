@@ -50,7 +50,7 @@ open class DefaultMessageModule : MessageModule {
         let count = 200
         let uId = IMCoreManager.shared.uId
         IMCoreManager.shared.api.getLatestMessages(uId, lastTime, count)
-           .compose(DefaultRxTransformer.io2Io())
+           .compose(RxTransformer.shared.io2Io())
            .subscribe(onNext: { messageArray in
                do {
                    var sessionMsgs = [Int64: [Message]]()
@@ -280,7 +280,7 @@ open class DefaultMessageModule : MessageModule {
     
     private func ackServerMessage(_ sessionId: Int64, _ msgIds: Set<Int64>) {
         IMCoreManager.shared.api.ackMessages(IMCoreManager.shared.uId, sessionId, msgIds)
-            .compose(DefaultRxTransformer.io2Io())
+            .compose(RxTransformer.shared.io2Io())
             .subscribe(
                 onError: { error in
                     DDLogError(error)
@@ -334,7 +334,7 @@ open class DefaultMessageModule : MessageModule {
     
     func processSessionByMessage(_ msg: Message) {
         self.getSession(msg.sessionId)
-            .compose(DefaultRxTransformer.io2Io())
+            .compose(RxTransformer.shared.io2Io())
             .subscribe(
                 onNext: { s in
                     let processor = self.getMsgProcessor(msg.type)

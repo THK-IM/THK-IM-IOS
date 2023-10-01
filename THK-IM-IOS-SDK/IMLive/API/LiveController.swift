@@ -292,7 +292,7 @@ class LiveController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func joinRoom() {
         LiveManager.shared.joinRoom(roomId: "1", role: Role.Broadcaster, token: "xxxxxx")
-            .compose(DefaultRxTransformer.io2Main())
+            .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] room in
                 guard let sf = self else {
                     return

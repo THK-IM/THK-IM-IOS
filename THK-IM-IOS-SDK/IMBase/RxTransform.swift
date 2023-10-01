@@ -9,9 +9,9 @@ import Foundation
 import RxSwift
 import Moya
 
-let DefaultRxTransformer = RxTransformer(queueSize: 8)
-
 class RxTransformer {
+    
+    static let shared = RxTransformer(queueSize: 8)
     
     var scheduler : ImmediateSchedulerType
     

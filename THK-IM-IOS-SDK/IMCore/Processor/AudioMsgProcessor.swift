@@ -234,7 +234,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
             
             return Disposables.create()
         })
-        .compose(DefaultRxTransformer.io2Io())
+        .compose(RxTransformer.shared.io2Io())
         .subscribe(onNext: { msg in
             do {
                 try self.insertOrUpdateDb(msg, true, false)

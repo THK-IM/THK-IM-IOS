@@ -28,7 +28,7 @@ class DefaultIMApi: IMApi {
         return sessionApi.rx
             .request(.queryLatestSession(uId, 0, count, mTime))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(ListBean<SessionBean>.self))
+            .compose(RxTransformer.shared.response2Bean(ListBean<SessionBean>.self))
             .flatMap({ (sessionListBean) -> Observable<Array<Session>> in
                 var array = [Session]()
                 for bean in sessionListBean.data {
@@ -43,7 +43,7 @@ class DefaultIMApi: IMApi {
         return sessionApi.rx
             .request(.querySession(uId, sessionId))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(SessionBean.self))
+            .compose(RxTransformer.shared.response2Bean(SessionBean.self))
             .flatMap({ (sessionBean) -> Observable<Session> in
                 let session = sessionBean.toSession()
                 return Observable.just(session)
@@ -55,7 +55,7 @@ class DefaultIMApi: IMApi {
         return sessionApi.rx
             .request(.createSession(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(SessionBean.self))
+            .compose(RxTransformer.shared.response2Bean(SessionBean.self))
             .flatMap({ (bean) -> Observable<Session> in
                 let session = bean.toSession()
                 return Observable.just(session)
@@ -67,7 +67,7 @@ class DefaultIMApi: IMApi {
         return messageApi.rx
             .request(.sendMsg(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(MessageBean.self))
+            .compose(RxTransformer.shared.response2Bean(MessageBean.self))
             .flatMap({ (bean) -> Observable<Message> in
                 msg.msgId = bean.msgId
                 msg.cTime = bean.cTime
@@ -84,7 +84,7 @@ class DefaultIMApi: IMApi {
         return messageApi.rx
             .request(.ackMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Void())
+            .compose(RxTransformer.shared.response2Void())
     }
     
     func readMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
@@ -92,7 +92,7 @@ class DefaultIMApi: IMApi {
         return messageApi.rx
             .request(.ackMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Void())
+            .compose(RxTransformer.shared.response2Void())
     }
     
     func revokeMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64) -> Observable<Void> {
@@ -102,7 +102,7 @@ class DefaultIMApi: IMApi {
         return messageApi.rx
             .request(.ackMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Void())
+            .compose(RxTransformer.shared.response2Void())
     }
     
     func reeditMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64, _ body: String) -> Observable<Void> {
@@ -112,7 +112,7 @@ class DefaultIMApi: IMApi {
         return messageApi.rx
             .request(.ackMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Void())
+            .compose(RxTransformer.shared.response2Void())
     }
     
     func deleteMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
@@ -120,14 +120,14 @@ class DefaultIMApi: IMApi {
         return messageApi.rx
             .request(.deleteMsgs(reqBean))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Void())
+            .compose(RxTransformer.shared.response2Void())
     }
     
     func getLatestMessages(_ uId: Int64, _ cTime: Int64, _ count: Int) -> Observable<Array<Message>> {
         return messageApi.rx
             .request(.queryLatestMsg(uId, 0, count, cTime))
             .asObservable()
-            .compose(DefaultRxTransformer.response2Bean(ListBean<MessageBean>.self))
+            .compose(RxTransformer.shared.response2Bean(ListBean<MessageBean>.self))
             .flatMap({ (messageListBean) -> Observable<Array<Message>> in
                 var array = [Message]()
                 for bean in messageListBean.data {

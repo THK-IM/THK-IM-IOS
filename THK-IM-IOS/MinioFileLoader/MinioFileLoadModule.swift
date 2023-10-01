@@ -143,7 +143,6 @@ class MinioFileLoadModule: FileLoadModule {
         url: String,
         path: String
     ) {
-        DDLogDebug("taskId: \(taskId), state: \(state), progress: \(progress)")
         let downloadTaskTuple = downloadTaskMap[taskId]
         if (downloadTaskTuple != nil) {
             for listener in downloadTaskTuple!.1 {

@@ -131,7 +131,7 @@ class IMMessageReverseLayout: UIView, UITableViewDataSource, UITableViewDelegate
         if (self.session != nil) {
             IMCoreManager.shared.getMessageModule()
                 .queryLocalMessages((self.session?.id)!, latestMsgTime, self.loadCount)
-                .compose(DefaultRxTransformer.io2Main())
+                .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] value in
                     guard let sf = self else { return }
                     sf.addMessage(value)

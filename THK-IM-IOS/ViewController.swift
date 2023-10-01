@@ -55,7 +55,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
         textView1.backgroundColor = UIColor.red;
         textView1.setTitleColor(UIColor.white, for: .normal)
         textView1.rx.tap
-            .compose(DefaultRxTransformer.io2Main())
+            .compose(RxTransformer.shared.io2Main())
             .flatMap({ (value) -> Observable<Session> in
 //                let entityId = Int64(arc4random() % 100000) + 100
                 let entityId = Int64(4)
@@ -183,7 +183,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
         textView6.setTitleColor(UIColor.white, for: .normal)
         textView6.rx.tap
             .asObservable()
-            .compose(DefaultRxTransformer.io2Main())
+            .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] in
                 do {
                     guard let sf = self else {
