@@ -93,7 +93,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
         
         let (_, fileName) = storageModule.getPathsFromFullPath(path)
         let (name, _) = storageModule.getFileExt(fileName)
-        let coverThumbName = "\(name)_cover.jpeg"
+        let coverThumbName = "\(Date().timeIntervalSince1970/1000)_\(name)_cover.jpeg"
         let coverThumbPath = storageModule.allocSessionFilePath(
             entity.sessionId,
             coverThumbName,

@@ -380,7 +380,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                     let storageModule = IMCoreManager.shared.storageModule
                     let (_, fName) = storageModule.getPathsFromFullPath(urlAsset.url.absoluteString)
                     let (name, ext) = storageModule.getFileExt(fName)
-                    let fileName = "\(name)_\(Date().timeIntervalSince1970).\(ext)"
+                    let fileName = "\((Date().timeIntervalSince1970/1000))_\(name)_.\(ext)"
                     let path = storageModule.allocSessionFilePath(
                         (self?.session?.id)!, fileName, IMFileFormat.Video.rawValue)
                     try storageModule.saveMediaDataInto(path, videoData)
@@ -396,35 +396,12 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     }
     
     private func sendVideo(_ path: String, _ image: UIImage? = nil, _ duration: Int? = nil) throws {
-        do {
-            let videoData = IMVideoMsgData()
-            videoData.path = path
-//            if image != nil {
-//                var data = image!.pngData()
-//                if (data == nil) {
-//                    data = image!.jpegData(compressionQuality: 0.8)
-//                }
-//                if (data == nil) {
-//                    return
-//                }
-//                let (_, fileName) = IMCoreManager.shared.storageModule.getPathsFromFullPath(path)
-//                let (name, _ ) = IMCoreManager.shared.storageModule.getFileExt(fileName)
-//                let ext = data!.detectImageType().rawValue
-//                let thumbnailName = "\(Date().timeIntervalSince1970)_\(name).\(ext)"
-//                let thumbnailPath = IMCoreManager.shared.storageModule
-//                    .allocSessionFilePath(session!.id, thumbnailName, IMFileFormat.Video.rawValue)
-//                try IMCoreManager.shared.storageModule.saveMediaDataInto(thumbnailPath, data!)
-//                videoData.thumbnailPath = thumbnailPath
-//                videoData.width = Int(image!.size.width)
-//                videoData.height = Int(image!.size.height)
-//            }
-            if duration != nil {
-                videoData.duration = duration!
-            }
-            self.sendMessage(MsgType.VIDEO.rawValue, videoData)
-        } catch {
-            DDLogError("sendVideo error: \(error)")
+        let videoData = IMVideoMsgData()
+        videoData.path = path
+        if duration != nil {
+            videoData.duration = duration!
         }
+        self.sendMessage(MsgType.VIDEO.rawValue, videoData)
     }
     
     private func sendImage(_ image: UIImage) throws {
@@ -494,22 +471,36 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     }
     
     func previewMessage(_ msg: Message, _ position: Int,  _ originView: UIView) {
-        if msg.type != MsgType.IMAGE.rawValue && msg.type != MsgType.VIDEO.rawValue {
-            return
+        if msg.type == MsgType.Audio.rawValue {
+            if (msg.data != nil) {
+                do {
+                    let data = try JSONDecoder().decode(
+                        IMAudioMsgData.self,
+                        from: msg.data!.data(using: .utf8) ?? Data())
+                    if (data.path != nil) {
+                        let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(data.path!)
+                        OggOpusAudioPlayer.shared.startPlaying(realPath) {db, duration, path, stopped in
+                        }
+                    }
+                } catch {
+                    DDLogError("previewMessage audio \(error)")
+                }
+            }
+        } else if msg.type == MsgType.IMAGE.rawValue || msg.type == MsgType.VIDEO.rawValue {
+            var ay = [Media]()
+            ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, true, 5).reversed())
+            let current = self.msgToMedia(msg: msg)
+            if current != nil {
+                ay.append(current!)
+            }
+            ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, false, 5))
+            let absoluteFrame = originView.convert(originView.bounds, to: nil)
+            MediaPreviewController.preview(
+                from: self, onMediaDownloaded: self,
+                source: ay, defaultId: String(msg.msgId),
+                enterFrame: absoluteFrame
+            )
         }
-        var ay = [Media]()
-        ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, true, 5).reversed())
-        let current = self.msgToMedia(msg: msg)
-        if current != nil {
-            ay.append(current!)
-        }
-        ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, false, 5))
-        let absoluteFrame = originView.convert(originView.bounds, to: nil)
-        MediaPreviewController.preview(
-            from: self, onMediaDownloaded: self,
-            source: ay, defaultId: String(msg.msgId),
-            enterFrame: absoluteFrame
-        )
     }
     
     func onMediaDownload(_ id: String, _ resourceType: Int, _ path: String) {
