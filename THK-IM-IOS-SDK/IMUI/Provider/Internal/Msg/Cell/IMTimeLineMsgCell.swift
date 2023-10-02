@@ -23,8 +23,8 @@ class IMTimeLineMsgCell: BaseMsgCell {
         return true
     }
     
-    override func setMessage(_ msgs: Array<Message>, _ position: Int) {
-        super.setMessage(msgs, position)
+    override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+        super.setMessage(position, messages, session, delegate)
         guard let msg = self.message else {
             return
         }

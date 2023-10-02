@@ -33,9 +33,8 @@ public class BaseMsgProcessor {
                         MsgOperateStatus.ClientRead.rawValue |
                         MsgOperateStatus.ServerRead.rawValue
                 }
-                msg.sendStatus = MsgSendStatus.Success.rawValue
                 try self.insertOrUpdateDb(msg)
-                if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
                     IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
                 }
             } else {
@@ -52,7 +51,7 @@ public class BaseMsgProcessor {
                     msg.sendStatus = MsgSendStatus.Success.rawValue
                     try insertOrUpdateDb(msg)
                 }
-                if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
                     IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
                 }
             }

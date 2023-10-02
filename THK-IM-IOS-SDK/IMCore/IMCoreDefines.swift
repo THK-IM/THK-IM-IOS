@@ -54,8 +54,6 @@ public class IMLoadProgress: Codable {
     }
 }
 
-
-
 public enum IMLoadType: String {
     case Upload = "upload",
          Download = "download"

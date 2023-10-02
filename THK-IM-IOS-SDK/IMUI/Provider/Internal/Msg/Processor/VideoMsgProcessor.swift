@@ -92,8 +92,8 @@ class VideoMsgProcessor : BaseMsgProcessor {
         }
         
         let (_, fileName) = storageModule.getPathsFromFullPath(path)
-        let (name, ext) = storageModule.getFileExt(fileName)
-        let coverThumbName = "\(name)_thumb.\(ext)"
+        let (name, _) = storageModule.getFileExt(fileName)
+        let coverThumbName = "\(name)_cover.jpeg"
         let coverThumbPath = storageModule.allocSessionFilePath(
             entity.sessionId,
             coverThumbName,
@@ -326,6 +326,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                                     } else {
                                         data.path = path
                                     }
+                                    data.duration = body.duration
                                     data.width = body.width!
                                     data.height = body.height!
                                     let d = try JSONEncoder().encode(data)

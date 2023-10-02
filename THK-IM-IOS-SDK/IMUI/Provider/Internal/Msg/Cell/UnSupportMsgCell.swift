@@ -20,8 +20,8 @@ class UnSupportMsgCell: BaseMsgCell {
         return self.view
     }
     
-    override func setMessage(_ msgs: Array<Message>, _ position: Int) {
-        super.setMessage(msgs, position)
+    override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+        super.setMessage(position, messages, session, delegate)
         self.view.text = "当前版本不支持该消息类型，请更新"
     }
     

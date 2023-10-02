@@ -171,7 +171,7 @@ class IMSpeakView: UILabel {
             if stopped {
                 if (!sf.hasTouchOutside) {
                     // 发送
-                    sf.sendVoiceMsg(duration: duration, path: path)
+                    sf.sendAudioMsg(duration: duration / 1000 + 1, path: path)
                 } else {
                     // 取消，删除文件
                     IMCoreManager.shared.storageModule.removeFile(path)
@@ -186,18 +186,10 @@ class IMSpeakView: UILabel {
         }
     }
     
-    func sendVoiceMsg(duration: Int, path: String) {
-        do {
-            let audioBody = IMAudioMsgData(path: path, duration: duration, played: true)
-            let d = try JSONEncoder().encode(audioBody)
-            guard let content = String(data: d, encoding: .utf8) else {
-                return
-            }
-            print("sendAudioMsg: \(duration), \(path)")
-            self.sender?.sendMessage(MsgType.Audio.rawValue, content)
-        } catch {
-            DDLogError(error)
-        }
+    func sendAudioMsg(duration: Int, path: String) {
+        let audioData = IMAudioMsgData(path: path, duration: duration, played: true)
+        self.sender?.sendMessage(MsgType.Audio.rawValue, audioData)
+    
     }
     
     func endRecordAudio() {

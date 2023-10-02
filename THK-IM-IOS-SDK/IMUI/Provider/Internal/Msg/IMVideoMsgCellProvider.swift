@@ -74,7 +74,7 @@ class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
                 let calWidth = max(80, min(200, width))
                 let calHeight = max(80, calWidth * height / width)
                 return CGSize(width: calWidth, height: calHeight)
-            } else if (width > width) {
+            } else if (height > width) {
                 let calHeight = max(80, min(200, height))
                 let calWidth = max(80, calHeight * width / height)
                 return CGSize(width: calWidth, height: calHeight)

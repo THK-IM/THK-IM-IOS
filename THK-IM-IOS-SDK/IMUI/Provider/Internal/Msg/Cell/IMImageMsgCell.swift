@@ -18,15 +18,13 @@ class IMImageMsgCell: BaseMsgCell {
         v.contentMode = .scaleToFill
         return v
     }()
-    private var taskId: String?
-    private var downloadListener: FileLoaderListener?
     
     override func msgView() -> UIView {
         return self.view
     }
     
-    override func setMessage(_ msgs: Array<Message>, _ position: Int) {
-        super.setMessage(msgs, position)
+    override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+        super.setMessage(position, messages, session, delegate)
         guard let msg = self.message else {
             return
         }
@@ -43,14 +41,14 @@ class IMImageMsgCell: BaseMsgCell {
                     IMImageMsgData.self,
                     from: msg.data!.data(using: .utf8) ?? Data())
                 if (data.thumbnailPath != nil) {
-                    self.view.isHidden = false
                     let path = IMCoreManager.shared.storageModule.sandboxFilePath(data.thumbnailPath!)
                     self.view.ca_setImagePathWithCorner(path: path, radius: 8.0)
-                    return
+                    self.view.isHidden = false
                 }
             } catch {
                 DDLogError(error)
             }
+            return
         }
         
         if (msg.content != nil) {
@@ -67,14 +65,6 @@ class IMImageMsgCell: BaseMsgCell {
             }
         }
 
-    }
-    
-    override func disappear() {
-        super.disappear()
-        self.unregister()
-    }
-    
-    private func unregister() {
     }
     
 }

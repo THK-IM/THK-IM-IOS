@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import CocoaLumberjack
 
-class IMMessageReverseLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCellDelegate {
+class IMMessageReverseLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsgCellOperator {
     
     var session: Session? = nil
     weak var sender: IMMsgSender? = nil
@@ -49,7 +49,7 @@ class IMMessageReverseLayout: UIView, UITableViewDataSource, UITableViewDelegate
             cell = provider.viewCell(viewType, (self.session?.type)!)
             (cell as! BaseMsgCell).contentView.transform = CGAffineTransformMakeScale (1,-1)
         }
-        (cell as! BaseMsgCell).setMessage(self.messages, indexPath.row)
+        (cell as! BaseMsgCell).setMessage(indexPath.row, self.messages, self.session!, self)
         (cell as! BaseMsgCell).selectedBackgroundView = UIView()
         (cell as! BaseMsgCell).multipleSelectionBackgroundView = UIView(frame: cell!.bounds)
         (cell as! BaseMsgCell).multipleSelectionBackgroundView?.backgroundColor = UIColor.clear
@@ -59,7 +59,6 @@ class IMMessageReverseLayout: UIView, UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let messageCellView = cell as! BaseMsgCell
-        messageCellView.delegate = self
         messageCellView.appear()
     }
     

@@ -13,19 +13,13 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
-protocol MsgCellDelegate: AnyObject {
-    func onMsgCellClick(message: Message, position:Int, view: UIView)
-    func onMsgCellLongClick(message: Message, position:Int, view: UIView)
-    func onMsgResendClick(message: Message)
-}
-
 open class BaseMsgCell : BaseCell {
     
-    weak var delegate: MsgCellDelegate? = nil
+    weak var delegate: IMMsgCellOperator? = nil
     var cellWrapper: CellWrapper
     var message: Message? = nil
     var position: Int? = nil
-    var previousMessage: Message? = nil
+    
     let disposeBag: DisposeBag = DisposeBag()
     var bubbleView: UIImageView?
     
@@ -47,6 +41,10 @@ open class BaseMsgCell : BaseCell {
         }
         
         let msgView = self.msgView()
+        msgContainerView.addSubview(msgView)
+        msgView.snp.makeConstraints { make in
+            make.bottom.left.right.top.equalToSuperview()
+        }
         // 点击事件
         msgContainerView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
@@ -74,11 +72,6 @@ open class BaseMsgCell : BaseCell {
                 )
             })
             .disposed(by: disposeBag)
-        
-        msgContainerView.addSubview(msgView)
-        msgView.snp.makeConstraints { make in
-            make.bottom.left.right.top.equalToSuperview()
-        }
         guard let resendButton = self.cellWrapper.resendButton() else {
             return
         }
@@ -104,12 +97,10 @@ open class BaseMsgCell : BaseCell {
         return UIView()
     }
     
-    func setMessage(_ msgs: Array<Message>, _ position: Int) {
-        self.message = msgs[position]
+    func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+        self.message = messages[position]
         self.position = position
-        if position >= 1 {
-            self.previousMessage = msgs[position-1]
-        }
+        
         showMessageStatus()
         guard let fUId = self.message?.fromUId else {
             return
@@ -193,13 +184,6 @@ open class BaseMsgCell : BaseCell {
             return false
         }
         return msg.fromUId != 0
-//        guard let msg = self.message else {
-//            return false
-//        }
-//        guard let previousMsg = self.previousMessage else {
-//            return false
-//        }
-//        return msg.fromUId != previousMsg.fromUId && msg.fromUId != 0
     }
     
     /**
@@ -207,10 +191,10 @@ open class BaseMsgCell : BaseCell {
      */
     func cellPosition() -> Int {
         if cellWrapper is LeftCellWrapper {
-            return 1
+            return IMMsgPosType.Left.rawValue
         } else if cellWrapper is RightCellWrapper {
-            return 2
+            return IMMsgPosType.Right.rawValue
         }
-        return 0
+        return IMMsgPosType.Mid.rawValue
     }
 }

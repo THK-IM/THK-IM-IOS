@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import CocoaLumberjack
 
-class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCellDelegate {
+class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsgCellOperator {
     
     var session: Session? = nil
     var messages: Array<Message> = Array()
@@ -25,6 +25,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
     private let timeLineMsgType = 9999
     private let timeLineInterval = 5 * 60 * 1000
     private let lock = NSLock()
+    private var lastResize = 0.0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,7 +49,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
         if cell == nil {
             cell = provider.viewCell(viewType, (self.session?.type)!)
         }
-        (cell as! BaseMsgCell).setMessage(self.messages, indexPath.row)
+        (cell as! BaseMsgCell).setMessage(indexPath.row, self.messages, self.session!, self)
         (cell as! BaseMsgCell).selectedBackgroundView = UIView()
         (cell as! BaseMsgCell).multipleSelectionBackgroundView = UIView(frame: cell!.bounds)
         (cell as! BaseMsgCell).multipleSelectionBackgroundView?.backgroundColor = UIColor.clear
@@ -215,7 +216,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
             paths.append(IndexPath.init(row: i, section: 0))
         }
         UIView.setAnimationsEnabled(false)
-        tableView.insertRows(at: paths, with: .none)
+        tableView.insertRows(at: paths, with: .none) 
         tableView.scrollToRow(
             at: IndexPath(row: messagesWithTimeLine.count-1, section: 0),
             at: .none,
@@ -335,8 +336,6 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, MsgCe
     func getContentHeight() -> CGFloat {
         return self.messageTableView.contentSize.height
     }
-    
-    private var lastResize = 0.0
     
     func layoutResize(_ height: CGFloat) {
         let offsetY = self.messageTableView.contentOffset.y + (height-lastResize)
