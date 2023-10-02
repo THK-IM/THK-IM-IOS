@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IMCoreManager.shared.api = DefaultIMApi(endpoint: endpoint)
         IMCoreManager.shared.signalModule = DefaultSignalModule(application, "ws://192.168.1.3:20000/ws", "\(uId)")
         
-        IMCoreManager.shared.fileLoadModule = MinioFileLoadModule("\(uId)", endpoint)
+        IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", endpoint)
         IMUIManager.shared.initConfig()
         
         IMCoreManager.shared.connect()

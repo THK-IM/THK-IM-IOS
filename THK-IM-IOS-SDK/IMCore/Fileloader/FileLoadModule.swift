@@ -1,5 +1,5 @@
 //
-//  FileLoaderModule.swift
+//  FileLoadModule.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/5.
@@ -46,7 +46,7 @@ protocol FileLoadModule: AnyObject {
      * @param listener 进度监听器
      * @return 任务id
      */
-    func download(key: String, path: String, loadListener: FileLoaderListener) -> String
+    func download(key: String, path: String, loadListener: FileLoadListener) -> String
     
     /**
      *  上传
@@ -55,7 +55,7 @@ protocol FileLoadModule: AnyObject {
      * @param listener 进度监听器
      * @return 任务id
      */
-    func upload(key: String, path: String, loadListener: FileLoaderListener) -> String
+    func upload(key: String, path: String, loadListener: FileLoadListener) -> String
     
     
     /**
@@ -66,7 +66,7 @@ protocol FileLoadModule: AnyObject {
     /**
      * 取消下载监听
      */
-    func cancelDownloadListener(taskId: String, listener: FileLoaderListener)
+    func cancelDownloadListener(taskId: String, listener: FileLoadListener)
     
     /**
      * 取消所有下载监听
@@ -81,7 +81,7 @@ protocol FileLoadModule: AnyObject {
     /**
      * 取消上传监听
      */
-    func cancelUploadListener(taskId: String, listener: FileLoaderListener)
+    func cancelUploadListener(taskId: String, listener: FileLoadListener)
     
     
     /**

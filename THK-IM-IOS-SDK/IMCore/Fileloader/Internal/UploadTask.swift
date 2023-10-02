@@ -1,5 +1,5 @@
 //
-//  MinioUploadTask.swift
+//  UploadTask.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/9/29.
@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-class MinioUploadTask: MinioLoadTask {
+class UploadTask: LoadTask {
     
     private var getParamsRequest: DataRequest?
     private var uploadRequest: DataRequest?
@@ -29,15 +29,15 @@ class MinioUploadTask: MinioLoadTask {
     
     override func start() {
         super.start()
-        self.notify(progress: 0, state: FileLoaderState.Init.rawValue)
+        self.notify(progress: 0, state: FileLoadState.Init.rawValue)
         guard let fileLoadModule = self.fileModuleReference.value else {
-            self.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
+            self.notify(progress: 0, state: FileLoadState.Failed.rawValue)
             return
         }
         var headers = HTTPHeaders()
         headers.add(name: "Token", value: fileLoadModule.token)
         guard let params = fileLoadModule.parserUploadKey(key: self.url) else {
-            self.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
+            self.notify(progress: 0, state: FileLoadState.Failed.rawValue)
             return
         }
         let url = "\(fileLoadModule.endpoint)/object/upload_params?s_id=\(params.0)&u_id=\(params.1)&f_name=\(params.2)"
@@ -49,7 +49,7 @@ class MinioUploadTask: MinioLoadTask {
             switch response.result {
             case .success:
                 if response.data == nil {
-                    sf.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
+                    sf.notify(progress: 0, state: FileLoadState.Failed.rawValue)
                 }
                 do {
                     let uploadParams = try JSONDecoder().decode(
@@ -58,11 +58,11 @@ class MinioUploadTask: MinioLoadTask {
                     )
                     sf.startUpload(params: uploadParams, fileName: params.2)
                 } catch {
-                    sf.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
+                    sf.notify(progress: 0, state: FileLoadState.Failed.rawValue)
                 }
                 break
             default:
-                sf.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
+                sf.notify(progress: 0, state: FileLoadState.Failed.rawValue)
                 break
             }
             return
@@ -72,11 +72,11 @@ class MinioUploadTask: MinioLoadTask {
     private func startUpload(params: UploadParams, fileName: String) {
         let fileExisted = FileManager.default.isReadableFile(atPath: path)
         if (!fileExisted) {
-            self.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
+            self.notify(progress: 0, state: FileLoadState.Failed.rawValue)
             return
         }
         guard let fileLoadModule = self.fileModuleReference.value else {
-            self.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
+            self.notify(progress: 0, state: FileLoadState.Failed.rawValue)
             return
         }
         let method = HTTPMethod(rawValue: params.method)
@@ -99,7 +99,7 @@ class MinioUploadTask: MinioLoadTask {
                 return
             }
             let p: Int = Int(100 * progress.completedUnitCount / progress.totalUnitCount)
-            sf.notify(progress: p, state: FileLoaderState.Ing.rawValue)
+            sf.notify(progress: p, state: FileLoadState.Ing.rawValue)
         }.responseData(queue: DispatchQueue.global()) { [weak self] response in
             guard let sf = self else {
                 return
@@ -107,10 +107,10 @@ class MinioUploadTask: MinioLoadTask {
             switch response.result {
             case .success:
                 sf.keyUrl = "\(fileLoadModule.endpoint)/object/\(params.id)"
-                sf.notify(progress: 100, state: FileLoaderState.Success.rawValue)
+                sf.notify(progress: 100, state: FileLoadState.Success.rawValue)
                 break
             case .failure:
-                sf.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
+                sf.notify(progress: 0, state: FileLoadState.Failed.rawValue)
                 break
             }
             return

@@ -1,32 +1,28 @@
 //
-//  OSSFileLoadModule.swift
+//  DefaultFileLoadModule.swift
 //  THK-IM-IOS
 //
-//  Created by vizoss on 2023/6/5.
+//  Created by vizoss on 2023/9/29.
+//  Copyright © 2023 THK. All rights reserved.
 //
 
 import Foundation
-import AliyunOSSiOS
 import CocoaLumberjack
 
-class OSSFileLoadModule: FileLoadModule {
+
+class DefaultFileLoadModule: FileLoadModule {
     
-    
-    private var downloadTaskMap = [String: (OSSLoadTask, Array<FileLoaderListener>)]()
-    private var uploadTaskMap = [String: (OSSLoadTask, Array<FileLoaderListener>)]()
+    private var downloadTaskMap = [String: (LoadTask, Array<FileLoadListener>)]()
+    private var uploadTaskMap = [String: (LoadTask, Array<FileLoadListener>)]()
     private let lock = NSLock()
+    var token: String
+    var endpoint: String
     
-    let oSsBucket: String
-    let oSsEndpoint: String
-    let credentialProvider: OSSCredentialProvider
-    let oSsClient: OSSClient
-    
-    init(_ oSsBucket: String, _ oSsEndpoint: String, _ credentialProvider: OSSCredentialProvider) {
-        self.oSsBucket = oSsBucket
-        self.oSsEndpoint = oSsEndpoint
-        self.credentialProvider = credentialProvider
-        self.oSsClient = OSSClient(endpoint: oSsEndpoint, credentialProvider: credentialProvider)
+    init(_ token: String, _ endpoint: String) {
+        self.token = token
+        self.endpoint = endpoint
     }
+    
     
     func getTaskId(key: String, path: String, type: String) -> String {
         return "\(type)/\(key)/\(path)"
@@ -54,13 +50,13 @@ class OSSFileLoadModule: FileLoadModule {
         return (sessionId, uId, String(paths[3]))
     }
     
-    func download(key: String, path: String, loadListener: FileLoaderListener) -> String {
+    func download(key: String, path: String, loadListener: FileLoadListener) -> String {
         lock.lock()
         defer {lock.unlock()}
         let taskId = self.getTaskId(key: key, path: path, type: "download")
         var taskTuple = downloadTaskMap[taskId]
         if (taskTuple == nil) {
-            let dTask = OSSDownloadTask(taskId: taskId, path: path, url: key, fileModule: self)
+            let dTask = DownloadTask(taskId: taskId, path: path, url: key, fileModule: self)
             dTask.start()
             downloadTaskMap[taskId] = (dTask, [loadListener])
         } else {
@@ -69,13 +65,13 @@ class OSSFileLoadModule: FileLoadModule {
         return taskId
     }
     
-    func upload(key: String, path: String, loadListener: FileLoaderListener) -> String {
+    func upload(key: String, path: String, loadListener: FileLoadListener) -> String {
         lock.lock()
         defer {lock.unlock()}
         let taskId = self.getTaskId(key: key, path: path, type: "upload")
         var taskTuple = uploadTaskMap[taskId]
         if (taskTuple == nil) {
-            let dTask = OSSLoadTask(taskId: taskId, path: path, url: key, fileModule: self)
+            let dTask = UploadTask(taskId: taskId, path: path, url: key, fileModule: self)
             dTask.start()
             uploadTaskMap[taskId] = (dTask, [loadListener])
         } else {
@@ -95,7 +91,7 @@ class OSSFileLoadModule: FileLoadModule {
         }
     }
     
-    func cancelDownloadListener(taskId: String, listener: FileLoaderListener) {
+    func cancelDownloadListener(taskId: String, listener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = downloadTaskMap[taskId]
@@ -123,7 +119,7 @@ class OSSFileLoadModule: FileLoadModule {
         }
     }
     
-    func cancelUploadListener(taskId: String, listener: FileLoaderListener) {
+    func cancelUploadListener(taskId: String, listener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = uploadTaskMap[taskId]
@@ -147,7 +143,6 @@ class OSSFileLoadModule: FileLoadModule {
         url: String,
         path: String
     ) {
-        DDLogDebug("taskId: \(taskId), state: \(state), progress: \(progress)")
         let downloadTaskTuple = downloadTaskMap[taskId]
         if (downloadTaskTuple != nil) {
             for listener in downloadTaskTuple!.1 {
@@ -159,7 +154,7 @@ class OSSFileLoadModule: FileLoadModule {
                     listener.notifyProgress(progress, state, url, path)
                 }
             }
-            if (state == FileLoaderState.Failed.rawValue || state == FileLoaderState.Success.rawValue) {
+            if (state == FileLoadState.Failed.rawValue || state == FileLoadState.Success.rawValue) {
                 cancelDownload(taskId: taskId)
             }
         }
@@ -175,7 +170,7 @@ class OSSFileLoadModule: FileLoadModule {
                     listener.notifyProgress(progress, state, url, path)
                 }
             }
-            if (state == FileLoaderState.Failed.rawValue || state == FileLoaderState.Success.rawValue) {
+            if (state == FileLoadState.Failed.rawValue || state == FileLoadState.Success.rawValue) {
                 cancelUpload(taskId: taskId)
             }
         }

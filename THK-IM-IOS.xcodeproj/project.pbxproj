@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		08F4799AC88630CBD25DF832 /* Pods_THK_IM_IOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */; };
-		A02529072AC6CB05001561A0 /* MinioFileLoadModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529062AC6CB05001561A0 /* MinioFileLoadModule.swift */; };
-		A02529092AC6CB82001561A0 /* MinioDownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529082AC6CB82001561A0 /* MinioDownloadTask.swift */; };
-		A025290B2AC6CBA6001561A0 /* MinioUploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290A2AC6CBA6001561A0 /* MinioUploadTask.swift */; };
-		A025290D2AC6CD1F001561A0 /* MinioLoadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290C2AC6CD1F001561A0 /* MinioLoadTask.swift */; };
+		A02529072AC6CB05001561A0 /* DefaultFileLoadModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */; };
+		A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529082AC6CB82001561A0 /* DownloadTask.swift */; };
+		A025290B2AC6CBA6001561A0 /* UploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290A2AC6CBA6001561A0 /* UploadTask.swift */; };
+		A025290D2AC6CD1F001561A0 /* LoadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290C2AC6CD1F001561A0 /* LoadTask.swift */; };
 		A025290F2AC6D7DB001561A0 /* UploadParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290E2AC6D7DB001561A0 /* UploadParams.swift */; };
 		A02529152ACAD527001561A0 /* IMUIDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529142ACAD527001561A0 /* IMUIDefines.swift */; };
 		A02529172ACADE72001561A0 /* IMMsgCellOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529162ACADE72001561A0 /* IMMsgCellOperator.swift */; };
@@ -144,11 +144,7 @@
 		A0D68BF12A888679004D11A5 /* BaseMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B522A888679004D11A5 /* BaseMsgProcessor.swift */; };
 		A0D68BF22A888679004D11A5 /* UnSupportMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B532A888679004D11A5 /* UnSupportMsgProcessor.swift */; };
 		A0D68BF32A888679004D11A5 /* TextMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B542A888679004D11A5 /* TextMsgProcessor.swift */; };
-		A0D68BF52A888679004D11A5 /* OSSDownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B582A888679004D11A5 /* OSSDownloadTask.swift */; };
-		A0D68BF62A888679004D11A5 /* OSSFileLoadModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B592A888679004D11A5 /* OSSFileLoadModule.swift */; };
-		A0D68BF72A888679004D11A5 /* OSSUploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B5A2A888679004D11A5 /* OSSUploadTask.swift */; };
-		A0D68BF82A888679004D11A5 /* OSSLoadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B5B2A888679004D11A5 /* OSSLoadTask.swift */; };
-		A0D68BF92A888679004D11A5 /* FileLoaderListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B5C2A888679004D11A5 /* FileLoaderListener.swift */; };
+		A0D68BF92A888679004D11A5 /* FileLoadListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B5C2A888679004D11A5 /* FileLoadListener.swift */; };
 		A0D68BFA2A888679004D11A5 /* FileLoadModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B5D2A888679004D11A5 /* FileLoadModule.swift */; };
 		A0D68BFB2A888679004D11A5 /* Bubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B5F2A888679004D11A5 /* Bubble.swift */; };
 		A0D68BFC2A888679004D11A5 /* RxTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B602A888679004D11A5 /* RxTransform.swift */; };
@@ -169,7 +165,7 @@
 		A0EA42EB2A94925600F64A90 /* DefaultUserDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42EA2A94925600F64A90 /* DefaultUserDao.swift */; };
 		A0EA42ED2A94928400F64A90 /* DefaultSessionDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42EC2A94928400F64A90 /* DefaultSessionDao.swift */; };
 		A0EA42EF2A94B06900F64A90 /* IMCoreDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42EE2A94B06900F64A90 /* IMCoreDefines.swift */; };
-		A0EA42F12A94B3BE00F64A90 /* FileLoaderState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42F02A94B3BE00F64A90 /* FileLoaderState.swift */; };
+		A0EA42F12A94B3BE00F64A90 /* FileLoadState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42F02A94B3BE00F64A90 /* FileLoadState.swift */; };
 		A0EA42F42A94B49100F64A90 /* ContactorModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42F22A94B49100F64A90 /* ContactorModule.swift */; };
 		A0EA42F52A94B49100F64A90 /* GroupModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42F32A94B49100F64A90 /* GroupModule.swift */; };
 		A0EA42F82A94CC5300F64A90 /* IMApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EA42F72A94CC5300F64A90 /* IMApi.swift */; };
@@ -181,10 +177,10 @@
 		00B256D621B64DD52DDF517D /* Pods-THK-IM-IOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.debug.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.debug.xcconfig"; sourceTree = "<group>"; };
 		12A71C20EF80882B33F43851 /* Pods-THK-IM-IOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.release.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.release.xcconfig"; sourceTree = "<group>"; };
 		34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_THK_IM_IOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A02529062AC6CB05001561A0 /* MinioFileLoadModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinioFileLoadModule.swift; sourceTree = "<group>"; };
-		A02529082AC6CB82001561A0 /* MinioDownloadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinioDownloadTask.swift; sourceTree = "<group>"; };
-		A025290A2AC6CBA6001561A0 /* MinioUploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinioUploadTask.swift; sourceTree = "<group>"; };
-		A025290C2AC6CD1F001561A0 /* MinioLoadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinioLoadTask.swift; sourceTree = "<group>"; };
+		A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFileLoadModule.swift; sourceTree = "<group>"; };
+		A02529082AC6CB82001561A0 /* DownloadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTask.swift; sourceTree = "<group>"; };
+		A025290A2AC6CBA6001561A0 /* UploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTask.swift; sourceTree = "<group>"; };
+		A025290C2AC6CD1F001561A0 /* LoadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadTask.swift; sourceTree = "<group>"; };
 		A025290E2AC6D7DB001561A0 /* UploadParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadParams.swift; sourceTree = "<group>"; };
 		A02529142ACAD527001561A0 /* IMUIDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUIDefines.swift; sourceTree = "<group>"; };
 		A02529162ACADE72001561A0 /* IMMsgCellOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgCellOperator.swift; sourceTree = "<group>"; };
@@ -319,11 +315,7 @@
 		A0D68B522A888679004D11A5 /* BaseMsgProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMsgProcessor.swift; sourceTree = "<group>"; };
 		A0D68B532A888679004D11A5 /* UnSupportMsgProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnSupportMsgProcessor.swift; sourceTree = "<group>"; };
 		A0D68B542A888679004D11A5 /* TextMsgProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextMsgProcessor.swift; sourceTree = "<group>"; };
-		A0D68B582A888679004D11A5 /* OSSDownloadTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSDownloadTask.swift; sourceTree = "<group>"; };
-		A0D68B592A888679004D11A5 /* OSSFileLoadModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSFileLoadModule.swift; sourceTree = "<group>"; };
-		A0D68B5A2A888679004D11A5 /* OSSUploadTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSUploadTask.swift; sourceTree = "<group>"; };
-		A0D68B5B2A888679004D11A5 /* OSSLoadTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSLoadTask.swift; sourceTree = "<group>"; };
-		A0D68B5C2A888679004D11A5 /* FileLoaderListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileLoaderListener.swift; sourceTree = "<group>"; };
+		A0D68B5C2A888679004D11A5 /* FileLoadListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileLoadListener.swift; sourceTree = "<group>"; };
 		A0D68B5D2A888679004D11A5 /* FileLoadModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileLoadModule.swift; sourceTree = "<group>"; };
 		A0D68B5F2A888679004D11A5 /* Bubble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bubble.swift; sourceTree = "<group>"; };
 		A0D68B602A888679004D11A5 /* RxTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxTransform.swift; sourceTree = "<group>"; };
@@ -344,7 +336,7 @@
 		A0EA42EA2A94925600F64A90 /* DefaultUserDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultUserDao.swift; sourceTree = "<group>"; };
 		A0EA42EC2A94928400F64A90 /* DefaultSessionDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSessionDao.swift; sourceTree = "<group>"; };
 		A0EA42EE2A94B06900F64A90 /* IMCoreDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCoreDefines.swift; sourceTree = "<group>"; };
-		A0EA42F02A94B3BE00F64A90 /* FileLoaderState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLoaderState.swift; sourceTree = "<group>"; };
+		A0EA42F02A94B3BE00F64A90 /* FileLoadState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLoadState.swift; sourceTree = "<group>"; };
 		A0EA42F22A94B49100F64A90 /* ContactorModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactorModule.swift; sourceTree = "<group>"; };
 		A0EA42F32A94B49100F64A90 /* GroupModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupModule.swift; sourceTree = "<group>"; };
 		A0EA42F72A94CC5300F64A90 /* IMApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMApi.swift; sourceTree = "<group>"; };
@@ -384,11 +376,6 @@
 		A02529052AC6CACC001561A0 /* MinioFileLoader */ = {
 			isa = PBXGroup;
 			children = (
-				A02529062AC6CB05001561A0 /* MinioFileLoadModule.swift */,
-				A02529082AC6CB82001561A0 /* MinioDownloadTask.swift */,
-				A025290A2AC6CBA6001561A0 /* MinioUploadTask.swift */,
-				A025290C2AC6CD1F001561A0 /* MinioLoadTask.swift */,
-				A025290E2AC6D7DB001561A0 /* UploadParams.swift */,
 			);
 			path = MinioFileLoader;
 			sourceTree = "<group>";
@@ -405,15 +392,16 @@
 			path = Processor;
 			sourceTree = "<group>";
 		};
-		A02578C42AA41A3200A66CEF /* OSSFileLoader */ = {
+		A02529182ACB2762001561A0 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B592A888679004D11A5 /* OSSFileLoadModule.swift */,
-				A0D68B582A888679004D11A5 /* OSSDownloadTask.swift */,
-				A0D68B5A2A888679004D11A5 /* OSSUploadTask.swift */,
-				A0D68B5B2A888679004D11A5 /* OSSLoadTask.swift */,
+				A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */,
+				A02529082AC6CB82001561A0 /* DownloadTask.swift */,
+				A025290A2AC6CBA6001561A0 /* UploadTask.swift */,
+				A025290C2AC6CD1F001561A0 /* LoadTask.swift */,
+				A025290E2AC6D7DB001561A0 /* UploadParams.swift */,
 			);
-			path = OSSFileLoader;
+			path = Internal;
 			sourceTree = "<group>";
 		};
 		A045CF8B2A92561900654957 /* IMMedia */ = {
@@ -501,7 +489,6 @@
 			isa = PBXGroup;
 			children = (
 				A02529052AC6CACC001561A0 /* MinioFileLoader */,
-				A02578C42AA41A3200A66CEF /* OSSFileLoader */,
 				A0D68A962A88838A004D11A5 /* AppDelegate.swift */,
 				A0D68A982A88838A004D11A5 /* SceneDelegate.swift */,
 				A0D68A9A2A88838A004D11A5 /* ViewController.swift */,
@@ -948,8 +935,9 @@
 		A0D68B552A888679004D11A5 /* Fileloader */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B5C2A888679004D11A5 /* FileLoaderListener.swift */,
-				A0EA42F02A94B3BE00F64A90 /* FileLoaderState.swift */,
+				A02529182ACB2762001561A0 /* Internal */,
+				A0D68B5C2A888679004D11A5 /* FileLoadListener.swift */,
+				A0EA42F02A94B3BE00F64A90 /* FileLoadState.swift */,
 				A0D68B5D2A888679004D11A5 /* FileLoadModule.swift */,
 			);
 			path = Fileloader;
@@ -1142,11 +1130,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A0D68BBB2A888679004D11A5 /* IMMoreView.swift in Sources */,
-				A0D68BF62A888679004D11A5 /* OSSFileLoadModule.swift in Sources */,
 				A0D68B772A888679004D11A5 /* OGGEncoder.swift in Sources */,
 				A0D68BD32A888679004D11A5 /* CircleProgressView.swift in Sources */,
-				A0D68BF82A888679004D11A5 /* OSSLoadTask.swift in Sources */,
-				A025290B2AC6CBA6001561A0 /* MinioUploadTask.swift in Sources */,
+				A025290B2AC6CBA6001561A0 /* UploadTask.swift in Sources */,
 				A0D68BB22A888679004D11A5 /* IMBaseMessageCellProvider.swift in Sources */,
 				A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiControllerProvider.swift in Sources */,
 				A0D68BD52A888679004D11A5 /* IMAVCacheManager.swift in Sources */,
@@ -1171,11 +1157,11 @@
 				A0D68BB72A888679004D11A5 /* IMMessageLayout.swift in Sources */,
 				A0D68BB82A888679004D11A5 /* IMMsgCheckedLayout.swift in Sources */,
 				A0D68BB62A888679004D11A5 /* IMMessageReverseLayout.swift in Sources */,
-				A0EA42F12A94B3BE00F64A90 /* FileLoaderState.swift in Sources */,
+				A0EA42F12A94B3BE00F64A90 /* FileLoadState.swift in Sources */,
 				A0D68C072A888679004D11A5 /* SignalModule.swift in Sources */,
 				A0D68BBC2A888679004D11A5 /* IMMoreCell.swift in Sources */,
 				A0EA42FD2A99A60200F64A90 /* ImageCacheManager.swift in Sources */,
-				A0D68BF92A888679004D11A5 /* FileLoaderListener.swift in Sources */,
+				A0D68BF92A888679004D11A5 /* FileLoadListener.swift in Sources */,
 				A0D68BEA2A888679004D11A5 /* VideoMsgProcessor.swift in Sources */,
 				A0C431F52A909CCE00A84D4A /* PublishBean.swift in Sources */,
 				A0D68BE72A888679004D11A5 /* MessageModule.swift in Sources */,
@@ -1199,11 +1185,9 @@
 				A0D68BCA2A888679004D11A5 /* IMSessionViewController.swift in Sources */,
 				A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */,
 				A0D68C092A888679004D11A5 /* SignalListener.swift in Sources */,
-				A0D68BF52A888679004D11A5 /* OSSDownloadTask.swift in Sources */,
 				A0D68BAE2A888679004D11A5 /* IMUnicodeEmojiUIController.swift in Sources */,
 				A0D68B9C2A888679004D11A5 /* String+Ext.swift in Sources */,
 				A0D68BE32A888679004D11A5 /* DefaultMessageModule.swift in Sources */,
-				A0D68BF72A888679004D11A5 /* OSSUploadTask.swift in Sources */,
 				A0D68B982A888679004D11A5 /* UserDao.swift in Sources */,
 				A0D68C042A888679004D11A5 /* StorageModule.swift in Sources */,
 				A0D68BAB2A888679004D11A5 /* IMImageMsgCellProvider.swift in Sources */,
@@ -1233,10 +1217,10 @@
 				A0D68BF22A888679004D11A5 /* UnSupportMsgProcessor.swift in Sources */,
 				A0D68C012A888679004D11A5 /* WeakReference.swift in Sources */,
 				A0C431F62A909CCE00A84D4A /* CreateRoomBean.swift in Sources */,
-				A02529092AC6CB82001561A0 /* MinioDownloadTask.swift in Sources */,
+				A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */,
 				A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */,
 				A02578BF2AA2F23100A66CEF /* IMMsgBodyDefines.swift in Sources */,
-				A025290D2AC6CD1F001561A0 /* MinioLoadTask.swift in Sources */,
+				A025290D2AC6CD1F001561A0 /* LoadTask.swift in Sources */,
 				A0D68BEC2A888679004D11A5 /* ImageMsgProcessor.swift in Sources */,
 				A0EA42ED2A94928400F64A90 /* DefaultSessionDao.swift in Sources */,
 				A0D68B7F2A888679004D11A5 /* ListBean.swift in Sources */,
@@ -1260,7 +1244,7 @@
 				A0D68BFA2A888679004D11A5 /* FileLoadModule.swift in Sources */,
 				A0D68BA62A888679004D11A5 /* IMTimeLineMsgCell.swift in Sources */,
 				A0D68BD22A888679004D11A5 /* PreviewImageCellView.swift in Sources */,
-				A02529072AC6CB05001561A0 /* MinioFileLoadModule.swift in Sources */,
+				A02529072AC6CB05001561A0 /* DefaultFileLoadModule.swift in Sources */,
 				A0D68B7A2A888679004D11A5 /* ErrorBean.swift in Sources */,
 				A0D68B992A888679004D11A5 /* SessionDao.swift in Sources */,
 				A0D68BFF2A888679004D11A5 /* GCDTool.swift in Sources */,

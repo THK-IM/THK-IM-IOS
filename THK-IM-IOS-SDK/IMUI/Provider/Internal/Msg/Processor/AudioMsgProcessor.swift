@@ -105,7 +105,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
             )
             
             return Observable.create({observer -> Disposable in
-                let loaderListener = FileLoaderListener(
+                let loaderListener = FileLoadListener(
                     { progress, state, url, path in
                         SwiftEventBus.post(
                             IMEvent.MsgLoadStatusUpdate.rawValue,
@@ -113,12 +113,12 @@ class AudioMsgProcessor : BaseMsgProcessor {
                         )
                         switch(state) {
                         case
-                            FileLoaderState.Wait.rawValue,
-                            FileLoaderState.Init.rawValue,
-                            FileLoaderState.Ing.rawValue:
+                            FileLoadState.Wait.rawValue,
+                            FileLoadState.Init.rawValue,
+                            FileLoadState.Ing.rawValue:
                             break
                         case
-                            FileLoaderState.Success.rawValue:
+                            FileLoadState.Success.rawValue:
                             do {
                                 audioBody.url = url
                                 audioBody.name = name
@@ -186,7 +186,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
                 } else {
                     let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
                         message.sessionId, fileName!, IMFileFormat.Image.rawValue)
-                    let loadListener = FileLoaderListener(
+                    let loadListener = FileLoadListener(
                         {progress, state, url, path in
                             SwiftEventBus.post(
                                 IMEvent.MsgLoadStatusUpdate.rawValue,
@@ -194,12 +194,12 @@ class AudioMsgProcessor : BaseMsgProcessor {
                             )
                             switch(state) {
                             case
-                                FileLoaderState.Wait.rawValue,
-                                FileLoaderState.Init.rawValue,
-                                FileLoaderState.Ing.rawValue:
+                                FileLoadState.Wait.rawValue,
+                                FileLoadState.Init.rawValue,
+                                FileLoadState.Ing.rawValue:
                                 break
                             case
-                                FileLoaderState.Success.rawValue:
+                                FileLoadState.Success.rawValue:
                                 do {
                                     data.path = path
                                     data.duration = body.duration

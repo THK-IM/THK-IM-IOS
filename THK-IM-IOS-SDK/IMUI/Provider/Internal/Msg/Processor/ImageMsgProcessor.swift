@@ -143,7 +143,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                 entity.sessionId, entity.fromUId, thumbName, entity.id
             )
             return Observable.create({ observer -> Disposable in
-                let loadListener = FileLoaderListener(
+                let loadListener = FileLoadListener(
                     {[weak self] progress, state, url, path in
                         SwiftEventBus.post(
                             IMEvent.MsgLoadStatusUpdate.rawValue,
@@ -151,11 +151,11 @@ class ImageMsgProcessor : BaseMsgProcessor {
                         )
                         switch(state) {
                         case
-                            FileLoaderState.Wait.rawValue,
-                            FileLoaderState.Init.rawValue,
-                            FileLoaderState.Ing.rawValue:
+                            FileLoadState.Wait.rawValue,
+                            FileLoadState.Init.rawValue,
+                            FileLoadState.Ing.rawValue:
                             break
-                        case FileLoaderState.Success.rawValue:
+                        case FileLoadState.Success.rawValue:
                             do {
                                 imageBody.thumbnailUrl = url
                                 imageBody.width = imageData.width
@@ -223,7 +223,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                 entity.sessionId, entity.fromUId, originName, entity.id
             )
             return Observable.create({ observer -> Disposable in
-                let loadListener = FileLoaderListener(
+                let loadListener = FileLoadListener(
                     {progress, state, url, path in
                         SwiftEventBus.post(
                             IMEvent.MsgLoadStatusUpdate.rawValue,
@@ -231,12 +231,12 @@ class ImageMsgProcessor : BaseMsgProcessor {
                         )
                         switch(state) {
                         case
-                            FileLoaderState.Wait.rawValue,
-                            FileLoaderState.Init.rawValue,
-                            FileLoaderState.Ing.rawValue:
+                            FileLoadState.Wait.rawValue,
+                            FileLoadState.Init.rawValue,
+                            FileLoadState.Ing.rawValue:
                             break
                         case
-                            FileLoaderState.Success.rawValue:
+                            FileLoadState.Success.rawValue:
                             do {
                                 imageBody.url = url
                                 imageBody.width = imageData.width
@@ -303,7 +303,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                 } else {
                     let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
                         message.sessionId, fileName!, IMFileFormat.Image.rawValue)
-                    let loadListener = FileLoaderListener(
+                    let loadListener = FileLoadListener(
                         {progress, state, url, path in
                             SwiftEventBus.post(
                                 IMEvent.MsgLoadStatusUpdate.rawValue,
@@ -311,12 +311,12 @@ class ImageMsgProcessor : BaseMsgProcessor {
                             )
                             switch(state) {
                             case
-                                FileLoaderState.Wait.rawValue,
-                                FileLoaderState.Init.rawValue,
-                                FileLoaderState.Ing.rawValue:
+                                FileLoadState.Wait.rawValue,
+                                FileLoadState.Init.rawValue,
+                                FileLoadState.Ing.rawValue:
                                 break
                             case
-                                FileLoaderState.Success.rawValue:
+                                FileLoadState.Success.rawValue:
                                 do {
                                     if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
                                         data.thumbnailPath = path

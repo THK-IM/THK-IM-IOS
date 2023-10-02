@@ -1,5 +1,5 @@
 //
-//  MinioDownloadTask.swift
+//  DownloadTask.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/9/29.
@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import CocoaLumberjack
 
-class MinioDownloadTask: MinioLoadTask {
+class DownloadTask: LoadTask {
     
     private var request: DownloadRequest?
     
@@ -21,7 +21,7 @@ class MinioDownloadTask: MinioLoadTask {
         let tempFilePath = self.path + ".tmp"
         let tempFileURL = NSURL(fileURLWithPath: tempFilePath) as URL
         let fileUrl = NSURL(fileURLWithPath: self.path) as URL
-        self.notify(progress: 0, state: FileLoaderState.Init.rawValue)
+        self.notify(progress: 0, state: FileLoadState.Init.rawValue)
         let redirector = Redirector(behavior: .follow)
         var headers = HTTPHeaders()
         headers.add(name: "Token", value: fileLoadModule.token)
@@ -34,7 +34,7 @@ class MinioDownloadTask: MinioLoadTask {
                     return
                 }
                 let p: Int = Int(100 * progress.completedUnitCount / progress.totalUnitCount)
-                sf.notify(progress: p, state: FileLoaderState.Ing.rawValue)
+                sf.notify(progress: p, state: FileLoadState.Ing.rawValue)
             }
             .response(queue: DispatchQueue.global()) { [weak self] response in
                 guard let sf = self else {
@@ -45,17 +45,17 @@ class MinioDownloadTask: MinioLoadTask {
                     if FileManager.default.fileExists(atPath: tempFilePath) {
                         do {
                             try FileManager.default.moveItem(at: tempFileURL, to: fileUrl)
-                            sf.notify(progress: 100, state: FileLoaderState.Success.rawValue)
+                            sf.notify(progress: 100, state: FileLoadState.Success.rawValue)
                         } catch {
-                            sf.notify(progress: 100, state: FileLoaderState.Failed.rawValue)
+                            sf.notify(progress: 100, state: FileLoadState.Failed.rawValue)
                             DDLogError(error)
                         }
                     } else {
-                        sf.notify(progress: 100, state: FileLoaderState.Failed.rawValue)
+                        sf.notify(progress: 100, state: FileLoadState.Failed.rawValue)
                     }
                     break
                 case .failure(_):
-                    sf.notify(progress: 0, state: FileLoaderState.Failed.rawValue)
+                    sf.notify(progress: 0, state: FileLoadState.Failed.rawValue)
                     break
                 }
             }

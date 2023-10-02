@@ -14,7 +14,7 @@ import SwiftEventBus
 class IMVideoMsgCell: BaseMsgCell {
     
     private var taskId: String?
-    private var downloadListener: FileLoaderListener?
+    private var downloadListener: FileLoadListener?
     
     private lazy var view: UIImageView = {
         let view = UIImageView()

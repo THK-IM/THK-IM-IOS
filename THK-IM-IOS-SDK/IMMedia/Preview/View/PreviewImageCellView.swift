@@ -12,7 +12,7 @@ class PreviewImageCellView : UICollectionViewCell {
     var cellIndex: Int = 0
     var media: Media? = nil
     private var taskId: String?
-    private var listener: FileLoaderListener?
+    private var listener: FileLoadListener?
     private lazy var progressView: CircleProgressView = {
         let p = CircleProgressView(
             frame: CGRect(x: 0, y: 0, width: 40, height: 40)
@@ -78,21 +78,21 @@ class PreviewImageCellView : UICollectionViewCell {
         if self.taskId != nil && self.listener != nil {
             fileLoadModule.cancelDownloadListener(taskId: self.taskId!, listener: self.listener!)
         }
-        let listener = FileLoaderListener({ [weak self] progress, state, url, path in
+        let listener = FileLoadListener({ [weak self] progress, state, url, path in
             guard let sf = self else {
                 return
             }
             switch(state) {
-            case FileLoaderState.Init.rawValue:
+            case FileLoadState.Init.rawValue:
                 break
-            case FileLoaderState.Failed.rawValue:
+            case FileLoadState.Failed.rawValue:
                 sf.progressView.isHidden = true
                 break
-            case FileLoaderState.Success.rawValue:
+            case FileLoadState.Success.rawValue:
                 sf.progressView.isHidden = true
                 sf.updateImagePath(path)
                 break
-            case FileLoaderState.Ing.rawValue:
+            case FileLoadState.Ing.rawValue:
                 sf.progressView.isHidden = false
                 sf.progressView.setProgress(to: progress)
                 break
