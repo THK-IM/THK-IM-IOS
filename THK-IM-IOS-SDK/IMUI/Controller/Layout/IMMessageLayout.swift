@@ -216,9 +216,13 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             paths.append(IndexPath.init(row: i, section: 0))
         }
         UIView.setAnimationsEnabled(false)
-        tableView.insertRows(at: paths, with: .none) 
+        tableView.insertRows(at: paths, with: .none)
+        var scrollTo = messagesWithTimeLine.count + 2
+        if (scrollTo > self.messages.count - 1) {
+            scrollTo = self.messages.count - 1
+        }
         tableView.scrollToRow(
-            at: IndexPath(row: messagesWithTimeLine.count-1, section: 0),
+            at: IndexPath(row: scrollTo, section: 0),
             at: .none,
             animated: false
         )
