@@ -262,7 +262,7 @@ class MediaPreviewController: UIViewController,
                 if !before {
                     at = wSf.sourceArray.count
                 }
-                wSf.sourceArray.insert(contentsOf: (before ? medias.reversed() : medias), at: at)
+                wSf.sourceArray.insert(contentsOf: (before ? medias : medias), at: at)
                 var paths = [IndexPath]()
                 for i in (at ..< (medias.count+at)) {
                     paths.append(IndexPath.init(row: i, section: 0))

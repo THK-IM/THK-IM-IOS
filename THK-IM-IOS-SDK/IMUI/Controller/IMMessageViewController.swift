@@ -496,7 +496,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             }
         } else if msg.type == MsgType.IMAGE.rawValue || msg.type == MsgType.VIDEO.rawValue {
             var ay = [Media]()
-            ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, true, 5).reversed())
+            ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, true, 5))
             let current = self.msgToMedia(msg: msg)
             if current != nil {
                 ay.append(current!)
@@ -531,20 +531,19 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
         do {
             let types = [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue]
             let msgDao = IMCoreManager.shared.database.messageDao
-            var messages: [Message]? = nil
+            var messages: [Message]
             if before {
                 messages = try msgDao.findOlderMessages(msgId, types, sessionId, count)
+                messages = messages.reversed()
             } else {
                 messages = try msgDao.findNewerMessages(msgId, types, sessionId, count)
             }
             var medias = [Media]()
-            if messages != nil {
-                for msg in messages!.reversed() {
-                    guard let m = self.msgToMedia(msg: msg) else {
-                        continue
-                    }
-                    medias.append(m)
+            for msg in messages {
+                guard let m = self.msgToMedia(msg: msg) else {
+                    continue
                 }
+                medias.append(m)
             }
             return medias
         } catch {

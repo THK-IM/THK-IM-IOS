@@ -102,9 +102,9 @@ protocol MessageDao {
     /**
      * 查询session下某时间之前的消息
      */
-    func queryMessageBySidAndBeforeCTime(_ sessionId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>?
+    func queryMessageBySidAndBeforeCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>?
     
     // 查询ctime之后的消息
-    func queryMessageBySidAndAfterCTime(_ sessionId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>?
+    func queryMessageBySidAndAfterCTime(_ sessionId: Int64,  _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>?
     
 }

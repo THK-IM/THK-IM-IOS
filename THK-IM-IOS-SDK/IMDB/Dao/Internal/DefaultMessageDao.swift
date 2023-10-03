@@ -50,7 +50,7 @@ class DefaultMessageDao : MessageDao {
         guard let time = msg?.cTime else {
             return []
         }
-        return try self.queryMessageBySidAndBeforeCTime(sessionId, types, time, count) ?? []
+        return try self.queryMessageBySidAndBeforeCTime(sessionId, msgId, types, time, count) ?? []
     }
     
     func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
@@ -58,7 +58,7 @@ class DefaultMessageDao : MessageDao {
         guard let time = msg?.cTime else {
             return []
         }
-        return try self.queryMessageBySidAndAfterCTime(sessionId, types, time, count) ?? []
+        return try self.queryMessageBySidAndAfterCTime(sessionId, msgId, types, time, count) ?? []
     }
     
     func insertOrReplaceMessages(_ messages: [Message]) throws {
@@ -195,11 +195,12 @@ class DefaultMessageDao : MessageDao {
     }
     
     // 查询ctime之前的消息
-    func queryMessageBySidAndBeforeCTime(_ sessionId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
+    func queryMessageBySidAndBeforeCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
-                    Message.Properties.cTime < cTime &&
+                    Message.Properties.msgId != msgId &&
+                    Message.Properties.cTime <= cTime &&
                     Message.Properties.type.in(types),
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             limit: count
@@ -207,11 +208,12 @@ class DefaultMessageDao : MessageDao {
     }
     
     // 查询ctime之后的消息
-    func queryMessageBySidAndAfterCTime(_ sessionId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
+    func queryMessageBySidAndAfterCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
-                    Message.Properties.cTime > cTime &&
+                    Message.Properties.msgId != msgId &&
+                    Message.Properties.cTime >= cTime &&
                     Message.Properties.type.in(types),
             orderBy: [Message.Properties.cTime.order(Order.ascending)],
             limit: count
