@@ -334,13 +334,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             guard let sf = self else {
                 return
             }
-            if image != nil {
-                do {
-                    try sf.sendImage(image!)
-                } catch {
-                    DDLogError(error)
-                }
-            } else if (videoUrl != nil) {
+            if (videoUrl != nil) {
                 do {
                     let asset = AVURLAsset(url: videoUrl!)
                     let videoData = try Data(contentsOf: asset.url)
@@ -352,6 +346,12 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                         (sf.session?.id)!, fileName, "video")
                     try storageModule.saveMediaDataInto(path, videoData)
                     try sf.sendVideo(path)
+                } catch {
+                    DDLogError(error)
+                }
+            } else if image != nil {
+                do {
+                    try sf.sendImage(image!)
                 } catch {
                     DDLogError(error)
                 }
@@ -423,50 +423,59 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     }
     
     private func msgToMedia(msg: Message) -> Media? {
-//        do {
-//            if msg.type == MsgType.IMAGE.rawValue {
-//                let imageBody = try JSONDecoder().decode(
-//                    ImageMsgBody.self,
-//                    from: msg.content.data(using: .utf8) ?? Data()
-//                )
-//                if imageBody.path == nil && imageBody.url != nil {
-//                    let (_, fileName) = IMCoreManager.shared.storageModule!.getPathsFromFullPath(imageBody.url!)
-//                    imageBody.path = IMCoreManager.shared.storageModule?
-//                        .allocLocalFilePath(msg.sessionId, msg.fromUId, fileName, "img")
-//                }
-//                return Media.imageMedia(
-//                    id: "\(msg.msgId)",
-//                    width: imageBody.width,
-//                    height: imageBody.height,
-//                    sourcePath: imageBody.path,
-//                    sourceUrl: imageBody.url,
-//                    thumbPath: imageBody.shrinkPath,
-//                    thumbUrl: imageBody.shrinkUrl
-//                )
-//            } else if msg.type == MsgType.VIDEO.rawValue {
-//                let videoBody = try JSONDecoder().decode(
-//                    VideoMsgBody.self,
-//                    from: msg.content.data(using: .utf8) ?? Data()
-//                )
-//                if videoBody.path == nil && videoBody.url != nil {
-//                    let (_, fileName) = IMCoreManager.shared.storageModule!.getPathsFromFullPath(videoBody.url!)
-//                    videoBody.path = IMCoreManager.shared.storageModule?
-//                        .allocSessionFilePath(msg.sessionId, msg.fromUId, fileName, "video")
-//                }
-//                return Media.videoMedia(
-//                    id: "\(msg.msgId)",
-//                    duration: videoBody.duration,
-//                    width: videoBody.width,
-//                    height: videoBody.height,
-//                    sourcePath: videoBody.path,
-//                    sourceUrl: videoBody.url,
-//                    thumbPath: videoBody.thumbnailPath,
-//                    thumbUrl: videoBody.thumbnailUrl
-//                )
-//            }
-//        } catch {
-//            DDLogError(error)
-//        }
+        do {
+            if msg.type == MsgType.IMAGE.rawValue {
+                let media = Media(id: "\(msg.msgId)", type: 1)
+                if (msg.data != nil) {
+                    let data = try JSONDecoder().decode(
+                        IMImageMsgData.self,
+                        from: msg.data!.data(using: .utf8) ?? Data()
+                    )
+                    media.thumbPath = data.thumbnailPath
+                    media.sourcePath = data.path
+                    media.width = data.width ?? 0
+                    media.height = data.height ?? 0
+                }
+                if (msg.content != nil) {
+                    let body = try JSONDecoder().decode(
+                        IMImageMsgBody.self,
+                        from: msg.data!.data(using: .utf8) ?? Data()
+                    )
+                    media.thumbUrl = body.thumbnailUrl
+                    media.sourceUrl = body.url
+                    media.width = body.width ?? 0
+                    media.height = body.height ?? 0
+                }
+                return media
+            } else if msg.type == MsgType.VIDEO.rawValue {
+                let media = Media(id: "\(msg.msgId)", type: 2)
+                if (msg.data != nil) {
+                    let data = try JSONDecoder().decode(
+                        IMVideoMsgData.self,
+                        from: msg.data!.data(using: .utf8) ?? Data()
+                    )
+                    media.thumbPath = data.thumbnailPath
+                    media.sourcePath = data.path
+                    media.duration = data.duration
+                    media.width = data.width ?? 0
+                    media.height = data.height ?? 0
+                }
+                if (msg.content != nil) {
+                    let body = try JSONDecoder().decode(
+                        IMVideoMsgBody.self,
+                        from: msg.data!.data(using: .utf8) ?? Data()
+                    )
+                    media.thumbUrl = body.thumbnailUrl
+                    media.sourceUrl = body.url
+                    media.duration = body.duration
+                    media.width = body.width ?? 0
+                    media.height = body.height ?? 0
+                }
+                return media
+            }
+        } catch {
+            DDLogError(error)
+        }
         return nil
     }
     
@@ -520,83 +529,108 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     }
     
     private func fetchMoreMessage(_ msgId: Int64, _ sessionId: Int64, _ before: Bool, _ count: Int) -> [Media] {
-//        do {
-//            let types = [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue]
-//            let msgDao = IMCoreManager.shared.database.messageDao
-//            var messages: [Message]? = nil
-//            if before {
-//                messages = try msgDao.findOlderMessages(msgId, types, sessionId, count)
-//            } else {
-//                messages = try msgDao.findNewerMessages(msgId, types, sessionId, count)
-//            }
-//            var medias = [Media]()
-//            if messages != nil {
-//                for msg in messages! {
-//                    guard let m = self.msgToMedia(msg: msg) else {
-//                        continue
-//                    }
-//                    medias.append(m)
-//                }
-//            }
-//            return medias
-//        } catch {
-//            DDLogError(error)
-//        }
+        do {
+            let types = [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue]
+            let msgDao = IMCoreManager.shared.database.messageDao
+            var messages: [Message]? = nil
+            if before {
+                messages = try msgDao.findOlderMessages(msgId, types, sessionId, count)
+            } else {
+                messages = try msgDao.findNewerMessages(msgId, types, sessionId, count)
+            }
+            var medias = [Media]()
+            if messages != nil {
+                for msg in messages!.reversed() {
+                    guard let m = self.msgToMedia(msg: msg) else {
+                        continue
+                    }
+                    medias.append(m)
+                }
+            }
+            return medias
+        } catch {
+            DDLogError(error)
+        }
         return []
     }
     
     private func updateMediaMessage(_ id: String, _ resourceType: Int, _ path: String) {
-//        guard let msgId: Int64 = Int64(id) else {
-//            return
-//        }
-//        guard let sessionId: Int64 = self.session?.id else {
-//            return
-//        }
-//        do {
-//            guard let msg = try IMCoreManager.shared.database.messageDao.findMessageBySid(msgId, sessionId) else {
-//                return
-//            }
-//            if msg.type == MsgType.IMAGE.rawValue {
-//                let imageBody = try JSONDecoder().decode(
-//                    ImageMsgBody.self,
-//                    from: msg.content.data(using: .utf8) ?? Data()
-//                )
-//                if resourceType == 1 {
-//                    // 缩略图
-//                    imageBody.shrinkPath = path
-//                } else {
-//                    imageBody.path = path
-//                }
-//                let data = try JSONEncoder().encode(imageBody)
-//                let content = String(data: data, encoding: .utf8)
-//                if content != nil {
-//                    msg.content = content!
-//                    try IMCoreManager.shared.database.messageDao.updateMessages(msg)
-//                    SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
-//                }
-//
-//            } else if msg.type == MsgType.VIDEO.rawValue {
-//                let videoMsgBody = try JSONDecoder().decode(
-//                    VideoMsgBody.self,
-//                    from: msg.content.data(using: .utf8) ?? Data()
-//                )
-//                if resourceType == 1 {
-//                    // 缩略图
-//                    videoMsgBody.thumbnailPath = path
-//                } else {
-//                    videoMsgBody.path = path
-//                }
-//                let data = try JSONEncoder().encode(videoMsgBody)
-//                let content = String(data: data, encoding: .utf8)
-//                if content != nil {
-//                    msg.content = content!
-//                    try IMCoreManager.shared.database.messageDao.updateMessages(msg)
-////                    SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
-//                }
-//            }
-//        } catch {
-//            DDLogError(error)
-//        }
+        guard let msgId: Int64 = Int64(id) else {
+            return
+        }
+        guard let sessionId: Int64 = self.session?.id else {
+            return
+        }
+        do {
+            guard let msg = try IMCoreManager.shared.database.messageDao.findMessageBySid(msgId, sessionId) else {
+                return
+            }
+            
+            if msg.type == MsgType.IMAGE.rawValue {
+                var data = IMImageMsgData()
+                if (msg.data != nil) {
+                    data = try JSONDecoder().decode(
+                        IMImageMsgData.self,
+                        from: msg.data!.data(using: .utf8) ?? Data()
+                    )
+                }
+                if ((data.width == nil || data.height == nil ) && msg.content != nil) {
+                    let body = try JSONDecoder().decode(
+                        IMImageMsgBody.self,
+                        from: msg.content!.data(using: .utf8) ?? Data()
+                    )
+                    data.width = body.width
+                    data.height = body.height
+                }
+                if resourceType == 1 {
+                    data.thumbnailPath = path
+                } else {
+                    data.path = path
+                }
+                let jsonData = try JSONEncoder().encode(data)
+                let jsonString = String(data: jsonData, encoding: .utf8)
+                if jsonString != nil {
+                    msg.data = jsonString!
+                    try IMCoreManager.shared.database.messageDao.updateMessages(msg)
+                    if (resourceType == 1) {
+                        SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
+                    }
+                }
+            } else if msg.type == MsgType.VIDEO.rawValue {
+                var data = IMVideoMsgData()
+                if (msg.data != nil) {
+                    data = try JSONDecoder().decode(
+                        IMVideoMsgData.self,
+                        from: msg.data!.data(using: .utf8) ?? Data()
+                    )
+                }
+                if ((data.width == nil || data.duration == nil || data.height == nil ) && msg.content != nil) {
+                    let body = try JSONDecoder().decode(
+                        IMVideoMsgBody.self,
+                        from: msg.content!.data(using: .utf8) ?? Data()
+                    )
+                    data.duration = body.duration
+                    data.width = body.width
+                    data.height = body.height
+                }
+                if resourceType == 1 {
+                    data.thumbnailPath = path
+                } else {
+                    data.path = path
+                }
+                let jsonData = try JSONEncoder().encode(data)
+                let jsonString = String(data: jsonData, encoding: .utf8)
+                if jsonString != nil {
+                    msg.data = jsonString!
+                    try IMCoreManager.shared.database.messageDao.updateMessages(msg)
+                    if (resourceType == 1) {
+                        SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
+                    }
+                }
+            }
+        } catch {
+            DDLogError(error)
+        }
     }
     
 }

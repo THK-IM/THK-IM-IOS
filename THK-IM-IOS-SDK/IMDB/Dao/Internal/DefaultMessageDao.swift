@@ -45,20 +45,20 @@ class DefaultMessageDao : MessageDao {
         )
     }
     
-    func findOlderMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message]? {
+    func findOlderMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
         let msg = try self.findMessageBySid(msgId, sessionId)
         guard let time = msg?.cTime else {
             return []
         }
-        return try self.queryMessageBySidAndBeforeCTime(sessionId, types, time, count)
+        return try self.queryMessageBySidAndBeforeCTime(sessionId, types, time, count) ?? []
     }
     
-    func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message]? {
+    func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
         let msg = try self.findMessageBySid(msgId, sessionId)
         guard let time = msg?.cTime else {
             return []
         }
-        return try self.queryMessageBySidAndAfterCTime(sessionId, types, time, count)
+        return try self.queryMessageBySidAndAfterCTime(sessionId, types, time, count) ?? []
     }
     
     func insertOrReplaceMessages(_ messages: [Message]) throws {

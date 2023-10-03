@@ -27,12 +27,12 @@ protocol MessageDao {
     /**
      * 查询比msgId早的消息
      */
-    func findOlderMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message]?
+    func findOlderMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message]
     
     /**
      * 查询比msgId晚的消息
      */
-    func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message]?
+    func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message]
     
     /**
      * 批量插入消息
