@@ -8,8 +8,6 @@
 import AVFoundation
 import CocoaLumberjack
 
-typealias AudioCallback = (_ db: Double, _ duration: Int, _ path: String, _ stopped: Bool) -> Void
-
 class OggOpusAudioRecorder {
     
     private let LogTag = "OggOpusAudioRecorder"

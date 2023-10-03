@@ -66,11 +66,11 @@ class PreviewImageCellView : UICollectionViewCell {
             setImagePath(realPath)
         }
         
-        // 下载原图
-        if media.sourceUrl != nil {
-            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(media.sourcePath!)
-            self.downloadMedia(media.sourceUrl!, path: realPath)
-        }
+//        // 下载原图
+//        if media.sourceUrl != nil {
+//            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(media.sourcePath!)
+//            self.downloadMedia(media.sourceUrl!, path: realPath)
+//        }
     }
     
     func downloadMedia(_ url: String, path: String) {

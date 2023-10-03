@@ -10,7 +10,6 @@ import RxSwift
 import UIKit
 import CocoaLumberjack
 import SnapKit
-import ZLPhotoBrowser
 import Photos
 import SwiftEventBus
 import RxGesture
@@ -305,93 +304,86 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     
     
     func choosePhoto() {
-        let ps = ZLPhotoPreviewSheet()
-        ps.selectImageBlock = { [weak self] results, isOriginal in
+//        let ps = ZLPhotoPreviewSheet()
+//        ps.selectImageBlock = { [weak self] results, isOriginal in
+//            guard let sf = self else {
+//                return
+//            }
+//            do {
+//                for r in results {
+//                    try sf.onMediaResult(r, isOriginal)
+//                }
+//            } catch {
+//                DDLogError(error)
+//            }
+//        }
+//        ps.showPhotoLibrary(sender: self)
+        guard let cp = IMUIManager.shared.contentProvider else {
+            return
+        }
+        cp.pick(controller: self, formats: [IMFileFormat.Image, IMFileFormat.Video]) { [weak self] result, cancel in
             guard let sf = self else {
                 return
             }
             do {
-                for r in results {
-                    try sf.onMediaResult(r, isOriginal)
+                for r in result {
+                    if (r.mimeType.starts(with: IMFileFormat.Image.rawValue)) {
+                        if (r.image != nil) {
+                            try sf.sendImage(r.image!)
+                        }
+                    } else if (r.mimeType.starts(with: IMFileFormat.Video.rawValue)) {
+                        if (r.url != nil) {
+                            let asset = AVURLAsset(url: r.url!)
+                            let videoData = try Data(contentsOf: asset.url)
+                            let storageModule = IMCoreManager.shared.storageModule
+                            let (_, fName) = storageModule.getPathsFromFullPath(asset.url.absoluteString)
+                            let (name, ext) = storageModule.getFileExt(fName)
+                            let fileName = "\(name)_\(String().random(8)).\(ext)"
+                            let path = storageModule.allocSessionFilePath(
+                                (sf.session?.id)!, fileName, IMFileFormat.Video.rawValue)
+                            try storageModule.saveMediaDataInto(path, videoData)
+                            try sf.sendVideo(path)
+                        }
+                    }
                 }
             } catch {
                 DDLogError(error)
             }
         }
-        ps.showPhotoLibrary(sender: self)
     }
     
     func openCamera() {
-        ZLPhotoConfiguration.default()
-            .cameraConfiguration
-            .maxRecordDuration(300)
-            .allowRecordVideo(true)
-            .allowSwitchCamera(true)
-            .showFlashSwitch(true)
-
-        let camera = ZLCustomCamera()
-        camera.takeDoneBlock = { [weak self] image, videoUrl in
+        guard let cp = IMUIManager.shared.contentProvider else {
+            return
+        }
+        cp.openCamera(controller: self, formats: [IMFileFormat.Image, IMFileFormat.Video]) { [weak self] result, cancel in
             guard let sf = self else {
                 return
             }
-            if (videoUrl != nil) {
-                do {
-                    let asset = AVURLAsset(url: videoUrl!)
-                    let videoData = try Data(contentsOf: asset.url)
-                    let storageModule = IMCoreManager.shared.storageModule
-                    let (_, fName) = storageModule.getPathsFromFullPath(asset.url.absoluteString)
-                    let (name, ext) = storageModule.getFileExt(fName)
-                    let fileName = "\(name)_\(String().random(8)).\(ext)"
-                    let path = storageModule.allocSessionFilePath(
-                        (sf.session?.id)!, fileName, "video")
-                    try storageModule.saveMediaDataInto(path, videoData)
-                    try sf.sendVideo(path)
-                } catch {
-                    DDLogError(error)
+            do {
+                for r in result {
+                    if (r.mimeType.starts(with: IMFileFormat.Image.rawValue)) {
+                        if (r.image != nil) {
+                            try sf.sendImage(r.image!)
+                        }
+                    } else if (r.mimeType.starts(with: IMFileFormat.Video.rawValue)) {
+                        if (r.url != nil) {
+                            let asset = AVURLAsset(url: r.url!)
+                            let videoData = try Data(contentsOf: asset.url)
+                            let storageModule = IMCoreManager.shared.storageModule
+                            let (_, fName) = storageModule.getPathsFromFullPath(asset.url.absoluteString)
+                            let (name, ext) = storageModule.getFileExt(fName)
+                            let fileName = "\(name)_\(String().random(8)).\(ext)"
+                            let path = storageModule.allocSessionFilePath(
+                                (sf.session?.id)!, fileName, "video")
+                            try storageModule.saveMediaDataInto(path, videoData)
+                            try sf.sendVideo(path)
+                        }
+                    }
                 }
-            } else if image != nil {
-                do {
-                    try sf.sendImage(image!)
-                } catch {
-                    DDLogError(error)
-                }
-            } else {
-                // TODO
+            } catch {
+                DDLogError(error)
             }
-        }
-        self.showDetailViewController(camera, sender: nil)
-    }
-    
-    
-    func onMediaResult(_ r: ZLResultModel, _ isOriginal: Bool) throws {
-        switch r.asset.mediaType {
-        case PHAssetMediaType.image:
-            try self.sendImage(r.image)
-            break
-        case PHAssetMediaType.video:
-            PHCachingImageManager.default()
-                .requestAVAsset(forVideo: r.asset, options: nil)
-            { [weak self] asset, audioMix, info in
-                guard let urlAsset = asset as? AVURLAsset else {
-                    return
-                }
-                do {
-                    let videoData = try Data(contentsOf: urlAsset.url)
-                    let storageModule = IMCoreManager.shared.storageModule
-                    let (_, fName) = storageModule.getPathsFromFullPath(urlAsset.url.absoluteString)
-                    let (name, ext) = storageModule.getFileExt(fName)
-                    let fileName = "\((Date().timeIntervalSince1970/1000))_\(name)_.\(ext)"
-                    let path = storageModule.allocSessionFilePath(
-                        (self?.session?.id)!, fileName, IMFileFormat.Video.rawValue)
-                    try storageModule.saveMediaDataInto(path, videoData)
-                    try self?.sendVideo(path, r.image, Int(r.asset.duration))
-                } catch {
-                    DDLogError(error)
-                }
-            }
-            break
-        default:
-            break
         }
     }
     
@@ -439,7 +431,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 if (msg.content != nil) {
                     let body = try JSONDecoder().decode(
                         IMImageMsgBody.self,
-                        from: msg.data!.data(using: .utf8) ?? Data()
+                        from: msg.content!.data(using: .utf8) ?? Data()
                     )
                     media.thumbUrl = body.thumbnailUrl
                     media.sourceUrl = body.url
@@ -481,6 +473,9 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     
     func previewMessage(_ msg: Message, _ position: Int,  _ originView: UIView) {
         if msg.type == MsgType.Audio.rawValue {
+            guard let cp = IMUIManager.shared.contentProvider else {
+                return
+            }
             if (msg.data != nil) {
                 do {
                     let data = try JSONDecoder().decode(
@@ -488,7 +483,11 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                         from: msg.data!.data(using: .utf8) ?? Data())
                     if (data.path != nil) {
                         let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(data.path!)
-                        OggOpusAudioPlayer.shared.startPlaying(realPath) {db, duration, path, stopped in
+                        let success = cp.startPlayAudio(path: realPath) {
+                            db, duration, path, stopped in
+                        }
+                        if (!success) {
+                            
                         }
                     }
                 } catch {

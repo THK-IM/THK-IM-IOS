@@ -16,6 +16,7 @@ public class IMUIManager: NSObject {
     private var sessionCellProviders = [Int:IMBaseSessionCellProvider]()
     private var bottomFunctionProviders = [IMBaseFunctionCellProvider]()
     private var emojiControllerProviders = [IMBasePanelControllerProvider]()
+    var contentProvider: IMContentProvider? = nil
     
     private var cornerImageMap = [String: UIImage]()
     

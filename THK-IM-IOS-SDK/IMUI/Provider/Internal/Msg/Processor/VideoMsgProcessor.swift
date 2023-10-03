@@ -104,7 +104,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
         videoData.thumbnailPath = coverThumbPath
         videoData.width = Int(frameImage.size.width)
         videoData.height = Int(frameImage.size.height)
-        videoData.duration = Int(asset.duration.seconds)
+        videoData.duration = Int(asset.duration.seconds) + 1
         
         let d = try JSONEncoder().encode(videoData)
         entity.data = String(data: d, encoding: .utf8)!

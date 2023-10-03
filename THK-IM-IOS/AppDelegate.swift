@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", endpoint)
         IMUIManager.shared.initConfig()
-        
+        IMUIManager.shared.contentProvider = IMMediaContentProvider()
         IMCoreManager.shared.connect()
         
     }

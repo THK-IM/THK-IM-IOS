@@ -155,13 +155,16 @@ class IMSpeakView: UILabel {
         guard let session = self.sender?.getSession() else {
             return false
         }
-        if OggOpusAudioRecorder.shared.isRecording() {
+        guard let cp = IMUIManager.shared.contentProvider else {
+            return false
+        }
+        if cp.isRecordingAudio() {
             return false
         }
         let fileName = "audio_\(String().random(8)).oga"
         let filePath = IMCoreManager.shared.storageModule
             .allocSessionFilePath(session.id, fileName, "audio")
-        return OggOpusAudioRecorder.shared.startRecording(filePath) {
+        return cp.startRecordAudio(path: filePath, duration: 60) {
             [weak self] db, duration, path, stopped in
             print("IMSpeakView recording: \(db), \(duration), \(stopped)")
             guard let sf = self else {

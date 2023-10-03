@@ -15,6 +15,9 @@
 		A025290F2AC6D7DB001561A0 /* UploadParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290E2AC6D7DB001561A0 /* UploadParams.swift */; };
 		A02529152ACAD527001561A0 /* IMUIDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529142ACAD527001561A0 /* IMUIDefines.swift */; };
 		A02529172ACADE72001561A0 /* IMMsgCellOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529162ACADE72001561A0 /* IMMsgCellOperator.swift */; };
+		A025291A2ACC31CA001561A0 /* IMContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529192ACC31CA001561A0 /* IMContentProvider.swift */; };
+		A025291C2ACC31E2001561A0 /* IMUIProtocolDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025291B2ACC31E2001561A0 /* IMUIProtocolDefines.swift */; };
+		A025291E2ACC344D001561A0 /* IMMediaContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025291D2ACC344D001561A0 /* IMMediaContentProvider.swift */; };
 		A02578BF2AA2F23100A66CEF /* IMMsgBodyDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578BE2AA2F23100A66CEF /* IMMsgBodyDefines.swift */; };
 		A02578C62AA4269B00A66CEF /* LiveApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C52AA4269B00A66CEF /* LiveApi.swift */; };
 		A02578C82AA427BD00A66CEF /* DefaultLiveApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */; };
@@ -184,6 +187,9 @@
 		A025290E2AC6D7DB001561A0 /* UploadParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadParams.swift; sourceTree = "<group>"; };
 		A02529142ACAD527001561A0 /* IMUIDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUIDefines.swift; sourceTree = "<group>"; };
 		A02529162ACADE72001561A0 /* IMMsgCellOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgCellOperator.swift; sourceTree = "<group>"; };
+		A02529192ACC31CA001561A0 /* IMContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMContentProvider.swift; sourceTree = "<group>"; };
+		A025291B2ACC31E2001561A0 /* IMUIProtocolDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUIProtocolDefines.swift; sourceTree = "<group>"; };
+		A025291D2ACC344D001561A0 /* IMMediaContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMediaContentProvider.swift; sourceTree = "<group>"; };
 		A02578BE2AA2F23100A66CEF /* IMMsgBodyDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgBodyDefines.swift; sourceTree = "<group>"; };
 		A02578C52AA4269B00A66CEF /* LiveApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveApi.swift; sourceTree = "<group>"; };
 		A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLiveApi.swift; sourceTree = "<group>"; };
@@ -411,6 +417,7 @@
 				A0D68B202A888678004D11A5 /* Preview */,
 				A0D68AAB2A888678004D11A5 /* IMAudio */,
 				A0D68B2C2A888679004D11A5 /* IMVideo */,
+				A025291D2ACC344D001561A0 /* IMMediaContentProvider.swift */,
 			);
 			path = IMMedia;
 			sourceTree = "<group>";
@@ -769,6 +776,8 @@
 				A0D68B112A888678004D11A5 /* IMMsgSender.swift */,
 				A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */,
 				A02529162ACADE72001561A0 /* IMMsgCellOperator.swift */,
+				A02529192ACC31CA001561A0 /* IMContentProvider.swift */,
+				A025291B2ACC31E2001561A0 /* IMUIProtocolDefines.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -1174,6 +1183,7 @@
 				A0D68BA12A888679004D11A5 /* IMAudioMsgCellProvider.swift in Sources */,
 				A0D68BC02A888679004D11A5 /* IMMsgSender.swift in Sources */,
 				A0D68BDA2A888679004D11A5 /* IMZoomImageView.swift in Sources */,
+				A025291A2ACC31CA001561A0 /* IMContentProvider.swift in Sources */,
 				A0EA42E62A94904400F64A90 /* IMDatabaseDefines.swift in Sources */,
 				A0D68BC22A888679004D11A5 /* MiddleCellWrapper.swift in Sources */,
 				A0D68A9B2A88838A004D11A5 /* ViewController.swift in Sources */,
@@ -1211,6 +1221,7 @@
 				A0D68BDE2A888679004D11A5 /* ObservableType+Compose.swift in Sources */,
 				A0C431E92A909CB200A84D4A /* LocalParticipant.swift in Sources */,
 				A0D68BD92A888679004D11A5 /* IMVideoPlayerView.swift in Sources */,
+				A025291E2ACC344D001561A0 /* IMMediaContentProvider.swift in Sources */,
 				A0D68BC12A888679004D11A5 /* IMMsgPreviewer.swift in Sources */,
 				A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */,
 				A0D68BFD2A888679004D11A5 /* Data+ImageFormat.swift in Sources */,
@@ -1248,6 +1259,7 @@
 				A0D68B7A2A888679004D11A5 /* ErrorBean.swift in Sources */,
 				A0D68B992A888679004D11A5 /* SessionDao.swift in Sources */,
 				A0D68BFF2A888679004D11A5 /* GCDTool.swift in Sources */,
+				A025291C2ACC31E2001561A0 /* IMUIProtocolDefines.swift in Sources */,
 				A0D68BC92A888679004D11A5 /* BaseSessionCell.swift in Sources */,
 				A0D68BB42A888679004D11A5 /* IMMessageViewController.swift in Sources */,
 				A02578C62AA4269B00A66CEF /* LiveApi.swift in Sources */,
