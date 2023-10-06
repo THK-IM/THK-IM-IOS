@@ -35,10 +35,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func initIM(_ application: UIApplication) {
         let debug = true
         let uId : Int64 = 15498
-        let endpoint = "http://192.168.1.3:10000"
+        let endpoint = "http://192.168.1.5:10000"
         IMCoreManager.shared.initApplication(application, uId, debug)
         IMCoreManager.shared.api = DefaultIMApi(endpoint: endpoint)
-        IMCoreManager.shared.signalModule = DefaultSignalModule(application, "ws://192.168.1.3:20000/ws", "\(uId)")
+        IMCoreManager.shared.signalModule = DefaultSignalModule(application, "ws://192.168.1.5:20000/ws", "\(uId)")
         
         IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", endpoint)
         IMUIManager.shared.initConfig()

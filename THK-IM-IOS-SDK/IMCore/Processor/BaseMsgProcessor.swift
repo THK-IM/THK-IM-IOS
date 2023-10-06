@@ -140,23 +140,23 @@ public class BaseMsgProcessor {
                 }
             })
             .flatMap({ (message) -> Observable<Message> in
-                originMsg = msg // 防止失败时缺失数据
-                // 消息内容上传
-                message.sendStatus = MsgSendStatus.Uploading.rawValue
-                do {
-                    try self.insertOrUpdateDb(message)
-                } catch {
-                    return Observable.error(error)
-                }
+                originMsg = message // 防止失败时缺失数据
                 let uploadObservable = self.uploadObservable(message)
                 if uploadObservable != nil {
+                    // 消息内容上传
+                    message.sendStatus = MsgSendStatus.Uploading.rawValue
+                    do {
+                        try self.insertOrUpdateDb(message)
+                    } catch {
+                        return Observable.error(error)
+                    }
                     return uploadObservable!
                 } else {
                     return Observable.just(message)
                 }
             })
             .flatMap({ (message) -> Observable<Message> in
-                originMsg = msg // 防止失败时缺失数据
+                originMsg = message // 防止失败时缺失数据
                 // 消息发送到服务端
                 message.sendStatus = MsgSendStatus.Sending.rawValue
                 try self.insertOrUpdateDb(message, false)
