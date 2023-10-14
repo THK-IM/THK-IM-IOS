@@ -29,24 +29,24 @@ class IMImageMsgCellProvider: IMBaseMessageCellProvider {
     }
     
     override func viewSize(_ message: Message) -> CGSize {
-        var width = 100
-        var height = 100
+        var width = 100.0
+        var height = 100.0
         do {
             if (message.content != nil) {
                 let imageBody = try JSONDecoder().decode(
                     IMImageMsgBody.self,
                     from: message.content!.data(using: .utf8) ?? Data())
                 if imageBody.height != nil && imageBody.width != nil {
-                    width = imageBody.width!
-                    height = imageBody.height!
+                    width = Double(imageBody.width!).ptValue()
+                    height = Double(imageBody.height!).ptValue()
                 }
             } else if (message.data != nil) {
                 let imageData = try JSONDecoder().decode(
                     IMImageMsgData.self,
                     from: message.data!.data(using: .utf8) ?? Data())
                 if imageData.height != nil && imageData.width != nil {
-                    width = imageData.width!
-                    height = imageData.height!
+                    width = Double(imageData.width!).ptValue()
+                    height = Double(imageData.height!).ptValue()
                 }
             }
             if (width >= height) {
