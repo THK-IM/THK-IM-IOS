@@ -21,7 +21,6 @@ public class ImageCompressor {
     
     // 压缩图片方法
     public static func compressImage(_ original: UIImage, _ options: Options) -> Data? {
-        // 先缩小图片尺寸
         var resizedImage: UIImage? = nil
         var originData = original.pngData()
         if (originData == nil) {
@@ -34,14 +33,21 @@ public class ImageCompressor {
             return originData!
         }
         
-        // 先按比例压缩
+        // 按比例压缩
         let rate = sqrt(Double(originData!.count) / Double(options.maxSize)) * 2
         var sample = 2.0
         while (sample < rate) {
             sample *= 2
         }
-        print("compress \(originData!.count) \(original.size) \(rate) \(sample)")
-        let compressSize = CGSize(width: original.size.width / sample, height: original.size.height / sample)
+        var width: Int64 = Int64(original.size.width / sample)
+        var height: Int64 = Int64(original.size.height / sample)
+        if (width % 2 != 0) {
+            width += 1
+        }
+        if (height % 2 != 0) {
+            height += 1
+        }
+        let compressSize = CGSize(width: Double(width), height: Double(height))
         UIGraphicsBeginImageContextWithOptions(compressSize, false, UIScreen.main.scale)
         original.draw(in: CGRect(
             origin: .zero,
