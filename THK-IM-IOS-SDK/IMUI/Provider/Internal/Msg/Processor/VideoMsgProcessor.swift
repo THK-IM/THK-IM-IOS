@@ -276,101 +276,82 @@ class VideoMsgProcessor : BaseMsgProcessor {
         }
     }
     
-    override func downloadMsgContent(_ message: Message, resourceType: String) {
-        Observable<Message>.create({observer -> Disposable in
-            do {
-                var data = IMVideoMsgData()
-                if (message.data != nil) {
-                    data = try JSONDecoder().decode(
-                        IMVideoMsgData.self,
-                        from: message.data!.data(using: .utf8) ?? Data()
-                    )
-                }
-                var body = IMVideoMsgBody()
-                if (message.content != nil) {
-                    body = try JSONDecoder().decode(
-                        IMVideoMsgBody.self,
-                        from: message.content!.data(using: .utf8) ?? Data()
-                    )
-                }
-
-                var downloadUrl: String? = nil
-                let fileName = body.name
-                if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
-                    downloadUrl = body.thumbnailUrl
-                } else {
-                    downloadUrl = body.url
-                }
-                if downloadUrl == nil || fileName == nil {
-                    observer.onError(CocoaError(.fileNoSuchFile))
-                } else {
-                    let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
-                        message.sessionId, fileName!, IMFileFormat.Image.rawValue)
-                    let loadListener = FileLoadListener(
-                        {progress, state, url, path in
-                            SwiftEventBus.post(
-                                IMEvent.MsgLoadStatusUpdate.rawValue,
-                                sender: IMLoadProgress(IMLoadType.Download.rawValue, url, state, progress)
-                            )
-                            switch(state) {
-                            case
-                                FileLoadState.Wait.rawValue,
-                                FileLoadState.Init.rawValue,
-                                FileLoadState.Ing.rawValue:
-                                break
-                            case
-                                FileLoadState.Success.rawValue:
-                                do {
-                                    if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
-                                        data.thumbnailPath = path
-                                    } else {
-                                        data.path = path
-                                    }
-                                    data.duration = body.duration
-                                    data.width = body.width!
-                                    data.height = body.height!
-                                    let d = try JSONEncoder().encode(data)
-                                    message.data = String(data: d, encoding: .utf8)!
-                                    observer.onNext(message)
-                                    observer.onCompleted()
-                                } catch {
-                                    DDLogError(error)
-                                    observer.onError(error)
+    override func downloadMsgContent(_ message: Message, resourceType: String) -> Bool {
+        do {
+            var data = IMVideoMsgData()
+            if (message.data != nil) {
+                data = try JSONDecoder().decode(
+                    IMVideoMsgData.self,
+                    from: message.data!.data(using: .utf8) ?? Data()
+                )
+            }
+            var body = IMVideoMsgBody()
+            if (message.content != nil) {
+                body = try JSONDecoder().decode(
+                    IMVideoMsgBody.self,
+                    from: message.content!.data(using: .utf8) ?? Data()
+                )
+            }
+            var downloadUrl: String? = nil
+            let fileName = body.name
+            if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
+                downloadUrl = body.thumbnailUrl
+            } else {
+                downloadUrl = body.url
+            }
+            if downloadUrl == nil || fileName == nil {
+                return false
+            } else {
+                let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
+                    message.sessionId, fileName!, IMFileFormat.Image.rawValue)
+                let loadListener = FileLoadListener(
+                    {progress, state, url, path in
+                        SwiftEventBus.post(
+                            IMEvent.MsgLoadStatusUpdate.rawValue,
+                            sender: IMLoadProgress(IMLoadType.Download.rawValue, url, state, progress)
+                        )
+                        switch(state) {
+                        case
+                            FileLoadState.Wait.rawValue,
+                            FileLoadState.Init.rawValue,
+                            FileLoadState.Ing.rawValue:
+                            break
+                        case
+                            FileLoadState.Success.rawValue:
+                            do {
+                                if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
+                                    data.thumbnailPath = path
+                                } else {
+                                    data.path = path
                                 }
-                                break
-                            default:
-                                observer.onError(CocoaError.init(.executableLoad))
-                                break
+                                data.duration = body.duration
+                                data.width = body.width!
+                                data.height = body.height!
+                                let d = try JSONEncoder().encode(data)
+                                message.data = String(data: d, encoding: .utf8)!
+                                try self.insertOrUpdateDb(message, true, false)
+                            } catch {
+                                DDLogError(error)
                             }
-                        },
-                        {
-                            return false
+                            break
+                        default:
+                            break
                         }
-                    )
-                    _ = IMCoreManager.shared.fileLoadModule.download(
-                        key: downloadUrl!,
-                        path: localPath,
-                        loadListener: loadListener
-                    )
-                }
-            } catch {
-                DDLogError(error)
-                observer.onError(error)
+                    },
+                    {
+                        return false
+                    }
+                )
+                _ = IMCoreManager.shared.fileLoadModule.download(
+                    key: downloadUrl!,
+                    path: localPath,
+                    loadListener: loadListener
+                )
             }
-            
-            return Disposables.create()
-        })
-        .compose(RxTransformer.shared.io2Io())
-        .subscribe(onNext: { msg in
-            do {
-                try self.insertOrUpdateDb(msg, true, false)
-            } catch let error {
-                DDLogError(error)
-            }
-        }, onError: { error in
+        } catch {
             DDLogError(error)
-        })
-        .disposed(by: disposeBag)
+        }
+        return true;
     }
     
 

@@ -11,7 +11,7 @@ import Moya
 
 class RxTransformer {
     
-    static let shared = RxTransformer(queueSize: 8)
+    static let shared = RxTransformer(queueSize: 16)
     
     var scheduler : ImmediateSchedulerType
     

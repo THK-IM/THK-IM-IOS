@@ -73,7 +73,9 @@ public class BaseMsgProcessor {
     /**
      * 消息内容下载
      */
-    open func downloadMsgContent(_ message: Message, resourceType: String) {}
+    open func downloadMsgContent(_ message: Message, resourceType: String) -> Bool {
+        return true
+    }
     
     open func buildSendMsg(_ body :Codable, _ sessionId: Int64, _ atUIdStr: String? = nil, _ rMsgId: Int64? = nil) throws -> Message {
         var content: String? = nil
