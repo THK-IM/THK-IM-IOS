@@ -17,27 +17,48 @@ public class IMMediaContentProvider: IMContentProvider {
     
     init(token: String) {
         IMAVCacheManager.shared.setToken(token: token)
-    }
-    
-    public func openCamera(controller: UIViewController, formats: [IMFileFormat], imContentResult: @escaping IMContentResult) {
         ZLPhotoConfiguration.default()
             .cameraConfiguration
             .maxRecordDuration(300)
             .allowRecordVideo(true)
             .allowSwitchCamera(true)
             .showFlashSwitch(true)
-
+        
+        ZLPhotoConfiguration.default()
+            .allowSelectGif(true)
+            .allowEditImage(true)
+            .allowEditVideo(true)
+            .allowSelectOriginal(true)
+    }
+    
+    public func openCamera(controller: UIViewController, formats: [IMFileFormat], imContentResult: @escaping IMContentResult) {
         let camera = ZLCustomCamera()
         camera.takeDoneBlock = { [weak self] image, videoUrl in
             guard let sf = self else {
                 return
             }
-            sf.sendResult(image, url: videoUrl, imContentResult)
+            if (videoUrl != nil) {
+                do {
+                    let data = try Data(contentsOf: videoUrl!)
+                    let ext = videoUrl!.pathExtension
+                    let name = videoUrl!.lastPathComponent
+                    sf.sendResult(data, name, "video/\(ext)", imContentResult)
+                } catch {
+                    DDLogError(error)
+                }
+            } else if image != nil {
+                if image!.pngData() != nil {
+                    self?.sendResult(image!.pngData()!, "", "image/png", imContentResult)
+                } else {
+                    self?.sendResult(image!.jpegData(compressionQuality: 1.0)!, "", "image/jpeg", imContentResult)
+                }
+            }
         }
         controller.showDetailViewController(camera, sender: nil)
     }
     
     public func pick(controller: UIViewController, formats: [IMFileFormat], imContentResult: @escaping IMContentResult) {
+        
         let ps = ZLPhotoPreviewSheet()
         ps.selectImageBlock = { [weak self] results, isOriginal in
             guard let sf = self else {
@@ -81,7 +102,18 @@ public class IMMediaContentProvider: IMContentProvider {
     private func onMediaResult(_ r: ZLResultModel, _ isOriginal: Bool, _ imContentResult: @escaping IMContentResult) throws {
         switch r.asset.mediaType {
         case PHAssetMediaType.image:
-            self.sendResult(r.image, url: nil, imContentResult)
+            PHCachingImageManager.default().requestImageDataAndOrientation(for: r.asset, options: nil)
+            { [weak self] data,_,_,_ in
+                if (data != nil) {
+                    if (r.image.images != nil) {
+                        self?.sendResult(data!, r.asset.zl.filename ?? "", "image/gif", imContentResult)
+                    } else if r.image.pngData() != nil {
+                        self?.sendResult(data!, r.asset.zl.filename ?? "","image/png", imContentResult)
+                    } else {
+                        self?.sendResult(data!, r.asset.zl.filename ?? "","image/jpeg", imContentResult)
+                    }
+                }
+            }
             break
         case PHAssetMediaType.video:
             PHCachingImageManager.default()
@@ -93,7 +125,14 @@ public class IMMediaContentProvider: IMContentProvider {
                 guard let sf = self else {
                     return
                 }
-                sf.sendResult(r.image, url: urlAsset.url, imContentResult)
+                do {
+                    let data = try Data(contentsOf: urlAsset.url)
+                    let ext = urlAsset.url.pathExtension
+                    let name = urlAsset.url.lastPathComponent
+                    sf.sendResult(data, name, "video/\(ext)", imContentResult)
+                } catch {
+                    DDLogError(error)
+                }
             }
             break
         default:
@@ -102,14 +141,9 @@ public class IMMediaContentProvider: IMContentProvider {
     }
     
     
-    private func sendResult(_ image: UIImage?, url: URL?, _ imContentResult: @escaping IMContentResult) {
-        if (url != nil) {
-            let file = IMFile(image: image, url: url, mimeType: "video/**")
-            imContentResult([file], false)
-        } else if (image != nil) {
-            let file = IMFile(image: image, url: nil, mimeType: "image/**")
-            imContentResult([file], false)
-        }
+    private func sendResult(_ data: Data, _ name: String, _ mimeType: String, _ imContentResult: @escaping IMContentResult) {
+        let file = IMFile(data: data, name: name, mimeType: mimeType)
+        imContentResult([file], false)
     }
     
     

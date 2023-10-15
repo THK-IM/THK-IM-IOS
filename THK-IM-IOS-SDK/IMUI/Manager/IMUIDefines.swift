@@ -16,13 +16,13 @@ public enum IMMsgPosType: Int {
 }
 
 public class IMFile {
-    var image: UIImage?
-    var url: URL?
+    var data: Data
     var mimeType: String
+    var name: String
     
-    init(image: UIImage?, url: URL?, mimeType: String) {
-        self.image = image
-        self.url = url
+    init(data: Data, name: String, mimeType: String) {
+        self.data = data
         self.mimeType = mimeType
+        self.name = name
     }
 }

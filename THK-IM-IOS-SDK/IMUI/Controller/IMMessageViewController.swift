@@ -13,6 +13,8 @@ import SnapKit
 import Photos
 import SwiftEventBus
 import RxGesture
+import ImageIO
+import CoreServices
 
 class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, MediaDownloadDelegate {
     
@@ -304,20 +306,6 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
     
     
     func choosePhoto() {
-//        let ps = ZLPhotoPreviewSheet()
-//        ps.selectImageBlock = { [weak self] results, isOriginal in
-//            guard let sf = self else {
-//                return
-//            }
-//            do {
-//                for r in results {
-//                    try sf.onMediaResult(r, isOriginal)
-//                }
-//            } catch {
-//                DDLogError(error)
-//            }
-//        }
-//        ps.showPhotoLibrary(sender: self)
         guard let cp = IMUIManager.shared.contentProvider else {
             return
         }
@@ -328,22 +316,13 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             do {
                 for r in result {
                     if (r.mimeType.starts(with: IMFileFormat.Image.rawValue)) {
-                        if (r.image != nil) {
-                            try sf.sendImage(r.image!)
-                        }
+                        var ext = r.mimeType.replacingOccurrences(of: IMFileFormat.Image.rawValue, with: "")
+                        ext = ext.replacingOccurrences(of: "/", with: "")
+                        try sf.sendImage(r.data, ext: ext)
                     } else if (r.mimeType.starts(with: IMFileFormat.Video.rawValue)) {
-                        if (r.url != nil) {
-                            let asset = AVURLAsset(url: r.url!)
-                            let videoData = try Data(contentsOf: asset.url)
-                            let storageModule = IMCoreManager.shared.storageModule
-                            let (_, fName) = storageModule.getPathsFromFullPath(asset.url.absoluteString)
-                            let (name, ext) = storageModule.getFileExt(fName)
-                            let fileName = "\(name)_\(String().random(8)).\(ext)"
-                            let path = storageModule.allocSessionFilePath(
-                                (sf.session?.id)!, fileName, IMFileFormat.Video.rawValue)
-                            try storageModule.saveMediaDataInto(path, videoData)
-                            try sf.sendVideo(path)
-                        }
+                        var ext = r.mimeType.replacingOccurrences(of: IMFileFormat.Video.rawValue, with: "")
+                        ext = ext.replacingOccurrences(of: "/", with: "")
+                        try sf.sendVideo(r.data, ext: ext)
                     }
                 }
             } catch {
@@ -363,22 +342,13 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             do {
                 for r in result {
                     if (r.mimeType.starts(with: IMFileFormat.Image.rawValue)) {
-                        if (r.image != nil) {
-                            try sf.sendImage(r.image!)
-                        }
+                        var ext = r.mimeType.replacingOccurrences(of: IMFileFormat.Image.rawValue, with: "")
+                        ext = ext.replacingOccurrences(of: "/", with: "")
+                        try sf.sendImage(r.data, ext: ext)
                     } else if (r.mimeType.starts(with: IMFileFormat.Video.rawValue)) {
-                        if (r.url != nil) {
-                            let asset = AVURLAsset(url: r.url!)
-                            let videoData = try Data(contentsOf: asset.url)
-                            let storageModule = IMCoreManager.shared.storageModule
-                            let (_, fName) = storageModule.getPathsFromFullPath(asset.url.absoluteString)
-                            let (name, ext) = storageModule.getFileExt(fName)
-                            let fileName = "\(name)_\(String().random(8)).\(ext)"
-                            let path = storageModule.allocSessionFilePath(
-                                (sf.session?.id)!, fileName, "video")
-                            try storageModule.saveMediaDataInto(path, videoData)
-                            try sf.sendVideo(path)
-                        }
+                        var ext = r.mimeType.replacingOccurrences(of: IMFileFormat.Video.rawValue, with: "")
+                        ext = ext.replacingOccurrences(of: "/", with: "")
+                        try sf.sendVideo(r.data, ext: ext)
                     }
                 }
             } catch {
@@ -387,31 +357,23 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
         }
     }
     
-    private func sendVideo(_ path: String, _ image: UIImage? = nil, _ duration: Int? = nil) throws {
+    private func sendVideo(_ data: Data, ext: String) throws {
+        let fileName = "\(String().random(8)).\(ext)"
+        let localPath = IMCoreManager.shared.storageModule
+            .allocSessionFilePath((self.session?.id)!, fileName, IMFileFormat.Video.rawValue)
+        try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
         let videoData = IMVideoMsgData()
-        videoData.path = path
-        if duration != nil {
-            videoData.duration = duration!
-        }
+        videoData.path = localPath
         self.sendMessage(MsgType.VIDEO.rawValue, videoData)
     }
     
-    private func sendImage(_ image: UIImage) throws {
-        var data = image.pngData()
-        if (data == nil) {
-            data = image.jpegData(compressionQuality: 1)
-        }
-        if (data != nil) {
-            let ext = data!.detectImageType().rawValue
-            let fileName = "\(String().random(8)).\(ext)"
-            let localPath = IMCoreManager.shared.storageModule
-                .allocSessionFilePath((self.session?.id)!, fileName, IMFileFormat.Image.rawValue)
-            try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data!)
-
-            let imageData = IMImageMsgData(width: Int(image.size.width), height: Int(image.size.height),
-                                           path: localPath, thumbnailPath: nil)
-            self.sendMessage(MsgType.IMAGE.rawValue, imageData)
-        }
+    private func sendImage(_ data: Data, ext: String) throws {
+        let fileName = "\(String().random(8)).\(ext)"
+        let localPath = IMCoreManager.shared.storageModule
+            .allocSessionFilePath((self.session?.id)!, fileName, IMFileFormat.Image.rawValue)
+        try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
+        let imageData = IMImageMsgData(width: nil, height: nil, path: localPath, thumbnailPath: nil)
+        self.sendMessage(MsgType.IMAGE.rawValue, imageData)
     }
     
     private func msgToMedia(msg: Message) -> Media? {
