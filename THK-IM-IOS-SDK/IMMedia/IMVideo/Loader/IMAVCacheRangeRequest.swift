@@ -29,10 +29,28 @@ class IMAVCacheRangeRequest {
     
     func startDownload() {
         var headers = HTTPHeaders()
+        let token = IMAVCacheManager.shared.getToken()
         if self.requestRange != "" {
             headers.add(HTTPHeader(name: "Range", value: self.requestRange))
+            if (token != nil) {
+                headers.add(HTTPHeader(name: "Token", value: token!))
+            }
         }
+        
         self.downloadRequest = AF.download(self.urlString, headers: headers)
+//            .redirect(using: Redirector(behavior: .modify({ _, request, response in
+//                do {
+//                    let url = response.headers["Location"]
+//                    if url == nil {
+//                        return nil
+//                    }
+//                    let newRequest = try URLRequest(url: url!, method: .get, headers: headers)
+//                    return newRequest
+//                } catch {
+//                    return nil
+//                }
+//            })))
+            .redirect(using: Redirector(behavior: .follow))
             .responseData { [weak self] response in
                 DispatchQueue.global().async {
                     guard let sf = self else {

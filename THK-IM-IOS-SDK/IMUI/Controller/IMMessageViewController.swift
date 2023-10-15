@@ -455,7 +455,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 if (msg.content != nil) {
                     let body = try JSONDecoder().decode(
                         IMVideoMsgBody.self,
-                        from: msg.data!.data(using: .utf8) ?? Data()
+                        from: msg.content!.data(using: .utf8) ?? Data()
                     )
                     media.thumbUrl = body.thumbnailUrl
                     media.sourceUrl = body.url

@@ -216,14 +216,17 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         guard let url = self.url else {
             return
         }
-        let customUrl = url.absoluteString.replacingOccurrences(of: "http", with: IMAVCacheManager.customProtocol)
-//        let customUrl = url.absoluteString
-        let urlAssets = AVURLAsset(url: URL(string: customUrl)!)
+        var customUrl = url.absoluteString
+        if (customUrl.hasPrefix("http")) {
+            customUrl = url.absoluteString.replacingOccurrences(of: "http", with: IMAVCacheManager.customProtocol)
+        }
+        let urlAssets = AVURLAsset(url: URL(string: customUrl)!, options:["AVURLAssetOutOfBandMIMETypeKey": "video/mp4"])
         urlAssets.resourceLoader.setDelegate(self, queue: DispatchQueue.global())
         let item = AVPlayerItem(asset: urlAssets)
         self.player.currentItem?.removeObserver(self, forKeyPath: "loadedTimeRanges")
         self.player.replaceCurrentItem(with: item)
         item.addObserver(self, forKeyPath: "loadedTimeRanges", options: .new, context: nil)
+        item.addObserver(self, forKeyPath: "status", options: .new, context: nil)
         let playerLayer = AVPlayerLayer.init(player: self.player)
         playerLayer.videoGravity = .resizeAspect
         playerLayer.frame = self.bounds
@@ -236,15 +239,19 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         if keyPath == "loadedTimeRanges" {
             // 获取已缓冲的时间范围
             let timeRanges = player.currentItem?.loadedTimeRanges
-            
             // 计算加载进度
             if let timeRange = timeRanges?.first?.timeRangeValue {
                 let totalBufferedTime = CMTimeGetSeconds(timeRange.start) + CMTimeGetSeconds(timeRange.duration)
                 let totalDuration = CMTimeGetSeconds(player.currentItem?.duration ?? CMTime.zero)
                 let bufferedProgress = Float(totalBufferedTime / totalDuration)
-                
                 // 更新进度条的值
                 print("observeValue \(bufferedProgress)")
+            }
+        }
+        if keyPath == "status" {
+            let err = player.currentItem?.error
+            if (err != nil) {
+                print("IMAVCacheManager err \(err!)")
             }
         }
     }

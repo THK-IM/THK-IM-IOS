@@ -15,6 +15,10 @@ import CocoaLumberjack
 
 public class IMMediaContentProvider: IMContentProvider {
     
+    init(token: String) {
+        IMAVCacheManager.shared.setToken(token: token)
+    }
+    
     public func openCamera(controller: UIViewController, formats: [IMFileFormat], imContentResult: @escaping IMContentResult) {
         ZLPhotoConfiguration.default()
             .cameraConfiguration

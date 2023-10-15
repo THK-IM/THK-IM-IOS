@@ -25,8 +25,8 @@ class PreviewVideoCellView : UICollectionViewCell {
         return p
     }()
     
-    private lazy var videoPlayView: IMVideoPlayerView = {
-        let v = IMVideoPlayerView(frame: self.contentView.frame)
+    private lazy var videoPlayView: IMCacheVideoPlayerView = {
+        let v = IMCacheVideoPlayerView(frame: self.contentView.frame)
         return v
     }()
     
@@ -68,62 +68,19 @@ class PreviewVideoCellView : UICollectionViewCell {
         if media.sourcePath != nil {
             let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(media.sourcePath!)
             if FileManager.default.fileExists(atPath: realPath) {
-                self.play(path: realPath)
+                self.videoPlayView.initDataSource(NSURL(fileURLWithPath: realPath) as URL)
+                self.videoPlayView.play()
                 return
             }
         }
         
-        if media.sourceUrl != nil && media.sourcePath != nil {
-            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(media.sourcePath!)
-            self.downloadMedia(media.sourceUrl!, path: realPath)
-        }
-    }
-    
-    func play(path: String) {
-        self.videoPlayView.initDataSource(NSURL(fileURLWithPath: path) as URL)
-//        self.videoPlayView.play()
-    }
-    
-    func updatePlayer(path: String) {
-        self.play(path: path)
-        guard let media = self.media else {
-            return
-        }
-        self.onMediaDownloaded?.onMediaDownload(media.id, 2, path)
-    }
-    
-    func downloadMedia(_ url: String, path: String) {
-        let fileLoader = IMCoreManager.shared.fileLoadModule
-        if self.taskId != nil && self.listener != nil {
-            fileLoader.cancelDownloadListener(taskId: self.taskId!, listener: self.listener!)
-        }
-        let listener = FileLoadListener({ [weak self] progress, state, url, path in
-            guard let sf = self else {
+        if media.sourceUrl != nil {
+            guard let url = NSURL(string: media.sourceUrl!) as URL? else {
                 return
             }
-            switch(state) {
-            case FileLoadState.Init.rawValue:
-                break
-            case FileLoadState.Failed.rawValue:
-                sf.progressView.isHidden = true
-                break
-            case FileLoadState.Success.rawValue:
-                sf.progressView.isHidden = true
-                sf.updatePlayer(path: path)
-                break
-            case FileLoadState.Ing.rawValue:
-                sf.progressView.isHidden = false
-                sf.progressView.setProgress(to: progress)
-                break
-            default:
-                break
-            }
-        }, {
-            return true
-        })
-        let taskId = fileLoader.download(key: url, path: path, loadListener: listener)
-        self.taskId = taskId
-        self.listener = listener
+            self.videoPlayView.initDataSource(url)
+            self.videoPlayView.play()
+        }
     }
     
 }

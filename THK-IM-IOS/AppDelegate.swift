@@ -35,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func initIM(_ application: UIApplication) {
         let debug = true
         let uId : Int64 = 15498
+        let token = String(uId)
         let endpoint = "http://192.168.1.5:10000"
         IMCoreManager.shared.initApplication(application, uId, debug)
         IMCoreManager.shared.api = DefaultIMApi(endpoint: endpoint)
@@ -42,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", endpoint)
         IMUIManager.shared.initConfig()
-        IMUIManager.shared.contentProvider = IMMediaContentProvider()
+        IMUIManager.shared.contentProvider = IMMediaContentProvider(token: token)
         IMCoreManager.shared.connect()
         
     }

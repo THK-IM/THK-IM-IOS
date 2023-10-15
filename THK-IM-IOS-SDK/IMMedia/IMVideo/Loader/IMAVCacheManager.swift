@@ -20,8 +20,17 @@ open class IMAVCacheManager {
     private var caches = [String: IMAVCache]()
     private var tasks = [String: (AVAssetResourceLoadingRequest, IMAVCacheRangeRequest)]()
     private let locker = NSLock()
+    private var token: String?
     
     private init() {
+    }
+    
+    func setToken(token: String) {
+        self.token = token
+    }
+    
+    func getToken() -> String? {
+        return self.token
     }
     
     func registerListener() {
