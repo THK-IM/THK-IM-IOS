@@ -8,11 +8,11 @@ import Foundation
 import Alamofire
 import AVFoundation
 import CocoaLumberjack
+import SwiftEventBus
 
 open class IMAVCacheManager {
     
     static let customProtocol = "custom"
-    static let notifyName = Notification.Name(rawValue: "IMAVCacheNotification")
     static let maxPageSize: Int64 = 500 * 1024
     
     static let shared = IMAVCacheManager()
@@ -31,10 +31,6 @@ open class IMAVCacheManager {
     
     func getToken() -> String? {
         return self.token
-    }
-    
-    func registerListener() {
-        
     }
     
     func addRequest(_ request: AVAssetResourceLoadingRequest) -> Bool {
@@ -66,7 +62,7 @@ open class IMAVCacheManager {
         return result
     }
     
-    private func loadCache(_ urlString: String) -> IMAVCache? {
+    func loadCache(_ urlString: String) -> IMAVCache? {
         let cacheDir = self.cacheDir(urlString)
         do {
             let cache = try IMAVCache(cacheDir, urlString)
@@ -119,9 +115,6 @@ open class IMAVCacheManager {
     
     private func cacheDir(_ requestUrl: String) -> String {
         let dirPath = NSTemporaryDirectory() + "video/" + requestUrl.hash_256
-//        let name = String().random(4)
-//        let dirPath = NSTemporaryDirectory() + "video/" + name
-        
         var isDir: ObjCBool = false
         let exist =  FileManager.default.fileExists(atPath: dirPath, isDirectory: &isDir)
         do {
@@ -153,7 +146,16 @@ open class IMAVCacheManager {
                 cache = IMAVCache(self.cacheDir(requestUrl), requestUrl, responseType!, responseRange!)
                 self.caches[requestUrl] = cache
             }
-            _ = self.caches[requestUrl]?.writeNewCache(responseRange!, data: data!)
+            if (cache != nil) {
+                let success = cache!.writeNewCache(responseRange!, data: data!)
+                if (success) {
+                    print("isFinished: \(cache!.cacheInfo.isFinished())")
+                    if (cache!.cacheInfo.isFinished()) {
+                        SwiftEventBus.post(IMAVCacheEvent, sender: cache!)
+                    }
+                }
+            }
+            
             let taskTuple = self.tasks[requestRange]
             if taskTuple != nil {
                 self.responseData(taskTuple!.0, cache!)
@@ -180,14 +182,6 @@ open class IMAVCacheManager {
             request.dataRequest?.respond(with: data!)
         }
         request.finishLoading()
-        
-        var notification = Notification(name: IMAVCacheManager.notifyName)
-        var value = [String: Any]()
-        value["info"] = cache.cacheInfo
-        value["remoteUrl"] = cache.cacheUrl
-        value["localPath"] = cache.cacheFilePath
-        notification.userInfo = value
-        NotificationCenter.default.post(notification)
     }
     
     private func buildRequestRangeString(_ ranges: [RangeInfo], _ max: Int64) -> String {

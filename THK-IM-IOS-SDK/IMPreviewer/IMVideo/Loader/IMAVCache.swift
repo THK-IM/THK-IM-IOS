@@ -8,6 +8,8 @@
 import Foundation
 import CocoaLumberjack
 
+var IMAVCacheEvent = "IMAVCacheEvent"
+
 open class RangeInfo: Codable {
     var start: Int64
     var end: Int64
@@ -241,6 +243,7 @@ class IMAVCache{
             }
             try file.close()
             self.cacheInfo.contentLength = length
+            return true
         } catch {
             DDLogError(error)
         }

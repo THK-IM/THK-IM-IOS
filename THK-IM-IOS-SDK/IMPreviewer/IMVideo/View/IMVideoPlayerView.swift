@@ -12,7 +12,7 @@ import AVFoundation
 class IMVideoPlayerView: UIView {
     
     private var url: URL? = nil
-    private var seconds: Int = 150
+    private var seconds: Int = 0
     private var player = AVPlayer()
     private var playerLayer: AVPlayerLayer
     private var isSliderDragging = false
@@ -28,8 +28,8 @@ class IMVideoPlayerView: UIView {
         let p = UISlider()
         p.value = 0.0
         p.minimumValue = 0.0
-        p.maximumValue = 1.0
-        p.backgroundColor = UIColor.clear
+        p.maximumValue = 0.0
+        p.backgroundColor = UIColor.white
         p.addTarget(
             self,
             action: #selector(self.playerSliderValueChanged(sender:)),

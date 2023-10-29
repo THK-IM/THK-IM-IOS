@@ -12,7 +12,7 @@ import AVFoundation
 class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     
     private var url: URL? = nil
-    private var seconds: Int = 150
+    private var seconds: Int = 0
     private var player = AVPlayer()
     private var isSliderDragging = false
     private var coverPath: String?
@@ -152,7 +152,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         self.destroyTimer()
         if self.player.currentItem != nil {
             self.observer = self.player.addPeriodicTimeObserver(
-                forInterval: CMTime(value: 1, timescale: 100),
+                forInterval: CMTime(value: 1, timescale: 60),
                 queue: DispatchQueue.main
             ) { [weak self] t in
                 guard let sf = self else {
@@ -162,9 +162,12 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
                 sf.timeLabel.text = Date().secondToTime(remain)
                 if !sf.isSliderDragging {
                     sf.progressView.value = Float(min(t.seconds/Double(sf.seconds), 1.0))
-                    if remain == 0 {
-                        sf.pause()
-                    }
+                }
+                if (remain == 0) {
+                    let seekTime = CMTimeMakeWithSeconds(0, preferredTimescale: 60)
+                    self?.pause()
+                    self?.seekTo(time: seekTime)
+                    self?.playButton.isSelected = false
                 }
             }
         }
@@ -172,6 +175,8 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     
     func initDuration(_ seconds: Int) {
         self.seconds = seconds
+        self.progressView.value = 0
+        self.playButton.isSelected = false
         self.timeLabel.text = Date().secondToTime(seconds)
     }
     
@@ -215,16 +220,13 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         print("observeValue callback")
         if keyPath == "loadedTimeRanges" {
-            // 获取已缓冲的时间范围
-            let timeRanges = player.currentItem?.loadedTimeRanges
             // 计算加载进度
-            if let timeRange = timeRanges?.first?.timeRangeValue {
-                let totalBufferedTime = CMTimeGetSeconds(timeRange.start) + CMTimeGetSeconds(timeRange.duration)
-                let totalDuration = CMTimeGetSeconds(player.currentItem?.duration ?? CMTime.zero)
-                let bufferedProgress = Float(totalBufferedTime / totalDuration)
-                // 更新进度条的值
-                print("observeValue \(bufferedProgress)")
-            }
+//            guard let timeRange = player.currentItem?.loadedTimeRanges.first else {
+//                return
+//            }
+//            let totalBufferedTime = CMTimeGetSeconds(timeRange.timeRangeValue.start) + CMTimeGetSeconds(timeRange.timeRangeValue.duration)
+//            let totalDuration = CMTimeGetSeconds(player.currentItem?.duration ?? CMTime.zero)
+//            let bufferedProgress = Float(totalBufferedTime / totalDuration)
         }
         if keyPath == "status" {
             let err = player.currentItem?.error
@@ -235,6 +237,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     }
     
     func play() {
+        self.setupTimer()
         self.resume()
     }
     
@@ -276,6 +279,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     @objc private func playerSliderTouchDown(sender:UISlider) {
         self.isSliderDragging = true
     }
+    
     //拖动进度条
     @objc private func playerSliderValueChanged(sender:UISlider) {
         self.pause()
@@ -284,6 +288,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         let changedTime = CMTimeMakeWithSeconds(Float64(seconds), preferredTimescale: 60)
         self.seekTo(time: changedTime)
     }
+    
     //手指松开进度条
     @objc private func playerSliderTouchUpInside(sender:UISlider) {
         self.isSliderDragging = false

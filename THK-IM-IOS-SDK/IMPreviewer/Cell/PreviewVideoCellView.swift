@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import AVFoundation
 import CocoaLumberjack
+import SwiftEventBus
 
 class PreviewVideoCellView : PreviewCellView {
     
@@ -91,6 +92,12 @@ class PreviewVideoCellView : PreviewCellView {
             let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(sourcePath!)
             self.videoPlayView.initDataSource(NSURL(fileURLWithPath: realPath) as URL)
         } else if (sourceUrl != nil) {
+            let cache = IMAVCacheManager.shared.loadCache(sourceUrl!)
+            if (cache != nil && cache!.cacheInfo.isFinished()) {
+                DispatchQueue.global().async { [weak self] in
+                    self?.updateMessage(cache: cache!)
+                }
+            }
             guard let url = NSURL(string: sourceUrl!) as URL? else {
                 return
             }
@@ -99,11 +106,64 @@ class PreviewVideoCellView : PreviewCellView {
     }
     
     override func startPreview() {
+        SwiftEventBus.onBackgroundThread(self, name: IMAVCacheEvent, handler: { [weak self ] result in
+            guard let cache = result?.object as? IMAVCache else {
+                return
+            }
+            self?.updateMessage(cache: cache)
+        })
         self.showVideo()
     }
     
     override func stopPreview() {
         self.videoPlayView.pause()
+        SwiftEventBus.unregister(self, name: IMAVCacheEvent)
+    }
+    
+    private func updateMessage(cache: IMAVCache) {
+        guard let message = self.message else {
+            return
+        }
+        do {
+            if (message.content != nil) {
+                let body = try JSONDecoder().decode(
+                    IMVideoMsgBody.self,
+                    from: message.content!.data(using: .utf8) ?? Data()
+                )
+                if (body.url == cache.cacheUrl) {
+                    var data: IMVideoMsgData? = nil
+                    if (message.data != nil) {
+                        data = try JSONDecoder().decode(
+                            IMVideoMsgData.self,
+                            from: message.data!.data(using: .utf8) ?? Data()
+                        )
+                        if (data!.path != nil) {
+                            return
+                        }
+                    } else {
+                        data = IMVideoMsgData()
+                    }
+                    let path = IMCoreManager.shared.storageModule.allocSessionFilePath(
+                            message.sessionId,
+                            body.name ?? String().random(8),
+                            IMFileFormat.Video.rawValue
+                        )
+                    try IMCoreManager.shared.storageModule.copyFile(cache.cacheFilePath, path)
+                    if (data != nil) {
+                        data!.path = path
+                        data!.height = body.width
+                        data!.width = body.duration
+                        data!.duration = body.duration
+                        let d = try JSONEncoder().encode(data)
+                        message.data = String(data: d, encoding: .utf8)!
+                        try IMCoreManager.shared.getMessageModule().getMsgProcessor(message.type)
+                            .insertOrUpdateDb(message, true, false)
+                    }
+                }
+            }
+        } catch {
+            DDLogError(error)
+        }
     }
     
 }
