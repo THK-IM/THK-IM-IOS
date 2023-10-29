@@ -203,7 +203,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
                 sf.resetLayout()
                 if sf.isEmojiPanelShow {
                     sf.isMorePanelShow = !sf.isEmojiPanelShow
-                    sf.sender?.showBottomPanel(1)
+                    sf.sender?.showBottomPanel(0)
                 } else {
                     _ = sf.openKeyboard()
                 }
@@ -220,7 +220,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
                 sf.resetLayout()
                 if sf.isMorePanelShow {
                     sf.isEmojiPanelShow = !sf.isMorePanelShow
-                    sf.sender?.showBottomPanel(2)
+                    sf.sender?.showBottomPanel(1)
                 } else {
                     _ = sf.openKeyboard()
                 }

@@ -1,6 +1,5 @@
 PODS:
   - Alamofire (5.7.1)
-  - AliyunOSSiOS (2.10.18)
   - CocoaLumberjack/Core (3.8.0)
   - CocoaLumberjack/Swift (3.8.0):
     - CocoaLumberjack/Core
@@ -41,7 +40,6 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
-  - AliyunOSSiOS
   - CocoaLumberjack/Swift
   - GDPerformanceView-Swift (~> 2.1.1)
   - Kingfisher (~> 7.0)
@@ -62,7 +60,6 @@ DEPENDENCIES:
 SPEC REPOS:
   https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
     - Alamofire
-    - AliyunOSSiOS
     - CocoaLumberjack
     - GDPerformanceView-Swift
     - Kingfisher
@@ -94,7 +91,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
-  AliyunOSSiOS: e683c1b1faa0657b5cd02de733628cf996f4cd93
   CocoaLumberjack: 78abfb691154e2a9df8ded4350d504ee19d90732
   GDPerformanceView-Swift: 22d964fe40b19e3d914dba2586237d064de8fd77
   Kingfisher: 59f908b6d2f403b0a3e539debb0eec05cb27002c
@@ -115,6 +111,6 @@ SPEC CHECKSUMS:
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
   ZLPhotoBrowser: 0563c2bfc7b247b65d023d646012f46cba94101b
 
-PODFILE CHECKSUM: 48387967e99e824894150c71166d1958d8a9cf4d
+PODFILE CHECKSUM: 8917b23747da06cd8b21a10a15d5fa1f693e8fde
 
 COCOAPODS: 1.12.1

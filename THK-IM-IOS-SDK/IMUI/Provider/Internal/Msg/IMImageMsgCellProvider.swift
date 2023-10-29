@@ -32,6 +32,15 @@ class IMImageMsgCellProvider: IMBaseMessageCellProvider {
         var width = 100.0
         var height = 100.0
         do {
+            if (message.data != nil) {
+                let imageData = try JSONDecoder().decode(
+                    IMImageMsgData.self,
+                    from: message.data!.data(using: .utf8) ?? Data())
+                if imageData.height != nil && imageData.width != nil {
+                    width = Double(imageData.width!).ptValue()
+                    height = Double(imageData.height!).ptValue()
+                }
+            }
             if (message.content != nil) {
                 let imageBody = try JSONDecoder().decode(
                     IMImageMsgBody.self,
@@ -39,14 +48,6 @@ class IMImageMsgCellProvider: IMBaseMessageCellProvider {
                 if imageBody.height != nil && imageBody.width != nil {
                     width = Double(imageBody.width!).ptValue()
                     height = Double(imageBody.height!).ptValue()
-                }
-            } else if (message.data != nil) {
-                let imageData = try JSONDecoder().decode(
-                    IMImageMsgData.self,
-                    from: message.data!.data(using: .utf8) ?? Data())
-                if imageData.height != nil && imageData.width != nil {
-                    width = Double(imageData.width!).ptValue()
-                    height = Double(imageData.height!).ptValue()
                 }
             }
             if (width >= height) {

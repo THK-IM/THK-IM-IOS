@@ -1,5 +1,5 @@
 //
-//  IMMediaContentProvider.swift
+//  Provider.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/10/3.
@@ -13,10 +13,9 @@ import AVFoundation
 import ZLPhotoBrowser
 import CocoaLumberjack
 
-public class IMMediaContentProvider: IMContentProvider {
+public class Provider: IMProvider {
     
     init(token: String) {
-        IMAVCacheManager.shared.setToken(token: token)
         ZLPhotoConfiguration.default()
             .cameraConfiguration
             .maxRecordDuration(300)

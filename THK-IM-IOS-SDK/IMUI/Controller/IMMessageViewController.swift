@@ -16,7 +16,7 @@ import RxGesture
 import ImageIO
 import CoreServices
 
-class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, MediaDownloadDelegate {
+class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     
     var session: Session? = nil
     private var containerView = UIView()
@@ -376,63 +376,6 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
         self.sendMessage(MsgType.IMAGE.rawValue, imageData)
     }
     
-    private func msgToMedia(msg: Message) -> Media? {
-        do {
-            if msg.type == MsgType.IMAGE.rawValue {
-                let media = Media(id: "\(msg.msgId)", type: 1)
-                if (msg.data != nil) {
-                    let data = try JSONDecoder().decode(
-                        IMImageMsgData.self,
-                        from: msg.data!.data(using: .utf8) ?? Data()
-                    )
-                    media.thumbPath = data.thumbnailPath
-                    media.sourcePath = data.path
-                    media.width = data.width ?? 0
-                    media.height = data.height ?? 0
-                }
-                if (msg.content != nil) {
-                    let body = try JSONDecoder().decode(
-                        IMImageMsgBody.self,
-                        from: msg.content!.data(using: .utf8) ?? Data()
-                    )
-                    media.thumbUrl = body.thumbnailUrl
-                    media.sourceUrl = body.url
-                    media.width = body.width ?? 0
-                    media.height = body.height ?? 0
-                }
-                return media
-            } else if msg.type == MsgType.VIDEO.rawValue {
-                let media = Media(id: "\(msg.msgId)", type: 2)
-                if (msg.data != nil) {
-                    let data = try JSONDecoder().decode(
-                        IMVideoMsgData.self,
-                        from: msg.data!.data(using: .utf8) ?? Data()
-                    )
-                    media.thumbPath = data.thumbnailPath
-                    media.sourcePath = data.path
-                    media.duration = data.duration
-                    media.width = data.width ?? 0
-                    media.height = data.height ?? 0
-                }
-                if (msg.content != nil) {
-                    let body = try JSONDecoder().decode(
-                        IMVideoMsgBody.self,
-                        from: msg.content!.data(using: .utf8) ?? Data()
-                    )
-                    media.thumbUrl = body.thumbnailUrl
-                    media.sourceUrl = body.url
-                    media.duration = body.duration
-                    media.width = body.width ?? 0
-                    media.height = body.height ?? 0
-                }
-                return media
-            }
-        } catch {
-            DDLogError(error)
-        }
-        return nil
-    }
-    
     func previewMessage(_ msg: Message, _ position: Int,  _ originView: UIView) {
         if msg.type == MsgType.Audio.rawValue {
             guard let cp = IMUIManager.shared.contentProvider else {
@@ -457,39 +400,16 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
                 }
             }
         } else if msg.type == MsgType.IMAGE.rawValue || msg.type == MsgType.VIDEO.rawValue {
-            var ay = [Media]()
+            var ay = [Message]()
             ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, true, 5))
-            let current = self.msgToMedia(msg: msg)
-            if current != nil {
-                ay.append(current!)
-            }
+            let current = msg
+            ay.append(current)
             ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, false, 5))
-            let absoluteFrame = originView.convert(originView.bounds, to: nil)
-            MediaPreviewController.preview(
-                from: self, onMediaDownloaded: self,
-                source: ay, defaultId: String(msg.msgId),
-                enterFrame: absoluteFrame
-            )
+            IMUIManager.shared.contentPreviewer?.previewMessage(self, items: ay, view: originView, defaultId: msg.id)
         }
     }
     
-    func onMediaDownload(_ id: String, _ resourceType: Int, _ path: String) {
-        DispatchQueue.global().async { [weak self] in
-            self?.updateMediaMessage(id, resourceType, path)
-        }
-    }
-    
-    func onMoreMediaFetch(_ id: String, _ before: Bool, _ count: Int) -> [Media] {
-        guard let msgId: Int64 = Int64(id) else {
-            return []
-        }
-        guard let sessionId = self.session?.id else {
-            return []
-        }
-        return self.fetchMoreMessage(msgId, sessionId, before, count)
-    }
-    
-    private func fetchMoreMessage(_ msgId: Int64, _ sessionId: Int64, _ before: Bool, _ count: Int) -> [Media] {
+    private func fetchMoreMessage(_ msgId: Int64, _ sessionId: Int64, _ before: Bool, _ count: Int) -> [Message] {
         do {
             let types = [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue]
             let msgDao = IMCoreManager.shared.database.messageDao
@@ -500,98 +420,13 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer, M
             } else {
                 messages = try msgDao.findNewerMessages(msgId, types, sessionId, count)
             }
-            var medias = [Media]()
-            for msg in messages {
-                guard let m = self.msgToMedia(msg: msg) else {
-                    continue
-                }
-                medias.append(m)
-            }
-            return medias
+            return messages
         } catch {
             DDLogError(error)
         }
         return []
     }
-    
-    private func updateMediaMessage(_ id: String, _ resourceType: Int, _ path: String) {
-        guard let msgId: Int64 = Int64(id) else {
-            return
-        }
-        guard let sessionId: Int64 = self.session?.id else {
-            return
-        }
-        do {
-            guard let msg = try IMCoreManager.shared.database.messageDao.findMessageBySid(msgId, sessionId) else {
-                return
-            }
-            
-            if msg.type == MsgType.IMAGE.rawValue {
-                var data = IMImageMsgData()
-                if (msg.data != nil) {
-                    data = try JSONDecoder().decode(
-                        IMImageMsgData.self,
-                        from: msg.data!.data(using: .utf8) ?? Data()
-                    )
-                }
-                if ((data.width == nil || data.height == nil ) && msg.content != nil) {
-                    let body = try JSONDecoder().decode(
-                        IMImageMsgBody.self,
-                        from: msg.content!.data(using: .utf8) ?? Data()
-                    )
-                    data.width = body.width
-                    data.height = body.height
-                }
-                if resourceType == 1 {
-                    data.thumbnailPath = path
-                } else {
-                    data.path = path
-                }
-                let jsonData = try JSONEncoder().encode(data)
-                let jsonString = String(data: jsonData, encoding: .utf8)
-                if jsonString != nil {
-                    msg.data = jsonString!
-                    try IMCoreManager.shared.database.messageDao.updateMessages(msg)
-                    if (resourceType == 1) {
-                        SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
-                    }
-                }
-            } else if msg.type == MsgType.VIDEO.rawValue {
-                var data = IMVideoMsgData()
-                if (msg.data != nil) {
-                    data = try JSONDecoder().decode(
-                        IMVideoMsgData.self,
-                        from: msg.data!.data(using: .utf8) ?? Data()
-                    )
-                }
-                if ((data.width == nil || data.duration == nil || data.height == nil ) && msg.content != nil) {
-                    let body = try JSONDecoder().decode(
-                        IMVideoMsgBody.self,
-                        from: msg.content!.data(using: .utf8) ?? Data()
-                    )
-                    data.duration = body.duration
-                    data.width = body.width
-                    data.height = body.height
-                }
-                if resourceType == 1 {
-                    data.thumbnailPath = path
-                } else {
-                    data.path = path
-                }
-                let jsonData = try JSONEncoder().encode(data)
-                let jsonString = String(data: jsonData, encoding: .utf8)
-                if jsonString != nil {
-                    msg.data = jsonString!
-                    try IMCoreManager.shared.database.messageDao.updateMessages(msg)
-                    if (resourceType == 1) {
-                        SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
-                    }
-                }
-            }
-        } catch {
-            DDLogError(error)
-        }
-    }
+
     
 }
 

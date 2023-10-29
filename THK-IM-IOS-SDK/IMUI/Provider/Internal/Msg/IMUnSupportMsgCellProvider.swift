@@ -27,15 +27,6 @@ class IMUnSupportMsgCellProvide: IMBaseMessageCellProvider {
         }
     }
     
-//    override func cellHeight(_ message: Message, _ sessionType: Int) -> CGFloat {
-//        let viewType = self.viewType(message)
-//        if viewType % 3 == 0 {
-//            return 30
-//        } else {
-//            return 30 + self.cellHeightForSessionType(sessionType)
-//        }
-//    }
-    
 }
 
 

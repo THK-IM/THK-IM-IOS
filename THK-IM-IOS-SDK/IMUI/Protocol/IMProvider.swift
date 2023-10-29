@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public protocol IMContentProvider: AnyObject  {
+public protocol IMProvider: AnyObject  {
     
     func openCamera(
         controller: UIViewController,

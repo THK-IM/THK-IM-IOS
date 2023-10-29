@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AliyunOSSiOS
 import CocoaLumberjack
 import GDPerformanceView_Swift
 
@@ -36,14 +35,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let debug = true
         let uId : Int64 = 15498
         let token = String(uId)
-        let endpoint = "http://192.168.1.5:10000"
+        let endpoint = "http://192.168.1.7:10000"
         IMCoreManager.shared.initApplication(application, uId, debug)
         IMCoreManager.shared.api = DefaultIMApi(endpoint: endpoint)
-        IMCoreManager.shared.signalModule = DefaultSignalModule(application, "ws://192.168.1.5:20000/ws", "\(uId)")
+        IMCoreManager.shared.signalModule = DefaultSignalModule(application, "ws://192.168.1.7:20000/ws", "\(uId)")
         
         IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", endpoint)
         IMUIManager.shared.initConfig()
-        IMUIManager.shared.contentProvider = IMMediaContentProvider(token: token)
+        IMUIManager.shared.contentProvider = Provider(token: token)
+        IMUIManager.shared.contentPreviewer = Previewer(token: token)
         IMCoreManager.shared.connect()
         
     }

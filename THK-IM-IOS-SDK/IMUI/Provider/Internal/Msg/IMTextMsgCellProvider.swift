@@ -27,16 +27,6 @@ class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-//    override func cellHeight(_ message: Message, _ sessionType: Int) -> CGFloat {
-//        guard let content = message.content else {
-//            return 36.0
-//        }
-//        let maxWidth = UIScreen.main.bounds.width - 100 - 16 // padding 为16
-//        var height = self.heightWithString(content, UIFont.boldSystemFont(ofSize: 16), maxWidth) + 16 + 20
-//        height += self.cellHeightForSessionType(sessionType)
-//        return max(height, super.cellHeight(message, sessionType))
-//    }
-    
     override func viewSize(_ message: Message) -> CGSize {
         let baseSize = super.viewSize(message)
         guard let content = message.content else {

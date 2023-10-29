@@ -32,6 +32,15 @@ class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
         var width = 100.0
         var height = 100.0
         do {
+            if (message.data != nil) {
+                let data = try JSONDecoder().decode(
+                    IMVideoMsgData.self,
+                    from: message.data!.data(using: .utf8) ?? Data())
+                if data.height != nil && data.width != nil {
+                    width = Double(data.width!).ptValue()
+                    height = Double(data.height!).ptValue()
+                }
+            }
             if (message.content != nil) {
                 let body = try JSONDecoder().decode(
                     IMVideoMsgBody.self,
@@ -39,14 +48,6 @@ class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
                 if body.height != nil && body.width != nil {
                     width = Double(body.width!).ptValue()
                     height = Double(body.height!).ptValue()
-                }
-            } else if (message.data != nil) {
-                let data = try JSONDecoder().decode(
-                    IMVideoMsgData.self,
-                    from: message.data!.data(using: .utf8) ?? Data())
-                if data.height != nil && data.width != nil {
-                    width = Double(data.width!).ptValue()
-                    height = Double(data.height!).ptValue()
                 }
             }
             if (width >= height) {

@@ -8,37 +8,22 @@
 import Foundation
 import UIKit
 import SwiftEventBus
+import RxSwift
 
 class MediaPreviewController: UIViewController,
                               UICollectionViewDataSource,
                               UICollectionViewDelegateFlowLayout,
                               UICollectionViewDelegate,
                               UIViewControllerTransitioningDelegate {
-    static func preview(
-        from: UIViewController, onMediaDownloaded: MediaDownloadDelegate,
-        source: [Media], defaultId: String,
-        enterFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
-    ) {
-        from.definesPresentationContext = true
-        let mediaPreviewController = MediaPreviewController()
-        mediaPreviewController.sourceArray = source
-        mediaPreviewController.enterFrame = enterFrame
-        mediaPreviewController.defaultId = defaultId
-        mediaPreviewController.onMediaDownloaded = onMediaDownloaded
-        mediaPreviewController.modalPresentationStyle = .overFullScreen
-        mediaPreviewController.transitioningDelegate = mediaPreviewController
-        from.present(mediaPreviewController, animated: true)
-    }
-    
-    var defaultId: String = ""
-    var currentId: String = ""
     var enterFrame: CGRect?
-    var sourceArray = [Media]()
-    weak var onMediaDownloaded: MediaDownloadDelegate?
+    var messages = [Message]()
+    var defaultId = Int64(0)
+    private var currentId = Int64(0)
     private var startPoint: CGPoint?
     private var _offsetX = 0.0
     private var _offsetY = 0.0
     private var _isRequestingMore = false
+    private var disposeBag = DisposeBag()
     
     private lazy var _collectView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -78,9 +63,9 @@ class MediaPreviewController: UIViewController,
         }
         
         var position = 0
-        if self.sourceArray.count > 0 {
-            for i in 0 ..< self.sourceArray.count {
-                if self.sourceArray[i].id == self.defaultId {
+        if self.messages.count > 0 {
+            for i in 0 ..< self.messages.count {
+                if self.messages[i].id == self.defaultId {
                     position = i
                 }
             }
@@ -89,7 +74,10 @@ class MediaPreviewController: UIViewController,
         
         let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(recognizerAction))
         self.view.addGestureRecognizer(gesture)
-        
+        initEvents()
+    }
+    
+    private func initEvents() {
         SwiftEventBus.onMainThread(self, name: "zoom", handler: { [weak self] result in
             guard let sf = self else {
                 return
@@ -99,6 +87,30 @@ class MediaPreviewController: UIViewController,
             }
             sf._collectView.isScrollEnabled = scale <= 1.0
         })
+        SwiftEventBus.onMainThread(self, name: IMEvent.MsgNew.rawValue, handler: { [weak self ] result in
+            guard let msg = result?.object as? Message else {
+                return
+            }
+            self?.messageUpdate(msg: msg)
+        })
+        SwiftEventBus.onMainThread(self, name: IMEvent.MsgUpdate.rawValue, handler: { [weak self ]result in
+            guard let msg = result?.object as? Message else {
+                return
+            }
+            self?.messageUpdate(msg: msg)
+        })
+    }
+    
+    private func messageUpdate(msg: Message) {
+        for  i in 0 ... self.messages.count-1 {
+            if (self.messages[i].id == msg.id) {
+                if (self.messages[i].type == MsgType.IMAGE.rawValue) {
+                    self.messages[i] = msg
+                    self._collectView.reloadItems(at: [IndexPath(row: i, section: 0)])
+                }
+                break
+            }
+        }
     }
     
     @objc func recognizerAction(gestureRecognizer: UIPanGestureRecognizer) {
@@ -175,7 +187,7 @@ class MediaPreviewController: UIViewController,
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.sourceArray.count
+        return self.messages.count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -183,46 +195,40 @@ class MediaPreviewController: UIViewController,
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let media = self.sourceArray[indexPath.row]
-        if media.type == 1 {
-            let mediaCell = collectionView.dequeueReusableCell(
+        let message = self.messages[indexPath.row]
+        if message.type == MsgType.IMAGE.rawValue {
+            let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: NSStringFromClass(PreviewImageCellView.self),
                 for: indexPath
             ) as! PreviewImageCellView
-            mediaCell.onMediaDownloaded = self.onMediaDownloaded
-            mediaCell.setPreviewMedia(media)
-            return mediaCell
+            cell.setMessage(message)
+            return cell
         } else {
-            let mediaCell = collectionView.dequeueReusableCell(
+            let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: NSStringFromClass(PreviewVideoCellView.self),
                 for: indexPath
             ) as! PreviewVideoCellView
-            mediaCell.onMediaDownloaded = self.onMediaDownloaded
-            mediaCell.setPreviewMedia(media)
-            return mediaCell
+            cell.setMessage(message)
+            return cell
         }
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let media = self.sourceArray[indexPath.row]
-        if media.type == 1 {
-            let mediaCall = cell as! PreviewImageCellView
-            mediaCall.endDisplaying()
-        } else {
-            let mediaCall = cell as! PreviewVideoCellView
-            mediaCall.endDisplaying()
-        }
+        let previewCell = cell as! PreviewCellView
+        previewCell.stopPreview()
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let media = self.sourceArray[indexPath.row]
-        self.currentId = media.id
-        if indexPath.row == 0 {
-            self.requestMoreMedia(media, true)
-        } else if indexPath.row == self.sourceArray.count - 1 {
-            self.requestMoreMedia(media, false)
+        self.currentId = self.messages[indexPath.row].id
+        if (indexPath.row == 0) {
+            self.loadMoreMessage(self.messages[indexPath.row], true)
+        } else if (indexPath.row == self.messages.count - 1) {
+            self.loadMoreMessage(self.messages[indexPath.row], false)
         }
+        
+        let previewCell = cell as! PreviewCellView
+        previewCell.startPreview()
     }
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -237,48 +243,45 @@ class MediaPreviewController: UIViewController,
         return animator
     }
     
-    func requestMoreMedia(_ media: Media, _ before: Bool) {
-        if _isRequestingMore {
-            return
-        }
-        _isRequestingMore = true
-        DispatchQueue.global().async { [weak self] in
-            guard let sf = self else {
-                return
-            }
-            guard let medias = self?.onMediaDownloaded?.onMoreMediaFetch(media.id, before, 10) else {
-                sf._isRequestingMore = false
-                return
-            }
-            DispatchQueue.main.async { [weak sf] in
-                guard let wSf = sf else {
-                    return
-                }
-                if medias.count == 0 {
-                    wSf._isRequestingMore = false
-                    return
-                }
-                var at = 0
-                if !before {
-                    at = wSf.sourceArray.count
-                }
-                wSf.sourceArray.insert(contentsOf: (before ? medias : medias), at: at)
-                var paths = [IndexPath]()
-                for i in (at ..< (medias.count+at)) {
-                    paths.append(IndexPath.init(row: i, section: 0))
-                }
-                wSf._collectView.insertItems(at: paths)
-                wSf._isRequestingMore = false
-            }
-        }
-    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
         coordinator.animate(alongsideTransition: { (context) in
             self._collectView.collectionViewLayout.invalidateLayout()
         }, completion: nil)
+    }
+    
+    
+    private func loadMoreMessage(_ message: Message, _ older: Bool) {
+        Observable.just(message)
+            .map({ message in
+                if (older) {
+                    let messages = try IMCoreManager.shared.database.messageDao.findOlderMessages(message.msgId, [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue], message.sessionId, 10)
+                    return messages
+                } else {
+                    let messages = try IMCoreManager.shared.database.messageDao.findNewerMessages(message.msgId, [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue], message.sessionId, 10)
+                    return messages
+                }
+            })
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] messages in
+                guard let sf = self else {
+                    return
+                }
+                var pos = 0
+                if (older) {
+                    sf.messages.insert(contentsOf: messages.reversed() , at: 0)
+                } else {
+                    pos = sf.messages.count
+                    sf.messages.insert(contentsOf: messages, at: pos)
+                }
+                var paths = Array<IndexPath>()
+                for i in (pos ..< pos + messages.count) {
+                    paths.append(IndexPath.init(row: i, section: 0))
+                }
+                sf._collectView.insertItems(at: paths)
+            })
+            .disposed(by: self.disposeBag)
     }
     
 }

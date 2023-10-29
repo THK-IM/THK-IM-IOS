@@ -100,29 +100,8 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     }
     
     private func setup() {
-        NotificationCenter.default.addObserver(self, selector: #selector(cacheInfoUpdate), name: IMAVCacheManager.notifyName, object: nil)
         self.setupView()
         self.setupTimer()
-    }
-    
-    @objc private func cacheInfoUpdate(note: NSNotification) {
-//        guard let url = self.url?.absoluteString else {
-//            return
-//        }
-//        guard let cacheInfo = note.userInfo!["info"] as? IMAVCacheInfo else {
-//            return
-//        }
-//        guard let cacheRemoteUrl = note.userInfo!["remoteUrl"] as? String else {
-//            return
-//        }
-//        guard let cacheLocalPath = note.userInfo!["localPath"] as? String else {
-//            return
-//        }
-//        print("cacheInfoUpdate \(cacheInfo.contentLength), \(cacheInfo.isFinished())")
-//        print("cacheInfoUpdate \(cacheRemoteUrl), \(cacheLocalPath)")
-        if self.player.currentItem != nil {
-            print("cacheInfoUpdate \(self.player.currentItem!.duration.seconds)")
-        }
     }
     
     private func setupView() {
@@ -173,7 +152,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         self.destroyTimer()
         if self.player.currentItem != nil {
             self.observer = self.player.addPeriodicTimeObserver(
-                forInterval: CMTime(value: 1, timescale: 60),
+                forInterval: CMTime(value: 1, timescale: 100),
                 queue: DispatchQueue.main
             ) { [weak self] t in
                 guard let sf = self else {
@@ -234,7 +213,6 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        
         print("observeValue callback")
         if keyPath == "loadedTimeRanges" {
             // 获取已缓冲的时间范围
@@ -257,7 +235,6 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     }
     
     func play() {
-        self.setupTimer()
         self.resume()
     }
     

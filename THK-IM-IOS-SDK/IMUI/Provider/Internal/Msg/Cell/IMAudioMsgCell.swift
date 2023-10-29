@@ -104,7 +104,7 @@ class IMAudioMsgCell: BaseMsgCell {
                     self.statusView.isHidden = false
                 }
                 if (body.url != nil) {
-                    IMCoreManager.shared.getMessageModule().getMsgProcessor(msg.type)
+                    _ = IMCoreManager.shared.getMessageModule().getMsgProcessor(msg.type)
                         .downloadMsgContent(msg, resourceType: IMMsgResourceType.Source.rawValue)
                 }
             } catch {

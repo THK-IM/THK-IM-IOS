@@ -159,7 +159,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                             FileLoadState.Ing.rawValue:
                             SwiftEventBus.post(
                                 IMEvent.MsgLoadStatusUpdate.rawValue,
-                                sender: IMLoadProgress(IMLoadType.Upload.rawValue, uploadKey, state, progress)
+                                sender: IMLoadProgress(IMLoadType.Upload.rawValue, url, path, state, progress)
                             )
                         case FileLoadState.Success.rawValue:
                             do {
@@ -229,7 +229,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                     {progress, state, url, path in
                         SwiftEventBus.post(
                             IMEvent.MsgLoadStatusUpdate.rawValue,
-                            sender: IMLoadProgress(IMLoadType.Upload.rawValue, uploadKey, state, progress)
+                            sender: IMLoadProgress(IMLoadType.Upload.rawValue, url, path, state, progress)
                         )
                         switch(state) {
                         case
@@ -291,63 +291,70 @@ class VideoMsgProcessor : BaseMsgProcessor {
                     IMVideoMsgBody.self,
                     from: message.content!.data(using: .utf8) ?? Data()
                 )
+            } else {
+                return false
             }
             var downloadUrl: String? = nil
-            let fileName = body.name
             if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
                 downloadUrl = body.thumbnailUrl
             } else {
                 downloadUrl = body.url
             }
-            if downloadUrl == nil || fileName == nil {
+            
+            if downloadUrl == nil || body.name == nil {
                 return false
-            } else {
-                let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
-                    message.sessionId, fileName!, IMFileFormat.Image.rawValue)
-                let loadListener = FileLoadListener(
-                    {progress, state, url, path in
-                        SwiftEventBus.post(
-                            IMEvent.MsgLoadStatusUpdate.rawValue,
-                            sender: IMLoadProgress(IMLoadType.Download.rawValue, url, state, progress)
-                        )
-                        switch(state) {
-                        case
-                            FileLoadState.Wait.rawValue,
-                            FileLoadState.Init.rawValue,
-                            FileLoadState.Ing.rawValue:
-                            break
-                        case
-                            FileLoadState.Success.rawValue:
-                            do {
-                                if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
-                                    data.thumbnailPath = path
-                                } else {
-                                    data.path = path
-                                }
-                                data.duration = body.duration
-                                data.width = body.width!
-                                data.height = body.height!
-                                let d = try JSONEncoder().encode(data)
-                                message.data = String(data: d, encoding: .utf8)!
-                                try self.insertOrUpdateDb(message, true, false)
-                            } catch {
-                                DDLogError(error)
-                            }
-                            break
-                        default:
-                            break
-                        }
-                    },
-                    {
-                        return false
-                    }
-                )
-                _ = IMCoreManager.shared.fileLoadModule.download(
-                    key: downloadUrl!,
-                    path: localPath,
-                    loadListener: loadListener
-                )
+            } 
+            
+            var fileName = body.name!
+            if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
+                fileName = "cover_\(body.name!)"
             }
+            
+            let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
+                message.sessionId, fileName, IMFileFormat.Image.rawValue)
+            let loadListener = FileLoadListener(
+                {progress, state, url, path in
+                    SwiftEventBus.post(
+                        IMEvent.MsgLoadStatusUpdate.rawValue,
+                        sender: IMLoadProgress(IMLoadType.Download.rawValue, url, path, state, progress)
+                    )
+                    switch(state) {
+                    case
+                        FileLoadState.Wait.rawValue,
+                        FileLoadState.Init.rawValue,
+                        FileLoadState.Ing.rawValue:
+                        break
+                    case
+                        FileLoadState.Success.rawValue:
+                        do {
+                            if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
+                                data.thumbnailPath = path
+                            } else {
+                                data.path = path
+                            }
+                            data.duration = body.duration
+                            data.width = body.width!
+                            data.height = body.height!
+                            let d = try JSONEncoder().encode(data)
+                            message.data = String(data: d, encoding: .utf8)!
+                            try self.insertOrUpdateDb(message, true, false)
+                        } catch {
+                            DDLogError(error)
+                        }
+                        break
+                    default:
+                        break
+                    }
+                },
+                {
+                    return false
+                }
+            )
+            _ = IMCoreManager.shared.fileLoadModule.download(
+                key: downloadUrl!,
+                path: localPath,
+                loadListener: loadListener
+            )
         } catch {
             DDLogError(error)
         }

@@ -25,7 +25,6 @@ target 'THK-IM-IOS' do
   pod 'Alamofire'
   pod 'Moya/RxSwift', '~> 15.0'
   pod 'Kingfisher', '~> 7.0'
-  pod 'AliyunOSSiOS'
   pod 'SwiftEventBus', :tag => '5.1.0', :git => 'https://github.com/cesarferreira/SwiftEventBus.git'
   pod 'ZLPhotoBrowser'
   pod 'YbridOpus'

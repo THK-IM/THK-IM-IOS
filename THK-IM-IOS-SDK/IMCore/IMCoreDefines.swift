@@ -35,20 +35,23 @@ public enum IMFileFormat: String {
 public class IMLoadProgress: Codable {
     
     var type: String
-    var key: String
+    var url: String
+    var path: String
     var state: Int
     var progress: Int
     
-    init(_ type: String, _ key: String, _ state: Int, _ progress: Int) {
+    init(_ type: String, _ url: String, _ path: String, _ state: Int, _ progress: Int) {
         self.type = type
-        self.key = key
+        self.url = url
+        self.path = path
         self.state = state
         self.progress = progress
     }
     
     enum CodingKeys: String, CodingKey {
         case type = "type"
-        case key = "key"
+        case url = "url"
+        case path = "path"
         case state = "state"
         case progress = "progress"
     }

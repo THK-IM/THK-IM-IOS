@@ -57,7 +57,7 @@ class IMImageMsgCell: BaseMsgCell {
                     IMImageMsgBody.self,
                     from: msg.content!.data(using: .utf8) ?? Data())
                 if (body.thumbnailUrl != nil) {
-                    IMCoreManager.shared.getMessageModule().getMsgProcessor(msg.type)
+                    _ = IMCoreManager.shared.getMessageModule().getMsgProcessor(msg.type)
                         .downloadMsgContent(msg, resourceType: IMMsgResourceType.Thumbnail.rawValue)
                 }
             } catch {
