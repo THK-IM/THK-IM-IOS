@@ -5,6 +5,8 @@
 //  Created by vizoss on 2023/6/11.
 //
 
+import ImageIO
+import MobileCoreServices
 import UIKit
 
 public class ImageCompressor {
@@ -74,6 +76,82 @@ public class ImageCompressor {
             return resizeData!
         }
         return resizedImage!.jpegData(compressionQuality: options.quality)
+    }
+    
+    public static func compressImageFile(_ srcPath: String, _ desPath: String, _ options: Options) throws {
+        guard let srcData = FileManager.default.contents(atPath: srcPath) else {
+            throw CocoaError.init(.fileNoSuchFile)
+        }
+        guard let image = UIImage(data: srcData) else {
+            throw CocoaError.init(.fileReadCorruptFile)
+        }
+        if srcData.detectImageType() == "gif" {
+            let srcExist = FileManager.default.fileExists(atPath: desPath)
+            if srcExist {
+                throw CocoaError.error(.fileWriteFileExists)
+            }
+            let success = FileManager.default.createFile(atPath: desPath, contents: nil)
+            if (!success) {
+                throw CocoaError(.fileWriteUnknown)
+            }
+            let inputURL = URL.init(fileURLWithPath: srcPath)
+            let outputURL = URL.init(fileURLWithPath: desPath)
+            let width = CGFloat(image.size.width) * (CGFloat(options.maxSize) / CGFloat(srcData.count))
+            try compressGIF(inputURL: inputURL, outputURL: outputURL, quality: options.quality, width: width)
+            return
+        } else {
+            let compressData = compressImage(image, options)
+            let srcExist = FileManager.default.fileExists(atPath: desPath)
+            if srcExist {
+                throw CocoaError.error(.fileWriteFileExists)
+            }
+            
+            let success = FileManager.default.createFile(atPath: desPath, contents: compressData)
+            if (!success) {
+                throw CocoaError(.fileWriteUnknown)
+            }
+        }
+    }
+
+    public static func compressGIF(inputURL: URL, outputURL: URL, quality: CGFloat, width: CGFloat) throws {
+        guard let source = CGImageSourceCreateWithURL(inputURL as CFURL, nil) else {
+            throw CocoaError.error(.fileNoSuchFile)
+        }
+        guard let destination = CGImageDestinationCreateWithURL(outputURL as CFURL, kUTTypeGIF, CGImageSourceGetCount(source), nil) else {
+            throw CocoaError.error(.fileWriteFileExists)
+        }
+        
+        let frameCount = CGImageSourceGetCount(source)
+        let minWidth: Double = 100.0
+        var interval = 1
+        var newWidth = width
+        if (newWidth < minWidth) {
+            interval = Int(sqrt((minWidth/newWidth)))
+            newWidth = minWidth
+        }
+        print("compressGIF \(interval) \(newWidth)")
+        let options: NSDictionary = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceThumbnailMaxPixelSize: newWidth,
+            kCGImageDestinationLossyCompressionQuality: quality
+        ]
+        
+        for index in 0..<frameCount {
+            if (index % interval != 0) {
+                continue
+            }
+            guard let image = CGImageSourceCreateThumbnailAtIndex(source, index, options) else {
+                continue
+            }
+            let frameProperties: NSDictionary = [
+                kCGImagePropertyGIFDictionary: [
+                    kCGImagePropertyGIFDelayTime:  0.1
+                ]
+            ]
+            CGImageDestinationAddImage(destination, image, frameProperties)
+        }
+        
+        CGImageDestinationFinalize(destination)
     }
     
 }

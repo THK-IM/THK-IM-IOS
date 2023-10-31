@@ -76,9 +76,8 @@ class ImageMsgProcessor : BaseMsgProcessor {
     open func compress(_ storageModule: StorageModule, _ imageData: inout IMImageMsgData, _ entity: inout Message) throws {
         let path = storageModule.sandboxFilePath(imageData.path!)
         let originImage = UIImage.init(contentsOfFile: path)
-        if (originImage == nil) {
-            throw CocoaError.init(CocoaError.fileReadNoSuchFile)
-        }
+        imageData.width = Int(originImage!.size.width)
+        imageData.height = Int(originImage!.size.height)
         let (_, fileName) = storageModule.getPathsFromFullPath(path)
         let (name, ext) = storageModule.getFileExt(fileName)
         let thumbName = "\(name)_thumb.\(ext)"
@@ -87,17 +86,19 @@ class ImageMsgProcessor : BaseMsgProcessor {
             thumbName,
             IMFileFormat.Image.rawValue
         )
-        guard let compressImage = ImageCompressor.compressImage(
-            originImage!,
-            getImageCompressorOptions()
-        ) else {
-            throw CocoaError.init(.executableLoad)
-        }
-        try storageModule.saveMediaDataInto(thumbPath, compressImage.toData())
+//        let originImage = UIImage.init(contentsOfFile: path)
+//        if (originImage == nil) {
+//            throw CocoaError.init(CocoaError.fileReadNoSuchFile)
+//        }
+//        guard let compressImage = ImageCompressor.compressImage(
+//            originImage!,
+//            getImageCompressorOptions()
+//        ) else {
+//            throw CocoaError.init(.executableLoad)
+//        }
+//        try storageModule.saveMediaDataInto(thumbPath, compressImage.toData())
+        try ImageCompressor.compressImageFile(path, thumbPath, getImageCompressorOptions())
         imageData.thumbnailPath = thumbPath
-        imageData.width = Int(originImage!.size.width)
-        imageData.height = Int(originImage!.size.height)
-        
         let d = try JSONEncoder().encode(imageData)
         entity.data = String(data: d, encoding: .utf8)!
     }
