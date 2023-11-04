@@ -26,7 +26,7 @@ open class BaseMsgCell : BaseCell {
     init(_ reuseIdentifier: String, _ wrapper: CellWrapper) {
         self.cellWrapper = wrapper
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .default
+        selectionStyle = .blue
         cellWrapper.attach(contentView)
         initMsgView()
         self.backgroundColor = UIColor.clear
@@ -168,6 +168,11 @@ open class BaseMsgCell : BaseCell {
     
     open override func appear() {
         self.cellWrapper.appear()
+        for view in self.subviews {
+//            if view is UITableViewCellEditControl {
+//
+//            }
+        }
     }
     
     open override func disappear() {

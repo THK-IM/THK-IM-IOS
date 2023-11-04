@@ -26,4 +26,8 @@ class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
+    override func canSelected() -> Bool {
+        return false
+    }
+    
 }

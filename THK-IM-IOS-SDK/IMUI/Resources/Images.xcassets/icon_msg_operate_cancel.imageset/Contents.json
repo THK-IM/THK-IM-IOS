@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon_msg_operate_cancel.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

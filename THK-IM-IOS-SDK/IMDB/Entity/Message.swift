@@ -8,7 +8,12 @@
 import Foundation
 import WCDBSwift
 
-public final class Message: TableCodable {
+public final class Message: TableCodable, Hashable {
+    
+    public static func == (lhs: Message, rhs: Message) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     // 消息id(客户端)
     var id: Int64 = 0
     // sessionId
@@ -74,6 +79,10 @@ public final class Message: TableCodable {
         self.atUsers = atUsers
         self.cTime = cTime
         self.mTime = mTime
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
 }

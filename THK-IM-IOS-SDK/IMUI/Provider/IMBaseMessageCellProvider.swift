@@ -66,4 +66,8 @@ open class IMBaseMessageCellProvider {
         }
     }
     
+    open func canSelected() -> Bool {
+        return true
+    }
+    
 }

@@ -12,4 +12,5 @@ import UIKit
 public protocol IMPreviewer: AnyObject  {
     
     func previewMessage(_ controller: UIViewController, items: [Message], view: UIView, defaultId: Int64)
+
 }

@@ -310,6 +310,7 @@ open class DefaultMessageModule : MessageModule {
         return Observable.create({observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.messageDao.deleteMessages(messages)
+                SwiftEventBus.post(IMEvent.BatchMsgDelete.rawValue, sender: messages)
             } catch {
                 observer.onError(error)
             }

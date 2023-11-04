@@ -54,9 +54,9 @@ public protocol IMMsgSender : AnyObject {
     /// 关闭键盘
     func closeKeyboard() -> Bool
     
-    /// 显示消息多选视图
-    func showMsgSelectedLayout()
-    
-    /// 关闭消息多选视图
-    func dismissMsgSelectedLayout()
+    /// 打开/关闭多选消息视图
+    func setSelectMode(_ selected: Bool, message: Message?)
+
+    /// 删除多选视图选中的消息
+    func deleteSelectedMessages()
 }

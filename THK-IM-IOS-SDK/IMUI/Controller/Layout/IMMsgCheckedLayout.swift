@@ -20,17 +20,16 @@ class IMMsgCheckedLayout: UIView {
         let v = UIStackView()
         v.axis = .horizontal
         v.distribution = .fillEqually
-        v.alignment = .fill
+        v.alignment = .center
+        v.addArrangedSubview(cancelButton)
         v.addArrangedSubview(deleteButton)
         v.addArrangedSubview(forwardButton)
-        v.addArrangedSubview(cancelButton)
         return v
     }()
     
     lazy private var deleteButton: UIImageView = {
         let button = UIImageView()
-        button.backgroundColor = UIColor.red
-        let image = UIImage(named: "chat_bar_voice")
+        let image = UIImage(named: "icon_msg_operate_delete")
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit
@@ -41,8 +40,7 @@ class IMMsgCheckedLayout: UIView {
     
     lazy private var forwardButton: UIImageView = {
         let button = UIImageView()
-        button.backgroundColor = UIColor.red
-        let image = UIImage(named: "chat_bar_voice")
+        let image = UIImage(named: "icon_msg_operate_forward")
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit
@@ -53,8 +51,7 @@ class IMMsgCheckedLayout: UIView {
     
     lazy private var cancelButton: UIImageView = {
         let button = UIImageView()
-        button.backgroundColor = UIColor.red
-        let image = UIImage(named: "chat_bar_voice")
+        let image = UIImage(named: "icon_msg_operate_cancel")
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit
@@ -85,7 +82,8 @@ class IMMsgCheckedLayout: UIView {
                 guard let sf = self else {
                     return
                 }
-                sf.sender?.dismissMsgSelectedLayout()
+                sf.sender?.deleteSelectedMessages()
+                sf.sender?.setSelectMode(false, message: nil)
             })
             .disposed(by: disposeBag)
         
@@ -94,7 +92,7 @@ class IMMsgCheckedLayout: UIView {
                 guard let sf = self else {
                     return
                 }
-                sf.sender?.dismissMsgSelectedLayout()
+                sf.sender?.setSelectMode(false, message: nil)
             })
             .disposed(by: disposeBag)
         self.cancelButton.rx.tapGesture()
@@ -102,7 +100,7 @@ class IMMsgCheckedLayout: UIView {
                 guard let sf = self else {
                     return
                 }
-                sf.sender?.dismissMsgSelectedLayout()
+                sf.sender?.setSelectMode(false, message: nil)
             })
             .disposed(by: disposeBag)
     }

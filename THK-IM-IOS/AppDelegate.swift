@@ -35,12 +35,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let debug = true
         let uId : Int64 = 15498
         let token = String(uId)
-        let endpoint = "http://192.168.1.3:10000"
+        let apiEndpoint = "http://api.thkim.com"
+        let wsEndpoint = "ws://ws.thkim.com/ws"
         IMCoreManager.shared.initApplication(application, uId, debug)
-        IMCoreManager.shared.api = DefaultIMApi(endpoint: endpoint)
-        IMCoreManager.shared.signalModule = DefaultSignalModule(application, "ws://192.168.1.3:20000/ws", "\(uId)")
+        IMCoreManager.shared.api = DefaultIMApi(endpoint: apiEndpoint)
+        IMCoreManager.shared.signalModule = DefaultSignalModule(application, wsEndpoint, "\(uId)")
         
-        IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", endpoint)
+        IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", apiEndpoint)
         IMUIManager.shared.initConfig()
         IMUIManager.shared.contentProvider = Provider(token: token)
         IMUIManager.shared.contentPreviewer = Previewer(token: token)

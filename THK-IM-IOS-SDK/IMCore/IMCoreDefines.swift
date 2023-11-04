@@ -16,6 +16,7 @@ public enum IMEvent: String {
          MsgNew = "IMEventMsgNew",
          MsgUpdate = "IMEventMsgUpdate",
          MsgDelete = "IMEventMsgDelete",
+         BatchMsgDelete = "IMEventBatchMsgDelete",
          SessionNew = "IMEventSessionNew",
          SessionUpdate = "IMEventSessionUpdate",
          SessionDelete = "IMEventSessionDelete",

@@ -18,6 +18,7 @@ import CoreServices
 
 class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     
+    
     var session: Session? = nil
     private var containerView = UIView()
 //    private var alwaysShowView = UIView()
@@ -26,6 +27,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     private var bottomPanelLayout = IMBottomPanelLayout()
     private var msgCheckedLayout = IMMsgCheckedLayout()
     private var keyboardShow = false
+    private var disposeBag = DisposeBag()
     
     deinit {
         DDLogDebug("IMMessageViewController, de init")
@@ -190,6 +192,22 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
             DDLogDebug("IMEvent: \(IMEvent.MsgUpdate.rawValue)")
             self?.messageLayout.deleteMessage(msg)
         })
+        
+        SwiftEventBus.onMainThread(self, name: IMEvent.BatchMsgDelete.rawValue, handler: { [weak self ]result in
+            guard let messages = result?.object as? Array<Message> else {
+                return
+            }
+            guard let sId = self?.session?.id else {
+                return
+            }
+            var deleteMessages = Array<Message>()
+            for msg in messages {
+                if (msg.sessionId == sId) {
+                    deleteMessages.append(msg)
+                }
+            }
+            self?.messageLayout.deleteMessages(deleteMessages)
+        })
     }
     
     func unregisterMsgEvent() {
@@ -290,21 +308,6 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         DDLogDebug("sendMessage \(success)")
     }
     
-    /// 显示消息多选视图
-    func showMsgSelectedLayout() {
-        self.messageLayout.setMessageEditing(true)
-        self.msgCheckedLayout.isHidden = false
-//        self.inputLayout.isHidden = true
-    }
-    
-    /// 关闭消息多选视图
-    func dismissMsgSelectedLayout() {
-        self.messageLayout.setMessageEditing(false)
-        self.msgCheckedLayout.isHidden = true
-//        self.inputLayout.isHidden = false
-    }
-    
-    
     func choosePhoto() {
         guard let cp = IMUIManager.shared.contentProvider else {
             return
@@ -354,6 +357,31 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
             } catch {
                 DDLogError(error)
             }
+        }
+    }
+    
+    
+    func setSelectMode(_ selected: Bool, message: Message?) {
+        if (selected) {
+            self.messageLayout.setSelectMode(selected, message: message)
+            self.msgCheckedLayout.isHidden = false
+        } else {
+            self.messageLayout.setSelectMode(selected)
+            self.msgCheckedLayout.isHidden = true
+        }
+    }
+    
+    func deleteSelectedMessages() {
+        let messages = self.messageLayout.getSelectMessages()
+        if (messages.count > 0 && session != nil) {
+            IMCoreManager.shared.getMessageModule()
+                .deleteMessages(session!.id, Array(messages), true)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onError: { error in
+                    DDLogError("deleteSelectedMessages \(error)")
+                }, onCompleted: {
+                    DDLogInfo("deleteSelectedMessages success ")
+                }).disposed(by: self.disposeBag)
         }
     }
     

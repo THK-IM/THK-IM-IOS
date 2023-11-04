@@ -97,7 +97,6 @@
 		A0D68BB32A888679004D11A5 /* IMBaseFunctionCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B002A888678004D11A5 /* IMBaseFunctionCellProvider.swift */; };
 		A0D68BB42A888679004D11A5 /* IMMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B022A888678004D11A5 /* IMMessageViewController.swift */; };
 		A0D68BB52A888679004D11A5 /* IMInputLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B042A888678004D11A5 /* IMInputLayout.swift */; };
-		A0D68BB62A888679004D11A5 /* IMMessageReverseLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B052A888678004D11A5 /* IMMessageReverseLayout.swift */; };
 		A0D68BB72A888679004D11A5 /* IMMessageLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B062A888678004D11A5 /* IMMessageLayout.swift */; };
 		A0D68BB82A888679004D11A5 /* IMMsgCheckedLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B072A888678004D11A5 /* IMMsgCheckedLayout.swift */; };
 		A0D68BB92A888679004D11A5 /* IMBottomPanelLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B082A888678004D11A5 /* IMBottomPanelLayout.swift */; };
@@ -274,7 +273,6 @@
 		A0D68B002A888678004D11A5 /* IMBaseFunctionCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBaseFunctionCellProvider.swift; sourceTree = "<group>"; };
 		A0D68B022A888678004D11A5 /* IMMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMessageViewController.swift; sourceTree = "<group>"; };
 		A0D68B042A888678004D11A5 /* IMInputLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMInputLayout.swift; sourceTree = "<group>"; };
-		A0D68B052A888678004D11A5 /* IMMessageReverseLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMessageReverseLayout.swift; sourceTree = "<group>"; };
 		A0D68B062A888678004D11A5 /* IMMessageLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMessageLayout.swift; sourceTree = "<group>"; };
 		A0D68B072A888678004D11A5 /* IMMsgCheckedLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgCheckedLayout.swift; sourceTree = "<group>"; };
 		A0D68B082A888678004D11A5 /* IMBottomPanelLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBottomPanelLayout.swift; sourceTree = "<group>"; };
@@ -740,7 +738,6 @@
 			isa = PBXGroup;
 			children = (
 				A0D68B042A888678004D11A5 /* IMInputLayout.swift */,
-				A0D68B052A888678004D11A5 /* IMMessageReverseLayout.swift */,
 				A0D68B062A888678004D11A5 /* IMMessageLayout.swift */,
 				A0D68B072A888678004D11A5 /* IMMsgCheckedLayout.swift */,
 				A0D68B082A888678004D11A5 /* IMBottomPanelLayout.swift */,
@@ -1161,7 +1158,6 @@
 				A0E8ED4A2AEDEE42004163BD /* Previewer.swift in Sources */,
 				A0D68BB72A888679004D11A5 /* IMMessageLayout.swift in Sources */,
 				A0D68BB82A888679004D11A5 /* IMMsgCheckedLayout.swift in Sources */,
-				A0D68BB62A888679004D11A5 /* IMMessageReverseLayout.swift in Sources */,
 				A0EA42F12A94B3BE00F64A90 /* FileLoadState.swift in Sources */,
 				A0D68C072A888679004D11A5 /* SignalModule.swift in Sources */,
 				A0D68BBC2A888679004D11A5 /* IMMoreCell.swift in Sources */,

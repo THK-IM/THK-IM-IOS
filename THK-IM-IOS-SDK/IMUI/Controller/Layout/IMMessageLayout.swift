@@ -11,8 +11,10 @@ import CocoaLumberjack
 
 class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsgCellOperator {
     
+    
     var session: Session? = nil
     var messages: Array<Message> = Array()
+    private var selectedMessages: Set<Message> = Set()
     weak var sender: IMMsgSender? = nil
     weak var previewer : IMMsgPreviewer? = nil
     
@@ -51,6 +53,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         }
         (cell as! BaseMsgCell).setMessage(indexPath.row, self.messages, self.session!, self)
         (cell as! BaseMsgCell).selectedBackgroundView = UIView()
+        (cell as! BaseMsgCell).isSelected = selectedMessages.contains(msg)
         (cell as! BaseMsgCell).multipleSelectionBackgroundView = UIView(frame: cell!.bounds)
         (cell as! BaseMsgCell).multipleSelectionBackgroundView?.backgroundColor = UIColor.clear
         return cell!
@@ -73,7 +76,20 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         let message = self.messages[indexPath.row]
-        return message.type != 9999
+        let provider = IMUIManager.shared.getMsgCellProvider(message.type)
+        return provider.canSelected()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        DDLogInfo("didSelectRowAt \(indexPath.row)")
+        let message = self.messages[indexPath.row]
+        self.selectedMessages.insert(message)
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        DDLogInfo("didDeselectRowAt \(indexPath.row)")
+        let message = self.messages[indexPath.row]
+        self.selectedMessages.remove(message)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -171,8 +187,9 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     private func newTimelineMessage(_ cTime: Int64) -> Message {
+        let id = IMCoreManager.shared.getMessageModule().generateNewMsgId()
         let message = Message(
-            id: 0, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0, type: 0, content: "", sendStatus: 0,
+            id: id, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0, type: 0, content: "", sendStatus: 0,
             operateStatus: 0, referMsgId: nil, atUsers: nil, data: "", cTime: 0, mTime: 0
         )
         message.cTime = cTime
@@ -279,25 +296,52 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         self.scrollToBottom(0.2)
     }
     
-//    func updateMessage(_ message: Message) {
-//        let tableView = self.messageTableView
-//        let pos = findPosition(message)
-//        if (pos != -1) {
-//            // 老消息，替换reload
-//            self.messages[pos] = message
-//            tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
-//        }
-//    }
-    
-    func deleteMessage(_ message: Message) {
+    func updateMessage(_ message: Message) {
         let tableView = self.messageTableView
         let pos = findPosition(message)
-        UIView.setAnimationsEnabled(false)
         if (pos != -1) {
-            self.messages.remove(at: pos)
-            tableView.deleteRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
+            // 老消息，替换reload
+            self.messages[pos] = message
+            tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
         }
-        UIView.setAnimationsEnabled(true)
+    }
+    
+    func deleteMessage(_ message: Message) {
+        var deletePaths = [IndexPath]()
+        var positions = [Int]()
+        let pos = findPosition(message)
+        if (pos < 0) {
+            return
+        }
+        positions.append(pos)
+        if (pos - 1 > 0 && self.messages[pos - 1].type == 9999) {
+            positions.append(pos-1)
+        }
+        for pos in positions.sorted().reversed() {
+            self.messages.remove(at: pos)
+            deletePaths.append(IndexPath.init(row: pos, section: 0))
+        }
+        self.messageTableView.deleteRows(at: deletePaths, with: .none)
+    }
+    
+    func deleteMessages(_ messages: Array<Message>) {
+        var deletePaths = [IndexPath]()
+        var positions = [Int]()
+        for msg in messages {
+            let pos = findPosition(msg)
+            if (pos < 0) {
+                continue
+            }
+            positions.append(pos)
+            if (pos - 1 > 0 && self.messages[pos - 1].type == 9999) {
+                positions.append(pos-1)
+            }
+        }
+        for pos in positions.sorted().reversed() {
+            self.messages.remove(at: pos)
+            deletePaths.append(IndexPath.init(row: pos, section: 0))
+        }
+        self.messageTableView.deleteRows(at: deletePaths, with: .none)
     }
     
     private func findPosition(_ message: Message) -> Int {
@@ -326,15 +370,11 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func onMsgCellLongClick(message: Message, position: Int, view: UIView) {
-        self.sender?.showMsgSelectedLayout()
+        self.sender?.setSelectMode(true, message: message)
     }
     
     func onMsgResendClick(message: Message) {
         self.sender?.resendMessage(message)
-    }
-    
-    func setMessageEditing(_ editing: Bool) {
-        self.messageTableView.isEditing = editing
     }
     
     func getContentHeight() -> CGFloat {
@@ -345,5 +385,42 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         let offsetY = self.messageTableView.contentOffset.y + (height-lastResize)
         self.messageTableView.setContentOffset(CGPoint(x: 0, y: offsetY), animated: false)
         lastResize = height
+    }
+    
+    func isSelectMode() -> Bool {
+        return self.messageTableView.isEditing
+    }
+    
+    func isItemSelected(message: Message) -> Bool {
+        return self.selectedMessages.contains(message)
+    }
+    
+    func onSelected(message: Message, selected: Bool) {
+        if (selected) {
+            self.selectedMessages.insert(message)
+        } else {
+            self.selectedMessages.remove(message)
+        }
+    }
+    
+    func setSelectMode(_ selected: Bool, message: Message? = nil) {
+        if self.messageTableView.isEditing != selected {
+            if (selected) {
+                if (message != nil) {
+                    self.selectedMessages.insert(message!)
+                    let pos = self.findPosition(message!)
+                    if (pos >= 0) {
+                        self.messageTableView.cellForRow(at: IndexPath.init(row: pos, section: 0))?.isSelected = true
+                    }
+                }
+            } else {
+                self.selectedMessages.removeAll()
+            }
+            self.messageTableView.isEditing = selected
+        }
+    }
+    
+    func getSelectMessages() -> Set<Message> {
+        return self.selectedMessages
     }
 }
