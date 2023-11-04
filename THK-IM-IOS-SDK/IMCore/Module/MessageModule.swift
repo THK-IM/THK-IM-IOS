@@ -77,22 +77,6 @@ protocol MessageModule : BaseModule {
     func sendMessageToServer(_ message: Message) -> Observable<Message>
     
     /**
-     * 标记消息已读
-     */
-    func readMessages(_ sessionId: Int64, _ msgIds: [Int64]?) -> Observable<Void>
-    
-    /**
-     * 撤回消息
-     */
-    func revokeMessage(_ message: Message) -> Observable<Void>
-    
-    
-    /**
-     * 重新编辑消息
-     */
-    func reeditMessage(_ message: Message) -> Observable<Void>
-    
-    /**
      * 消息ack:需要ack的消息存入客户端缓存,批量按sessionId进行ack
      */
     func ackMessageToCache(_ msg: Message)

@@ -59,4 +59,7 @@ public protocol IMMsgSender : AnyObject {
 
     /// 删除多选视图选中的消息
     func deleteSelectedMessages()
+    
+    /// 设置已读消息
+    func readMessage(_ message: Message)
 }

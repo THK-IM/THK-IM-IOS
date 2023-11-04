@@ -9,8 +9,18 @@ import Foundation
 import UIKit
 import Kingfisher
 import CocoaLumberjack
+import BadgeSwift
 
 open class BaseSessionCell : BaseCell {
+    
+    lazy var unreadCountView: BadgeSwift = {
+        let view = BadgeSwift()
+        view.font = UIFont.systemFont(ofSize: 10)
+        view.textColor = UIColor.white
+        view.badgeColor = UIColor.red
+        view.cornerRadius = 6
+        return view
+    }()
     
     lazy var avatarView: UIImageView = {
         let view = UIImageView()
@@ -51,6 +61,7 @@ open class BaseSessionCell : BaseCell {
         contentView.addSubview(self.nickView)
         contentView.addSubview(self.msgView)
         contentView.addSubview(self.timeView)
+        contentView.addSubview(self.unreadCountView)
         
         avatarView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
@@ -72,6 +83,14 @@ open class BaseSessionCell : BaseCell {
             make.right.equalTo(contentView.snp.right).offset(-10)
             make.width.lessThanOrEqualTo(120)
         }
+        
+        unreadCountView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(4)
+            make.left.equalToSuperview().offset(42)
+            make.height.equalTo(16)
+            make.width.greaterThanOrEqualTo(16)
+        }
+        
     }
     
     required public init?(coder: NSCoder) {
@@ -89,12 +108,20 @@ open class BaseSessionCell : BaseCell {
     }
     
     func setSession(_ session: Session) {
-        self.avatarView.ca_setImageUrlWithCorner(url: "https://picsum.photos/300/300", radius: 20)
+        self.avatarView.ca_setImageUrlWithCorner(url: "https://picsum.photos/300/300", radius: 6)
         self.nickView.text = String(format: "nick-%d", session.entityId)
         self.msgView.text = session.lastMsg
         let dateString = Date().timeToDateString(showTime: session.mTime, currentTime: IMCoreManager.shared.severTime)
         self.timeView.text = dateString
         self.timeView.textAlignment = .right
+        let number = String.getNumber(count: Int(session.unreadCount))
+        if (number != nil) {
+            unreadCountView.text = number
+            unreadCountView.isHidden = false
+        } else {
+            unreadCountView.text = ""
+            unreadCountView.isHidden = true
+        }
     }
     
 }

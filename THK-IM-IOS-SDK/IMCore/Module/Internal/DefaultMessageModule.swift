@@ -230,21 +230,6 @@ open class DefaultMessageModule : MessageModule {
         return IMCoreManager.shared.api.sendMessageToServer(msg: message)
     }
     
-    func readMessages(_ sessionId: Int64, _ msgIds: [Int64]?) -> Observable<Void> {
-        // TODO
-        return Observable.empty()
-    }
-    
-    func revokeMessage(_ message: Message) -> Observable<Void> {
-        // TODO
-        return Observable.empty()
-    }
-    
-    func reeditMessage(_ message: Message) -> Observable<Void> {
-        // TODO
-        return Observable.empty()
-    }
-    
     func ackMessageToCache(_ msg: Message) {
         ackLock.lock()
         if msg.sessionId > 0 && msg.msgId > 0 {
@@ -342,10 +327,7 @@ open class DefaultMessageModule : MessageModule {
                     s.lastMsg = processor.getSessionDesc(msg: msg)
                     s.mTime = msg.cTime
                     do {
-                        let unReadCount = try IMCoreManager.shared.database.messageDao.getUnReadCount(
-                            msg.sessionId, MsgOperateStatus.ClientRead.rawValue
-                        )
-                        s.unreadCount = unReadCount
+                        s.unreadCount = try IMCoreManager.shared.database.messageDao.getUnReadCount(msg.sessionId)
                         try IMCoreManager.shared.database.sessionDao.insertOrUpdateSessions(s)
                         SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
                     } catch {

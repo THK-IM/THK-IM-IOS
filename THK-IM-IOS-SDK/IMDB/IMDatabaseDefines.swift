@@ -62,7 +62,11 @@ public enum MsgOperateStatus: Int {
  * 消息类型
  */
 public enum MsgType : Int {
-    case UnSupport = 0, // 未知
+    case REEDIT = -4,   // 重编辑消息
+         Revoke = -3,   // 撤回消息
+         READ = -2,     // 读取消息
+         ACK = -1,      // 收到消息
+         UnSupport = 0, // 未知
          TEXT = 1,      // 文本
          EMOJI = 2,     // 表情图片
          Audio = 3,     // 语音

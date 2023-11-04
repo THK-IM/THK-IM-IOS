@@ -39,6 +39,7 @@ public class IMUIManager: NSObject {
         self.registerMsgCellProviders(IMAudioMsgCellProvider())
         self.registerMsgCellProviders(IMVideoMsgCellProvider())
         
+        self.registerSessionCellProvider(IMSingleSessionCellProvider())
         
         registerBottomFunctionProvider(
             IMPhotoFunctionProvider(), IMCameraFunctionProvider()

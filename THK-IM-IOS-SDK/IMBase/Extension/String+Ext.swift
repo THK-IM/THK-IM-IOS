@@ -7,10 +7,34 @@
 
 import Foundation
 import CommonCrypto
+import UIKit
 
 extension String {
     var length: Int {
         return self.utf16.count
+    }
+    
+    static func getNumber(count: Int) -> String? {
+        if (count <= 0) {
+             return nil
+        } else if (count < 100) {
+            return "\(count)"
+        } else {
+            return "99+"
+        }
+    }
+    
+    func sizeWith(_ font : UIFont , _ maxSize : CGSize) ->CGSize {
+        let options = NSStringDrawingOptions.usesLineFragmentOrigin
+        var attributes : [NSAttributedString.Key : Any] = [:]
+        attributes[NSAttributedString.Key.font] = font
+        let textBouds = self.boundingRect(
+            with: maxSize,
+            options: options,
+            attributes: attributes,
+            context: nil
+        )
+        return textBouds.size
     }
     
     func random(_ length: Int) -> String {

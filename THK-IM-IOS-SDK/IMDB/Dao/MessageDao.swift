@@ -67,7 +67,7 @@ protocol MessageDao {
     /**
      * 获取session下的未读数
      */
-    func getUnReadCount(_ sessionId: Int64, _ operateStatus: Int) throws -> Int64
+    func getUnReadCount(_ sessionId: Int64) throws -> Int64
     
     /**
      * 更新消息发送状态

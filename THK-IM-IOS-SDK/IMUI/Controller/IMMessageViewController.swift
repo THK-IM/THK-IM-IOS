@@ -18,7 +18,6 @@ import CoreServices
 
 class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     
-    
     var session: Session? = nil
     private var containerView = UIView()
 //    private var alwaysShowView = UIView()
@@ -384,6 +383,13 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
                 }).disposed(by: self.disposeBag)
         }
     }
+    
+    func readMessage(_ message: Message) {
+        _ = IMCoreManager.shared.getMessageModule().sendMessage(
+            "", message.sessionId, MsgType.READ.rawValue, nil, message.msgId)
+    }
+    
+    
     
     private func sendVideo(_ data: Data, ext: String) throws {
         let fileName = "\(String().random(8)).\(ext)"

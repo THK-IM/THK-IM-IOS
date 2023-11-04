@@ -94,8 +94,19 @@ public class BaseMsgProcessor {
         let operateStatus = MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
         // tips：msgId初始值给-clientId,发送成功后更新为服务端返回的msgId
         let msg = Message(
-            id: clientId, sessionId: sessionId, fromUId: IMCoreManager.shared.uId, msgId: -clientId, type: messageType(),
-            content: content, sendStatus: MsgSendStatus.Init.rawValue, operateStatus: operateStatus, data: data, cTime: now, mTime: now
+            id: clientId, 
+            sessionId: sessionId,
+            fromUId: IMCoreManager.shared.uId,
+            msgId: -clientId,
+            type: messageType(),
+            content: content, 
+            sendStatus: MsgSendStatus.Init.rawValue,
+            operateStatus: operateStatus,
+            referMsgId: rMsgId,
+            atUsers: atUIdStr,
+            data: data,
+            cTime: now,
+            mTime: now
         )
         return msg
     }

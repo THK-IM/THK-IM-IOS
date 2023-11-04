@@ -16,6 +16,8 @@ enum IMMessageApi {
     case queryLatestMsg(_ uId: Int64, _ offset :Int, _ count: Int, _ cTime: Int64)
     /// 消息ack
     case ackMsgs(_ bean: AckMsgBean)
+    /// 已读消息
+    case readMsgs(_ bean: ReadMsgBean)
     /// 删除消息
     case deleteMsgs(_ bean: DeleteMsgBean)
 }
@@ -35,6 +37,8 @@ extension IMMessageApi: TargetType {
             return "/message/latest"
         case .ackMsgs:
             return "/message/ack"
+        case .readMsgs:
+            return "/message/read"
         case .deleteMsgs:
             return "/message"
         }
@@ -47,6 +51,8 @@ extension IMMessageApi: TargetType {
         case .queryLatestMsg:
             return .get
         case .ackMsgs:
+            return .post
+        case .readMsgs:
             return .post
         case .deleteMsgs:
             return .delete
@@ -61,6 +67,8 @@ extension IMMessageApi: TargetType {
             let urlParameters = ["u_id": uId, "offset": offset, "count": count, "c_time": cTime] as [String : Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         case let .ackMsgs(bean):
+            return .requestJSONEncodable(bean)
+        case let .readMsgs(bean):
             return .requestJSONEncodable(bean)
         case let .deleteMsgs(bean):
             return .requestJSONEncodable(bean)

@@ -88,9 +88,9 @@ class DefaultIMApi: IMApi {
     }
     
     func readMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
-        let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
+        let reqBean = ReadMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
-            .request(.ackMsgs(reqBean))
+            .request(.readMsgs(reqBean))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }

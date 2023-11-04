@@ -7,6 +7,7 @@
 
 import Foundation
 import WCDBSwift
+import CocoaLumberjack
 
 class DefaultMessageDao : MessageDao {
     
@@ -93,6 +94,7 @@ class DefaultMessageDao : MessageDao {
     }
     
     func updateMessageOperationStatus(_ sessionId: Int64, _ msgIds: [Int64], _ operateStatus: Int) throws {
+        DDLogInfo("updateMessageOperationStatus \(msgIds) \(operateStatus)")
         let operateStatusColumn = Column(named: "operate_status")
         let expression1 = Expression(with: operateStatusColumn)
         let expression2 = Expression(with: operateStatus)
@@ -126,16 +128,27 @@ class DefaultMessageDao : MessageDao {
     /**
      * 获取session下的未读数
      */
-    func getUnReadCount(_ sessionId: Int64, _ operateStatus: Int) throws -> Int64 {
+    func getUnReadCount(_ sessionId: Int64) throws -> Int64 {
         guard let res = try self.database?.getValue(
-            on: Message.Properties.id.count(),
+            on: Message.Properties.msgId.count(),
             fromTable: self.tableName,
-            where: Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0
-        ).int64Value else {
+            where: Message.Properties.sessionId == sessionId &&
+                (Message.Properties.type > 0) &&
+                (Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue != 2)
+        ).int32Value else {
             return 0
         }
-        return res
+        return Int64(res)
     }
+    
+//    func getUnReadCountMessages(_ sessionId: Int64) throws -> [Message]? {
+//        return try self.database?.getObjects(
+//            on: Message.Properties.all,
+//            fromTable: self.tableName,
+//            where: Message.Properties.sessionId == sessionId &&
+//                (Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue != 2)
+//        )
+//    }
     
     
     /**

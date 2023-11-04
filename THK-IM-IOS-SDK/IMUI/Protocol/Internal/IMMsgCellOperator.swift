@@ -16,4 +16,5 @@ protocol IMMsgCellOperator: AnyObject {
     func isSelectMode() ->Bool
     func isItemSelected(message: Message) ->Bool
     func onSelected(message: Message, selected: Bool)
+    func readMessage(_ message: Message)
 }

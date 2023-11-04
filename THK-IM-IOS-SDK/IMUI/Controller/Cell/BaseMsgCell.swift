@@ -168,11 +168,7 @@ open class BaseMsgCell : BaseCell {
     
     open override func appear() {
         self.cellWrapper.appear()
-        for view in self.subviews {
-//            if view is UITableViewCellEditControl {
-//
-//            }
-        }
+        self.readMessage()
     }
     
     open override func disappear() {
@@ -201,5 +197,20 @@ open class BaseMsgCell : BaseCell {
             return IMMsgPosType.Right.rawValue
         }
         return IMMsgPosType.Mid.rawValue
+    }
+    
+    private func readMessage() {
+        if (message == nil) {
+            return
+        }
+        if (message!.msgId <= 0 || message!.fromUId == IMCoreManager.shared.uId) {
+            return
+        }
+        if (message!.operateStatus & MsgOperateStatus.ClientRead.rawValue) > 0
+            && (message!.operateStatus & MsgOperateStatus.ServerRead.rawValue) > 0 {
+            return
+        }
+        self.delegate?.readMessage(message!)
+        message!.operateStatus = message!.operateStatus | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ClientRead.rawValue
     }
 }

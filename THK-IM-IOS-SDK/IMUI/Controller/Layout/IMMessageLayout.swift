@@ -11,7 +11,6 @@ import CocoaLumberjack
 
 class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsgCellOperator {
     
-    
     var session: Session? = nil
     var messages: Array<Message> = Array()
     private var selectedMessages: Set<Message> = Set()
@@ -376,6 +375,12 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     func onMsgResendClick(message: Message) {
         self.sender?.resendMessage(message)
     }
+    
+    func readMessage(_ message: Message) {
+        self.sender?.readMessage(message)
+    }
+    
+    
     
     func getContentHeight() -> CGFloat {
         return self.messageTableView.contentSize.height
