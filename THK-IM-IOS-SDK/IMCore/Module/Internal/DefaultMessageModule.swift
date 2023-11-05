@@ -343,14 +343,15 @@ open class DefaultMessageModule : MessageModule {
             .compose(RxTransformer.shared.io2Io())
             .subscribe(
                 onNext: { s in
-                    DDLogDebug("processSessionByMessage \(msg.id) \(msg.type)")
-                    let processor = self.getMsgProcessor(msg.type)
-                    s.lastMsg = processor.getSessionDesc(msg: msg)
-                    s.mTime = msg.cTime
                     do {
-                        s.unreadCount = try IMCoreManager.shared.database.messageDao.getUnReadCount(msg.sessionId)
-                        try IMCoreManager.shared.database.sessionDao.insertOrUpdateSessions(s)
-                        SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
+                        let unReadCount = try IMCoreManager.shared.database.messageDao.getUnReadCount(msg.sessionId)
+                        if (s.mTime < msg.mTime || s.unreadCount != unReadCount) {
+                            let processor = self.getMsgProcessor(msg.type)
+                            s.lastMsg = processor.getSessionDesc(msg: msg)
+                            s.mTime = msg.cTime
+                            try IMCoreManager.shared.database.sessionDao.insertOrUpdateSessions(s)
+                            SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
+                        }
                     } catch {
                         DDLogError(error)
                     }

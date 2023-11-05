@@ -52,10 +52,12 @@ public class ReadMsgProcessor: BaseMsgProcessor {
                     let session = try IMCoreManager.shared.database.sessionDao.findSessionById(msg.sessionId)
                     if (session != nil) {
                         let count = try IMCoreManager.shared.database.messageDao.getUnReadCount(session!.id)
-                        session!.unreadCount = count
-                        session!.mTime = IMCoreManager.shared.getCommonModule().getSeverTime()
-                        try IMCoreManager.shared.database.sessionDao.updateSessions(session!)
-                        SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                        if (session!.unreadCount != count || session!.mTime < msg.mTime) {
+                            session!.unreadCount = count
+                            session!.mTime = IMCoreManager.shared.getCommonModule().getSeverTime()
+                            try IMCoreManager.shared.database.sessionDao.updateSessions(session!)
+                            SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                        }
                     }
                 } else {
                     // 别人发给自己的已读消息
@@ -97,10 +99,12 @@ public class ReadMsgProcessor: BaseMsgProcessor {
                 let session = try IMCoreManager.shared.database.sessionDao.findSessionById(msg.sessionId)
                 if (session != nil) {
                     let count = try IMCoreManager.shared.database.messageDao.getUnReadCount(session!.id)
-                    session!.unreadCount = count
-                    session!.mTime = IMCoreManager.shared.getCommonModule().getSeverTime()
-                    try IMCoreManager.shared.database.sessionDao.updateSessions(session!)
-                    SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                    if (session!.unreadCount != count || session!.mTime < msg.mTime) {
+                        session!.unreadCount = count
+                        session!.mTime = msg.mTime
+                        try IMCoreManager.shared.database.sessionDao.updateSessions(session!)
+                        SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                    }
                 }
                 observer.onNext(msg)
             } catch {
