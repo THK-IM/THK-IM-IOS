@@ -72,10 +72,14 @@ class MessageBean: Codable {
     }
     
     func toMessage() -> Message {
+        var oprStatus = self.status
+        if (oprStatus == nil) {
+            oprStatus = MsgOperateStatus.Init.rawValue
+        }
         let message = Message(
             id: self.clientId, sessionId: self.sessionId, fromUId: self.fUId, msgId: self.msgId,
             type: self.type, content: self.body, data: nil, sendStatus: MsgSendStatus.Success.rawValue,
-            operateStatus: MsgOperateStatus.Init.rawValue, cTime: self.cTime, mTime: self.cTime)
+            operateStatus: oprStatus!, referMsgId: self.rMsgId, cTime: self.cTime, mTime: self.cTime)
         return message
     }
 }

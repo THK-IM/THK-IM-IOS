@@ -38,12 +38,15 @@ public class ReadMsgProcessor: BaseMsgProcessor {
             return
         }
         do {
+            DDLogInfo("ReadMsgProcessor received msg \(msg.id) \(msg.fromUId) \(msg.operateStatus)")
             let referMsg = try IMCoreManager.shared.database.messageDao.findMessageByMsgId(msg.referMsgId!, msg.sessionId)
             if (referMsg != nil) {
+                DDLogInfo("ReadMsgProcessor received referMsg \(referMsg!.id) \(referMsg!.fromUId) \(referMsg!.operateStatus)")
                 if (msg.fromUId == IMCoreManager.shared.uId) {
                     // 自己发的已读消息，更新rMsgId的消息状态为服务端已读
-                    referMsg!.operateStatus = MsgOperateStatus.ServerRead.rawValue | MsgOperateStatus.ClientRead.rawValue |
-                    MsgOperateStatus.Ack.rawValue
+                    referMsg!.operateStatus = MsgOperateStatus.ServerRead.rawValue | 
+                                                MsgOperateStatus.ClientRead.rawValue |
+                                                MsgOperateStatus.Ack.rawValue
                     referMsg!.mTime = msg.cTime
                     try insertOrUpdateDb(referMsg!, true, false)
                     let session = try IMCoreManager.shared.database.sessionDao.findSessionById(msg.sessionId)

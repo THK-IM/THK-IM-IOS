@@ -97,7 +97,7 @@ class DefaultMessageDao : MessageDao {
     
     func updateMessageOperationStatus(_ sessionId: Int64, _ msgIds: [Int64], _ operateStatus: Int) throws {
         DDLogInfo("updateMessageOperationStatus \(msgIds) \(operateStatus)")
-        let operateStatusColumn = Column(named: "operate_status")
+        let operateStatusColumn = Column(named: "opr_status")
         let expression1 = Expression(with: operateStatusColumn)
         let expression2 = Expression(with: operateStatus)
         let expression3 = expression1 | expression2
