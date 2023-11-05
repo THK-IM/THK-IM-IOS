@@ -49,6 +49,11 @@ open class BaseSessionCell : BaseCell {
         return view
     }()
     
+    lazy var silenceView: UIImageView = {
+        let view = UIImageView()
+        return view
+    }()
+    
     deinit {
         DDLogDebug("BaseSessionCell deinit")
     }
@@ -62,6 +67,7 @@ open class BaseSessionCell : BaseCell {
         contentView.addSubview(self.msgView)
         contentView.addSubview(self.timeView)
         contentView.addSubview(self.unreadCountView)
+        contentView.addSubview(self.silenceView)
         
         avatarView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
@@ -83,14 +89,18 @@ open class BaseSessionCell : BaseCell {
             make.right.equalTo(contentView.snp.right).offset(-10)
             make.width.lessThanOrEqualTo(120)
         }
-        
         unreadCountView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(4)
             make.left.equalToSuperview().offset(42)
             make.height.equalTo(16)
             make.width.greaterThanOrEqualTo(16)
         }
-        
+        silenceView.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-8)
+            make.bottom.equalToSuperview().offset(-8)
+            make.height.equalTo(16)
+            make.width.equalTo(16)
+        }
     }
     
     required public init?(coder: NSCoder) {
@@ -121,6 +131,11 @@ open class BaseSessionCell : BaseCell {
         } else {
             unreadCountView.text = ""
             unreadCountView.isHidden = true
+        }
+        if (session.status & SessionStatus.Silence.rawValue > 0) {
+            silenceView.image = UIImage(named: "icon_msg_silence")
+        } else {
+            silenceView.image = nil
         }
     }
     

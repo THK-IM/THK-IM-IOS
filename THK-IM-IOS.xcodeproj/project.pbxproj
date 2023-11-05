@@ -30,6 +30,8 @@
 		A03082D32AF67C57001B8373 /* ReadMsgBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082D22AF67C57001B8373 /* ReadMsgBean.swift */; };
 		A03082D62AF67E45001B8373 /* SingleSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082D52AF67E45001B8373 /* SingleSessionCell.swift */; };
 		A03082D92AF67E81001B8373 /* IMSingleSessionCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082D82AF67E81001B8373 /* IMSingleSessionCellProvider.swift */; };
+		A03082DF2AF7BB84001B8373 /* IMSessionCellOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082DE2AF7BB84001B8373 /* IMSessionCellOperator.swift */; };
+		A03082E12AF7BFEC001B8373 /* UpdateSessionBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082E02AF7BFEC001B8373 /* UpdateSessionBean.swift */; };
 		A0C431DD2A909C1700A84D4A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0C431DC2A909C1600A84D4A /* Images.xcassets */; };
 		A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* LiveManager.swift */; };
 		A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DF2A909C3100A84D4A /* LiveController.swift */; };
@@ -210,6 +212,8 @@
 		A03082D22AF67C57001B8373 /* ReadMsgBean.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadMsgBean.swift; sourceTree = "<group>"; };
 		A03082D52AF67E45001B8373 /* SingleSessionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleSessionCell.swift; sourceTree = "<group>"; };
 		A03082D82AF67E81001B8373 /* IMSingleSessionCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSingleSessionCellProvider.swift; sourceTree = "<group>"; };
+		A03082DE2AF7BB84001B8373 /* IMSessionCellOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSessionCellOperator.swift; sourceTree = "<group>"; };
+		A03082E02AF7BFEC001B8373 /* UpdateSessionBean.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSessionBean.swift; sourceTree = "<group>"; };
 		A0C431DC2A909C1600A84D4A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A0C431DE2A909C3000A84D4A /* LiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveManager.swift; path = API/LiveManager.swift; sourceTree = "<group>"; };
 		A0C431DF2A909C3100A84D4A /* LiveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveController.swift; path = API/LiveController.swift; sourceTree = "<group>"; };
@@ -568,6 +572,7 @@
 				A0D68ABA2A888678004D11A5 /* AckMsgBean.swift */,
 				A0D68ABB2A888678004D11A5 /* ListBean.swift */,
 				A03082D22AF67C57001B8373 /* ReadMsgBean.swift */,
+				A03082E02AF7BFEC001B8373 /* UpdateSessionBean.swift */,
 			);
 			path = Bean;
 			sourceTree = "<group>";
@@ -1008,6 +1013,7 @@
 				A0D68B112A888678004D11A5 /* IMMsgSender.swift */,
 				A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */,
 				A02529162ACADE72001561A0 /* IMMsgCellOperator.swift */,
+				A03082DE2AF7BB84001B8373 /* IMSessionCellOperator.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -1187,6 +1193,7 @@
 				A02529222ADBD5BF001561A0 /* Data+Hexstring.swift in Sources */,
 				A0EA42FB2A94CCE200F64A90 /* DefaultIMApi.swift in Sources */,
 				A0D68BC72A888679004D11A5 /* BaseCell.swift in Sources */,
+				A03082E12AF7BFEC001B8373 /* UpdateSessionBean.swift in Sources */,
 				A0E8ED482AEDED23004163BD /* IMPreviewer.swift in Sources */,
 				A0D68BA92A888679004D11A5 /* IMUnSupportMsgCellProvider.swift in Sources */,
 				A0D68BD42A888679004D11A5 /* IMVideoController.swift in Sources */,
@@ -1288,6 +1295,7 @@
 				A0D68B7A2A888679004D11A5 /* ErrorBean.swift in Sources */,
 				A0D68B992A888679004D11A5 /* SessionDao.swift in Sources */,
 				A0D68BFF2A888679004D11A5 /* GCDTool.swift in Sources */,
+				A03082DF2AF7BB84001B8373 /* IMSessionCellOperator.swift in Sources */,
 				A025291C2ACC31E2001561A0 /* IMUIProtocolDefines.swift in Sources */,
 				A03082D32AF67C57001B8373 /* ReadMsgBean.swift in Sources */,
 				A0D68BC92A888679004D11A5 /* BaseSessionCell.swift in Sources */,

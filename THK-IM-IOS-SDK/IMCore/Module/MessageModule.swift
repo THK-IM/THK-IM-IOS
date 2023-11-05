@@ -54,7 +54,12 @@ protocol MessageModule : BaseModule {
     /**
      * 批量删除多条Session
      */
-    func deleteSession(_ sessionList: Array<Session>, _ deleteServer: Bool) -> Observable<Bool>
+    func deleteSession(_ session: Session, _ deleteServer: Bool) -> Observable<Void>
+    
+    /**
+     * 更新session
+     */
+    func updateSession(_ session: Session, _ updateSever: Bool) -> Observable<Void>
     
     /**
      * 收到新消息

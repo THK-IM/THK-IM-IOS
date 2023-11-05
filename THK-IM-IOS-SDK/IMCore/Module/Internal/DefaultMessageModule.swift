@@ -199,9 +199,26 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    func deleteSession(_ sessionList: Array<Session>, _ deleteServer: Bool) -> Observable<Bool> {
-        // TODO
-        return Observable.just(true)
+    /**
+     * 批量删除多条Session
+     */
+    func deleteSession(_ session: Session, _ deleteServer: Bool) -> Observable<Void> {
+        if (deleteServer) {
+            return self.deleteServerSession(session)
+                .concat(self.deleteLocalSession(session))
+        }
+        return self.deleteLocalSession(session)
+    }
+    
+    /**
+     * 更新session
+     */
+    func updateSession(_ session: Session, _ updateSever: Bool) -> Observable<Void> {
+        if (updateSever) {
+            return self.updateServerSession(session)
+                .concat(self.updateLocalSession(session))
+        }
+        return self.updateLocalSession(session)
     }
     
     func onNewMessage(_ msg: Message) {
@@ -366,4 +383,41 @@ open class DefaultMessageModule : MessageModule {
             v.value.reset()
         }
     }
+    
+    
+    private func deleteLocalSession(_ session: Session) -> Observable<Void> {
+        return Observable.create({observer -> Disposable in
+            do {
+                try IMCoreManager.shared.database.sessionDao.deleteSessions(session)
+            } catch {
+                observer.onError(error)
+            }
+            SwiftEventBus.post(IMEvent.SessionDelete.rawValue, sender: session)
+            observer.onCompleted()
+            return Disposables.create()
+        })
+    }
+    
+    private func deleteServerSession(_ session: Session) -> Observable<Void> {
+        return IMCoreManager.shared.api.deleteSession(IMCoreManager.shared.uId, session: session)
+    }
+    
+    private func updateLocalSession(_ session: Session) -> Observable<Void> {
+        return Observable.create({observer -> Disposable in
+            do {
+                try IMCoreManager.shared.database.sessionDao.updateSessions(session)
+                
+            } catch {
+                observer.onError(error)
+            }
+            SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+            observer.onCompleted()
+            return Disposables.create()
+        })
+    }
+    
+    private func updateServerSession(_ session: Session) -> Observable<Void> {
+        return IMCoreManager.shared.api.updateSession(IMCoreManager.shared.uId, session: session)
+    }
+    
 }

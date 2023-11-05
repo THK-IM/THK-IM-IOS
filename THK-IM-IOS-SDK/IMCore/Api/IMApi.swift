@@ -30,6 +30,17 @@ protocol IMApi: AnyObject {
      */
     func createSession(_ uId: Int64, _ sessionType: Int, _ entityId: Int64, _ members: Set<Int64>?) -> Observable<Session>
     
+    
+    /**
+     * 删除用户session
+     */
+    func deleteSession(_ uId: Int64, session: Session)-> Observable<Void>
+
+    /**
+     * 根新用户session
+     */
+    func updateSession(_ uId: Int64, session: Session)-> Observable<Void>
+    
     /**
      * 发送消息到服务端
      */

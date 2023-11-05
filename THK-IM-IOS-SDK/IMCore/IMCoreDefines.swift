@@ -7,6 +7,11 @@
 
 import Foundation
 
+public enum SessionStatus: Int {
+    case Reject = 1,
+        Silence = 2
+}
+
 /**
  * IM事件
  */

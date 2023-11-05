@@ -39,7 +39,7 @@ class SessionBean: Codable {
     func toSession() -> Session {
         let session = Session(
             id: self.sessionId, type: self.type, entityId: self.entityId, name: self.name, remark: self.remark,
-            mute: self.mute, role: self.role, status: self.status, unreadCount: 0, topTimestamp: top,
+            mute: self.mute, role: self.role, status: self.status, unreadCount: 0, topTimestamp: top ?? 0,
             extData: extData, cTime: cTime, mTime: mTime
         )
         return session

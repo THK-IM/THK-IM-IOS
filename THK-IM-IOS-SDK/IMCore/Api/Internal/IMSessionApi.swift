@@ -16,6 +16,10 @@ enum IMSessionApi {
     case queryLatestSession(_ uId: Int64, _ offset :Int, _ count: Int, _ mTime: Int64)
     /// 查询单个会话
     case querySession(_ uId: Int64, _ sessionId: Int64)
+    /// 删除session
+    case deleteSession(_ uId: Int64, _ sessionId: Int64)
+    /// 更新session
+    case updateSession(_ bean: UpdateSessionBean)
 }
 
 
@@ -33,6 +37,10 @@ extension IMSessionApi: TargetType {
             return "/session/latest"
         case let .querySession(uId, sessionId):
             return "/user_session/\(uId)/\(sessionId)"
+        case let .deleteSession(uId, sessionId):
+            return "/user_session/\(uId)/\(sessionId)"
+        case .updateSession:
+            return "/user_session"
         }
     }
     
@@ -44,6 +52,10 @@ extension IMSessionApi: TargetType {
             return .get
         case .querySession:
             return .get
+        case .deleteSession:
+            return .delete
+        case .updateSession:
+            return .put
         }
     }
     
@@ -56,6 +68,10 @@ extension IMSessionApi: TargetType {
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         case .querySession:
             return .requestPlain
+        case .deleteSession:
+            return .requestPlain
+        case let .updateSession(bean):
+            return .requestJSONEncodable(bean)
         }
     }
     

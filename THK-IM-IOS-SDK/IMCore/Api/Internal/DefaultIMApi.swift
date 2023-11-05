@@ -62,6 +62,21 @@ class DefaultIMApi: IMApi {
             })
     }
     
+    func deleteSession(_ uId: Int64, session: Session)-> Observable<Void> {
+        return sessionApi.rx
+            .request(.deleteSession(uId, session.id))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Void())
+    }
+
+    func updateSession(_ uId: Int64, session: Session)-> Observable<Void> {
+        let bean = UpdateSessionBean(uId: uId, sId: session.id, top: session.topTimestamp, status: session.status)
+        return sessionApi.rx
+            .request(.updateSession(bean))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Void())
+    }
+    
     func sendMessageToServer(msg: Message) -> Observable<Message> {
         let reqBean = MessageBean(msg: msg)
         return messageApi.rx

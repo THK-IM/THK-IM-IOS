@@ -31,16 +31,20 @@ class DefaultSessionDao : SessionDao {
         }
     }
     
-    func updateSessionStatus(_ sessionId: Int64) {
-        
-    }
-    
     func insertOrUpdateSessions(_ sessions: Session...) throws {
         try self.database?.insertOrReplace(sessions, intoTable: self.tableName)
     }
     
     func insertOrIgnoreSessions(_ sessions: Session...) throws {
         try self.database?.insertOrIgnore(sessions, intoTable: self.tableName)
+    }
+    
+    func deleteSessions(_ sessions: Session...) throws {
+        var ids = Array<Int64>()
+        for session in sessions {
+            ids.append(session.id)
+        }
+        try self.database?.delete(fromTable: self.tableName, where: Session.Properties.id.in(ids))
     }
     
     func findSessionById(_ sId: Int64) throws -> Session? {
@@ -55,7 +59,7 @@ class DefaultSessionDao : SessionDao {
         return try self.database?.getObjects(
             fromTable: self.tableName,
             where: Session.Properties.mTime < mTime,
-            orderBy: [Session.Properties.mTime.order(Order.descending)],
+            orderBy: [Session.Properties.topTimestamp.order(Order.descending), Session.Properties.mTime.order(Order.descending)],
             limit: count
         )
     }

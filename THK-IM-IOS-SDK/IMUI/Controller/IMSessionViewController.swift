@@ -12,7 +12,8 @@ import CocoaLumberjack
 import SwiftEventBus
 
 
-class IMSessionViewController : UIViewController, UITableViewDataSource, UITableViewDelegate {
+class IMSessionViewController : UIViewController, UITableViewDataSource, UITableViewDelegate, IMSessionCellOperator {
+    
     
     private var sessionTableView : UITableView?
     private var sessions: Array<Session> = Array()
@@ -71,7 +72,6 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             self.sessions.remove(at: pos)
             tableView.deleteRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
         }
-        
         // 新Session
         let insertPos = findInsertPosition(session)
         self.sessions.insert(session, at: insertPos)
@@ -83,7 +83,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         defer {lock.unlock()}
         guard let tableView = self.sessionTableView else { return }
         let pos = findPosition(session)
-        if (pos == -1) {
+        if (pos != -1) {
             // 老session，替换reload
             self.sessions.remove(at: pos)
             tableView.deleteRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
@@ -102,7 +102,29 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     }
     
     private func findInsertPosition(_ session: Session) -> Int {
-        return 0
+        for i in 0 ..< sessions.count {
+            if session.topTimestamp > sessions[i].topTimestamp {
+                return i
+            } else if (session.topTimestamp == sessions[i].topTimestamp) {
+                if (session.mTime >= sessions[i].mTime) {
+                    return i
+                }
+            }
+        }
+        return sessions.count
+    }
+    
+    internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let h = self.sessionTableView!.frame.height
+        let distance = self.sessionTableView!.contentSize.height - self.sessionTableView!.contentOffset.y
+        DDLogDebug("scrollViewDidScroll, h:" + h.description + ", dis: " + distance.description)
+        if (h > distance) {
+            DDLogDebug("scrollViewDidScroll loadSessions start")
+            self.loadSessions()
+        }
+        if (self.sessionTableView!.contentOffset.y < 0) {
+            DDLogDebug("scrollViewDidScroll 最顶部")
+        }
     }
     
     
@@ -160,22 +182,88 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let messageController = IMMessageViewController()
-        messageController.session = self.sessions[indexPath.row]
-        self.navigationController?.pushViewController(messageController, animated: true)
+        let session = self.sessions[indexPath.row]
+        self.openSession(session)
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let h = self.sessionTableView!.frame.height
-        let distance = self.sessionTableView!.contentSize.height - self.sessionTableView!.contentOffset.y
-        DDLogDebug("scrollViewDidScroll, h:" + h.description + ", dis: " + distance.description)
-        if (h > distance) {
-            DDLogDebug("scrollViewDidScroll loadSessions start")
-            self.loadSessions()
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let session = self.sessions[indexPath.row]
+        var topText = "置顶"
+        var silenceText = "免打扰"
+        let deleteText = "删除"
+        if (session.topTimestamp > 0) {
+            topText = "取消置顶"
         }
-        if (self.sessionTableView!.contentOffset.y < 0) {
-            DDLogDebug("scrollViewDidScroll 最顶部")
+        if (session.status & SessionStatus.Silence.rawValue > 0) {
+            silenceText = "取消静音"
         }
+        let top = UIContextualAction(style: .normal, title: topText, handler: { [weak self] action, view, completionHandler in
+            guard let sf = self else {
+                return
+            }
+            let session = sf.sessions[indexPath.row]
+            if (session.topTimestamp > 0) {
+                session.topTimestamp = 0
+            } else {
+                session.topTimestamp = IMCoreManager.shared.getCommonModule().getSeverTime()
+            }
+            sf.updateSession(session)
+            completionHandler(true)
+        })
+        top.backgroundColor = UIColor.init(hex: "2466e9")
+        
+        let mute = UIContextualAction(style: .normal, title: silenceText, handler: { [weak self] action, view, completionHandler in
+            guard let sf = self else {
+                return
+            }
+            let session = sf.sessions[indexPath.row]
+            session.status = session.status ^ SessionStatus.Silence.rawValue
+            sf.updateSession(session)
+            completionHandler(true)
+        })
+        mute.backgroundColor = UIColor.init(hex: "f9b018")
+        
+        let delete = UIContextualAction(style: .normal, title: deleteText, handler: { [weak self] action, view, completionHandler in
+            guard let sf = self else {
+                return
+            }
+            let session = sf.sessions[indexPath.row]
+            sf.deleteSession(session)
+            completionHandler(true)
+        })
+        delete.backgroundColor = UIColor.init(hex: "d22c69")
+        
+        let configuration = UISwipeActionsConfiguration(actions: [top, delete, mute])
+        return configuration
+    }
+    
+    
+    func updateSession(_ session: Session) {
+        IMCoreManager.shared.getMessageModule()
+            .updateSession(session, true)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onError: { error in
+                DDLogError("deleteSession error \(error)")
+            }, onCompleted: {
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
+    func deleteSession(_ session: Session) {
+        IMCoreManager.shared.getMessageModule()
+            .deleteSession(session, true)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onError: { error in
+                DDLogError("deleteSession error \(error)")
+            }, onCompleted: {
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
+    func openSession(_ session: Session) {
+        let messageController = IMMessageViewController()
+        messageController.session = session
+        self.navigationController?.pushViewController(messageController, animated: true)
     }
     
 }

@@ -25,6 +25,12 @@ protocol SessionDao {
      */
     func insertOrIgnoreSessions(_ sessions: Session...) throws
     
+    
+    /**
+     * 批量删除session
+     */
+    func deleteSessions(_ sessions: Session...) throws
+    
     /**
      * 通过sessionId查询session
      */

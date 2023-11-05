@@ -11,8 +11,6 @@ import CocoaLumberjack
 
 class DefaultMessageDao : MessageDao {
     
-    
-    
     weak var database: Database?
     let tableName: String
     

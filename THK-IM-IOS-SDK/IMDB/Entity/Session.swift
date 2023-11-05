@@ -32,7 +32,7 @@ public final class Session: TableCodable {
     // 最近一条消息
     var lastMsg: String? = nil
     // 置顶时间戳
-    var topTimestamp: Int64? = 0
+    var topTimestamp: Int64 = 0
     // 自定义扩展数据 推荐使用json结构存储
     var extData: String? = nil
     // 消息创建时间
@@ -67,7 +67,7 @@ public final class Session: TableCodable {
     
     
     init(id: Int64, type: Int, entityId: Int64, name: String, remark: String, mute: Int, role: Int, status: Int,
-         unreadCount: Int64, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64? = nil,
+         unreadCount: Int64, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64,
          extData: String? = nil, cTime: Int64, mTime: Int64) {
         self.id = id
         self.type = type
@@ -89,7 +89,7 @@ public final class Session: TableCodable {
     public static func emptySession() -> Session {
         return Session(
             id: 0, type: 0, entityId: 0, name: "", remark: "", mute: 0, role: 0,
-            status: 0, unreadCount: 0, cTime: 0, mTime: 0
+            status: 0, unreadCount: 0, topTimestamp: 0, cTime: 0, mTime: 0
         )
     }
     
