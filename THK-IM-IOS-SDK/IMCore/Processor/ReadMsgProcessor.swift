@@ -9,7 +9,7 @@
 import Foundation
 import CocoaLumberjack
 import RxSwift
-
+import SwiftEventBus
 
 public class ReadMsgProcessor: BaseMsgProcessor {
     
@@ -23,7 +23,7 @@ public class ReadMsgProcessor: BaseMsgProcessor {
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { [weak self] _ in
                 DDLogInfo("readMessagesToServer")
-                self?.readMessagesToServer()
+                self?.sendReadMessagesToServer()
             })
             .disposed(by: self.disposeBag)
     }
@@ -34,24 +34,49 @@ public class ReadMsgProcessor: BaseMsgProcessor {
     }
     
     override public func received(_ msg: Message) {
-        // 自己发的已读消息，更新rMsgId的消息状态为服务端已读
-        if (msg.fromUId == IMCoreManager.shared.uId) {
-            if (msg.referMsgId != nil) {
-                do {
-                    try IMCoreManager.shared.database.messageDao
-                        .updateMessageOperationStatus(
-                            msg.sessionId,
-                            [msg.referMsgId!],
-                            MsgOperateStatus.ServerRead.rawValue | MsgOperateStatus.ClientRead.rawValue
-                        )
-                } catch {
-                    DDLogError("updateMessageOperationStatus err: \(error)")
+        if (msg.referMsgId == nil) {
+            return
+        }
+        do {
+            let referMsg = try IMCoreManager.shared.database.messageDao.findMessageByMsgId(msg.referMsgId!, msg.sessionId)
+            if (referMsg != nil) {
+                if (msg.fromUId == IMCoreManager.shared.uId) {
+                    // 自己发的已读消息，更新rMsgId的消息状态为服务端已读
+                    referMsg!.operateStatus = MsgOperateStatus.ServerRead.rawValue | MsgOperateStatus.ClientRead.rawValue |
+                    MsgOperateStatus.Ack.rawValue
+                    referMsg!.mTime = msg.cTime
+                    try insertOrUpdateDb(referMsg!, true, false)
+                    let session = try IMCoreManager.shared.database.sessionDao.findSessionById(msg.sessionId)
+                    if (session != nil) {
+                        let count = try IMCoreManager.shared.database.messageDao.getUnReadCount(session!.id)
+                        session!.unreadCount = count
+                        session!.mTime = IMCoreManager.shared.getCommonModule().getSeverTime()
+                        try IMCoreManager.shared.database.sessionDao.updateSessions(session!)
+                        SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                    }
+                } else {
+                    // 别人发给自己的已读消息
+                    if (referMsg!.rUsers != nil) {
+                        referMsg!.rUsers = "\(referMsg!.rUsers!)#\(msg.fromUId)"
+                    } else {
+                        referMsg!.rUsers = "\(msg.fromUId)"
+                    }
+                    referMsg!.mTime = msg.cTime
+                    try insertOrUpdateDb(referMsg!, true, false)
+                    // 状态操作消息对用户不可见，默认状态即位本身已读
+                    msg.operateStatus = MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+                    // 已读消息入库，并ack
+                    try insertOrUpdateDb(referMsg!, false, false)
+                    if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                        IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
+                    }
                 }
             }
-        } else {
-            // TODO
-            IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
+        } catch {
+            DDLogError("ReadMsgProcessor received err: \(error)")
         }
+        
+        
     }
     
     override public func send(_ msg: Message, resend: Bool = false) {
@@ -66,6 +91,14 @@ public class ReadMsgProcessor: BaseMsgProcessor {
                         [msg.referMsgId!],
                         MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.Ack.rawValue
                     )
+                let session = try IMCoreManager.shared.database.sessionDao.findSessionById(msg.sessionId)
+                if (session != nil) {
+                    let count = try IMCoreManager.shared.database.messageDao.getUnReadCount(session!.id)
+                    session!.unreadCount = count
+                    session!.mTime = IMCoreManager.shared.getCommonModule().getSeverTime()
+                    try IMCoreManager.shared.database.sessionDao.updateSessions(session!)
+                    SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                }
                 observer.onNext(msg)
             } catch {
                 observer.onError(error)
@@ -74,11 +107,9 @@ public class ReadMsgProcessor: BaseMsgProcessor {
             return Disposables.create()
         }).compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { [weak self] message in
-                IMCoreManager.shared.getMessageModule().processSessionByMessage(message)
                 self?.readMessageToCache(message)
-                
             }, onError: { error in
-                DDLogError("send readMessage error: \(error)")
+                DDLogError("ReadMsgProcessor send error: \(error)")
             }
         ).disposed(by: self.disposeBag)
     }
@@ -107,7 +138,7 @@ public class ReadMsgProcessor: BaseMsgProcessor {
     }
 
     
-    private func readServerMessage(_ sessionId: Int64, _ msgIds: Set<Int64>) {
+    private func sendReadMessages(_ sessionId: Int64, _ msgIds: Set<Int64>) {
         IMCoreManager.shared.api.readMessages(IMCoreManager.shared.uId, sessionId, msgIds)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(
@@ -123,18 +154,18 @@ public class ReadMsgProcessor: BaseMsgProcessor {
                         )
                         self.readMessageSuccess(sessionId, msgIds)
                     } catch {
-                        DDLogError("ackMessageSuccess error: \(error)")
+                        DDLogError("ReadMsgProcessor sendReadMessages error: \(error)")
                     }
                 }
             ).disposed(by: disposeBag)
     }
     
-    private func readMessagesToServer() {
+    private func sendReadMessagesToServer() {
         readLock.lock()
         for (k, v) in self.needReadDic {
             if v.count > 0 {
-                print("ackMessagesToServer \(k) \(v)")
-                self.readServerMessage(k, v)
+                DDLogDebug("ReadMsgProcessor sendReadMessagesToServer \(k) \(v)")
+                self.sendReadMessages(k, v)
             }
         }
         readLock.unlock()

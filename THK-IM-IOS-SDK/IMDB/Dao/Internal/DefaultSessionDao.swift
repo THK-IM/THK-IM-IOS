@@ -43,15 +43,15 @@ class DefaultSessionDao : SessionDao {
         try self.database?.insertOrIgnore(sessions, intoTable: self.tableName)
     }
     
-    func querySessionById(_ sId: Int64) throws -> Session? {
+    func findSessionById(_ sId: Int64) throws -> Session? {
         return try self.database?.getObject(fromTable: self.tableName, where: Session.Properties.id == sId)
     }
     
-    func querySessionByEntityId(_ entityId: Int64, _ type: Int) throws -> Session? {
+    func findSessionByEntityId(_ entityId: Int64, _ type: Int) throws -> Session? {
         return try self.database?.getObject(fromTable: self.tableName, where: Session.Properties.entityId == entityId && Session.Properties.type == type)
     }
     
-    func querySessions(_ count: Int, _ mTime: Int64) throws -> Array<Session>? {
+    func findSessions(_ count: Int, _ mTime: Int64) throws -> Array<Session>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
             where: Session.Properties.mTime < mTime,

@@ -74,8 +74,8 @@ class MessageBean: Codable {
     func toMessage() -> Message {
         let message = Message(
             id: self.clientId, sessionId: self.sessionId, fromUId: self.fUId, msgId: self.msgId,
-            type: self.type, content: self.body, sendStatus: MsgSendStatus.Success.rawValue,
-            operateStatus: MsgOperateStatus.Init.rawValue, data: nil, cTime: self.cTime, mTime: self.cTime)
+            type: self.type, content: self.body, data: nil, sendStatus: MsgSendStatus.Success.rawValue,
+            operateStatus: MsgOperateStatus.Init.rawValue, cTime: self.cTime, mTime: self.cTime)
         return message
     }
 }

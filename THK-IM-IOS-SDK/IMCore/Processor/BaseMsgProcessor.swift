@@ -23,7 +23,7 @@ public class BaseMsgProcessor {
      */
     open func received(_ msg: Message){
         do {
-            let dbMsg = try IMCoreManager.shared.database.messageDao.findMessage(msg.id, msg.sessionId, msg.fromUId)
+            let dbMsg = try IMCoreManager.shared.database.messageDao.findMessageById(msg.id, msg.fromUId, msg.sessionId)
             if (dbMsg == nil) {
                 // 数据库不存在
                 if (msg.fromUId == IMCoreManager.shared.uId) {
@@ -100,11 +100,12 @@ public class BaseMsgProcessor {
             msgId: -clientId,
             type: messageType(),
             content: content, 
+            data: data,
             sendStatus: MsgSendStatus.Init.rawValue,
             operateStatus: operateStatus,
+            rUsers: nil,
             referMsgId: rMsgId,
             atUsers: atUIdStr,
-            data: data,
             cTime: now,
             mTime: now
         )

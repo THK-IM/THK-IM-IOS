@@ -20,7 +20,6 @@ open class DefaultMessageModule : MessageModule {
     private var needAckDic = [Int64: Set<Int64>]()
     private let idLock = NSLock()
     private let ackLock = NSLock()
-    private let msgLock = NSLock()
     
     private func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
         let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
@@ -54,6 +53,7 @@ open class DefaultMessageModule : MessageModule {
            .subscribe(onNext: { messageArray in
                do {
                    var sessionMsgs = [Int64: [Message]]()
+                   var unProcessMsgs = [Message]()
                    for msg in messageArray {
                        if msg.fromUId == IMCoreManager.shared.uId {
                            msg.operateStatus = msg.operateStatus |
@@ -62,27 +62,33 @@ open class DefaultMessageModule : MessageModule {
                                                MsgOperateStatus.ServerRead.rawValue
                        }
                        msg.sendStatus = MsgSendStatus.Success.rawValue
-                       if sessionMsgs[msg.sessionId] == nil {
-                           sessionMsgs[msg.sessionId] = [Message]()
+                       if (msg.type < 0) {
+                           // 状态操作消息交给对应消息处理器自己处理
+                           self.getMsgProcessor(msg.type).received(msg)
+                       } else {
+                           // 其他消息批量处理
+                           if sessionMsgs[msg.sessionId] == nil {
+                               sessionMsgs[msg.sessionId] = [Message]()
+                           }
+                           sessionMsgs[msg.sessionId]?.append(msg)
+                           unProcessMsgs.append(msg)
                        }
-                       sessionMsgs[msg.sessionId]?.append(msg)
                    }
                    // 批量插入消息
-                   if messageArray.count > 0 {
+                   if unProcessMsgs.count > 0 {
                        try IMCoreManager.shared.database.messageDao.insertOrIgnoreMessages(messageArray)
-                   }
-
-                   // 插入ack
-                   for msg in messageArray {
-                       if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
-                           self.ackMessageToCache(msg)
+                       // 插入ack
+                       for msg in unProcessMsgs {
+                           if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                               self.ackMessageToCache(msg)
+                           }
                        }
                    }
 
                    // 更新每个session的最后一条消息
                    for (sid, msgs) in sessionMsgs {
                        SwiftEventBus.post(IMEvent.BatchMsgNew.rawValue, sender: (sid, msgs))
-                       let lastMsg = msgs.last
+                       let lastMsg = try IMCoreManager.shared.database.messageDao.findLastMessageBySessionId(sid)
                        if lastMsg != nil {
                            self.processSessionByMessage(lastMsg!)
                        }
@@ -111,12 +117,11 @@ open class DefaultMessageModule : MessageModule {
     }
     
     
-    
     func createSingleSession(_ entityId: Int64) -> Observable<Session> {
         let sessionType = SessionType.Single.rawValue
         return Observable.create({observer -> Disposable in
             do {
-                var session = try IMCoreManager.shared.database.sessionDao.querySessionByEntityId(entityId, sessionType)
+                var session = try IMCoreManager.shared.database.sessionDao.findSessionByEntityId(entityId, sessionType)
                 if (session == nil) {
                     session = Session.emptySession()
                 }
@@ -139,7 +144,7 @@ open class DefaultMessageModule : MessageModule {
     func getSession(_ sessionId: Int64) -> Observable<Session> {
         return Observable.create({observer -> Disposable in
             do {
-                var session = try IMCoreManager.shared.database.sessionDao.querySessionById(sessionId)
+                var session = try IMCoreManager.shared.database.sessionDao.findSessionById(sessionId)
                 if (session == nil) {
                     session = Session.emptySession()
                 }
@@ -161,7 +166,7 @@ open class DefaultMessageModule : MessageModule {
     func queryLocalSessions(_ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
         return Observable.create({observer -> Disposable in
             do {
-                let sessions = try IMCoreManager.shared.database.sessionDao.querySessions(count, mTime)
+                let sessions = try IMCoreManager.shared.database.sessionDao.findSessions(count, mTime)
                 if (sessions != nil) {
                     observer.onNext(sessions!)
                 } else {
@@ -200,9 +205,7 @@ open class DefaultMessageModule : MessageModule {
     }
     
     func onNewMessage(_ msg: Message) {
-        msgLock.lock()
         getMsgProcessor(msg.type).received(msg)
-        msgLock.unlock()
     }
     
     func generateNewMsgId() -> Int64 {
@@ -323,6 +326,7 @@ open class DefaultMessageModule : MessageModule {
             .compose(RxTransformer.shared.io2Io())
             .subscribe(
                 onNext: { s in
+                    DDLogDebug("processSessionByMessage \(msg.id) \(msg.type)")
                     let processor = self.getMsgProcessor(msg.type)
                     s.lastMsg = processor.getSessionDesc(msg: msg)
                     s.mTime = msg.cTime

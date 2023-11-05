@@ -12,6 +12,7 @@ import CocoaLumberjack
 class DefaultMessageDao : MessageDao {
     
     
+    
     weak var database: Database?
     let tableName: String
     
@@ -28,7 +29,8 @@ class DefaultMessageDao : MessageDao {
         ).int64Value
     }
     
-    func findMessageBySid(_ msgId: Int64, _ sessionId: Int64) throws -> Message? {
+    
+    func findMessageByMsgId(_ msgId: Int64, _ sessionId: Int64) throws -> Message? {
         return try self.database?.getObject(
             on: Message.Properties.all,
             fromTable: self.tableName,
@@ -36,7 +38,7 @@ class DefaultMessageDao : MessageDao {
         )
     }
     
-    func findMessage(_ id: Int64, _ sessionId: Int64, _ fromUId: Int64) throws  -> Message?  {
+    func findMessageById(_ id: Int64, _ fromUId: Int64, _ sessionId: Int64) throws -> Message? {
         return try self.database?.getObject(
             on: Message.Properties.all,
             fromTable: self.tableName,
@@ -47,7 +49,7 @@ class DefaultMessageDao : MessageDao {
     }
     
     func findOlderMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
-        let msg = try self.findMessageBySid(msgId, sessionId)
+        let msg = try self.findMessageByMsgId(msgId, sessionId)
         guard let time = msg?.cTime else {
             return []
         }
@@ -55,7 +57,7 @@ class DefaultMessageDao : MessageDao {
     }
     
     func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
-        let msg = try self.findMessageBySid(msgId, sessionId)
+        let msg = try self.findMessageByMsgId(msgId, sessionId)
         guard let time = msg?.cTime else {
             return []
         }
@@ -230,6 +232,16 @@ class DefaultMessageDao : MessageDao {
                     Message.Properties.type.in(types),
             orderBy: [Message.Properties.cTime.order(Order.ascending)],
             limit: count
+        )
+    }
+    
+    func findLastMessageBySessionId(_ sessionId: Int64) throws -> Message? {
+        return try self.database?.getObject(
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId &&
+                    Message.Properties.type >= 0,
+            orderBy: [Message.Properties.cTime.order(Order.descending)],
+            offset: 0
         )
     }
     

@@ -17,12 +17,13 @@ protocol MessageDao {
     /**
      * 根据msgId和sessionId查询消息
      */
-    func findMessageBySid(_ msgId: Int64, _ sessionId: Int64) throws -> Message?
+    func findMessageByMsgId(_ msgId: Int64, _ sessionId: Int64) throws -> Message?
+    
     
     /**
-     * 根据id、sessionId、fromUId查询消息
+     * 根据id、fromUId、sessionId查询消息
      */
-    func findMessage(_ id: Int64, _ sessionId: Int64, _ fromUId: Int64) throws -> Message?
+    func findMessageById(_ id: Int64, _ fromUId: Int64,  _ sessionId: Int64) throws -> Message?
     
     /**
      * 查询比msgId早的消息
@@ -104,7 +105,14 @@ protocol MessageDao {
      */
     func queryMessageBySidAndBeforeCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>?
     
-    // 查询ctime之后的消息
+    /**
+     * 查询ctime之后的消息
+     */
     func queryMessageBySidAndAfterCTime(_ sessionId: Int64,  _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>?
+    
+    /**
+     * 查询session的最后一条消息
+     */
+    func findLastMessageBySessionId(_ sessionId: Int64) throws -> Message?
     
 }

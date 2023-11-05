@@ -189,7 +189,7 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
                     guard let sf = self else {
                         return
                     }
-                    let sessions = try IMCoreManager.shared.database.sessionDao.querySessions(1708851739664322560, IMCoreManager.shared.severTime)
+                    let sessions = try IMCoreManager.shared.database.sessionDao.findSessions(1708851739664322560, IMCoreManager.shared.severTime)
                     if (sessions != nil) {
                         for session in sessions! {
                             print("\(session.id) \(session.entityId)")

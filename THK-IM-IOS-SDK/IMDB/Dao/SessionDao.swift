@@ -28,17 +28,17 @@ protocol SessionDao {
     /**
      * 通过sessionId查询session
      */
-    func querySessionById(_ sessionId: Int64) throws -> Session?
+    func findSessionById(_ sessionId: Int64) throws -> Session?
     
     /**
      * 通过对方id查询session
      */
-    func querySessionByEntityId(_ entityId: Int64, _ type: Int) throws -> Session?
+    func findSessionByEntityId(_ entityId: Int64, _ type: Int) throws -> Session?
     
     /**
      * 查询mTim之后的session数组
      * @param count 数量
      * @param mTime 修改时间
      */
-    func querySessions(_ count: Int, _ mTime: Int64) throws -> Array<Session>?
+    func findSessions(_ count: Int, _ mTime: Int64) throws -> Array<Session>?
 }

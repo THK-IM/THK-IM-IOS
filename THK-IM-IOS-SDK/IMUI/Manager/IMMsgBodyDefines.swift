@@ -7,26 +7,7 @@
 
 import Foundation
 
-public class IMCommonMsgData: Codable {
-    // 回复当前消息的消息id数组
-    var replyMsgIds: Set<Int64>?
-    // 已读用户
-    var readUIds: Set<Int64>?
-    
-    enum CodingKeys: String, CodingKey {
-        case replyMsgIds = "reply_msg_ids"
-        case readUIds = "read_u_ids"
-    }
-    
-    init() {}
-    
-    init(replyMsgIds: Set<Int64>? = nil, readUIds: Set<Int64>? = nil) {
-        self.replyMsgIds = replyMsgIds
-        self.readUIds = readUIds
-    }
-}
-
-public class IMAudioMsgData: IMCommonMsgData {
+public class IMAudioMsgData: Codable {
     var path: String?
     var duration: Int?
     var played: Bool
@@ -37,36 +18,18 @@ public class IMAudioMsgData: IMCommonMsgData {
         case played = "played"
     }
     
-    override init() {
+    init() {
         self.played = false
-        super.init()
     }
     
     init(path: String? = nil, duration: Int? = nil, played: Bool = false) {
         self.path = path
         self.duration = duration
         self.played = played
-        super.init()
-    }
-    
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.path = try container.decode(String?.self, forKey: .path)
-        self.duration = try container.decode(Int?.self, forKey: .duration)
-        self.played = try container.decode(Bool.self, forKey: .played)
-        try super.init(from: decoder)
-    }
-    
-    public override func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(path, forKey: .path)
-        try container.encode(duration, forKey: .duration)
-        try container.encode(played, forKey: .played)
-        try super.encode(to: encoder)
     }
 }
 
-public class IMImageMsgData: IMCommonMsgData {
+public class IMImageMsgData: Codable {
     var width: Int?
     var height: Int?
     var path: String?
@@ -79,8 +42,7 @@ public class IMImageMsgData: IMCommonMsgData {
         case thumbnailPath = "thumbnail_path"
     }
     
-    override init() {
-        super.init()
+    init() {
     }
     
     init(width: Int?, height: Int?, path: String? = nil, thumbnailPath: String? = nil) {
@@ -88,29 +50,10 @@ public class IMImageMsgData: IMCommonMsgData {
         self.height = height
         self.path = path
         self.thumbnailPath = thumbnailPath
-        super.init()
-    }
-    
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.width = try container.decode(Int?.self, forKey: .width)
-        self.height = try container.decode(Int?.self, forKey: .height)
-        self.path = try container.decode(String?.self, forKey: .path)
-        self.thumbnailPath = try container.decode(String?.self, forKey: .thumbnailPath)
-        try super.init(from: decoder)
-    }
-    
-    public override func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(width, forKey: .width)
-        try container.encode(height, forKey: .height)
-        try container.encode(path, forKey: .path)
-        try container.encode(thumbnailPath, forKey: .thumbnailPath)
-        try super.encode(to: encoder)
     }
 }
 
-public class IMVideoMsgData: IMCommonMsgData {
+public class IMVideoMsgData: Codable {
     var duration: Int?
     var width: Int?
     var height: Int?
@@ -125,8 +68,7 @@ public class IMVideoMsgData: IMCommonMsgData {
         case thumbnailPath = "thumbnail_path"
     }
     
-    override init() {
-        super.init()
+    init() {
     }
     
     init(duration: Int?, width: Int?, height:Int?, path: String? = nil, thumbnailPath: String? = nil) {
@@ -135,28 +77,8 @@ public class IMVideoMsgData: IMCommonMsgData {
         self.height = height
         self.path = path
         self.thumbnailPath = thumbnailPath
-        super.init()
     }
     
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.duration = try container.decode(Int?.self, forKey: .duration)
-        self.width = try container.decode(Int?.self, forKey: .width)
-        self.height = try container.decode(Int?.self, forKey: .height)
-        self.path = try container.decode(String?.self, forKey: .path)
-        self.thumbnailPath = try container.decode(String?.self, forKey: .thumbnailPath)
-        try super.init(from: decoder)
-    }
-    
-    public override func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(duration, forKey: .duration)
-        try container.encode(width, forKey: .width)
-        try container.encode(height, forKey: .height)
-        try container.encode(path, forKey: .path)
-        try container.encode(thumbnailPath, forKey: .thumbnailPath)
-        try super.encode(to: encoder)
-    }
 }
 
 public class IMAudioMsgBody: Codable {
