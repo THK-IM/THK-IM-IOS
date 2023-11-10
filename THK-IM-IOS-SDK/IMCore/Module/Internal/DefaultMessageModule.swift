@@ -17,9 +17,11 @@ open class DefaultMessageModule : MessageModule {
     private let disposeBag = DisposeBag()
     private var lastTimestamp : Int64 = 0
     private var lastSequence : Int = 0
+    private let epoch: Int64 = 1288834974657
     private var needAckDic = [Int64: Set<Int64>]()
     private let idLock = NSLock()
     private let ackLock = NSLock()
+    private let snowFlakeMachine: Int64 = 1 // 雪花算法机器编号 IOS:1 Android: 2
     
     private func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
         let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
@@ -27,7 +29,7 @@ open class DefaultMessageModule : MessageModule {
         UserDefaults.standard.setValue(saveTime, forKey: key)
         return UserDefaults.standard.synchronize()
     }
-
+    
     private func getOfflineMsgLastSyncTime() -> Int64 {
         let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
         let value = UserDefaults.standard.object(forKey: key)
@@ -38,7 +40,7 @@ open class DefaultMessageModule : MessageModule {
     func registerMsgProcessor(_ processor: BaseMsgProcessor) {
         processorDic[processor.messageType()] = processor
     }
-
+    
     func getMsgProcessor(_ msgType: Int) -> BaseMsgProcessor {
         let processor = processorDic[msgType]
         return (processor != nil) ? (processor!) : processorDic[0]!
@@ -49,67 +51,66 @@ open class DefaultMessageModule : MessageModule {
         let count = 200
         let uId = IMCoreManager.shared.uId
         IMCoreManager.shared.api.getLatestMessages(uId, lastTime, count)
-           .compose(RxTransformer.shared.io2Io())
-           .subscribe(onNext: { messageArray in
-               do {
-                   var sessionMsgs = [Int64: [Message]]()
-                   var unProcessMsgs = [Message]()
-                   for msg in messageArray {
-                       if msg.fromUId == IMCoreManager.shared.uId {
-                           msg.operateStatus = msg.operateStatus |
-                                               MsgOperateStatus.Ack.rawValue |
-                                               MsgOperateStatus.ClientRead.rawValue |
-                                               MsgOperateStatus.ServerRead.rawValue
-                       }
-                       msg.sendStatus = MsgSendStatus.Success.rawValue
-                       if (msg.type < 0) {
-                           // 状态操作消息交给对应消息处理器自己处理
-                           self.getMsgProcessor(msg.type).received(msg)
-                       } else {
-                           // 其他消息批量处理
-                           if sessionMsgs[msg.sessionId] == nil {
-                               sessionMsgs[msg.sessionId] = [Message]()
-                           }
-                           sessionMsgs[msg.sessionId]?.append(msg)
-                           unProcessMsgs.append(msg)
-                       }
-                   }
-                   // 批量插入消息
-                   if unProcessMsgs.count > 0 {
-                       try IMCoreManager.shared.database.messageDao.insertOrIgnoreMessages(messageArray)
-                       // 插入ack
-                       for msg in unProcessMsgs {
-                           if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
-                               self.ackMessageToCache(msg)
-                           }
-                       }
-                   }
-
-                   // 更新每个session的最后一条消息
-                   for (sid, msgs) in sessionMsgs {
-                       SwiftEventBus.post(IMEvent.BatchMsgNew.rawValue, sender: (sid, msgs))
-                       let lastMsg = try IMCoreManager.shared.database.messageDao.findLastMessageBySessionId(sid)
-                       if lastMsg != nil {
-                           self.processSessionByMessage(lastMsg!)
-                       }
-                   }
-               } catch {
-                   DDLogError(error)
-               }
-
-               if (messageArray.last != nil) {
-                   let severTime = messageArray.last!.cTime
-                   let success = self.setOfflineMsgSyncTime(severTime)
-                   if (success) {
-                       if (messageArray.count >= count) {
-                           self.syncOfflineMessages()
-                       }
-                   }
-               }
-
-               
-           })
-           .disposed(by: disposeBag)
+            .compose(RxTransformer.shared.io2Io())
+            .subscribe(onNext: { messageArray in
+                do {
+                    var sessionMsgs = [Int64: [Message]]()
+                    var unProcessMsgs = [Message]()
+                    for msg in messageArray {
+                        if msg.fromUId == IMCoreManager.shared.uId {
+                            msg.operateStatus = msg.operateStatus |
+                            MsgOperateStatus.Ack.rawValue |
+                            MsgOperateStatus.ClientRead.rawValue |
+                            MsgOperateStatus.ServerRead.rawValue
+                        }
+                        msg.sendStatus = MsgSendStatus.Success.rawValue
+                        if (msg.type < 0) {
+                            // 状态操作消息交给对应消息处理器自己处理
+                            self.getMsgProcessor(msg.type).received(msg)
+                        } else {
+                            // 其他消息批量处理
+                            if sessionMsgs[msg.sessionId] == nil {
+                                sessionMsgs[msg.sessionId] = [Message]()
+                            }
+                            sessionMsgs[msg.sessionId]?.append(msg)
+                            unProcessMsgs.append(msg)
+                        }
+                    }
+                    // 批量插入消息
+                    if unProcessMsgs.count > 0 {
+                        try IMCoreManager.shared.database.messageDao.insertOrIgnoreMessages(messageArray)
+                        // 插入ack
+                        for msg in unProcessMsgs {
+                            if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                                self.ackMessageToCache(msg)
+                            }
+                        }
+                    }
+                    
+                    // 更新每个session的最后一条消息
+                    for (sid, msgs) in sessionMsgs {
+                        SwiftEventBus.post(IMEvent.BatchMsgNew.rawValue, sender: (sid, msgs))
+                        let lastMsg = try IMCoreManager.shared.database.messageDao.findLastMessageBySessionId(sid)
+                        if lastMsg != nil {
+                            self.processSessionByMessage(lastMsg!)
+                        }
+                    }
+                } catch {
+                    DDLogError(error)
+                }
+                
+                if (messageArray.last != nil) {
+                    let severTime = messageArray.last!.cTime
+                    let success = self.setOfflineMsgSyncTime(severTime)
+                    if (success) {
+                        if (messageArray.count >= count) {
+                            self.syncOfflineMessages()
+                        }
+                    }
+                }
+                
+            })
+            .disposed(by: disposeBag)
     }
     
     func syncLatestSessionsFromServer(_ lastSyncTime: Int, _ count: Int) {
@@ -237,7 +238,7 @@ open class DefaultMessageModule : MessageModule {
             self.lastTimestamp = current
             self.lastSequence = 0
         }
-        return current * 100 + Int64(self.lastSequence)
+        return (current-epoch) << 22 + Int64(snowFlakeMachine << 12) + Int64(self.lastSequence)
     }
     
     func sendMessage(_ body: Codable, _ sessionId: Int64, _ type: Int,
@@ -281,7 +282,7 @@ open class DefaultMessageModule : MessageModule {
         }
         ackLock.unlock()
     }
-
+    
     
     private func ackServerMessage(_ sessionId: Int64, _ msgIds: Set<Int64>) {
         IMCoreManager.shared.api.ackMessages(IMCoreManager.shared.uId, sessionId, msgIds)
@@ -310,7 +311,7 @@ open class DefaultMessageModule : MessageModule {
     private func deleteServerMessages(_ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
         return IMCoreManager.shared.api.deleteMessages(IMCoreManager.shared.uId, sessionId, msgIds)
     }
-
+    
     private func deleteLocalMessages(_ messages: Array<Message>) -> Observable<Void> {
         return Observable.create({observer -> Disposable in
             do {
@@ -363,7 +364,7 @@ open class DefaultMessageModule : MessageModule {
             ).disposed(by: disposeBag)
     }
     
-    func onSignalReceived(_ subType: Int, _ body: String) {
+    public func onSignalReceived(_ subType: Int, _ body: String) {
         if subType == 0 {
             do {
                 let msgBean = try JSONDecoder().decode(

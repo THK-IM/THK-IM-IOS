@@ -8,35 +8,12 @@
 
 import Foundation
 
-class LoadTask {
+protocol LoadTask: AnyObject {
     
-    let taskId: String
-    let path: String
-    let url: String
-    let fileModuleReference: WeakReference<DefaultFileLoadModule>
+    func start()
     
-    private var running = true
+    func cancel()
     
-    init(taskId : String, path: String, url: String, fileModule: DefaultFileLoadModule) {
-        self.taskId = taskId
-        self.path = path
-        self.url = url
-        self.fileModuleReference = WeakReference(value: fileModule)
-    }
-    
-    func start() {
-        
-    }
-    
-    func cancel() {
-        running = false
-    }
-    
-    func notify(progress: Int, state: Int) {
-        if (running) {
-            fileModuleReference.value?.notifyListeners(
-                taskId: taskId, progress: progress, state: state, url: url, path: path)
-        }
-    }
+    func notify(progress: Int, state: Int, err: Error?)
 }
 

@@ -10,9 +10,10 @@ import RxSwift
 import CocoaLumberjack
 import SwiftEventBus
 
-public class BaseMsgProcessor {
+open class BaseMsgProcessor {
     
-    var disposeBag = DisposeBag()
+    open var disposeBag = DisposeBag()
+    open var downloadUrls = [String]()
     
     func getMessageModule() -> MessageModule {
         return IMCoreManager.shared.getMessageModule()

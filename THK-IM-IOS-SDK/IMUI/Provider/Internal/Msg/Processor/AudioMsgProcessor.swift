@@ -36,7 +36,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
             var entity = message
             // 1 检查文件所在目录，如果非IM目录，拷贝到IM目录下
             try self.checkDir(storageModule, &audioData, &entity)
-    
+            
             return Observable.just(entity)
         } catch {
             DDLogInfo(error)
@@ -96,17 +96,9 @@ class AudioMsgProcessor : BaseMsgProcessor {
             }
             let realPath = storageModule.sandboxFilePath(audioData.path!)
             let (_, name) = storageModule.getPathsFromFullPath(realPath)
-            
-            let uploadKey = fileLoadModule.getUploadKey(
-                entity.sessionId,
-                entity.fromUId,
-                name,
-                entity.id
-            )
-            
             return Observable.create({observer -> Disposable in
                 let loaderListener = FileLoadListener(
-                    { progress, state, url, path in
+                    { progress, state, url, path, err in
                         SwiftEventBus.post(
                             IMEvent.MsgLoadStatusUpdate.rawValue,
                             sender: IMLoadProgress(IMLoadType.Upload.rawValue, url, path, state, progress)
@@ -133,8 +125,15 @@ class AudioMsgProcessor : BaseMsgProcessor {
                                 observer.onError(error)
                             }
                             break
+                        case
+                            FileLoadState.Failed.rawValue:
+                            if (err != nil) {
+                                observer.onError(err!)
+                            } else {
+                                observer.onError(CocoaError.init(.executableLoad))
+                            }
+                            break
                         default:
-                            observer.onError(CocoaError.init(.coderInvalidValue))
                             break
                         }
                     },
@@ -142,11 +141,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
                         return false
                     }
                 )
-                _ = fileLoadModule.upload(
-                    key: uploadKey,
-                    path: realPath,
-                    loadListener: loaderListener
-                )
+                fileLoadModule.upload(path: realPath, message: entity, loadListener: loaderListener)
                 return Disposables.create()
             })
         } catch {
@@ -183,11 +178,16 @@ class AudioMsgProcessor : BaseMsgProcessor {
             if downloadUrl == nil || body.name == nil {
                 return false
             }
+            if (downloadUrls.contains(downloadUrl!)) {
+                return true
+            } else {
+                downloadUrls.append(downloadUrl!)
+            }
             let fileName = body.name
             let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
                 message.sessionId, fileName!, IMFileFormat.Image.rawValue)
             let loadListener = FileLoadListener(
-                {progress, state, url, path in
+                {[weak self] progress, state, url, path, err in
                     SwiftEventBus.post(
                         IMEvent.MsgLoadStatusUpdate.rawValue,
                         sender: IMLoadProgress(IMLoadType.Download.rawValue, url, path, state, progress)
@@ -201,14 +201,25 @@ class AudioMsgProcessor : BaseMsgProcessor {
                     case
                         FileLoadState.Success.rawValue:
                         do {
-                            data.path = path
-                            data.duration = body.duration
-                            let d = try JSONEncoder().encode(data)
-                            message.data = String(data: d, encoding: .utf8)!
-                            try self.insertOrUpdateDb(message, true, false)
+                            if (!FileManager.default.fileExists(atPath: localPath)) {
+                                try IMCoreManager.shared.storageModule.copyFile(path, localPath)
+                                data.path = localPath
+                                data.duration = body.duration
+                                let d = try JSONEncoder().encode(data)
+                                message.data = String(data: d, encoding: .utf8)!
+                                try self?.insertOrUpdateDb(message, true, false)
+                            }
                         } catch {
                             DDLogError(error)
                         }
+                        self?.downloadUrls.removeAll(where: { it in
+                            return it == downloadUrl!
+                        })
+                        break
+                    case FileLoadState.Failed.rawValue:
+                        self?.downloadUrls.removeAll(where: { it in
+                            return it == downloadUrl!
+                        })
                         break
                     default:
                         break
@@ -218,11 +229,7 @@ class AudioMsgProcessor : BaseMsgProcessor {
                     return false
                 }
             )
-            _ = IMCoreManager.shared.fileLoadModule.download(
-                key: downloadUrl!,
-                path: localPath,
-                loadListener: loadListener
-            )
+            IMCoreManager.shared.fileLoadModule.download(key: downloadUrl!, message: message, loadListener: loadListener)
         } catch {
             DDLogError(error)
         }

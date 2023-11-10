@@ -9,7 +9,7 @@ import Foundation
 
 
 /**
-  存储协议
+ 存储协议
  */
 protocol StorageModule : AnyObject {
     
@@ -39,12 +39,6 @@ protocol StorageModule : AnyObject {
      */
     func copyFile(_ srcPath :String, _ dePath: String) throws
     
-    /**
-     * 申请存放用户头像的地址
-     */
-    func allocAvatarPath(_ id: Int64, _ avatarUrl: String, _ type: Int) -> String
-    
-
     
     /**
      * 申请会话下文件存放路径，函数内不会创建文件

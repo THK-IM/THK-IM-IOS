@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
-open class BaseMsgCell : BaseCell {
+open class BaseMsgCell : BaseTableCell {
     
     weak var delegate: IMMsgCellOperator? = nil
     var cellWrapper: CellWrapper

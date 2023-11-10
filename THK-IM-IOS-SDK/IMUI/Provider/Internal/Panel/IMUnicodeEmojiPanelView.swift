@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 import RxSwift
 
-open class IMUnicodeEmojiUIController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    private let cellID = "unicode_emoji_cell_id"
+    private let cellId = "unicode_emoji_cell_id"
     private let countOneRow = 8.0
     private let disposeBag = DisposeBag()
     
@@ -23,14 +23,14 @@ open class IMUnicodeEmojiUIController: UIViewController, UICollectionViewDelegat
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         layout.minimumInteritemSpacing = 0
-        let collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: self.frame, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundView = nil
         collectionView.backgroundColor = UIColor.clear
-        collectionView.register(IMUnicodeEmojiCell.self, forCellWithReuseIdentifier: self.cellID)
+        collectionView.register(IMUnicodeEmojiCell.self, forCellWithReuseIdentifier: self.cellId)
         collectionView.alpha = 1
         return collectionView
     }()
@@ -69,18 +69,22 @@ open class IMUnicodeEmojiUIController: UIViewController, UICollectionViewDelegat
         return emojis
     }()
     
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        setupView()
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupView()
     }
     
-    private func setupView() {
-        self.view.addSubview(self.emojiView)
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupView() {
+        self.addSubview(self.emojiView)
         self.emojiView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
-        self.view.addSubview(self.sendButton)
+        self.addSubview(self.sendButton)
         self.sendButton.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
             make.right.equalToSuperview().offset(-10)
@@ -88,7 +92,7 @@ open class IMUnicodeEmojiUIController: UIViewController, UICollectionViewDelegat
             make.height.equalTo(30)
         }
         
-        self.view.addSubview(self.deleteButton)
+        self.addSubview(self.deleteButton)
         self.deleteButton.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
@@ -111,7 +115,7 @@ open class IMUnicodeEmojiUIController: UIViewController, UICollectionViewDelegat
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellID, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellId, for: indexPath)
         let emojiCell = cell as! IMUnicodeEmojiCell
         emojiCell.setEmoji(self.emojis[indexPath.row])
         return cell

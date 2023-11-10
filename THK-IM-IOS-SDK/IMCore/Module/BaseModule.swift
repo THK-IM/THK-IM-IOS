@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol BaseModule : AnyObject {
+public protocol BaseModule : AnyObject {
     
     func onSignalReceived(_ subType: Int, _ body: String)
 }

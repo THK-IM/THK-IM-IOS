@@ -48,6 +48,7 @@
 		A0C431F82A909CCE00A84D4A /* JoinRoomBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */; };
 		A0C431FC2A909D2500A84D4A /* UIRtcMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431FA2A909D2500A84D4A /* UIRtcMsgCell.swift */; };
 		A0C431FD2A909D2500A84D4A /* ParticipantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431FB2A909D2500A84D4A /* ParticipantView.swift */; };
+		A0CC9F742AFC88F200801B25 /* IMTabCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CC9F732AFC88F200801B25 /* IMTabCell.swift */; };
 		A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A962A88838A004D11A5 /* AppDelegate.swift */; };
 		A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A982A88838A004D11A5 /* SceneDelegate.swift */; };
 		A0D68A9B2A88838A004D11A5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A9A2A88838A004D11A5 /* ViewController.swift */; };
@@ -95,12 +96,12 @@
 		A0D68BA92A888679004D11A5 /* IMUnSupportMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF42A888678004D11A5 /* IMUnSupportMsgCellProvider.swift */; };
 		A0D68BAA2A888679004D11A5 /* IMDefaultSessionCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF52A888678004D11A5 /* IMDefaultSessionCellProvider.swift */; };
 		A0D68BAB2A888679004D11A5 /* IMImageMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF62A888678004D11A5 /* IMImageMsgCellProvider.swift */; };
-		A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiControllerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF82A888678004D11A5 /* IMUnicodeEmojiControllerProvider.swift */; };
+		A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiPanelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF82A888678004D11A5 /* IMUnicodeEmojiPanelProvider.swift */; };
 		A0D68BAD2A888679004D11A5 /* IMUnicodeEmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF92A888678004D11A5 /* IMUnicodeEmojiCell.swift */; };
-		A0D68BAE2A888679004D11A5 /* IMUnicodeEmojiUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFA2A888678004D11A5 /* IMUnicodeEmojiUIController.swift */; };
+		A0D68BAE2A888679004D11A5 /* IMUnicodeEmojiPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFA2A888678004D11A5 /* IMUnicodeEmojiPanelView.swift */; };
 		A0D68BAF2A888679004D11A5 /* IMCameraFunctionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFC2A888678004D11A5 /* IMCameraFunctionProvider.swift */; };
 		A0D68BB02A888679004D11A5 /* IMPhotoFunctionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFD2A888678004D11A5 /* IMPhotoFunctionProvider.swift */; };
-		A0D68BB12A888679004D11A5 /* IMBasePanelControllerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFE2A888678004D11A5 /* IMBasePanelControllerProvider.swift */; };
+		A0D68BB12A888679004D11A5 /* IMBasePanelViewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFE2A888678004D11A5 /* IMBasePanelViewProvider.swift */; };
 		A0D68BB22A888679004D11A5 /* IMBaseMessageCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AFF2A888678004D11A5 /* IMBaseMessageCellProvider.swift */; };
 		A0D68BB32A888679004D11A5 /* IMBaseFunctionCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B002A888678004D11A5 /* IMBaseFunctionCellProvider.swift */; };
 		A0D68BB42A888679004D11A5 /* IMMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B022A888678004D11A5 /* IMMessageViewController.swift */; };
@@ -109,10 +110,9 @@
 		A0D68BB82A888679004D11A5 /* IMMsgCheckedLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B072A888678004D11A5 /* IMMsgCheckedLayout.swift */; };
 		A0D68BB92A888679004D11A5 /* IMBottomPanelLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B082A888678004D11A5 /* IMBottomPanelLayout.swift */; };
 		A0D68BBA2A888679004D11A5 /* IMSpeakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0A2A888678004D11A5 /* IMSpeakView.swift */; };
-		A0D68BBB2A888679004D11A5 /* IMMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0B2A888678004D11A5 /* IMMoreView.swift */; };
-		A0D68BBC2A888679004D11A5 /* IMMoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0C2A888678004D11A5 /* IMMoreCell.swift */; };
-		A0D68BBD2A888679004D11A5 /* IMEmojiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0D2A888678004D11A5 /* IMEmojiView.swift */; };
-		A0D68BBE2A888679004D11A5 /* IMEmojiController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0E2A888678004D11A5 /* IMEmojiController.swift */; };
+		A0D68BBB2A888679004D11A5 /* IMFunctionPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0B2A888678004D11A5 /* IMFunctionPanelView.swift */; };
+		A0D68BBC2A888679004D11A5 /* IMFunctionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0C2A888678004D11A5 /* IMFunctionCell.swift */; };
+		A0D68BBD2A888679004D11A5 /* IMTabPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0D2A888678004D11A5 /* IMTabPanelView.swift */; };
 		A0D68BBF2A888679004D11A5 /* IMMsgLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0F2A888678004D11A5 /* IMMsgLabelView.swift */; };
 		A0D68BC02A888679004D11A5 /* IMMsgSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B112A888678004D11A5 /* IMMsgSender.swift */; };
 		A0D68BC12A888679004D11A5 /* IMMsgPreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */; };
@@ -120,7 +120,7 @@
 		A0D68BC42A888679004D11A5 /* CellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B172A888678004D11A5 /* CellWrapper.swift */; };
 		A0D68BC52A888679004D11A5 /* LeftCellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B182A888678004D11A5 /* LeftCellWrapper.swift */; };
 		A0D68BC62A888679004D11A5 /* RightCellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B192A888678004D11A5 /* RightCellWrapper.swift */; };
-		A0D68BC72A888679004D11A5 /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1A2A888678004D11A5 /* BaseCell.swift */; };
+		A0D68BC72A888679004D11A5 /* BaseTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1A2A888678004D11A5 /* BaseTableCell.swift */; };
 		A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1B2A888678004D11A5 /* BaseMsgCell.swift */; };
 		A0D68BC92A888679004D11A5 /* BaseSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */; };
 		A0D68BCA2A888679004D11A5 /* IMSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */; };
@@ -230,6 +230,7 @@
 		A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinRoomBean.swift; sourceTree = "<group>"; };
 		A0C431FA2A909D2500A84D4A /* UIRtcMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIRtcMsgCell.swift; sourceTree = "<group>"; };
 		A0C431FB2A909D2500A84D4A /* ParticipantView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantView.swift; sourceTree = "<group>"; };
+		A0CC9F732AFC88F200801B25 /* IMTabCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMTabCell.swift; sourceTree = "<group>"; };
 		A0D68A932A88838A004D11A5 /* THK-IM-IOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "THK-IM-IOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0D68A962A88838A004D11A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A0D68A982A88838A004D11A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -279,12 +280,12 @@
 		A0D68AF42A888678004D11A5 /* IMUnSupportMsgCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUnSupportMsgCellProvider.swift; sourceTree = "<group>"; };
 		A0D68AF52A888678004D11A5 /* IMDefaultSessionCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMDefaultSessionCellProvider.swift; sourceTree = "<group>"; };
 		A0D68AF62A888678004D11A5 /* IMImageMsgCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMImageMsgCellProvider.swift; sourceTree = "<group>"; };
-		A0D68AF82A888678004D11A5 /* IMUnicodeEmojiControllerProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUnicodeEmojiControllerProvider.swift; sourceTree = "<group>"; };
+		A0D68AF82A888678004D11A5 /* IMUnicodeEmojiPanelProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUnicodeEmojiPanelProvider.swift; sourceTree = "<group>"; };
 		A0D68AF92A888678004D11A5 /* IMUnicodeEmojiCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUnicodeEmojiCell.swift; sourceTree = "<group>"; };
-		A0D68AFA2A888678004D11A5 /* IMUnicodeEmojiUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUnicodeEmojiUIController.swift; sourceTree = "<group>"; };
+		A0D68AFA2A888678004D11A5 /* IMUnicodeEmojiPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUnicodeEmojiPanelView.swift; sourceTree = "<group>"; };
 		A0D68AFC2A888678004D11A5 /* IMCameraFunctionProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMCameraFunctionProvider.swift; sourceTree = "<group>"; };
 		A0D68AFD2A888678004D11A5 /* IMPhotoFunctionProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPhotoFunctionProvider.swift; sourceTree = "<group>"; };
-		A0D68AFE2A888678004D11A5 /* IMBasePanelControllerProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBasePanelControllerProvider.swift; sourceTree = "<group>"; };
+		A0D68AFE2A888678004D11A5 /* IMBasePanelViewProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBasePanelViewProvider.swift; sourceTree = "<group>"; };
 		A0D68AFF2A888678004D11A5 /* IMBaseMessageCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBaseMessageCellProvider.swift; sourceTree = "<group>"; };
 		A0D68B002A888678004D11A5 /* IMBaseFunctionCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBaseFunctionCellProvider.swift; sourceTree = "<group>"; };
 		A0D68B022A888678004D11A5 /* IMMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMessageViewController.swift; sourceTree = "<group>"; };
@@ -293,10 +294,9 @@
 		A0D68B072A888678004D11A5 /* IMMsgCheckedLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgCheckedLayout.swift; sourceTree = "<group>"; };
 		A0D68B082A888678004D11A5 /* IMBottomPanelLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBottomPanelLayout.swift; sourceTree = "<group>"; };
 		A0D68B0A2A888678004D11A5 /* IMSpeakView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSpeakView.swift; sourceTree = "<group>"; };
-		A0D68B0B2A888678004D11A5 /* IMMoreView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMoreView.swift; sourceTree = "<group>"; };
-		A0D68B0C2A888678004D11A5 /* IMMoreCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMoreCell.swift; sourceTree = "<group>"; };
-		A0D68B0D2A888678004D11A5 /* IMEmojiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMEmojiView.swift; sourceTree = "<group>"; };
-		A0D68B0E2A888678004D11A5 /* IMEmojiController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMEmojiController.swift; sourceTree = "<group>"; };
+		A0D68B0B2A888678004D11A5 /* IMFunctionPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMFunctionPanelView.swift; sourceTree = "<group>"; };
+		A0D68B0C2A888678004D11A5 /* IMFunctionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMFunctionCell.swift; sourceTree = "<group>"; };
+		A0D68B0D2A888678004D11A5 /* IMTabPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMTabPanelView.swift; sourceTree = "<group>"; };
 		A0D68B0F2A888678004D11A5 /* IMMsgLabelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgLabelView.swift; sourceTree = "<group>"; };
 		A0D68B112A888678004D11A5 /* IMMsgSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgSender.swift; sourceTree = "<group>"; };
 		A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgPreviewer.swift; sourceTree = "<group>"; };
@@ -304,7 +304,7 @@
 		A0D68B172A888678004D11A5 /* CellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellWrapper.swift; sourceTree = "<group>"; };
 		A0D68B182A888678004D11A5 /* LeftCellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftCellWrapper.swift; sourceTree = "<group>"; };
 		A0D68B192A888678004D11A5 /* RightCellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightCellWrapper.swift; sourceTree = "<group>"; };
-		A0D68B1A2A888678004D11A5 /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
+		A0D68B1A2A888678004D11A5 /* BaseTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableCell.swift; sourceTree = "<group>"; };
 		A0D68B1B2A888678004D11A5 /* BaseMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMsgCell.swift; sourceTree = "<group>"; };
 		A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseSessionCell.swift; sourceTree = "<group>"; };
 		A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSessionViewController.swift; sourceTree = "<group>"; };
@@ -491,6 +491,32 @@
 				A0C431FB2A909D2500A84D4A /* ParticipantView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		A0CC9F702AFC83C600801B25 /* Msg */ = {
+			isa = PBXGroup;
+			children = (
+				A0D68B142A888678004D11A5 /* Container */,
+				A0D68B1B2A888678004D11A5 /* BaseMsgCell.swift */,
+			);
+			path = Msg;
+			sourceTree = "<group>";
+		};
+		A0CC9F712AFC83D300801B25 /* Function */ = {
+			isa = PBXGroup;
+			children = (
+				A0D68B0C2A888678004D11A5 /* IMFunctionCell.swift */,
+				A0CC9F732AFC88F200801B25 /* IMTabCell.swift */,
+			);
+			path = Function;
+			sourceTree = "<group>";
+		};
+		A0CC9F722AFC83FC00801B25 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */,
+			);
+			path = Session;
 			sourceTree = "<group>";
 		};
 		A0D68A8A2A88838A004D11A5 = {
@@ -691,7 +717,7 @@
 			isa = PBXGroup;
 			children = (
 				A0D68AE72A888678004D11A5 /* Internal */,
-				A0D68AFE2A888678004D11A5 /* IMBasePanelControllerProvider.swift */,
+				A0D68AFE2A888678004D11A5 /* IMBasePanelViewProvider.swift */,
 				A0D68AFF2A888678004D11A5 /* IMBaseMessageCellProvider.swift */,
 				A0D68B002A888678004D11A5 /* IMBaseFunctionCellProvider.swift */,
 				A0D68AE62A888678004D11A5 /* IMBaseSessionCellProvider.swift */,
@@ -742,9 +768,9 @@
 		A0D68AF72A888678004D11A5 /* Panel */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68AF82A888678004D11A5 /* IMUnicodeEmojiControllerProvider.swift */,
+				A0D68AF82A888678004D11A5 /* IMUnicodeEmojiPanelProvider.swift */,
 				A0D68AF92A888678004D11A5 /* IMUnicodeEmojiCell.swift */,
-				A0D68AFA2A888678004D11A5 /* IMUnicodeEmojiUIController.swift */,
+				A0D68AFA2A888678004D11A5 /* IMUnicodeEmojiPanelView.swift */,
 			);
 			path = Panel;
 			sourceTree = "<group>";
@@ -785,10 +811,8 @@
 			isa = PBXGroup;
 			children = (
 				A0D68B0A2A888678004D11A5 /* IMSpeakView.swift */,
-				A0D68B0B2A888678004D11A5 /* IMMoreView.swift */,
-				A0D68B0C2A888678004D11A5 /* IMMoreCell.swift */,
-				A0D68B0D2A888678004D11A5 /* IMEmojiView.swift */,
-				A0D68B0E2A888678004D11A5 /* IMEmojiController.swift */,
+				A0D68B0B2A888678004D11A5 /* IMFunctionPanelView.swift */,
+				A0D68B0D2A888678004D11A5 /* IMTabPanelView.swift */,
 				A0D68B0F2A888678004D11A5 /* IMMsgLabelView.swift */,
 			);
 			path = Component;
@@ -808,10 +832,10 @@
 		A0D68B132A888678004D11A5 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B142A888678004D11A5 /* Container */,
-				A0D68B1A2A888678004D11A5 /* BaseCell.swift */,
-				A0D68B1B2A888678004D11A5 /* BaseMsgCell.swift */,
-				A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */,
+				A0D68B1A2A888678004D11A5 /* BaseTableCell.swift */,
+				A0CC9F722AFC83FC00801B25 /* Session */,
+				A0CC9F712AFC83D300801B25 /* Function */,
+				A0CC9F702AFC83C600801B25 /* Msg */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -1169,13 +1193,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A03082D92AF67E81001B8373 /* IMSingleSessionCellProvider.swift in Sources */,
-				A0D68BBB2A888679004D11A5 /* IMMoreView.swift in Sources */,
+				A0D68BBB2A888679004D11A5 /* IMFunctionPanelView.swift in Sources */,
 				A0D68B772A888679004D11A5 /* OGGEncoder.swift in Sources */,
 				A0D68BD32A888679004D11A5 /* CircleProgressView.swift in Sources */,
 				A025290B2AC6CBA6001561A0 /* UploadTask.swift in Sources */,
 				A03082D12AF66C31001B8373 /* RevokeMsgProcessor.swift in Sources */,
 				A0D68BB22A888679004D11A5 /* IMBaseMessageCellProvider.swift in Sources */,
-				A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiControllerProvider.swift in Sources */,
+				A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiPanelProvider.swift in Sources */,
 				A0D68BD52A888679004D11A5 /* IMAVCacheManager.swift in Sources */,
 				A0C431EB2A909CB200A84D4A /* RemoteParticipant.swift in Sources */,
 				A0D68BC62A888679004D11A5 /* RightCellWrapper.swift in Sources */,
@@ -1185,14 +1209,13 @@
 				A0D68BFC2A888679004D11A5 /* RxTransform.swift in Sources */,
 				A0D68BD12A888679004D11A5 /* PreviewVideoCellView.swift in Sources */,
 				A0D68B812A888679004D11A5 /* Exception.swift in Sources */,
-				A0D68BBE2A888679004D11A5 /* IMEmojiController.swift in Sources */,
 				A0D68BCB2A888679004D11A5 /* IMUIManager.swift in Sources */,
 				A0D68B792A888679004D11A5 /* DeleteMsgBean.swift in Sources */,
 				A0D68BA02A888679004D11A5 /* IMVideoMsgCellProvider.swift in Sources */,
 				A02529172ACADE72001561A0 /* IMMsgCellOperator.swift in Sources */,
 				A02529222ADBD5BF001561A0 /* Data+Hexstring.swift in Sources */,
 				A0EA42FB2A94CCE200F64A90 /* DefaultIMApi.swift in Sources */,
-				A0D68BC72A888679004D11A5 /* BaseCell.swift in Sources */,
+				A0D68BC72A888679004D11A5 /* BaseTableCell.swift in Sources */,
 				A03082E12AF7BFEC001B8373 /* UpdateSessionBean.swift in Sources */,
 				A0E8ED482AEDED23004163BD /* IMPreviewer.swift in Sources */,
 				A0D68BA92A888679004D11A5 /* IMUnSupportMsgCellProvider.swift in Sources */,
@@ -1204,7 +1227,7 @@
 				A0D68BB82A888679004D11A5 /* IMMsgCheckedLayout.swift in Sources */,
 				A0EA42F12A94B3BE00F64A90 /* FileLoadState.swift in Sources */,
 				A0D68C072A888679004D11A5 /* SignalModule.swift in Sources */,
-				A0D68BBC2A888679004D11A5 /* IMMoreCell.swift in Sources */,
+				A0D68BBC2A888679004D11A5 /* IMFunctionCell.swift in Sources */,
 				A0EA42FD2A99A60200F64A90 /* ImageCacheManager.swift in Sources */,
 				A02529202ADAE496001561A0 /* Double+DP.swift in Sources */,
 				A0D68BF92A888679004D11A5 /* FileLoadListener.swift in Sources */,
@@ -1230,7 +1253,7 @@
 				A0D68BCA2A888679004D11A5 /* IMSessionViewController.swift in Sources */,
 				A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */,
 				A0D68C092A888679004D11A5 /* SignalListener.swift in Sources */,
-				A0D68BAE2A888679004D11A5 /* IMUnicodeEmojiUIController.swift in Sources */,
+				A0D68BAE2A888679004D11A5 /* IMUnicodeEmojiPanelView.swift in Sources */,
 				A0D68B9C2A888679004D11A5 /* String+Ext.swift in Sources */,
 				A0D68BE32A888679004D11A5 /* DefaultMessageModule.swift in Sources */,
 				A0D68B982A888679004D11A5 /* UserDao.swift in Sources */,
@@ -1276,7 +1299,7 @@
 				A0D68B752A888679004D11A5 /* OpusError.swift in Sources */,
 				A0D68BE62A888679004D11A5 /* CustomModule.swift in Sources */,
 				A0D68BFB2A888679004D11A5 /* Bubble.swift in Sources */,
-				A0D68BB12A888679004D11A5 /* IMBasePanelControllerProvider.swift in Sources */,
+				A0D68BB12A888679004D11A5 /* IMBasePanelViewProvider.swift in Sources */,
 				A02529152ACAD527001561A0 /* IMUIDefines.swift in Sources */,
 				A0D68BAF2A888679004D11A5 /* IMCameraFunctionProvider.swift in Sources */,
 				A0D68C032A888679004D11A5 /* DefaultStorageModule.swift in Sources */,
@@ -1315,7 +1338,7 @@
 				A0D68BE92A888679004D11A5 /* BaseModule.swift in Sources */,
 				A0D68BE42A888679004D11A5 /* DefaultUserModule.swift in Sources */,
 				A03082CF2AF66BD7001B8373 /* ReeditMsgProcessor.swift in Sources */,
-				A0D68BBD2A888679004D11A5 /* IMEmojiView.swift in Sources */,
+				A0D68BBD2A888679004D11A5 /* IMTabPanelView.swift in Sources */,
 				A0D68B9F2A888679004D11A5 /* IMTimeLineMsgCellProvider.swift in Sources */,
 				A0D68B9B2A888679004D11A5 /* UIColor+HexString.swift in Sources */,
 				A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */,
@@ -1326,6 +1349,7 @@
 				A0D68C052A888679004D11A5 /* DefaultSignalModule.swift in Sources */,
 				A02578C82AA427BD00A66CEF /* DefaultLiveApi.swift in Sources */,
 				A0D68BAA2A888679004D11A5 /* IMDefaultSessionCellProvider.swift in Sources */,
+				A0CC9F742AFC88F200801B25 /* IMTabCell.swift in Sources */,
 				A0D68BCD2A888679004D11A5 /* MediaPreviewController.swift in Sources */,
 				A0D68B9A2A888679004D11A5 /* UIImageView+Cache.swift in Sources */,
 				A0D68BDB2A888679004D11A5 /* IMVideoCachePlayerView.swift in Sources */,

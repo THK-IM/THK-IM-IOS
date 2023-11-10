@@ -14,21 +14,18 @@ class UploadTask: LoadTask {
     private var getParamsRequest: DataRequest?
     private var uploadRequest: DataRequest?
     private var keyUrl: String?
+    private let path: String
+    private let param: String
+    private let fileModuleReference: WeakReference<DefaultFileLoadModule>
+    private var running = true
     
-    override func notify(progress: Int, state: Int) {
-        guard let fileLoadModule = self.fileModuleReference.value else {
-            return
-        }
-        var url = self.url
-        if (self.keyUrl != nil) {
-            url = self.keyUrl!
-        }
-        fileLoadModule.notifyListeners(taskId: taskId, progress: progress, state: state, url: url, path: path)
-        
+    init(fileModule: DefaultFileLoadModule, path: String, param: String) {
+        self.fileModuleReference = WeakReference(value: fileModule)
+        self.path = path
+        self.param = param
     }
     
-    override func start() {
-        super.start()
+    func start() {
         self.notify(progress: 0, state: FileLoadState.Init.rawValue)
         guard let fileLoadModule = self.fileModuleReference.value else {
             self.notify(progress: 0, state: FileLoadState.Failed.rawValue)
@@ -36,11 +33,7 @@ class UploadTask: LoadTask {
         }
         var headers = HTTPHeaders()
         headers.add(name: "Token", value: fileLoadModule.token)
-        guard let params = fileLoadModule.parserUploadKey(key: self.url) else {
-            self.notify(progress: 0, state: FileLoadState.Failed.rawValue)
-            return
-        }
-        let url = "\(fileLoadModule.endpoint)/object/upload_params?s_id=\(params.0)&u_id=\(params.1)&f_name=\(params.2)"
+        let url = "\(fileLoadModule.endpoint)/session/object/upload_params?\(self.param)"
         self.getParamsRequest = AF.request(url, headers: headers).responseData(queue: DispatchQueue.global())
         { [weak self] response in
             guard let sf = self else {
@@ -49,34 +42,38 @@ class UploadTask: LoadTask {
             switch response.result {
             case .success:
                 if response.data == nil {
-                    sf.notify(progress: 0, state: FileLoadState.Failed.rawValue)
+                    sf.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError.init(CocoaError.coderValueNotFound))
                 }
                 do {
                     let uploadParams = try JSONDecoder().decode(
                         UploadParams.self,
                         from: response.data!
                     )
-                    sf.startUpload(params: uploadParams, fileName: params.2)
+                    sf.startUpload(params: uploadParams)
                 } catch {
-                    sf.notify(progress: 0, state: FileLoadState.Failed.rawValue)
+                    sf.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError.init(CocoaError.formatting))
                 }
                 break
-            default:
-                sf.notify(progress: 0, state: FileLoadState.Failed.rawValue)
+            case let .failure(err):
+                sf.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: err)
                 break
             }
             return
         }
     }
     
-    private func startUpload(params: UploadParams, fileName: String) {
+    private func startUpload(params: UploadParams) {
+        if (!self.running) {
+            self.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: nil)
+            return
+        }
         let fileExisted = FileManager.default.isReadableFile(atPath: path)
         if (!fileExisted) {
-            self.notify(progress: 0, state: FileLoadState.Failed.rawValue)
+            self.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError(.fileNoSuchFile))
             return
         }
         guard let fileLoadModule = self.fileModuleReference.value else {
-            self.notify(progress: 0, state: FileLoadState.Failed.rawValue)
+            self.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError(.executableLoad))
             return
         }
         let method = HTTPMethod(rawValue: params.method)
@@ -90,7 +87,6 @@ class UploadTask: LoadTask {
                 }
                 let fileUrl = URL.init(fileURLWithPath: sf.path)
                 multipartFormData.append(fileUrl, withName: "file")
-                
             },
             to: params.url,
             method: method
@@ -106,19 +102,19 @@ class UploadTask: LoadTask {
             }
             switch response.result {
             case .success:
-                sf.keyUrl = "\(fileLoadModule.endpoint)/object/\(params.id)"
+                sf.keyUrl = "\(params.id)"
                 sf.notify(progress: 100, state: FileLoadState.Success.rawValue)
                 break
-            case .failure:
-                sf.notify(progress: 0, state: FileLoadState.Failed.rawValue)
+            case let .failure (err):
+                sf.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: err)
                 break
             }
             return
         }
     }
     
-    override func cancel() {
-        super.cancel()
+    func cancel() {
+        running = false
         if (self.getParamsRequest != nil) {
             if (!self.getParamsRequest!.isCancelled && !self.getParamsRequest!.isFinished) {
                 self.getParamsRequest!.cancel()
@@ -130,5 +126,19 @@ class UploadTask: LoadTask {
                 self.uploadRequest!.cancel()
             }
         }
+    }
+    
+    
+    
+    func notify(progress: Int, state: Int, err: Error? = nil) {
+        guard let fileLoadModule = self.fileModuleReference.value else {
+            return
+        }
+        var url = ""
+        if (self.keyUrl != nil) {
+            url = self.keyUrl!
+        }
+        fileLoadModule.notifyListeners(progress: progress, state: state, url: url, path: path, err: err)
+        
     }
 }

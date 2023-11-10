@@ -146,12 +146,9 @@ class VideoMsgProcessor : BaseMsgProcessor {
             
             let realThumbPath = storageModule.sandboxFilePath(thumbPath)
             let (_, thumbName) = storageModule.getPathsFromFullPath(realThumbPath)
-            let uploadKey = IMCoreManager.shared.fileLoadModule.getUploadKey(
-                entity.sessionId, entity.fromUId, thumbName, entity.id
-            )
             return Observable.create({ observer -> Disposable in
                 let loadListener = FileLoadListener(
-                    {[weak self] progress, state, url, path in
+                    {[weak self] progress, state, url, path, err in
                         switch(state) {
                         case
                             FileLoadState.Wait.rawValue,
@@ -167,7 +164,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                                 videoBody.name = thumbName
                                 let d = try JSONEncoder().encode(videoBody)
                                 entity.content = String(data: d, encoding: .utf8)!
-                                try self?.insertOrUpdateDb(entity, false) // 插入数据库不更新ui,防止数据丢失
+                                try self?.insertOrUpdateDb(entity, false, false) 
                                 observer.onNext(entity)
                                 observer.onCompleted()
                             } catch {
@@ -175,19 +172,22 @@ class VideoMsgProcessor : BaseMsgProcessor {
                                 observer.onError(error)
                             }
                             break
+                        case
+                            FileLoadState.Failed.rawValue:
+                            if (err != nil) {
+                                observer.onError(err!)
+                            } else {
+                                observer.onError(CocoaError.init(.executableLoad))
+                            }
+                            break
                         default:
-                            observer.onError(CocoaError.init(.executableLoad))
                             break
                         }
                     },
                     {
                         return false
                     })
-                _ = fileLoadModule.upload(
-                    key: uploadKey,
-                    path: realThumbPath,
-                    loadListener: loadListener
-                )
+                fileLoadModule.upload(path: realThumbPath, message: entity, loadListener: loadListener)
                 return Disposables.create()
             })
         } catch {
@@ -221,12 +221,9 @@ class VideoMsgProcessor : BaseMsgProcessor {
             }
             let realVideoPath = storageModule.sandboxFilePath(videoPath)
             let (_, originName) = storageModule.getPathsFromFullPath(realVideoPath)
-            let uploadKey = IMCoreManager.shared.fileLoadModule.getUploadKey(
-                entity.sessionId, entity.fromUId, originName, entity.id
-            )
             return Observable.create({ observer -> Disposable in
                 let loadListener = FileLoadListener(
-                    {progress, state, url, path in
+                    {progress, state, url, path, err in
                         SwiftEventBus.post(
                             IMEvent.MsgLoadStatusUpdate.rawValue,
                             sender: IMLoadProgress(IMLoadType.Upload.rawValue, url, path, state, progress)
@@ -254,8 +251,15 @@ class VideoMsgProcessor : BaseMsgProcessor {
                                 observer.onError(error)
                             }
                             break
+                        case
+                            FileLoadState.Failed.rawValue:
+                            if (err != nil) {
+                                observer.onError(err!)
+                            } else {
+                                observer.onError(CocoaError.init(.executableLoad))
+                            }
+                            break
                         default:
-                            observer.onError(CocoaError.init(.executableLoad))
                             break
                         }
                     },
@@ -263,11 +267,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                         return false
                     }
                 )
-                _ = fileLoadModule.upload(
-                    key: uploadKey,
-                    path: realVideoPath,
-                    loadListener: loadListener
-                )
+                fileLoadModule.upload(path: realVideoPath, message: entity, loadListener: loadListener)
                 return Disposables.create()
             })
         } catch {
@@ -305,6 +305,12 @@ class VideoMsgProcessor : BaseMsgProcessor {
                 return false
             } 
             
+            if (downloadUrls.contains(downloadUrl!)) {
+                return true
+            } else {
+                downloadUrls.append(downloadUrl!)
+            }
+            
             var fileName = body.name!
             if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
                 fileName = "cover_\(body.name!)"
@@ -313,7 +319,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
             let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
                 message.sessionId, fileName, IMFileFormat.Image.rawValue)
             let loadListener = FileLoadListener(
-                {progress, state, url, path in
+                {[weak self] progress, state, url, path, err in
                     SwiftEventBus.post(
                         IMEvent.MsgLoadStatusUpdate.rawValue,
                         sender: IMLoadProgress(IMLoadType.Download.rawValue, url, path, state, progress)
@@ -327,20 +333,31 @@ class VideoMsgProcessor : BaseMsgProcessor {
                     case
                         FileLoadState.Success.rawValue:
                         do {
-                            if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
-                                data.thumbnailPath = path
-                            } else {
-                                data.path = path
+                            if (!FileManager.default.fileExists(atPath: localPath)) {
+                                try IMCoreManager.shared.storageModule.copyFile(path, localPath)
+                                if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
+                                    data.thumbnailPath = localPath
+                                } else {
+                                    data.path = localPath
+                                }
+                                data.duration = body.duration
+                                data.width = body.width!
+                                data.height = body.height!
+                                let d = try JSONEncoder().encode(data)
+                                message.data = String(data: d, encoding: .utf8)!
+                                try self?.insertOrUpdateDb(message, true, false)
                             }
-                            data.duration = body.duration
-                            data.width = body.width!
-                            data.height = body.height!
-                            let d = try JSONEncoder().encode(data)
-                            message.data = String(data: d, encoding: .utf8)!
-                            try self.insertOrUpdateDb(message, true, false)
                         } catch {
                             DDLogError(error)
                         }
+                        self?.downloadUrls.removeAll(where: { it in
+                            return it == downloadUrl!
+                        })
+                        break
+                    case FileLoadState.Failed.rawValue:
+                        self?.downloadUrls.removeAll(where: { it in
+                            return it == downloadUrl!
+                        })
                         break
                     default:
                         break
@@ -350,11 +367,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
                     return false
                 }
             )
-            _ = IMCoreManager.shared.fileLoadModule.download(
-                key: downloadUrl!,
-                path: localPath,
-                loadListener: loadListener
-            )
+            IMCoreManager.shared.fileLoadModule.download(key: downloadUrl!, message: message, loadListener: loadListener)
         } catch {
             DDLogError(error)
         }

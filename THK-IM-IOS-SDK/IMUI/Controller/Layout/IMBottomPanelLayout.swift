@@ -20,19 +20,13 @@ class IMBottomPanelLayout: UIView {
     private var isMorePanelShow = false
     private var isKeyboardShow = false
     
-//    private lazy var unicodeEmojiView: IMUnicodeEmojiView = {
-//        let view = IMUnicodeEmojiView()
-//        view.emojiSelect = self
-//        return view
-//    }()
-    
-    private lazy var emojiView: IMEmojiView = {
-        let view = IMEmojiView()
+    private lazy var tabPanelView: IMTabPanelView = {
+        let view = IMTabPanelView()
         return view
     }()
     
-    private lazy var moreView: IMMoreView = {
-        let view = IMMoreView()
+    private lazy var functionPanelView: IMFunctionPanelView = {
+        let view = IMFunctionPanelView()
         return view
     }()
     
@@ -50,25 +44,33 @@ class IMBottomPanelLayout: UIView {
     
     func showBottomPanel(_ position: Int) {
         if position == 0 {
-            self.isEmojiPanelShow = true
-            self.isMorePanelShow = false
-            self.moreView.removeFromSuperview()
-            self.addSubview(self.emojiView)
-            self.emojiView.snp.makeConstraints { make in
-                make.edges.equalToSuperview()
+            if (!self.isEmojiPanelShow) {
+                self.isEmojiPanelShow = true
+                self.isMorePanelShow = false
+                self.subviews.forEach {
+                    $0.removeFromSuperview()
+                }
+                self.tabPanelView.sender = self.sender
+                self.addSubview(self.tabPanelView)
+                self.tabPanelView.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+                panelLayoutHeight = emojiHeight
             }
-            self.emojiView.setUp(sender: self.sender)
-            panelLayoutHeight = emojiHeight
         } else {
-            self.isEmojiPanelShow = false
-            self.isMorePanelShow = true
-            self.emojiView.removeFromSuperview()
-            self.moreView.sender = self.sender
-            self.addSubview(self.moreView)
-            self.moreView.snp.makeConstraints { make in
-                make.edges.equalToSuperview()
+            if (!self.isMorePanelShow) {
+                self.isEmojiPanelShow = false
+                self.isMorePanelShow = true
+                self.subviews.forEach {
+                    $0.removeFromSuperview()
+                }
+                self.functionPanelView.sender = self.sender
+                self.addSubview(self.functionPanelView)
+                self.functionPanelView.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+                panelLayoutHeight = moreFunctionHeight
             }
-            panelLayoutHeight = moreFunctionHeight
         }
         if isKeyboardShow {
             _ = self.sender?.closeKeyboard()
@@ -80,7 +82,7 @@ class IMBottomPanelLayout: UIView {
     func closeBottomPanel() {
         self.isMorePanelShow = false
         self.isEmojiPanelShow = false
-        self.emojiView.removeFromSuperview()
+        self.tabPanelView.removeFromSuperview()
         panelLayoutHeight = 0.0
         if isKeyboardShow {
             _ = self.sender?.closeKeyboard()
@@ -104,8 +106,8 @@ class IMBottomPanelLayout: UIView {
             // 如果键盘显示
             self.isMorePanelShow = false
             self.isEmojiPanelShow = false
-            self.emojiView.removeFromSuperview()
-            self.moreView.removeFromSuperview()
+            self.tabPanelView.removeFromSuperview()
+            self.functionPanelView.removeFromSuperview()
             self.panelLayoutHeight = 0
         } else {
             // 如果键盘关闭

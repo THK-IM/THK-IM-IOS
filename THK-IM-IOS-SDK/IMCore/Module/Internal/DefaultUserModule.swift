@@ -83,7 +83,7 @@ open class DefaultUserModule : UserModule {
         })
     }
     
-    func onSignalReceived(_ subType: Int, _ body: String) {
+    public func onSignalReceived(_ subType: Int, _ body: String) {
         
     }
     

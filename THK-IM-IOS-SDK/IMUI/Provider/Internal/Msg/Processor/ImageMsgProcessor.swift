@@ -86,17 +86,6 @@ class ImageMsgProcessor : BaseMsgProcessor {
             thumbName,
             IMFileFormat.Image.rawValue
         )
-//        let originImage = UIImage.init(contentsOfFile: path)
-//        if (originImage == nil) {
-//            throw CocoaError.init(CocoaError.fileReadNoSuchFile)
-//        }
-//        guard let compressImage = ImageCompressor.compressImage(
-//            originImage!,
-//            getImageCompressorOptions()
-//        ) else {
-//            throw CocoaError.init(.executableLoad)
-//        }
-//        try storageModule.saveMediaDataInto(thumbPath, compressImage.toData())
         try ImageCompressor.compressImageFile(path, thumbPath, getImageCompressorOptions())
         imageData.thumbnailPath = thumbPath
         let d = try JSONEncoder().encode(imageData)
@@ -140,12 +129,9 @@ class ImageMsgProcessor : BaseMsgProcessor {
             }
             thumbPath = storageModule.sandboxFilePath(thumbPath)
             let (_, thumbName) = storageModule.getPathsFromFullPath(thumbPath)
-            let uploadKey = IMCoreManager.shared.fileLoadModule.getUploadKey(
-                entity.sessionId, entity.fromUId, thumbName, entity.id
-            )
             return Observable.create({ observer -> Disposable in
                 let loadListener = FileLoadListener(
-                    {[weak self] progress, state, url, path in
+                    {[weak self] progress, state, url, path, err in
                         SwiftEventBus.post(
                             IMEvent.MsgLoadStatusUpdate.rawValue,
                             sender: IMLoadProgress(IMLoadType.Upload.rawValue, url, path, state, progress)
@@ -164,7 +150,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                                 imageBody.name = thumbName
                                 let d = try JSONEncoder().encode(imageBody)
                                 entity.content = String(data: d, encoding: .utf8)!
-                                try self?.insertOrUpdateDb(entity, false)
+                                try self?.insertOrUpdateDb(entity, false, false) 
                                 observer.onNext(entity)
                                 observer.onCompleted()
                             } catch {
@@ -172,19 +158,22 @@ class ImageMsgProcessor : BaseMsgProcessor {
                                 observer.onError(error)
                             }
                             break
+                        case
+                            FileLoadState.Failed.rawValue:
+                            if (err != nil) {
+                                observer.onError(err!)
+                            } else {
+                                observer.onError(CocoaError.init(.executableLoad))
+                            }
+                            break
                         default:
-                            observer.onError(CocoaError.init(.executableLoad))
                             break
                         }
                     },
                     {
                         return false
                     })
-                _ = fileLoadModule.upload(
-                    key: uploadKey,
-                    path: thumbPath,
-                    loadListener: loadListener
-                )
+                fileLoadModule.upload(path: thumbPath, message: entity, loadListener: loadListener)
                 return Disposables.create()
             })
         } catch {
@@ -194,7 +183,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
     }
     
     open func uploadOriginImage(_ fileLoadModule: FileLoadModule, _ storageModule: StorageModule,
-                               _ entity: Message) -> Observable<Message> {
+                                _ entity: Message) -> Observable<Message> {
         do {
             var imageBody = IMImageMsgBody()
             if (entity.content != nil) {
@@ -220,12 +209,9 @@ class ImageMsgProcessor : BaseMsgProcessor {
             }
             originPath = storageModule.sandboxFilePath(originPath)
             let (_, originName) = storageModule.getPathsFromFullPath(originPath)
-            let uploadKey = IMCoreManager.shared.fileLoadModule.getUploadKey(
-                entity.sessionId, entity.fromUId, originName, entity.id
-            )
             return Observable.create({ observer -> Disposable in
                 let loadListener = FileLoadListener(
-                    {progress, state, url, path in
+                    {progress, state, url, path, err in
                         SwiftEventBus.post(
                             IMEvent.MsgLoadStatusUpdate.rawValue,
                             sender: IMLoadProgress(IMLoadType.Upload.rawValue, url, path, state, progress)
@@ -252,8 +238,15 @@ class ImageMsgProcessor : BaseMsgProcessor {
                                 observer.onError(error)
                             }
                             break
+                        case
+                            FileLoadState.Failed.rawValue:
+                            if (err != nil) {
+                                observer.onError(err!)
+                            } else {
+                                observer.onError(CocoaError.init(.executableLoad))
+                            }
+                            break
                         default:
-                            observer.onError(CocoaError.init(.executableLoad))
                             break
                         }
                     },
@@ -261,11 +254,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                         return false
                     }
                 )
-                _ = fileLoadModule.upload(
-                    key: uploadKey,
-                    path: originPath,
-                    loadListener: loadListener
-                )
+                fileLoadModule.upload(path: originPath, message: entity, loadListener: loadListener)
                 return Disposables.create()
             })
         } catch {
@@ -292,7 +281,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
             } else {
                 return false
             }
-
+            
             var downloadUrl: String? = nil
             if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
                 downloadUrl = body.thumbnailUrl
@@ -311,10 +300,16 @@ class ImageMsgProcessor : BaseMsgProcessor {
                 downloadUrl = body.url
             }
             
+            if (downloadUrls.contains(downloadUrl!)) {
+                return true
+            } else {
+                downloadUrls.append(downloadUrl!)
+            }
+            
             let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
                 message.sessionId, fileName!, IMFileFormat.Image.rawValue)
             let loadListener = FileLoadListener(
-                {progress, state, url, path in
+                {[weak self] progress, state, url, path, err in
                     SwiftEventBus.post(
                         IMEvent.MsgLoadStatusUpdate.rawValue,
                         sender: IMLoadProgress(IMLoadType.Download.rawValue, url, path, state, progress)
@@ -328,19 +323,31 @@ class ImageMsgProcessor : BaseMsgProcessor {
                     case
                         FileLoadState.Success.rawValue:
                         do {
-                            if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
-                                data.thumbnailPath = path
-                            } else {
-                                data.path = path
+                            if (!FileManager.default.fileExists(atPath: localPath)) {
+                                try IMCoreManager.shared.storageModule.copyFile(path, localPath)
+                                if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
+                                    data.thumbnailPath = localPath
+                                } else {
+                                    data.path = localPath
+                                }
+                                data.width = body.width!
+                                data.height = body.height!
+                                let d = try JSONEncoder().encode(data)
+                                message.data = String(data: d, encoding: .utf8)!
+                                try self?.insertOrUpdateDb(message, true, false)
                             }
-                            data.width = body.width!
-                            data.height = body.height!
-                            let d = try JSONEncoder().encode(data)
-                            message.data = String(data: d, encoding: .utf8)!
-                            try self.insertOrUpdateDb(message, true, false)
+                            
                         } catch {
                             DDLogError(error)
                         }
+                        self?.downloadUrls.removeAll(where: { it in
+                            return it == downloadUrl!
+                        })
+                        break
+                    case FileLoadState.Failed.rawValue:
+                        self?.downloadUrls.removeAll(where: { it in
+                            return it == downloadUrl!
+                        })
                         break
                     default:
                         break
@@ -350,11 +357,7 @@ class ImageMsgProcessor : BaseMsgProcessor {
                     return false
                 }
             )
-            _ = IMCoreManager.shared.fileLoadModule.download(
-                key: downloadUrl!,
-                path: localPath,
-                loadListener: loadListener
-            )
+            IMCoreManager.shared.fileLoadModule.download(key: downloadUrl!, message: message, loadListener: loadListener)
         } catch {
             DDLogError(error)
         }

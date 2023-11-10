@@ -9,29 +9,11 @@ import Foundation
 import CocoaLumberjack
 
 class DefaultStorageModule : StorageModule {
+    
     private let rootPath: String
+    
     init(_ uId: Int64) {
         rootPath = NSHomeDirectory() + "/Documents/im/\(uId)"
-        DDLogDebug("documentPath: \(rootPath)")
-        var isDir: ObjCBool = false
-        let exist = FileManager.default.fileExists(atPath: rootPath, isDirectory: &isDir)
-        if exist {
-            if (!isDir.boolValue) {
-                do {
-                    try FileManager.default.removeItem(atPath: rootPath)
-                    try FileManager.default.createDirectory(atPath: rootPath, withIntermediateDirectories: true)
-                    for i in 1...3 {
-                        // ../avatar/1 用户头像, 2群头像 i与sessiontype对应
-                        let path = "\(rootPath)/avatar/\(i)"
-                        DDLogDebug("documentPath: " + path.description)
-                        try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
-                    }
-                } catch {
-                    DDLogError(error)
-                }
-                
-            }
-        }
     }
     
     
@@ -123,14 +105,6 @@ class DefaultStorageModule : StorageModule {
         }
         
         try fileManager.copyItem(atPath: srcPath, toPath: dePath)
-    }
-    
-    func allocAvatarPath(_ id: Int64, _ avatarUrl: String, _ type: Int) -> String {
-        var ext = getFileExtFromUrl(avatarUrl)
-        if (ext == "") {
-            ext = "png"
-        }
-        return "\(rootPath)/avatar/\(type)/user-\(id).\(ext)"
     }
     
     func allocSessionFilePath(_ sId: Int64,  _ fileName: String, _ format: String) -> String {

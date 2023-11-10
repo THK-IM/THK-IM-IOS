@@ -8,85 +8,46 @@
 import Foundation
 
 
-protocol FileLoadModule: AnyObject {
+public protocol FileLoadModule: AnyObject {
     
     /**
-     * 获取任务id
-     * @param key 任务key
-     * @param path 本地路径
-     * @param type 类型
-     * @return 任务id
-     */
-    func getTaskId(key: String, path: String, type: String) -> String
-    
-    /**
-     * 获取文件上传key
-     * @param sId 会话id
-     * @param uId 用户id
-     * @param fileName 文件名
-     * @param msgClientId 客户端消息id
-     * @return 任务id
-     */
-    func getUploadKey(
-        _ sId: Int64,
-        _ uId: Int64,
-        _ fileName: String,
-        _ msgClientId: Int64
-    ) -> String
-    
-    /**
-     * 从上传key中解析出 sId, uId, fileName
-     */
-    func parserUploadKey(key: String) -> (Int64, Int64, String)?
-    
-    /**
-     *  下载
-     * @param key 下载key, 传入网路地址
-     * @param path 本地路径
+     * 下载
+     * @param key 下载key, 传入网路地址或id
+     * @param message 消息
      * @param listener 进度监听器
      * @return 任务id
      */
-    func download(key: String, path: String, loadListener: FileLoadListener) -> String
+    func download(key: String, message: Message, loadListener: FileLoadListener)
     
     /**
-     *  上传
-     * @param key 上传key,传入空串
+     * 上传
      * @param path 本地路径
+     * @param message 消息
      * @param listener 进度监听器
      * @return 任务id
      */
-    func upload(key: String, path: String, loadListener: FileLoadListener) -> String
+    func upload(path: String, message: Message, loadListener: FileLoadListener)
     
     
     /**
      * 取消下载
      */
-    func cancelDownload(taskId: String)
+    func cancelDownload(url: String)
     
     /**
      * 取消下载监听
      */
-    func cancelDownloadListener(taskId: String, listener: FileLoadListener)
-    
-    /**
-     * 取消所有下载监听
-     */
-    func cancelAllDownloadListeners(taskId: String)
+    func cancelDownloadListener(url: String, listener: FileLoadListener)
     
     /**
      * 取消上传
      */
-    func cancelUpload(taskId: String)
+    func cancelUpload(path: String)
     
     /**
      * 取消上传监听
      */
-    func cancelUploadListener(taskId: String, listener: FileLoadListener)
+    func cancelUploadListener(path: String, listener: FileLoadListener)
     
-    
-    /**
-     * 取消所有上传监听
-     */
-    func cancelAllUploadListeners(taskId: String)
     
 }

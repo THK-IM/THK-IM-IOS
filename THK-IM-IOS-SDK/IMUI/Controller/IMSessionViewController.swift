@@ -234,6 +234,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         delete.backgroundColor = UIColor.init(hex: "d22c69")
         
         let configuration = UISwipeActionsConfiguration(actions: [top, delete, mute])
+        configuration.performsFirstActionWithFullSwipe = false
         return configuration
     }
     

@@ -11,7 +11,7 @@ import Kingfisher
 import CocoaLumberjack
 import BadgeSwift
 
-open class BaseSessionCell : BaseCell {
+open class BaseSessionCell : BaseTableCell {
     
     lazy var unreadCountView: BadgeSwift = {
         let view = BadgeSwift()

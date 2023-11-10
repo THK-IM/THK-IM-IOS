@@ -15,7 +15,7 @@ public class IMUIManager: NSObject {
     private var msgCellProviders = [Int:IMBaseMessageCellProvider]()
     private var sessionCellProviders = [Int:IMBaseSessionCellProvider]()
     private var bottomFunctionProviders = [IMBaseFunctionCellProvider]()
-    private var emojiControllerProviders = [IMBasePanelControllerProvider]()
+    private var panelProviders = [IMBasePanelViewProvider]()
     var contentProvider: IMProvider? = nil
     var contentPreviewer: IMPreviewer? = nil
     
@@ -44,8 +44,8 @@ public class IMUIManager: NSObject {
         registerBottomFunctionProvider(
             IMPhotoFunctionProvider(), IMCameraFunctionProvider()
         )
-        registerEmojiControllerProvider(
-            IMUnicodeEmojiControllerProvider(), IMUnicodeEmojiControllerProvider()
+        registerPanelProvider(
+            IMUnicodeEmojiPanelProvider(), IMUnicodeEmojiPanelProvider()
         )
         self.registerSessionCellProvider(IMDefaultSessionCellProvider())
     }
@@ -88,16 +88,16 @@ public class IMUIManager: NSObject {
         return bottomFunctionProviders
     }
     
-    func registerEmojiControllerProvider(_ ps: IMBasePanelControllerProvider...) {
+    func registerPanelProvider(_ ps: IMBasePanelViewProvider...) {
         lock.lock()
         defer {lock.unlock()}
         for p in ps {
-            self.emojiControllerProviders.append(p)
+            self.panelProviders.append(p)
         }
     }
     
-    func getEmojiControllerProviders() -> Array<IMBasePanelControllerProvider> {
-        return emojiControllerProviders
+    func getPanelProviders() -> Array<IMBasePanelViewProvider> {
+        return panelProviders
     }
     
     lazy var bubble: Bubble = {

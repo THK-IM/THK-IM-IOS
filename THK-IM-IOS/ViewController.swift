@@ -57,8 +57,8 @@ class ViewController: UIViewController, PerformanceMonitorDelegate {
         textView1.rx.tap
             .compose(RxTransformer.shared.io2Main())
             .flatMap({ (value) -> Observable<Session> in
-                let entityId = Int64(arc4random() % 100000) + 100
-//                let entityId = Int64(4)
+//                let entityId = Int64(arc4random() % 100000) + 100
+                let entityId = Int64(4)
                 return IMCoreManager.shared.getMessageModule().createSingleSession(entityId)
             })
             .subscribe(onNext: { data in

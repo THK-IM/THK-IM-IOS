@@ -38,7 +38,7 @@ open class DefaultCommonModule : CommonModule {
         }
     }
     
-    func onSignalReceived(_ subType: Int, _ body: String) {
+    public func onSignalReceived(_ subType: Int, _ body: String) {
         if subType == CommonSubType.PONG.rawValue {
             IMCoreManager.shared.getMessageModule().ackMessagesToServer()
         } else if subType == CommonSubType.ServerTime.rawValue {

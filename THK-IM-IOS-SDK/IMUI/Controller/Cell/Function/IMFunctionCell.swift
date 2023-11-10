@@ -1,5 +1,5 @@
 //
-//  IMMoreCellView.swift
+//  IMFunctionCell.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/7/9.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class IMMoreCell: UICollectionViewCell {
+class IMFunctionCell: UICollectionViewCell {
     
     private let labelView = UILabel()
     private let iconView = UIImageView()

@@ -2,7 +2,7 @@
 //  RevokeMsgProcessor.swift
 //  THK-IM-IOS
 //
-//  Created by 周维 on 2023/11/4.
+//  Created by vizoss on 2023/11/4.
 //  Copyright © 2023 THK. All rights reserved.
 //
 

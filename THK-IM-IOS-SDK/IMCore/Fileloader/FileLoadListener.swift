@@ -8,10 +8,10 @@
 import Foundation
 import CocoaLumberjack
 
-typealias NotifyProgressBlock = (_ progress: Int, _ state: Int, _ url: String, _ path :String) -> Void
+typealias NotifyProgressBlock = (_ progress: Int, _ state: Int, _ url: String, _ path :String, _ err: Error?) -> Void
 typealias NotifyOnUiThreadBlock = () -> Bool
 
-class FileLoadListener : NSObject {
+public class FileLoadListener : NSObject {
     
     let notifyProgress: NotifyProgressBlock
     let notifyOnUiThread: NotifyOnUiThreadBlock

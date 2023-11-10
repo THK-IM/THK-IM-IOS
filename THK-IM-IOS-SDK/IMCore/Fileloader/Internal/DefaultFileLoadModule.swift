@@ -12,166 +12,168 @@ import CocoaLumberjack
 
 class DefaultFileLoadModule: FileLoadModule {
     
+    private let cacheExpire: TimeInterval = 10 * 24 * 3600 * 1000 // ms 
     private var downloadTaskMap = [String: (LoadTask, Array<FileLoadListener>)]()
     private var uploadTaskMap = [String: (LoadTask, Array<FileLoadListener>)]()
     private let lock = NSLock()
     var token: String
     var endpoint: String
+    var cacheDirPath: String
     
     init(_ token: String, _ endpoint: String) {
         self.token = token
         self.endpoint = endpoint
+        cacheDirPath = NSTemporaryDirectory() + "/message_cache"
+        var isDir: ObjCBool = false
+        let exist = FileManager.default.fileExists(atPath: cacheDirPath, isDirectory: &isDir)
+        if exist {
+            if (!isDir.boolValue) {
+                do {
+                    try FileManager.default.removeItem(atPath: cacheDirPath)
+                    try FileManager.default.createDirectory(atPath: cacheDirPath, withIntermediateDirectories: true)
+                } catch {
+                    DDLogError(error)
+                }
+            }
+        } else {
+            do {
+                try FileManager.default.createDirectory(atPath: cacheDirPath, withIntermediateDirectories: true)
+            } catch {
+                DDLogError(error)
+            }
+        }
+        
+        guard let subFiles = FileManager.default.subpaths(atPath: cacheDirPath) else {
+            return
+        }
+        
+        do {
+            let timeZone = NSTimeZone.system
+            let interval: TimeInterval = TimeInterval(timeZone.secondsFromGMT())
+            for f in subFiles {
+                let attributes = try FileManager.default.attributesOfFileSystem(forPath: f)
+                let modificationDate = attributes[FileAttributeKey.modificationDate]
+                if (modificationDate != nil) {
+                    let localModDate = (modificationDate as! NSDate).addingTimeInterval(interval)
+                    if (abs(localModDate.timeIntervalSince1970 - Date().timeIntervalSince1970) > cacheExpire) {
+                        try FileManager.default.removeItem(atPath: f)
+                    }
+                }
+            }
+        } catch {
+            DDLogError(error)
+        }
+        
     }
     
     
-    func getTaskId(key: String, path: String, type: String) -> String {
-        return "\(type)/\(key)/\(path)"
+    private func buildDownloadParam(_ key: String, _ message: Message) -> String {
+        if key.hasSuffix("http") {
+            return ""
+        } else {
+            return "s_id=\(message.sessionId)&id=\(key)"
+        }
     }
     
-    func getUploadKey(_ sId: Int64, _ uId: Int64, _ fileName: String, _ msgClientId: Int64) -> String {
-        return "im/session_\(sId)/\(uId)/\(msgClientId)_\(fileName)"
+    private func buildUploadParam(_ path: String, _ message: Message) -> String {
+        let (_, fileName) = IMCoreManager.shared.storageModule.getPathsFromFullPath(path)
+        return "s_id=\(message.sessionId)&u_id=\(message.fromUId)&f_name=\(fileName)&client_id=\(message.id)"
     }
     
-    func parserUploadKey(key: String) -> (Int64, Int64, String)? {
-        let paths = key.split(separator: "/")
-        if (paths.count != 4) {
-            return nil
-        }
-        let sessions = paths[1].split(separator: "_")
-        if (sessions.count != 2) {
-            return nil
-        }
-        guard let sessionId = Int64(sessions[1]) else {
-            return nil
-        }
-        guard let uId = Int64(paths[2]) else {
-            return nil
-        }
-        return (sessionId, uId, String(paths[3]))
-    }
-    
-    func download(key: String, path: String, loadListener: FileLoadListener) -> String {
+    func download(key: String, message: Message, loadListener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
-        let taskId = self.getTaskId(key: key, path: path, type: "download")
-        var taskTuple = downloadTaskMap[taskId]
+        var taskTuple = downloadTaskMap[key]
         if (taskTuple == nil) {
-            let dTask = DownloadTask(taskId: taskId, path: path, url: key, fileModule: self)
+            let downloadParam = self.buildDownloadParam(key, message)
+            let dTask = DownloadTask(fileModule: self, key: key, downLoadParam: downloadParam)
+            downloadTaskMap[key] = (dTask, [loadListener])
             dTask.start()
-            downloadTaskMap[taskId] = (dTask, [loadListener])
         } else {
             taskTuple?.1.append(loadListener)
         }
-        return taskId
     }
     
-    func upload(key: String, path: String, loadListener: FileLoadListener) -> String {
+    func upload(path: String, message: Message, loadListener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
-        let taskId = self.getTaskId(key: key, path: path, type: "upload")
-        var taskTuple = uploadTaskMap[taskId]
+        var taskTuple = uploadTaskMap[path]
         if (taskTuple == nil) {
-            let dTask = UploadTask(taskId: taskId, path: path, url: key, fileModule: self)
+            let uploadParam = self.buildUploadParam(path, message)
+            let dTask = UploadTask(fileModule: self, path: path, param: uploadParam)
             dTask.start()
-            uploadTaskMap[taskId] = (dTask, [loadListener])
+            uploadTaskMap[path] = (dTask, [loadListener])
         } else {
             taskTuple?.1.append(loadListener)
         }
-        return taskId
     }
     
-    func cancelDownload(taskId: String) {
+    func cancelDownload(url: String) {
         lock.lock()
         defer {lock.unlock()}
-        var taskTuple = downloadTaskMap[taskId]
+        var taskTuple = downloadTaskMap[url]
         if taskTuple != nil {
-            taskTuple!.0.cancel()
             taskTuple!.1.removeAll()
-            downloadTaskMap.removeValue(forKey: taskId)
+            taskTuple!.0.cancel()
+            downloadTaskMap.removeValue(forKey: url)
         }
     }
     
-    func cancelDownloadListener(taskId: String, listener: FileLoadListener) {
+    func cancelDownloadListener(url: String, listener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
-        var taskTuple = downloadTaskMap[taskId]
+        var taskTuple = downloadTaskMap[url]
         taskTuple?.1.removeAll(where: { $0 == listener })
     }
     
-    func cancelAllDownloadListeners(taskId: String) {
+    func cancelUpload(path: String) {
         lock.lock()
         defer {lock.unlock()}
-        var taskTuple = downloadTaskMap[taskId]
-        if taskTuple != nil {
-            taskTuple!.1.removeAll()
-            downloadTaskMap.removeValue(forKey: taskId)
-        }
-    }
-    
-    func cancelUpload(taskId: String) {
-        lock.lock()
-        defer {lock.unlock()}
-        var taskTuple = uploadTaskMap[taskId]
+        var taskTuple = uploadTaskMap[path]
         if taskTuple != nil {
             taskTuple!.0.cancel()
             taskTuple!.1.removeAll()
-            uploadTaskMap.removeValue(forKey: taskId)
+            uploadTaskMap.removeValue(forKey: path)
         }
     }
     
-    func cancelUploadListener(taskId: String, listener: FileLoadListener) {
+    func cancelUploadListener(path: String, listener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
-        var taskTuple = uploadTaskMap[taskId]
+        var taskTuple = uploadTaskMap[path]
         taskTuple?.1.removeAll(where: { $0 == listener })
     }
     
-    func cancelAllUploadListeners(taskId: String) {
-        lock.lock()
-        defer {lock.unlock()}
-        var taskTuple = uploadTaskMap[taskId]
-        if taskTuple != nil {
-            taskTuple!.1.removeAll()
-            uploadTaskMap.removeValue(forKey: taskId)
-        }
-    }
-    
-    func notifyListeners(
-        taskId: String,
-        progress: Int,
-        state: Int,
-        url: String,
-        path: String
-    ) {
-        let downloadTaskTuple = downloadTaskMap[taskId]
+    func notifyListeners(progress: Int, state: Int, url: String, path: String, err: Error?) {
+        let downloadTaskTuple = downloadTaskMap[url]
         if (downloadTaskTuple != nil) {
             for listener in downloadTaskTuple!.1 {
                 if listener.notifyOnUiThread() {
                     DispatchQueue.main.async {
-                        listener.notifyProgress(progress, state, url, path)
+                        listener.notifyProgress(progress, state, url, path, err)
                     }
                 } else {
-                    listener.notifyProgress(progress, state, url, path)
+                    listener.notifyProgress(progress, state, url, path, err)
                 }
             }
             if (state == FileLoadState.Failed.rawValue || state == FileLoadState.Success.rawValue) {
-                cancelDownload(taskId: taskId)
+                cancelDownload(url: url)
             }
         }
         
-        let uploadTaskTuple = uploadTaskMap[taskId]
+        let uploadTaskTuple = uploadTaskMap[path]
         if (uploadTaskTuple != nil) {
             for listener in uploadTaskTuple!.1 {
                 if listener.notifyOnUiThread() {
                     DispatchQueue.main.async {
-                        listener.notifyProgress(progress, state, url, path)
+                        listener.notifyProgress(progress, state, url, path, err)
                     }
                 } else {
-                    listener.notifyProgress(progress, state, url, path)
+                    listener.notifyProgress(progress, state, url, path, err)
                 }
             }
             if (state == FileLoadState.Failed.rawValue || state == FileLoadState.Success.rawValue) {
-                cancelUpload(taskId: taskId)
+                cancelUpload(path: path)
             }
         }
     }

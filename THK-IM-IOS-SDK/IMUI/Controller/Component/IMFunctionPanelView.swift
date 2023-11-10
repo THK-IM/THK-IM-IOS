@@ -9,14 +9,14 @@ import Foundation
 import UIKit
 import RxSwift
 
-class IMMoreView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     weak var sender: IMMsgSender?
-    private let cellID = "more_cell_id"
+    private let cellID = "function_cell_id"
     private let countOneRow = 4.0
     private let disposeBag = DisposeBag()
     private let functions = IMUIManager.shared.getBottomFunctionProviders()
     
-    lazy var moreView: UICollectionView = {
+    lazy var functionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.scrollDirection = .vertical
@@ -29,7 +29,7 @@ class IMMoreView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundView = nil
         collectionView.backgroundColor = UIColor.clear
-        collectionView.register(IMMoreCell.self, forCellWithReuseIdentifier: self.cellID)
+        collectionView.register(IMFunctionCell.self, forCellWithReuseIdentifier: self.cellID)
         collectionView.alpha = 1
         return collectionView
     }()
@@ -45,17 +45,17 @@ class IMMoreView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
     }
     
     private func setupView() {
-        self.addSubview(self.moreView)
-        self.moreView.snp.makeConstraints { make in
+        self.addSubview(self.functionView)
+        self.functionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellID, for: indexPath)
-        let moreCell = cell as! IMMoreCell
-        moreCell.setFunction(functions[indexPath.row])
-        return moreCell
+        let functionCell = cell as! IMFunctionCell
+        functionCell.setFunction(functions[indexPath.row])
+        return functionCell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -76,7 +76,6 @@ class IMMoreView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
         }
         f.click(sender: s)
     }
-    
     
 }
 
