@@ -55,6 +55,7 @@ class IMBottomPanelLayout: UIView {
                 self.tabPanelView.snp.makeConstraints { make in
                     make.edges.equalToSuperview()
                 }
+                self.tabPanelView.initPosition()
                 panelLayoutHeight = emojiHeight
             }
         } else {

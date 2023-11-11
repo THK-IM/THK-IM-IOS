@@ -81,12 +81,15 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
     func setupView() {
         self.addSubview(self.emojiView)
         self.emojiView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-20)
         }
         
         self.addSubview(self.sendButton)
         self.sendButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-20)
             make.right.equalToSuperview().offset(-10)
             make.width.equalTo(40)
             make.height.equalTo(30)
@@ -97,8 +100,8 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
             guard let sf = self else {
                 return
             }
-            make.bottom.equalToSuperview()
-            make.right.equalTo(sf.sendButton.snp.left).offset(-8)
+            make.bottom.equalToSuperview().offset(-20)
+            make.right.equalTo(sf.sendButton.snp.left).offset(-10)
             make.width.equalTo(40)
             make.height.equalTo(30)
         }

@@ -60,7 +60,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
         let textView = UITextView()
         textView.delegate = self
         textView.isScrollEnabled = true
-        textView.font = UIFont.systemFont(ofSize: 14.0)
+        textView.font = UIFont.systemFont(ofSize: 16.0)
         textView.returnKeyType = .send
         textView.keyboardType = .default
         textView.backgroundColor = UIColor.white

@@ -240,6 +240,7 @@ class MediaPreviewController: UIViewController,
             x: frame.origin.x + frame.size.width / 2,
             y: frame.origin.y + frame.size.height / 2
         )
+        animator.size = self.enterFrame?.size
         return animator
     }
     

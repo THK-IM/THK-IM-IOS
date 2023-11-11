@@ -58,11 +58,18 @@ class IMTabPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSour
             }
             make.top.equalTo(sf.functionView.snp.bottom)
         }
-        let view = IMUIManager.shared.getPanelProviders()[0].contentView(sender: self.sender)
-        self.containerView.addSubview(view)
-        view.snp.makeConstraints {make in
-            make.edges.equalToSuperview()
+        
+    }
+    
+    func initPosition() {
+        if (IMUIManager.shared.getPanelProviders().count > 0) {
+            let view = IMUIManager.shared.getPanelProviders()[0].contentView(sender: self.sender)
+            self.containerView.addSubview(view)
+            view.snp.makeConstraints {make in
+                make.edges.equalToSuperview()
+            }
         }
+        
     }
     
     required init?(coder: NSCoder) {

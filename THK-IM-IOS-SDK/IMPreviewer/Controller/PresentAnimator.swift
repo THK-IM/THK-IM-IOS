@@ -9,11 +9,12 @@ import UIKit
 
 class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
-    let duration = 0.4
+    var duration = 0.4
     var origin: CGPoint?
+    var size: CGSize?
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.4
+        return duration
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -29,7 +30,11 @@ class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let screenHeight = UIScreen.main.bounds.size.height
         let translationX = x - screenWidth / 2
         let translationY = y - screenHeight / 2
-        let scale = 0.1
+        
+        var scale = 0.2
+        if (self.size != nil) {
+            scale = self.size!.width / UIScreen.main.bounds.width
+        }
         
         // 定义平移和放大变换
         let translationTransform = CGAffineTransform(translationX: translationX/scale, y: translationY/scale)
@@ -38,7 +43,7 @@ class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let combinedTransform = translationTransform.concatenating(scaleTransform)
         // 设置转场前的初始状态
         toVC.view.transform = combinedTransform
-        toVC.view.alpha = 0.1
+        toVC.view.alpha = 0.01
         containerView.addSubview(toVC.view)
         // 执行转场动画
         UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
