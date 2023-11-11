@@ -1,5 +1,5 @@
 //
-//  UnSupportMsgProcessor.swift
+//  IMUnSupportMsgProcessor.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/27.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UnSupportMsgProcessor : BaseMsgProcessor {
+class IMUnSupportMsgProcessor : BaseMsgProcessor {
     
     override func messageType() -> Int {
         return MsgType.UnSupport.rawValue

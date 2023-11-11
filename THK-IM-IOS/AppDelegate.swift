@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", apiEndpoint)
         IMUIManager.shared.initConfig()
         IMUIManager.shared.contentProvider = Provider(token: token)
-        IMUIManager.shared.contentPreviewer = Previewer(token: token)
+        IMUIManager.shared.contentPreviewer = Previewer(token: token, endpoint: apiEndpoint)
         IMCoreManager.shared.connect()
         
     }

@@ -11,8 +11,8 @@ import UIKit
 
 public class Previewer : IMPreviewer {
     
-    init(token: String) {
-        IMAVCacheManager.shared.setToken(token: token)
+    init(token: String, endpoint: String) {
+        IMAVCacheManager.shared.initCache(token: token, endpoint: endpoint)
     }
     
     public func previewMessage(_ controller: UIViewController, items: [Message], view: UIView, defaultId: Int64) {

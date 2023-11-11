@@ -1,5 +1,5 @@
 //
-//  VideoMsgProcessor.swift
+//  IMVideoMsgProcessor.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/7/10.
@@ -11,7 +11,7 @@ import CocoaLumberjack
 import SwiftEventBus
 import AVFoundation
 
-class VideoMsgProcessor : BaseMsgProcessor {
+class IMVideoMsgProcessor : BaseMsgProcessor {
     
     override func messageType() -> Int {
         return MsgType.VIDEO.rawValue
@@ -313,7 +313,7 @@ class VideoMsgProcessor : BaseMsgProcessor {
             
             var fileName = body.name!
             if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
-                fileName = "cover_\(body.name!)"
+                fileName = "cover_\(body.name!).jpeg"
             }
             
             let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(

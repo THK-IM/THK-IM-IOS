@@ -92,16 +92,25 @@ class PreviewVideoCellView : PreviewCellView {
             let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(sourcePath!)
             self.videoPlayView.initDataSource(NSURL(fileURLWithPath: realPath) as URL)
         } else if (sourceUrl != nil) {
-            let cache = IMAVCacheManager.shared.loadCache(sourceUrl!)
-            if (cache != nil && cache!.cacheInfo.isFinished()) {
+            let realUrl = self.getRealUrl(url: sourceUrl!, message: message)
+            let cache = IMAVCacheManager.shared.loadCache(realUrl)
+            if (cache.cacheInfo.isFinished()) {
                 DispatchQueue.global().async { [weak self] in
-                    self?.updateMessage(cache: cache!)
+                    self?.updateMessage(cache: cache)
                 }
             }
-            guard let url = NSURL(string: sourceUrl!) as URL? else {
+            guard let url = NSURL(string: realUrl) as URL? else {
                 return
             }
             self.videoPlayView.initDataSource(url)
+        }
+    }
+    
+    private func getRealUrl(url: String, message: Message) -> String {
+        if (url.hasPrefix("http")) {
+            return url
+        } else {
+            return "\(IMAVCacheManager.shared.getEndpoint())/session/object/download_url?id=\(url)&s_id=\(message.sessionId)"
         }
     }
     
@@ -124,13 +133,20 @@ class PreviewVideoCellView : PreviewCellView {
         guard let message = self.message else {
             return
         }
+        if (!cache.cacheInfo.isFinished()) {
+            return
+        }
         do {
             if (message.content != nil) {
                 let body = try JSONDecoder().decode(
                     IMVideoMsgBody.self,
                     from: message.content!.data(using: .utf8) ?? Data()
                 )
-                if (body.url == cache.cacheUrl) {
+                if (body.url == nil) {
+                    return
+                }
+                let realUrl = self.getRealUrl(url: body.url!, message: message)
+                if (realUrl == cache.cacheUrl) {
                     var data: IMVideoMsgData? = nil
                     if (message.data != nil) {
                         data = try JSONDecoder().decode(

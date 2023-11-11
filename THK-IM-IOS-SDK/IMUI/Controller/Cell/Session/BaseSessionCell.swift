@@ -41,7 +41,7 @@ open class BaseSessionCell : BaseTableCell {
         return view
     }()
     
-    lazy var timeView: UILabel = {
+    lazy var lastTimeView: UILabel = {
         let view = UILabel()
         view.font = UIFont.systemFont(ofSize: 10)
         view.textColor = UIColor.gray
@@ -65,7 +65,7 @@ open class BaseSessionCell : BaseTableCell {
         contentView.addSubview(self.avatarView)
         contentView.addSubview(self.nickView)
         contentView.addSubview(self.msgView)
-        contentView.addSubview(self.timeView)
+        contentView.addSubview(self.lastTimeView)
         contentView.addSubview(self.unreadCountView)
         contentView.addSubview(self.silenceView)
         
@@ -77,14 +77,14 @@ open class BaseSessionCell : BaseTableCell {
         nickView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.left.equalTo(avatarView.snp.right).offset(5)
-            make.right.equalTo(timeView.snp.left).offset(-5)
+            make.right.equalTo(lastTimeView.snp.left).offset(-5)
         }
         msgView.snp.makeConstraints { make in
             make.top.equalTo(self.nickView.snp.bottom).offset(10)
             make.left.equalTo(avatarView.snp.right).offset(5)
-            make.right.equalTo(timeView.snp.left).offset(-5)
+            make.right.equalTo(lastTimeView.snp.left).offset(-5)
         }
-        timeView.snp.makeConstraints { make in
+        lastTimeView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.right.equalTo(contentView.snp.right).offset(-10)
             make.width.lessThanOrEqualTo(120)
@@ -121,9 +121,9 @@ open class BaseSessionCell : BaseTableCell {
         self.avatarView.ca_setImageUrlWithCorner(url: "https://picsum.photos/300/300", radius: 6)
         self.nickView.text = String(format: "nick-%d", session.entityId)
         self.msgView.text = session.lastMsg
-        let dateString = Date().timeToDateString(showTime: session.mTime, currentTime: IMCoreManager.shared.severTime)
-        self.timeView.text = dateString
-        self.timeView.textAlignment = .right
+        let dateString = DateUtils.timeToMsgTime(ms: session.mTime, now: IMCoreManager.shared.severTime)
+        self.lastTimeView.text = dateString
+        self.lastTimeView.textAlignment = .right
         let number = String.getNumber(count: Int(session.unreadCount))
         if (number != nil) {
             unreadCountView.text = number

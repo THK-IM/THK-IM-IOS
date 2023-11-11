@@ -50,7 +50,7 @@ extension String {
         return randomString
     }
     
-    public var hash_256: String {
+    public var sha256Hash: String {
         guard let data = data(using: .utf8) else {
             return self
         }

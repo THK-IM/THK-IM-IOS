@@ -63,22 +63,43 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         registerSessionEvent()
     }
     
-    private func insertSession(_ session: Session) {
-        lock.lock()
-        defer {lock.unlock()}
-        guard let tableView = self.sessionTableView else { return }
-        let pos = findPosition(session)
-        if (pos != -1) {
-            self.sessions.remove(at: pos)
-            tableView.deleteRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
-        }
-        // 新Session
-        let insertPos = findInsertPosition(session)
-        self.sessions.insert(session, at: insertPos)
-        tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
+    private func onNewSession(_ session: Session) {
+        self.onSessionUpdate(session)
     }
     
-    private func removeSession(_ session: Session) {
+    private func onSessionUpdate(_ session: Session) {
+        guard let tableView = self.sessionTableView else { return }
+        let oldPos = findPosition(session)
+        if (oldPos >= 0 && oldPos < self.sessions.count) {
+            self.sessions.remove(at: oldPos)
+            let insertPos = findInsertPosition(session)
+            if (oldPos == insertPos) {
+                self.sessions.insert(session, at: insertPos)
+                tableView.reloadRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
+            } else {
+                tableView.deleteRows(at: [IndexPath.init(row: oldPos, section: 0)], with: .none)
+                self.sessions.insert(session, at: insertPos)
+                tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
+            }
+        } else {
+            // 新Session
+            let insertPos = findInsertPosition(session)
+            self.sessions.insert(session, at: insertPos)
+            tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
+        }
+//        let pos = findPosition(session)
+//        if (pos != -1) {
+//            self.sessions.remove(at: pos)
+//            tableView.deleteRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
+//        }
+//        // 新Session
+//        let insertPos = findInsertPosition(session)
+//        self.sessions.insert(session, at: insertPos)
+//        tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
+
+    }
+    
+    private func onSessionRemove(_ session: Session) {
         lock.lock()
         defer {lock.unlock()}
         guard let tableView = self.sessionTableView else { return }
@@ -133,20 +154,20 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             guard let session = result?.object as? Session else {
                 return
             }
-            self?.insertSession(session)
+            self?.onNewSession(session)
         })
         SwiftEventBus.onMainThread(self, name: IMEvent.SessionUpdate.rawValue, handler: { [weak self ] result in
             guard let session = result?.object as? Session else {
                 return
             }
-            self?.insertSession(session)
+            self?.onSessionUpdate(session)
         })
         
         SwiftEventBus.onMainThread(self, name: IMEvent.SessionDelete.rawValue, handler: { [weak self ] result in
             guard let session = result?.object as? Session else {
                 return
             }
-            self?.removeSession(session)
+            self?.onSessionRemove(session)
         })
     }
     
@@ -233,7 +254,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         })
         delete.backgroundColor = UIColor.init(hex: "d22c69")
         
-        let configuration = UISwipeActionsConfiguration(actions: [top, delete, mute])
+        let configuration = UISwipeActionsConfiguration(actions: [delete, mute, top])
         configuration.performsFirstActionWithFullSwipe = false
         return configuration
     }

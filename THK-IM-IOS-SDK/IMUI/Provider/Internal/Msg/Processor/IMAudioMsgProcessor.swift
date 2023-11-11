@@ -1,5 +1,5 @@
 //
-//  AudioMsgProcessor.swift
+//  IMAudioMsgProcessor.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/7/5.
@@ -10,7 +10,7 @@ import RxSwift
 import CocoaLumberjack
 import SwiftEventBus
 
-class AudioMsgProcessor : BaseMsgProcessor {
+class IMAudioMsgProcessor : BaseMsgProcessor {
     
     override func messageType() -> Int {
         return MsgType.Audio.rawValue

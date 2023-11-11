@@ -1,5 +1,5 @@
 //
-//  ImageMsgProcessor.swift
+//  IMImageMsgProcessor.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/21.
@@ -10,7 +10,7 @@ import RxSwift
 import CocoaLumberjack
 import SwiftEventBus
 
-class ImageMsgProcessor : BaseMsgProcessor {
+class IMImageMsgProcessor : BaseMsgProcessor {
     
     override func messageType() -> Int {
         return MsgType.IMAGE.rawValue

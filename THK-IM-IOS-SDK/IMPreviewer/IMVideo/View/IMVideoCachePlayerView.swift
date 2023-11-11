@@ -65,8 +65,8 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         let b = UIButton()
         b.contentHorizontalAlignment = .fill
         b.contentVerticalAlignment = .fill
-        b.setImage(UIImage(named: "chat_video_play"), for: UIControl.State.normal)
-        b.setImage(UIImage(named: "chat_video_pause"), for: UIControl.State.selected)
+        b.setImage(UIImage(named: "icon_video_play"), for: UIControl.State.normal)
+        b.setImage(UIImage(named: "icon_video_pause"), for: UIControl.State.selected)
         b.addTarget(
             self,
             action: #selector(self.playOrPauseClick(sender:)),
@@ -159,7 +159,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
                     return
                 }
                 let remain = max(0, sf.seconds - Int(t.seconds))
-                sf.timeLabel.text = Date().secondToTime(remain)
+                sf.timeLabel.text = DateUtils.secondToDuration(seconds: remain)
                 if !sf.isSliderDragging {
                     sf.progressView.value = Float(min(t.seconds/Double(sf.seconds), 1.0))
                 }
@@ -177,7 +177,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         self.seconds = seconds
         self.progressView.value = 0
         self.playButton.isSelected = false
-        self.timeLabel.text = Date().secondToTime(seconds)
+        self.timeLabel.text = DateUtils.secondToDuration(seconds: seconds)
     }
     
     func initCover(_ path: String) {
@@ -218,20 +218,12 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        print("observeValue callback")
         if keyPath == "loadedTimeRanges" {
-            // 计算加载进度
-//            guard let timeRange = player.currentItem?.loadedTimeRanges.first else {
-//                return
-//            }
-//            let totalBufferedTime = CMTimeGetSeconds(timeRange.timeRangeValue.start) + CMTimeGetSeconds(timeRange.timeRangeValue.duration)
-//            let totalDuration = CMTimeGetSeconds(player.currentItem?.duration ?? CMTime.zero)
-//            let bufferedProgress = Float(totalBufferedTime / totalDuration)
         }
         if keyPath == "status" {
             let err = player.currentItem?.error
             if (err != nil) {
-                print("IMAVCacheManager err \(err!)")
+                print("IMCacheVideoPlayerView err \(err!)")
             }
         }
     }
@@ -307,27 +299,26 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     
     
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel authenticationChallenge: URLAuthenticationChallenge) {
-        print("resourceLoader authenticationChallenge")
+        print("IMCacheVideoPlayerView resourceLoader authenticationChallenge")
     }
     
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
-        print("resourceLoader didCancel")
+        print("IMCacheVideoPlayerView resourceLoader didCancel")
         IMAVCacheManager.shared.cancelRequest(loadingRequest)
     }
     
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         let response = IMAVCacheManager.shared.addRequest(loadingRequest)
-        print("resourceLoader shouldWaitForLoadingOfRequestedResource \(Thread.current) \(response)")
+        print("IMCacheVideoPlayerView resourceLoader shouldWaitForLoadingOfRequestedResource \(Thread.current) \(response)")
         return response
     }
     
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest) -> Bool {
-        print("resourceLoader shouldWaitForRenewalOfRequestedResource")
+        print("IMCacheVideoPlayerView resourceLoader shouldWaitForRenewalOfRequestedResource")
         return true
     }
     
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForResponseTo authenticationChallenge: URLAuthenticationChallenge) -> Bool {
-        print("resourceLoader authenticationChallenge")
         return true
     }
     

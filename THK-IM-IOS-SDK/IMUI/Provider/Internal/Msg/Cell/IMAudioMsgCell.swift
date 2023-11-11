@@ -81,7 +81,7 @@ class IMAudioMsgCell: BaseMsgCell {
                     IMAudioMsgData.self,
                     from: msg.data!.data(using: .utf8) ?? Data())
                 if (data.duration != nil) {
-                    self.durationView.text = Date().secondToTime(data.duration!)
+                    self.durationView.text = DateUtils.secondToDuration(seconds: data.duration!)
                 }
                 if (!data.played) {
                     self.statusView.isHidden = false
@@ -100,7 +100,7 @@ class IMAudioMsgCell: BaseMsgCell {
                     IMAudioMsgBody.self,
                     from: msg.content!.data(using: .utf8) ?? Data())
                 if (body.duration != nil) {
-                    self.durationView.text = Date().secondToTime(body.duration!)
+                    self.durationView.text = DateUtils.secondToDuration(seconds: body.duration!)
                     self.statusView.isHidden = false
                 }
                 if (body.url != nil) {

@@ -26,11 +26,11 @@ public class IMUIManager: NSObject {
     private override init() {
         super.init()
         
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(UnSupportMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(TextMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(ImageMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(AudioMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(VideoMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMUnSupportMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMTextMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMImageMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMAudioMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMVideoMsgProcessor())
         
         self.registerMsgCellProviders(IMUnSupportMsgCellProvide())
         self.registerMsgCellProviders(IMTimeLineMsgCellProvider())

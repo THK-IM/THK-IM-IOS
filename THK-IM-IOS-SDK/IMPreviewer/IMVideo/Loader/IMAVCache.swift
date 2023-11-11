@@ -42,6 +42,9 @@ open class IMAVCacheInfo: Codable {
     }
     
     func isFinished() -> Bool {
+        if (self.contentLength == 0) {
+            return false
+        }
         var s : Int64 = 0
         for r in loadedRanges {
             s += Int64(r.end - r.start) + 1
@@ -71,32 +74,37 @@ class IMAVCache{
         }
     }
     
-    init(_ cacheDir: String, _ cacheUrl: String) throws {
+    init(_ cacheDir: String, _ cacheUrl: String) {
         let infoFilePath = "\(cacheDir)/meta.json"
         var isDirectory: ObjCBool = false
+        var cacheInfo: IMAVCacheInfo?
         let existed = FileManager.default.fileExists(atPath: infoFilePath, isDirectory: &isDirectory)
-        if !existed {
-            throw CocoaError.error(.fileReadUnknown)
+        if existed {
+            if (isDirectory.boolValue) {
+                do {
+                    try FileManager.default.removeItem(atPath: infoFilePath)
+                } catch {
+                    DDLogError(error)
+                }
+            } else {
+                let content = FileManager.default.contents(atPath: infoFilePath)
+                if (content != nil) {
+                    do {
+                        cacheInfo = try JSONDecoder().decode(IMAVCacheInfo.self, from: content!)
+                    } catch {
+                        DDLogError(error)
+                    }
+                }
+            }
         }
-        if (existed && isDirectory.boolValue) {
-            try FileManager.default.removeItem(atPath: infoFilePath)
-            throw CocoaError.error(.fileReadUnknown)
+        if (cacheInfo == nil) {
+            cacheInfo = IMAVCacheInfo(0, "", [])
         }
-        let cacheFilePath = "\(cacheDir)/video.tmp"
-        if !FileManager.default.fileExists(atPath: cacheFilePath) {
-            try FileManager.default.removeItem(atPath: infoFilePath)
-            throw CocoaError.error(.fileReadUnknown)
-        }
-        guard let content = FileManager.default.contents(atPath: infoFilePath) else {
-            throw CocoaError.error(.fileReadUnknown)
-        }
-        let _cacheInfo = try JSONDecoder().decode(IMAVCacheInfo.self, from: content)
         self.cacheDir = cacheDir
-        self.cacheFilePath = cacheFilePath
+        self.cacheFilePath = "\(cacheDir)/video.tmp"
         self.cacheInfoFilePath = infoFilePath
         self.cacheUrl = cacheUrl
-        self.cacheInfo = _cacheInfo
-        
+        self.cacheInfo = cacheInfo!
     }
     
     // 返回需要加载的range和已经缓存的range
@@ -197,7 +205,7 @@ class IMAVCache{
         }
     }
     
-    func writeNewCache(_ contentRange: String, data: Data) -> Bool {
+    func writeNewCache(_ contentRange: String, _ responseType: String, _ data: Data) -> Bool {
         lock.lock()
         defer {lock.unlock()}
         defer {
@@ -211,6 +219,7 @@ class IMAVCache{
                 DDLogError(error)
             }
         }
+        self.cacheInfo.contentType = responseType
         var isDirectory: ObjCBool = false
         let existed = FileManager.default.fileExists(atPath: self.cacheFilePath, isDirectory: &isDirectory)
         if !existed {
@@ -252,7 +261,7 @@ class IMAVCache{
     
     private func parserRequestRange(_ requestRange: String) -> [RangeInfo] {
         var rangesString = requestRange
-        if rangesString.contains("bytes") {
+        if rangesString.contains("bytes=") {
             rangesString = String(rangesString.replacingOccurrences(of: "bytes=", with: ""))
         }
         return self.parserRanges(rangesString, self.cacheInfo.contentLength)

@@ -20,12 +20,12 @@ class IMVideoMsgCell: BaseMsgCell {
         let view = UIImageView()
         durationLabel.font = UIFont.systemFont(ofSize: 10)
         durationLabel.textColor = UIColor.white
-        durationLabel.layer.backgroundColor = UIColor.init(hex: "333333").withAlphaComponent(0.4).cgColor
-        durationLabel.layer.cornerRadius = 4
+        durationLabel.layer.backgroundColor = UIColor.init(hex: "333333").withAlphaComponent(0.5).cgColor
+        durationLabel.layer.cornerRadius = 6
         durationLabel.padding = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
         view.addSubview(durationLabel)
         
-        playView.image = UIImage(named: "chat_video_play")
+        playView.image = UIImage(named: "icon_video_play")
         view.addSubview(playView)
         return view
     }()
@@ -63,7 +63,7 @@ class IMVideoMsgCell: BaseMsgCell {
                     IMVideoMsgData.self,
                     from: msg.data!.data(using: .utf8) ?? Data())
                 if (data.duration != nil) {
-                    self.durationLabel.text = Date().secondToTime(data.duration!)
+                    self.durationLabel.text = DateUtils.secondToDuration(seconds: data.duration!)
                 }
                 if (data.thumbnailPath != nil) {
                     let path = IMCoreManager.shared.storageModule.sandboxFilePath(data.thumbnailPath!)
@@ -82,7 +82,7 @@ class IMVideoMsgCell: BaseMsgCell {
                     IMVideoMsgBody.self,
                     from: msg.content!.data(using: .utf8) ?? Data())
                 if (body.duration != nil) {
-                    self.durationLabel.text = Date().secondToTime(body.duration!)
+                    self.durationLabel.text = DateUtils.secondToDuration(seconds: body.duration!)
                 }
                 if (body.thumbnailUrl != nil) {
                     _ = IMCoreManager.shared.getMessageModule().getMsgProcessor(msg.type)
