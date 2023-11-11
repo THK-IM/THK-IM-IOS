@@ -38,9 +38,4 @@ class IMDatabase {
         self.sessionDao = DefaultSessionDao(self.database, TableName.Session.rawValue)
         self.userDao = DefaultUserDao(self.database, TableName.User.rawValue)
     }
-    
-    
-    
-    
-    
 }

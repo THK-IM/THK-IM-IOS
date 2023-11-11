@@ -11,7 +11,6 @@ PODS:
   - Moya/RxSwift (15.0.0):
     - Moya/Core
     - RxSwift (~> 6.0)
-  - Pageboy (4.0.2)
   - RxCocoa (6.5.0):
     - RxRelay (= 6.5.0)
     - RxSwift (= 6.5.0)
@@ -24,8 +23,6 @@ PODS:
   - SnapKit (5.6.0)
   - Starscream (4.0.4)
   - SwiftEventBus (5.0.0)
-  - Tabman (3.0.2):
-    - Pageboy (~> 4.0.2)
   - WCDB.swift (2.0.2.5):
     - WCDB.swift/no-arc (= 2.0.2.5)
     - WCDBOptimizedSQLCipher (~> 1.4.1)
@@ -52,7 +49,6 @@ DEPENDENCIES:
   - SnapKit (~> 5.6.0)
   - Starscream (~> 4.0.4)
   - SwiftEventBus (from `https://github.com/cesarferreira/SwiftEventBus.git`, tag `5.1.0`)
-  - Tabman (~> 3.0)
   - WCDB.swift (~> 2.0.1)
   - WebRTC-SDK (= 114.5735.04)
   - YbridOgg
@@ -67,14 +63,12 @@ SPEC REPOS:
     - GDPerformanceView-Swift
     - Kingfisher
     - Moya
-    - Pageboy
     - RxCocoa
     - RxGesture
     - RxRelay
     - RxSwift
     - SnapKit
     - Starscream
-    - Tabman
     - WCDB.swift
     - WCDBOptimizedSQLCipher
     - WebRTC-SDK
@@ -99,7 +93,6 @@ SPEC CHECKSUMS:
   GDPerformanceView-Swift: 22d964fe40b19e3d914dba2586237d064de8fd77
   Kingfisher: 59f908b6d2f403b0a3e539debb0eec05cb27002c
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
-  Pageboy: 34ff11e8d1041b81769d5bcde9b19a0cb7218bd9
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
@@ -107,7 +100,6 @@ SPEC CHECKSUMS:
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   SwiftEventBus: 976fdca8270b925c5f8e897f519cc49597e1f13c
-  Tabman: 6326ec3a792da1c2a6e79c7eddb56af7b591c9d6
   WCDB.swift: 41d30d0e113cb2032947e34998f9eedc5c8cbd71
   WCDBOptimizedSQLCipher: 880ec8aa6cda6b27e4c72b30bf0cc01771deda6f
   WebRTC-SDK: 3a2279e1649c45e2988e574bce645d7ad44e0679
@@ -115,6 +107,6 @@ SPEC CHECKSUMS:
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
   ZLPhotoBrowser: 0563c2bfc7b247b65d023d646012f46cba94101b
 
-PODFILE CHECKSUM: 9f2e977491f690045d290c5b39e5cceaa3bf6126
+PODFILE CHECKSUM: bbd267ff6471b54c05084d720fd5c8af5dab9f88
 
 COCOAPODS: 1.12.1
