@@ -16,6 +16,7 @@ public class IMUIManager: NSObject {
     private var sessionCellProviders = [Int:IMBaseSessionCellProvider]()
     private var bottomFunctionProviders = [IMBaseFunctionCellProvider]()
     private var panelProviders = [IMBasePanelViewProvider]()
+    private var msgOperators = [String: IMMessageOperator]()
     var contentProvider: IMProvider? = nil
     var contentPreviewer: IMPreviewer? = nil
     
@@ -41,13 +42,17 @@ public class IMUIManager: NSObject {
         
         self.registerSessionCellProvider(IMSingleSessionCellProvider())
         
-        registerBottomFunctionProvider(
-            IMPhotoFunctionProvider(), IMCameraFunctionProvider()
-        )
-        registerPanelProvider(
-            IMUnicodeEmojiPanelProvider(), IMUnicodeEmojiPanelProvider()
-        )
+        self.registerBottomFunctionProvider(IMPhotoFunctionProvider(), IMCameraFunctionProvider())
+        self.registerPanelProvider(IMUnicodeEmojiPanelProvider(), IMUnicodeEmojiPanelProvider())
         self.registerSessionCellProvider(IMDefaultSessionCellProvider())
+        
+        self.registerMessageOperator(IMMsgDeleteOperator())
+        self.registerMessageOperator(IMMsgCopyOperator())
+        self.registerMessageOperator(IMMsgForwardOperator())
+        self.registerMessageOperator(IMMsgRevokeOperator())
+        self.registerMessageOperator(IMMsgReplyOperator())
+        self.registerMessageOperator(IMMsgMultiSelectOperator())
+        
     }
     
     func registerMsgCellProviders(_ provider: IMBaseMessageCellProvider) {
@@ -98,6 +103,18 @@ public class IMUIManager: NSObject {
     
     func getPanelProviders() -> Array<IMBasePanelViewProvider> {
         return panelProviders
+    }
+    
+    func registerMessageOperator(_ msgOperator: IMMessageOperator) {
+        msgOperators[msgOperator.id()] = msgOperator
+    }
+    
+    func getMessageOperators(_ message: Message) -> [IMMessageOperator] {
+        var operators = [IMMessageOperator]()
+        for msgOperator in msgOperators {
+            operators.append(msgOperator.value)
+        }
+        return operators
     }
     
     lazy var bubble: Bubble = {

@@ -369,7 +369,8 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func onMsgCellLongClick(message: Message, position: Int, view: UIView) {
-        self.sender?.setSelectMode(true, message: message)
+//        self.sender?.setSelectMode(true, message: message)
+        self.sender?.popupMessageOperatorPanel(view, message)
     }
     
     func onMsgResendClick(message: Message) {

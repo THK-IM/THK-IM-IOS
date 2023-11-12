@@ -11,7 +11,7 @@ import RxSwift
 import RxGesture
 
 
-class IMMsgCheckedLayout: UIView {
+class IMMessageSelectedLayout: UIView {
     
     weak var sender: IMMsgSender?
     private let disposeBag = DisposeBag()

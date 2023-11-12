@@ -20,11 +20,11 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     
     var session: Session? = nil
     private var containerView = UIView()
-//    private var alwaysShowView = UIView()
+    //    private var alwaysShowView = UIView()
     private var messageLayout = IMMessageLayout()
     private var inputLayout = IMInputLayout()
     private var bottomPanelLayout = IMBottomPanelLayout()
-    private var msgCheckedLayout = IMMsgCheckedLayout()
+    private var msgSelectedLayout = IMMessageSelectedLayout()
     private var keyboardShow = false
     private var disposeBag = DisposeBag()
     
@@ -79,19 +79,19 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         }
         
         // 多选msg视图
-        self.containerView.addSubview(self.msgCheckedLayout)
-        self.msgCheckedLayout.sender = self
-        self.msgCheckedLayout.alpha = 1
-        self.msgCheckedLayout.backgroundColor = UIColor.init(hex: "e2e2e2")
-        self.msgCheckedLayout.isHidden = true
-        self.msgCheckedLayout.snp.makeConstraints { [weak self] make in
+        self.containerView.addSubview(self.msgSelectedLayout)
+        self.msgSelectedLayout.sender = self
+        self.msgSelectedLayout.alpha = 1
+        self.msgSelectedLayout.backgroundColor = UIColor.init(hex: "e2e2e2")
+        self.msgSelectedLayout.isHidden = true
+        self.msgSelectedLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
             }
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.bottom.equalTo(sf.bottomPanelLayout.snp.top)
-            make.height.equalTo(sf.msgCheckedLayout.getLayoutHeight()) // 高度内部自己计算
+            make.height.equalTo(sf.msgSelectedLayout.getLayoutHeight()) // 高度内部自己计算
         }
         
         // 消息视图，在输入框之上，铺满alwaysShowView
@@ -363,10 +363,10 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     func setSelectMode(_ selected: Bool, message: Message?) {
         if (selected) {
             self.messageLayout.setSelectMode(selected, message: message)
-            self.msgCheckedLayout.isHidden = false
+            self.msgSelectedLayout.isHidden = false
         } else {
             self.messageLayout.setSelectMode(selected)
-            self.msgCheckedLayout.isHidden = true
+            self.msgSelectedLayout.isHidden = true
         }
     }
     
@@ -390,6 +390,28 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     }
     
     
+    func popupMessageOperatorPanel(_ view: UIView, _ message: Message) {
+        let screenWidth = UIScreen.main.bounds.width
+        let screenHeight = UIScreen.main.bounds.height
+        let atFrame = view.convert(view.bounds, to: nil)
+        let operators = IMUIManager.shared.getMessageOperators(message)
+        let rowCount = 5
+        let popupWidth = 300
+        let popupHeight = (operators.count/rowCount + operators.count%rowCount) * 60
+        var y = 0
+        if (atFrame.origin.y > 300) {
+            y = Int(atFrame.origin.y) - popupHeight
+        } else {
+            if (atFrame.size.height > (screenHeight - 300)) {
+                y = (Int(screenHeight) - popupHeight) / 2
+            } else {
+                y = Int(atFrame.origin.y) + Int(atFrame.size.height)
+            }
+        }
+        let frame = CGRect(x: (Int(screenWidth)-popupWidth)/2, y: y, width: popupWidth, height: popupHeight)
+        let popupView = IMMessageOperatorPopupView(frame: frame)
+        popupView.show(rowCount, operators, self, message)
+    }
     
     private func sendVideo(_ data: Data, ext: String) throws {
         let fileName = "\(String().random(8)).\(ext)"
@@ -460,7 +482,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         }
         return []
     }
-
+    
     
 }
 

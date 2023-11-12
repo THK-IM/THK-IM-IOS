@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol IMMsgSender : AnyObject {
     
@@ -62,4 +63,7 @@ public protocol IMMsgSender : AnyObject {
     
     /// 设置已读消息
     func readMessage(_ message: Message)
+    
+    /// 弹出消息操作面板弹窗
+    func popupMessageOperatorPanel(_ view: UIView, _ message: Message)
 }
