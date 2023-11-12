@@ -1,5 +1,5 @@
 //
-//  IMAVCacheRangeRequest.swift
+//  AVCacheRangeRequest.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/7/16.
@@ -10,17 +10,17 @@ import AVFoundation
 import Alamofire
 import CocoaLumberjack
 
-typealias RequestCallBlack = (_ success: Bool, _ requestRange: String, _ requestUrl: String, _ data: Data?, _ responseRange: String?, _ responseType :String?) -> Void
+typealias AVRequestCallBlack = (_ success: Bool, _ requestRange: String, _ requestUrl: String, _ data: Data?, _ responseRange: String?, _ responseType :String?) -> Void
 
-class IMAVCacheRangeRequest {
+class AVCacheRangeRequest {
     
     private var downloadRequest: DownloadRequest?
     var requestRange: String
     var originRequestRange: String
     var urlString: String
-    private var requestCallBlack: RequestCallBlack?
+    private var requestCallBlack: AVRequestCallBlack?
     
-    init(_ requestRange: String, _ originRequestRange: String, _ urlString: String, _ requestCallBlack: @escaping RequestCallBlack) {
+    init(_ requestRange: String, _ originRequestRange: String, _ urlString: String, _ requestCallBlack: @escaping AVRequestCallBlack) {
         self.requestRange = requestRange
         self.originRequestRange = originRequestRange
         self.urlString = urlString
@@ -29,10 +29,13 @@ class IMAVCacheRangeRequest {
     
     func startDownload() {
         var headers = HTTPHeaders()
-        let token = IMAVCacheManager.shared.getToken()
-        let endpoint = IMAVCacheManager.shared.getEndpoint()
-        if (urlString.hasSuffix(endpoint)) {
-            headers.add(HTTPHeader(name: "Token", value: token))
+        if (AVCacheManager.shared.delegate != nil) {
+            let addHeaders = AVCacheManager.shared.delegate!.header(url: urlString)
+            if (addHeaders != nil) {
+                for addHeader in addHeaders! {
+                    headers.add(HTTPHeader(name: addHeader.key, value: addHeader.value))
+                }
+            }
         }
         if self.requestRange != "" {
             headers.add(HTTPHeader(name: "Range", value: self.requestRange))

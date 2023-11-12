@@ -202,7 +202,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         }
         var customUrl = url.absoluteString
         if (customUrl.hasPrefix("http")) {
-            customUrl = url.absoluteString.replacingOccurrences(of: "http", with: IMAVCacheManager.customProtocol)
+            customUrl = url.absoluteString.replacingOccurrences(of: "http", with: AVCacheManager.customProtocol)
         }
         let urlAssets = AVURLAsset(url: URL(string: customUrl)!, options:["AVURLAssetOutOfBandMIMETypeKey": "video/mp4"])
         urlAssets.resourceLoader.setDelegate(self, queue: DispatchQueue.global())
@@ -304,11 +304,11 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
         print("IMCacheVideoPlayerView resourceLoader didCancel")
-        IMAVCacheManager.shared.cancelRequest(loadingRequest)
+        AVCacheManager.shared.cancelRequest(loadingRequest)
     }
     
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        let response = IMAVCacheManager.shared.addRequest(loadingRequest)
+        let response = AVCacheManager.shared.addRequest(loadingRequest)
         print("IMCacheVideoPlayerView resourceLoader shouldWaitForLoadingOfRequestedResource \(Thread.current) \(response)")
         return response
     }

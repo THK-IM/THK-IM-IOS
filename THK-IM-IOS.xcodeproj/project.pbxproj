@@ -10,7 +10,8 @@
 		08F4799AC88630CBD25DF832 /* Pods_THK_IM_IOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */; };
 		A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF52AFF18EC00896B87 /* DateUtils.swift */; };
 		A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF72AFFA9A900896B87 /* MediaViewController.swift */; };
-		A018CDFA2B007E0C00896B87 /* IMAVCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF92B007E0C00896B87 /* IMAVCacheProtocol.swift */; };
+		A018CDFA2B007E0C00896B87 /* AVCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF92B007E0C00896B87 /* AVCacheProtocol.swift */; };
+		A018CDFC2B00856B00896B87 /* IMAVCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDFB2B00856B00896B87 /* IMAVCacheProtocol.swift */; };
 		A02529072AC6CB05001561A0 /* DefaultFileLoadModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */; };
 		A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529082AC6CB82001561A0 /* DownloadTask.swift */; };
 		A025290B2AC6CBA6001561A0 /* UploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290A2AC6CBA6001561A0 /* UploadTask.swift */; };
@@ -135,9 +136,9 @@
 		A0D68BD22A888679004D11A5 /* PreviewImageCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B2A2A888678004D11A5 /* PreviewImageCellView.swift */; };
 		A0D68BD32A888679004D11A5 /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B2B2A888678004D11A5 /* CircleProgressView.swift */; };
 		A0D68BD42A888679004D11A5 /* VideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B2D2A888679004D11A5 /* VideoController.swift */; };
-		A0D68BD52A888679004D11A5 /* IMAVCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B2F2A888679004D11A5 /* IMAVCacheManager.swift */; };
-		A0D68BD62A888679004D11A5 /* IMAVCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B302A888679004D11A5 /* IMAVCache.swift */; };
-		A0D68BD72A888679004D11A5 /* IMAVCacheRangeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B312A888679004D11A5 /* IMAVCacheRangeRequest.swift */; };
+		A0D68BD52A888679004D11A5 /* AVCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B2F2A888679004D11A5 /* AVCacheManager.swift */; };
+		A0D68BD62A888679004D11A5 /* AVCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B302A888679004D11A5 /* AVCache.swift */; };
+		A0D68BD72A888679004D11A5 /* AVCacheRangeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B312A888679004D11A5 /* AVCacheRangeRequest.swift */; };
 		A0D68BDA2A888679004D11A5 /* IMZoomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B352A888679004D11A5 /* IMZoomImageView.swift */; };
 		A0D68BDB2A888679004D11A5 /* IMVideoCachePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B362A888679004D11A5 /* IMVideoCachePlayerView.swift */; };
 		A0D68BDD2A888679004D11A5 /* Date+TimeStamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B3A2A888679004D11A5 /* Date+TimeStamp.swift */; };
@@ -194,7 +195,8 @@
 		34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_THK_IM_IOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A018CDF52AFF18EC00896B87 /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		A018CDF72AFFA9A900896B87 /* MediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
-		A018CDF92B007E0C00896B87 /* IMAVCacheProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMAVCacheProtocol.swift; sourceTree = "<group>"; };
+		A018CDF92B007E0C00896B87 /* AVCacheProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCacheProtocol.swift; sourceTree = "<group>"; };
+		A018CDFB2B00856B00896B87 /* IMAVCacheProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMAVCacheProtocol.swift; sourceTree = "<group>"; };
 		A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFileLoadModule.swift; sourceTree = "<group>"; };
 		A02529082AC6CB82001561A0 /* DownloadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTask.swift; sourceTree = "<group>"; };
 		A025290A2AC6CBA6001561A0 /* UploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTask.swift; sourceTree = "<group>"; };
@@ -321,9 +323,9 @@
 		A0D68B2A2A888678004D11A5 /* PreviewImageCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewImageCellView.swift; sourceTree = "<group>"; };
 		A0D68B2B2A888678004D11A5 /* CircleProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
 		A0D68B2D2A888679004D11A5 /* VideoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoController.swift; sourceTree = "<group>"; };
-		A0D68B2F2A888679004D11A5 /* IMAVCacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMAVCacheManager.swift; sourceTree = "<group>"; };
-		A0D68B302A888679004D11A5 /* IMAVCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMAVCache.swift; sourceTree = "<group>"; };
-		A0D68B312A888679004D11A5 /* IMAVCacheRangeRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMAVCacheRangeRequest.swift; sourceTree = "<group>"; };
+		A0D68B2F2A888679004D11A5 /* AVCacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVCacheManager.swift; sourceTree = "<group>"; };
+		A0D68B302A888679004D11A5 /* AVCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVCache.swift; sourceTree = "<group>"; };
+		A0D68B312A888679004D11A5 /* AVCacheRangeRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVCacheRangeRequest.swift; sourceTree = "<group>"; };
 		A0D68B352A888679004D11A5 /* IMZoomImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMZoomImageView.swift; sourceTree = "<group>"; };
 		A0D68B362A888679004D11A5 /* IMVideoCachePlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMVideoCachePlayerView.swift; sourceTree = "<group>"; };
 		A0D68B3A2A888679004D11A5 /* Date+TimeStamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+TimeStamp.swift"; sourceTree = "<group>"; };
@@ -902,21 +904,20 @@
 		A0D68B2C2A888679004D11A5 /* IMVideo */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B2E2A888679004D11A5 /* Loader */,
 				A0D68B322A888679004D11A5 /* View */,
 			);
 			path = IMVideo;
 			sourceTree = "<group>";
 		};
-		A0D68B2E2A888679004D11A5 /* Loader */ = {
+		A0D68B2E2A888679004D11A5 /* AVCacheLoader */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B2F2A888679004D11A5 /* IMAVCacheManager.swift */,
-				A0D68B302A888679004D11A5 /* IMAVCache.swift */,
-				A0D68B312A888679004D11A5 /* IMAVCacheRangeRequest.swift */,
-				A018CDF92B007E0C00896B87 /* IMAVCacheProtocol.swift */,
+				A0D68B2F2A888679004D11A5 /* AVCacheManager.swift */,
+				A0D68B302A888679004D11A5 /* AVCache.swift */,
+				A0D68B312A888679004D11A5 /* AVCacheRangeRequest.swift */,
+				A018CDF92B007E0C00896B87 /* AVCacheProtocol.swift */,
 			);
-			path = Loader;
+			path = AVCacheLoader;
 			sourceTree = "<group>";
 		};
 		A0D68B322A888679004D11A5 /* View */ = {
@@ -1029,10 +1030,12 @@
 		A0E8ED442AEDE9F6004163BD /* IMPreviewer */ = {
 			isa = PBXGroup;
 			children = (
+				A0D68B2E2A888679004D11A5 /* AVCacheLoader */,
 				A0D68B2C2A888679004D11A5 /* IMVideo */,
 				A0D68B212A888678004D11A5 /* Controller */,
 				A0D68B282A888678004D11A5 /* Cell */,
 				A0E8ED492AEDEE42004163BD /* Previewer.swift */,
+				A018CDFB2B00856B00896B87 /* IMAVCacheProtocol.swift */,
 			);
 			path = IMPreviewer;
 			sourceTree = "<group>";
@@ -1206,7 +1209,7 @@
 				A03082D12AF66C31001B8373 /* RevokeMsgProcessor.swift in Sources */,
 				A0D68BB22A888679004D11A5 /* IMBaseMessageCellProvider.swift in Sources */,
 				A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiPanelProvider.swift in Sources */,
-				A0D68BD52A888679004D11A5 /* IMAVCacheManager.swift in Sources */,
+				A0D68BD52A888679004D11A5 /* AVCacheManager.swift in Sources */,
 				A0C431EB2A909CB200A84D4A /* RemoteParticipant.swift in Sources */,
 				A0D68BC62A888679004D11A5 /* RightCellWrapper.swift in Sources */,
 				A0D68B782A888679004D11A5 /* OggOpusAudioRecorder.swift in Sources */,
@@ -1247,7 +1250,7 @@
 				A0D68B7B2A888679004D11A5 /* MessageBean.swift in Sources */,
 				A0D68B7D2A888679004D11A5 /* SessionBean.swift in Sources */,
 				A0D68B742A888679004D11A5 /* AudioUtils.swift in Sources */,
-				A018CDFA2B007E0C00896B87 /* IMAVCacheProtocol.swift in Sources */,
+				A018CDFA2B007E0C00896B87 /* AVCacheProtocol.swift in Sources */,
 				A0D68BA12A888679004D11A5 /* IMAudioMsgCellProvider.swift in Sources */,
 				A0D68BC02A888679004D11A5 /* IMMsgSender.swift in Sources */,
 				A0D68BDA2A888679004D11A5 /* IMZoomImageView.swift in Sources */,
@@ -1303,7 +1306,7 @@
 				A0EA42ED2A94928400F64A90 /* DefaultSessionDao.swift in Sources */,
 				A0D68B7F2A888679004D11A5 /* ListBean.swift in Sources */,
 				A0D68BF32A888679004D11A5 /* IMTextMsgProcessor.swift in Sources */,
-				A0D68BD72A888679004D11A5 /* IMAVCacheRangeRequest.swift in Sources */,
+				A0D68BD72A888679004D11A5 /* AVCacheRangeRequest.swift in Sources */,
 				A0D68B752A888679004D11A5 /* OpusError.swift in Sources */,
 				A0D68BE62A888679004D11A5 /* CustomModule.swift in Sources */,
 				A0D68BFB2A888679004D11A5 /* Bubble.swift in Sources */,
@@ -1359,6 +1362,7 @@
 				A0D68BAA2A888679004D11A5 /* IMDefaultSessionCellProvider.swift in Sources */,
 				A0CC9F742AFC88F200801B25 /* IMTabCell.swift in Sources */,
 				A0D68BCD2A888679004D11A5 /* MediaPreviewController.swift in Sources */,
+				A018CDFC2B00856B00896B87 /* IMAVCacheProtocol.swift in Sources */,
 				A0D68B9A2A888679004D11A5 /* UIImageView+Cache.swift in Sources */,
 				A0D68BDB2A888679004D11A5 /* IMVideoCachePlayerView.swift in Sources */,
 				A0D68BA42A888679004D11A5 /* IMAudioMsgCell.swift in Sources */,
@@ -1369,7 +1373,7 @@
 				A02578CA2AA4398E00A66CEF /* TableName.swift in Sources */,
 				A0EA42EB2A94925600F64A90 /* DefaultUserDao.swift in Sources */,
 				A0D68BBA2A888679004D11A5 /* IMSpeakView.swift in Sources */,
-				A0D68BD62A888679004D11A5 /* IMAVCache.swift in Sources */,
+				A0D68BD62A888679004D11A5 /* AVCache.swift in Sources */,
 				A0EA42EF2A94B06900F64A90 /* IMCoreDefines.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

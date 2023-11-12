@@ -1,5 +1,5 @@
 //
-//  IMAVCacheManager.swift
+//  AVCacheManager.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/7/16.
@@ -10,54 +10,33 @@ import AVFoundation
 import CocoaLumberjack
 import SwiftEventBus
 
-public class IMAVCacheManager {
+public class AVCacheManager {
     
     static let IMAVCacheEvent = "IMAVCacheEvent"
-    
     static let customProtocol = "custom"
-    static let maxPageSize: Int64 = 500 * 1024
+    static let shared = AVCacheManager()
     
-    static let shared = IMAVCacheManager()
-    
-    private var caches = [String: IMAVCache]()
-    private var tasks = [String: (AVAssetResourceLoadingRequest, IMAVCacheRangeRequest)]()
+    private var caches = [String: AVCache]()
+    private var tasks = [String: (AVAssetResourceLoadingRequest, AVCacheRangeRequest)]()
     private let locker = NSLock()
-    private var token: String = ""
-    private var endpoint: String = ""
+    private let maxPageSize: Int64 = 500 * 1024
     
-    func initCache(token: String, endpoint: String) {
-        self.token = token
-        self.endpoint = endpoint
-    }
-    
-    func getToken() -> String {
-        return self.token
-    }
-    
-    func getEndpoint() -> String {
-        return self.endpoint
-    }
+    var delegate: AVCacheProtocol? = nil
     
     func getCacheKey(url: String) -> String {
-        if url.hasSuffix(self.endpoint) {
-            let urlComponents = URLComponents(string: url)
-            if (urlComponents != nil && urlComponents!.queryItems != nil) {
-                for it in urlComponents!.queryItems! {
-                    if it.name == "id" && it.value != nil {
-                        return it.value!
-                    }
-                }
-            }
+        if (delegate == nil) {
+            return url.sha1Hash
+        } else {
+            return delegate!.cacheKey(url: url)
         }
-        return url
     }
     
-    func loadCache(_ url: String) -> IMAVCache {
+    func loadCache(_ url: String) -> AVCache {
         let key = self.getCacheKey(url: url)
         var cache = caches[key]
         if cache == nil {
             let cacheDir = self.cacheDir(key)
-            cache = IMAVCache(cacheDir, url)
+            cache = AVCache(cacheDir, url)
             caches[key] = cache
         }
         return cache!
@@ -69,13 +48,13 @@ public class IMAVCacheManager {
         guard let url = request.request.url?.absoluteString else {
             return false
         }
-        let urlString = url.replacingOccurrences(of: IMAVCacheManager.customProtocol, with: "http")
+        let urlString = url.replacingOccurrences(of: AVCacheManager.customProtocol, with: "http")
         let originRangeString = self.getHeaderRangeValue(request)
         let cache = self.loadCache(urlString)
         let needLoadRanges = cache.getNeedLoadRanges(originRangeString)
         if needLoadRanges.count > 0 {
             // 缓存不够,计算需要下载的range
-            let needLoadRangeString = self.buildRequestRangeString(needLoadRanges, IMAVCacheManager.maxPageSize)
+            let needLoadRangeString = self.buildRequestRangeString(needLoadRanges, maxPageSize)
             return self.addTask(request, needLoadRangeString, originRangeString, urlString)
         } else {
             // 缓存足够
@@ -86,7 +65,7 @@ public class IMAVCacheManager {
     
     private func addTask(_ request: AVAssetResourceLoadingRequest, _ needLoadRangeString: String, _ originRangeString: String, _ urlString: String) -> Bool {
         if tasks[originRangeString] == nil {
-            let rangeRequest = IMAVCacheRangeRequest(needLoadRangeString, originRangeString, urlString) {
+            let rangeRequest = AVCacheRangeRequest(needLoadRangeString, originRangeString, urlString) {
                 [weak self] success, requestRange, requestUrl, data, responseRange, responseType in
                 self?.onRangeResponse(success, requestRange, requestUrl, data, responseRange, responseType)
             }
@@ -115,14 +94,17 @@ public class IMAVCacheManager {
         let headers = request.request.headers
         let headerString = headers["Range"] != nil ? headers["Range"]! : ""
         
-        let ranges = self.parserRangesFromRangeString(headerString, IMAVCacheManager.maxPageSize)
-        let realRequestRangeString = self.buildRequestRangeString(ranges, IMAVCacheManager.maxPageSize)
+        let ranges = self.parserRangesFromRangeString(headerString, maxPageSize)
+        let realRequestRangeString = self.buildRequestRangeString(ranges, maxPageSize)
         return realRequestRangeString
     }
     
     private func cacheDir(_ cacheKey: String) -> String {
-        let dirPath = NSTemporaryDirectory() + "video/" + cacheKey.sha1Hash
-        print("IMAVCacheManager \(dirPath)")
+        var rootDir = NSTemporaryDirectory() + "video"
+        if (delegate != nil) {
+            rootDir = delegate!.cacheDirPath()
+        }
+        let dirPath = rootDir + "/" + cacheKey
         var isDir: ObjCBool = false
         let exist =  FileManager.default.fileExists(atPath: dirPath, isDirectory: &isDir)
         do {
@@ -149,7 +131,7 @@ public class IMAVCacheManager {
             let success = cache.writeNewCache(responseRange!, responseType!, data!)
             if (success) {
                 if (cache.cacheInfo.isFinished()) {
-                    SwiftEventBus.post(IMAVCacheManager.IMAVCacheEvent, sender: cache)
+                    SwiftEventBus.post(AVCacheManager.IMAVCacheEvent, sender: cache)
                 }
             }
             let taskTuple = self.tasks[requestRange]
@@ -167,7 +149,7 @@ public class IMAVCacheManager {
         }
     }
     
-    private func onLoadSuccess(_ request: AVAssetResourceLoadingRequest, _ cache: IMAVCache) {
+    private func onLoadSuccess(_ request: AVAssetResourceLoadingRequest, _ cache: AVCache) {
         let requestRange = self.getHeaderRangeValue(request)
         let data = cache.fetchCachedData(requestRange)
         if data != nil {
@@ -179,7 +161,7 @@ public class IMAVCacheManager {
         request.finishLoading()
     }
     
-    private func buildRequestRangeString(_ ranges: [RangeInfo], _ max: Int64) -> String {
+    private func buildRequestRangeString(_ ranges: [AVRange], _ max: Int64) -> String {
         var result = "bytes="
         var pos = 0
         for r in ranges {
@@ -196,13 +178,14 @@ public class IMAVCacheManager {
         return result
     }
     
-    private func parserRangesFromRangeString(_ rangeString: String, _ max: Int64) -> [RangeInfo] {
+    private func parserRangesFromRangeString(_ rangeString: String, _ contentLength: Int64) -> [AVRange] {
         var rangesString = rangeString
         if rangesString.contains("bytes=") {
             rangesString = String(rangesString.replacingOccurrences(of: "bytes=", with: ""))
         }
+        rangesString = String(rangesString.replacingOccurrences(of: " ", with: ""))
         let ranges = rangesString.split(separator: ",")
-        var rangeInfos = [RangeInfo]()
+        var rangeInfos = [AVRange]()
         for r in ranges {
             if r.contains("-") {
                 var start: Int64? = nil, end: Int64? = nil
@@ -223,12 +206,12 @@ public class IMAVCacheManager {
                     start = 0
                 }
                 if end == nil {
-                    end = start! + max
+                    end = start! + contentLength
                 }
-                if end! - start! > max {
-                    end = start! + max
+                if end! - start! > contentLength {
+                    end = start! + contentLength
                 }
-                rangeInfos.append(RangeInfo(start: start!, end: end!))
+                rangeInfos.append(AVRange(start: start!, end: end!))
             }
         }
         return rangeInfos

@@ -93,7 +93,7 @@ class PreviewVideoCellView : PreviewCellView {
             self.videoPlayView.initDataSource(NSURL(fileURLWithPath: realPath) as URL)
         } else if (sourceUrl != nil) {
             let realUrl = self.getRealUrl(url: sourceUrl!, message: message)
-            let cache = IMAVCacheManager.shared.loadCache(realUrl)
+            let cache = AVCacheManager.shared.loadCache(realUrl)
             if (cache.cacheInfo.isFinished()) {
                 DispatchQueue.global().async { [weak self] in
                     self?.updateMessage(cache: cache)
@@ -110,13 +110,13 @@ class PreviewVideoCellView : PreviewCellView {
         if (url.hasPrefix("http")) {
             return url
         } else {
-            return "\(IMAVCacheManager.shared.getEndpoint())/session/object/download_url?id=\(url)&s_id=\(message.sessionId)"
+            return "\(IMCoreManager.shared.api.getEndpoint())/session/object/download_url?id=\(url)&s_id=\(message.sessionId)"
         }
     }
     
     override func startPreview() {
-        SwiftEventBus.onBackgroundThread(self, name: IMAVCacheManager.IMAVCacheEvent, handler: { [weak self ] result in
-            guard let cache = result?.object as? IMAVCache else {
+        SwiftEventBus.onBackgroundThread(self, name: AVCacheManager.IMAVCacheEvent, handler: { [weak self ] result in
+            guard let cache = result?.object as? AVCache else {
                 return
             }
             self?.updateMessage(cache: cache)
@@ -126,10 +126,10 @@ class PreviewVideoCellView : PreviewCellView {
     
     override func stopPreview() {
         self.videoPlayView.pause()
-        SwiftEventBus.unregister(self, name: IMAVCacheManager.IMAVCacheEvent)
+        SwiftEventBus.unregister(self, name: AVCacheManager.IMAVCacheEvent)
     }
     
-    private func updateMessage(cache: IMAVCache) {
+    private func updateMessage(cache: AVCache) {
         guard let message = self.message else {
             return
         }

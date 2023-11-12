@@ -8,7 +8,7 @@
 import Foundation
 import CocoaLumberjack
 
-open class RangeInfo: Codable {
+open class AVRange: Codable {
     var start: Int64
     var end: Int64
     init(start: Int64, end: Int64) {
@@ -22,12 +22,12 @@ open class RangeInfo: Codable {
     }
 }
 
-open class IMAVCacheInfo: Codable {
+open class AVCacheInfo: Codable {
     var contentLength: Int64
     var contentType: String
-    var loadedRanges: [RangeInfo]
+    var loadedRanges: [AVRange]
     
-    init(_ length: Int64, _ type: String, _ ranges: [RangeInfo]) {
+    init(_ length: Int64, _ type: String, _ ranges: [AVRange]) {
         self.contentLength = length
         self.contentType = type
         self.loadedRanges = ranges
@@ -51,12 +51,12 @@ open class IMAVCacheInfo: Codable {
     }
 }
 
-class IMAVCache{
+class AVCache{
     var cacheDir: String
     var cacheFilePath: String
     var cacheInfoFilePath: String
     var cacheUrl: String
-    var cacheInfo: IMAVCacheInfo
+    var cacheInfo: AVCacheInfo
     private let lock = NSLock()
     
     init(_ cacheDir: String, _ cacheUrl: String, _ contentType: String, _ contentRange: String) {
@@ -64,7 +64,7 @@ class IMAVCache{
         self.cacheFilePath = "\(cacheDir)/video.tmp"
         self.cacheInfoFilePath = "\(cacheDir)/meta.json"
         self.cacheUrl = cacheUrl
-        self.cacheInfo = IMAVCacheInfo(0, contentType, [])
+        self.cacheInfo = AVCacheInfo(0, contentType, [])
         let (length, ranges) = self.parserResponseRange(contentRange)
         self.cacheInfo.contentLength = length
         for r in ranges {
@@ -75,7 +75,7 @@ class IMAVCache{
     init(_ cacheDir: String, _ cacheUrl: String) {
         let infoFilePath = "\(cacheDir)/meta.json"
         var isDirectory: ObjCBool = false
-        var cacheInfo: IMAVCacheInfo?
+        var cacheInfo: AVCacheInfo?
         let existed = FileManager.default.fileExists(atPath: infoFilePath, isDirectory: &isDirectory)
         if existed {
             if (isDirectory.boolValue) {
@@ -88,7 +88,7 @@ class IMAVCache{
                 let content = FileManager.default.contents(atPath: infoFilePath)
                 if (content != nil) {
                     do {
-                        cacheInfo = try JSONDecoder().decode(IMAVCacheInfo.self, from: content!)
+                        cacheInfo = try JSONDecoder().decode(AVCacheInfo.self, from: content!)
                     } catch {
                         DDLogError(error)
                     }
@@ -96,7 +96,7 @@ class IMAVCache{
             }
         }
         if (cacheInfo == nil) {
-            cacheInfo = IMAVCacheInfo(0, "", [])
+            cacheInfo = AVCacheInfo(0, "", [])
         }
         self.cacheDir = cacheDir
         self.cacheFilePath = "\(cacheDir)/video.tmp"
@@ -106,17 +106,17 @@ class IMAVCache{
     }
     
     // 返回需要加载的range和已经缓存的range
-    private func getNeedLoadRange(_ range: RangeInfo) -> ([RangeInfo], [RangeInfo]) {
+    private func getNeedLoadRange(_ range: AVRange) -> ([AVRange], [AVRange]) {
         return calNeedLoadRange(range, self.cacheInfo.loadedRanges)
     }
     
     // cachedRangeInfos必须要保证从小到大排序
-    private func calNeedLoadRange(_ rangeInfo: RangeInfo, _ cachedRangeInfos: [RangeInfo]) -> ([RangeInfo], [RangeInfo]) {
+    private func calNeedLoadRange(_ rangeInfo: AVRange, _ cachedRangeInfos: [AVRange]) -> ([AVRange], [AVRange]) {
         if cachedRangeInfos.count == 0 {
             return ([rangeInfo], [])
         }
-        var needLoadRanges = [RangeInfo]()
-        var localRanges = [RangeInfo]()
+        var needLoadRanges = [AVRange]()
+        var localRanges = [AVRange]()
         var startPos = 0, endPos = cachedRangeInfos.count  - 1
         for pos in 0 ..< cachedRangeInfos.count {
             let cR = cachedRangeInfos[pos]
@@ -137,7 +137,7 @@ class IMAVCache{
             let start = rangeInfo.start
             let end = min(cachedRangeInfos[startPos].start - 1, rangeInfo.end)
             if end >= start {
-                needLoadRanges.append(RangeInfo(start: start, end: end))
+                needLoadRanges.append(AVRange(start: start, end: end))
             }
         }
         
@@ -146,28 +146,28 @@ class IMAVCache{
                 let start = cachedRangeInfos[i].end + 1
                 let end = cachedRangeInfos[i+1].start - 1
                 if end >= start {
-                    needLoadRanges.append(RangeInfo(start: start, end: end))
+                    needLoadRanges.append(AVRange(start: start, end: end))
                 }
                 let fetchStart = max(cachedRangeInfos[i].start, rangeInfo.start)
                 let fetchEnd = min(cachedRangeInfos[i].end, rangeInfo.end)
-                localRanges.append(RangeInfo(start: fetchStart, end: fetchEnd))
+                localRanges.append(AVRange(start: fetchStart, end: fetchEnd))
             }
             let fetchStart = max(cachedRangeInfos[endPos].start, rangeInfo.start)
             let fetchEnd = min(cachedRangeInfos[endPos].end, rangeInfo.end)
-            localRanges.append(RangeInfo(start: fetchStart, end: fetchEnd))
+            localRanges.append(AVRange(start: fetchStart, end: fetchEnd))
         }
         
         if rangeInfo.end > cachedRangeInfos[endPos].end {
             let start = max(cachedRangeInfos[endPos].end+1, rangeInfo.start)
             let end = rangeInfo.end
             if end > start {
-                needLoadRanges.append(RangeInfo(start: start, end: end))
+                needLoadRanges.append(AVRange(start: start, end: end))
             }
         }
         return (needLoadRanges, localRanges)
     }
     
-    private func addLoadedRange(_ range: RangeInfo) {
+    private func addLoadedRange(_ range: AVRange) {
         var pos = 0
         for p in self.cacheInfo.loadedRanges {
             if range.start <= p.start {
@@ -198,7 +198,7 @@ class IMAVCache{
         self.cacheInfo.loadedRanges.removeAll()
         for i in 0 ..< positions.count {
             if i%2==0 {
-                self.cacheInfo.loadedRanges.append(RangeInfo(start: positions[i], end: positions[i+1]))
+                self.cacheInfo.loadedRanges.append(AVRange(start: positions[i], end: positions[i+1]))
             }
         }
     }
@@ -257,7 +257,7 @@ class IMAVCache{
         return false
     }
     
-    private func parserRequestRange(_ requestRange: String) -> [RangeInfo] {
+    private func parserRequestRange(_ requestRange: String) -> [AVRange] {
         var rangesString = requestRange
         if rangesString.contains("bytes=") {
             rangesString = String(rangesString.replacingOccurrences(of: "bytes=", with: ""))
@@ -265,7 +265,7 @@ class IMAVCache{
         return self.parserRanges(rangesString, self.cacheInfo.contentLength)
     }
     
-    private func parserResponseRange(_ contentRange: String) -> (Int64, [RangeInfo]) {
+    private func parserResponseRange(_ contentRange: String) -> (Int64, [AVRange]) {
         guard let lengthIndex = contentRange.lastIndex(of: "/") else {
             return (0, [])
         }
@@ -282,9 +282,9 @@ class IMAVCache{
         return (length, rangeInfos)
     }
     
-    private func parserRanges(_ rangesString: String, _ contentLength: Int64) -> [RangeInfo] {
+    private func parserRanges(_ rangesString: String, _ contentLength: Int64) -> [AVRange] {
         let ranges = rangesString.split(separator: ",")
-        var rangeInfos = [RangeInfo]()
+        var rangeInfos = [AVRange]()
         for r in ranges {
             if r.contains("-") {
                 var start: Int64? = nil, end: Int64? = nil
@@ -307,17 +307,17 @@ class IMAVCache{
                 if end == nil {
                     end = contentLength - 1
                 }
-                rangeInfos.append(RangeInfo(start: start!, end: end!))
+                rangeInfos.append(AVRange(start: start!, end: end!))
             }
         }
         return rangeInfos
     }
     
-    func getNeedLoadRanges(_ requestRange: String) -> [RangeInfo] {
+    func getNeedLoadRanges(_ requestRange: String) -> [AVRange] {
         lock.lock()
         defer {lock.unlock()}
         let ranges = self.parserRequestRange(requestRange)
-        var requestRanges = [RangeInfo]()
+        var requestRanges = [AVRange]()
         for r in ranges {
             let (r1, _) = self.getNeedLoadRange(r)
             requestRanges.append(contentsOf: r1)
@@ -333,21 +333,14 @@ class IMAVCache{
         guard let tmpFile = FileHandle(forReadingAtPath: self.cacheFilePath) else {
             return nil
         }
-//        let maxLength = 1024 * 100 // 一次最多返回100k数据
         do {
             for range in ranges {
                 let (r1, _) = self.getNeedLoadRange(range)
                 if r1.count == 0 {
                     try tmpFile.seek(toOffset: UInt64(range.start))
                     let length = Int(range.end - range.start) + 1
-//                    if data.count + length > maxLength {
-//                        length = maxLength - data.count
-//                    }
                     let d = tmpFile.readData(ofLength: length)
                     data.append(d)
-//                    if data.count >= maxLength {
-//                        break
-//                    }
                 } else {
                     // 无法补齐
                     data.removeAll()
