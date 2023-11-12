@@ -1,11 +1,11 @@
 PODS:
-  - Alamofire (5.7.1)
+  - Alamofire (5.8.1)
   - BadgeSwift (8.0.0)
-  - CocoaLumberjack/Core (3.8.0)
-  - CocoaLumberjack/Swift (3.8.0):
+  - CocoaLumberjack/Core (3.8.2)
+  - CocoaLumberjack/Swift (3.8.2):
     - CocoaLumberjack/Core
   - GDPerformanceView-Swift (2.1.1)
-  - Kingfisher (7.9.0)
+  - Kingfisher (7.0.0)
   - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
   - Moya/RxSwift (15.0.0):
@@ -23,37 +23,37 @@ PODS:
   - SnapKit (5.6.0)
   - Starscream (4.0.4)
   - SwiftEventBus (5.0.0)
-  - WCDB.swift (2.0.2.5):
-    - WCDB.swift/no-arc (= 2.0.2.5)
-    - WCDBOptimizedSQLCipher (~> 1.4.1)
-  - WCDB.swift/no-arc (2.0.2.5):
-    - WCDBOptimizedSQLCipher (~> 1.4.1)
-  - WCDBOptimizedSQLCipher (1.4.1)
+  - WCDB.swift (2.0.1):
+    - WCDB.swift/no-arc (= 2.0.1)
+    - WCDBOptimizedSQLCipher (~> 1.4.0)
+  - WCDB.swift/no-arc (2.0.1):
+    - WCDBOptimizedSQLCipher (~> 1.4.0)
+  - WCDBOptimizedSQLCipher (1.4.2)
   - WebRTC-SDK (114.5735.04)
   - YbridOgg (0.8.0)
   - YbridOpus (0.8.0)
-  - ZLPhotoBrowser (4.4.3.2):
-    - ZLPhotoBrowser/Core (= 4.4.3.2)
-  - ZLPhotoBrowser/Core (4.4.3.2)
+  - ZLPhotoBrowser (4.4.6):
+    - ZLPhotoBrowser/Core (= 4.4.6)
+  - ZLPhotoBrowser/Core (4.4.6)
 
 DEPENDENCIES:
-  - Alamofire
-  - BadgeSwift (~> 8.0)
-  - CocoaLumberjack/Swift
-  - GDPerformanceView-Swift (~> 2.1.1)
-  - Kingfisher (~> 7.0)
-  - Moya/RxSwift (~> 15.0)
+  - Alamofire (= 5.8.1)
+  - BadgeSwift (= 8.0)
+  - CocoaLumberjack/Swift (= 3.8.2)
+  - GDPerformanceView-Swift (= 2.1.1)
+  - Kingfisher (= 7.0)
+  - Moya/RxSwift (= 15.0)
   - RxCocoa (= 6.5.0)
-  - RxGesture
+  - RxGesture (= 4.0.4)
   - RxSwift (= 6.5.0)
-  - SnapKit (~> 5.6.0)
-  - Starscream (~> 4.0.4)
+  - SnapKit (= 5.6.0)
+  - Starscream (= 4.0.4)
   - SwiftEventBus (from `https://github.com/cesarferreira/SwiftEventBus.git`, tag `5.1.0`)
-  - WCDB.swift (~> 2.0.1)
+  - WCDB.swift (= 2.0.1)
   - WebRTC-SDK (= 114.5735.04)
-  - YbridOgg
-  - YbridOpus
-  - ZLPhotoBrowser
+  - YbridOgg (= 0.8.0)
+  - YbridOpus (= 0.8.0)
+  - ZLPhotoBrowser (= 4.4.6)
 
 SPEC REPOS:
   https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
@@ -87,11 +87,11 @@ CHECKOUT OPTIONS:
     :tag: 5.1.0
 
 SPEC CHECKSUMS:
-  Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
+  Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
   BadgeSwift: a81547ffde1f462bb5fc02e3fa3fdcbc1b888354
-  CocoaLumberjack: 78abfb691154e2a9df8ded4350d504ee19d90732
+  CocoaLumberjack: f8d89a516e7710fdb2e9b8f1560b16ec6040eef0
   GDPerformanceView-Swift: 22d964fe40b19e3d914dba2586237d064de8fd77
-  Kingfisher: 59f908b6d2f403b0a3e539debb0eec05cb27002c
+  Kingfisher: 5efc54fec3980f92354898532e562cc17f31efb4
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
@@ -100,13 +100,13 @@ SPEC CHECKSUMS:
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   SwiftEventBus: 976fdca8270b925c5f8e897f519cc49597e1f13c
-  WCDB.swift: 41d30d0e113cb2032947e34998f9eedc5c8cbd71
-  WCDBOptimizedSQLCipher: 880ec8aa6cda6b27e4c72b30bf0cc01771deda6f
+  WCDB.swift: 738cf27df8883c47ef732ea02c44e690da5bb66d
+  WCDBOptimizedSQLCipher: ef2be79fed278289a309ad0d4d707c55bf166d6d
   WebRTC-SDK: 3a2279e1649c45e2988e574bce645d7ad44e0679
   YbridOgg: 4af27a7224f0876a7000e1893df8ba986dd4a014
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
-  ZLPhotoBrowser: 0563c2bfc7b247b65d023d646012f46cba94101b
+  ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
 
-PODFILE CHECKSUM: bbd267ff6471b54c05084d720fd5c8af5dab9f88
+PODFILE CHECKSUM: d74f13e977d6f4a0028cefd66fd5a8ec01ca31b8
 
 COCOAPODS: 1.12.1
