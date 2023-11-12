@@ -399,14 +399,12 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         let popupWidth = 300
         let popupHeight = (operators.count/rowCount + operators.count%rowCount) * 60
         var y = 0
-        if (atFrame.origin.y > 300) {
+        if (atFrame.origin.y <= 300 && (atFrame.origin.y + atFrame.size.height) >= (screenHeight - 300)) {
+            y = (Int(screenHeight) - popupHeight) / 2
+        } else if (atFrame.origin.y > 300) {
             y = Int(atFrame.origin.y) - popupHeight
         } else {
-            if (atFrame.size.height > (screenHeight - 300)) {
-                y = (Int(screenHeight) - popupHeight) / 2
-            } else {
-                y = Int(atFrame.origin.y) + Int(atFrame.size.height)
-            }
+            y = Int(atFrame.origin.y) + Int(atFrame.size.height)
         }
         let frame = CGRect(x: (Int(screenWidth)-popupWidth)/2, y: y, width: popupWidth, height: popupHeight)
         let popupView = IMMessageOperatorPopupView(frame: frame)
