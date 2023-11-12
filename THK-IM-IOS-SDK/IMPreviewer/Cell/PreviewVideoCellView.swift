@@ -115,7 +115,7 @@ class PreviewVideoCellView : PreviewCellView {
     }
     
     override func startPreview() {
-        SwiftEventBus.onBackgroundThread(self, name: IMAVCacheEvent, handler: { [weak self ] result in
+        SwiftEventBus.onBackgroundThread(self, name: IMAVCacheManager.IMAVCacheEvent, handler: { [weak self ] result in
             guard let cache = result?.object as? IMAVCache else {
                 return
             }
@@ -126,7 +126,7 @@ class PreviewVideoCellView : PreviewCellView {
     
     override func stopPreview() {
         self.videoPlayView.pause()
-        SwiftEventBus.unregister(self, name: IMAVCacheEvent)
+        SwiftEventBus.unregister(self, name: IMAVCacheManager.IMAVCacheEvent)
     }
     
     private func updateMessage(cache: IMAVCache) {

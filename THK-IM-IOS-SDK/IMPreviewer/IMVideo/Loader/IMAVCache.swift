@@ -8,8 +8,6 @@
 import Foundation
 import CocoaLumberjack
 
-var IMAVCacheEvent = "IMAVCacheEvent"
-
 open class RangeInfo: Codable {
     var start: Int64
     var end: Int64

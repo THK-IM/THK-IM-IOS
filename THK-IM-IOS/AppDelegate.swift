@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let apiEndpoint = "http://api.thkim.com"
         let wsEndpoint = "ws://ws.thkim.com/ws"
         IMCoreManager.shared.initApplication(application, uId, debug)
-        IMCoreManager.shared.api = DefaultIMApi(endpoint: apiEndpoint)
+        IMCoreManager.shared.api = DefaultIMApi(token: token, endpoint: apiEndpoint)
         IMCoreManager.shared.signalModule = DefaultSignalModule(application, wsEndpoint, "\(uId)")
         
         IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", apiEndpoint)

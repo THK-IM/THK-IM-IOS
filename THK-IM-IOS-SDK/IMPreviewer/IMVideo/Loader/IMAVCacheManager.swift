@@ -10,7 +10,9 @@ import AVFoundation
 import CocoaLumberjack
 import SwiftEventBus
 
-open class IMAVCacheManager {
+public class IMAVCacheManager {
+    
+    static let IMAVCacheEvent = "IMAVCacheEvent"
     
     static let customProtocol = "custom"
     static let maxPageSize: Int64 = 500 * 1024
@@ -147,7 +149,7 @@ open class IMAVCacheManager {
             let success = cache.writeNewCache(responseRange!, responseType!, data!)
             if (success) {
                 if (cache.cacheInfo.isFinished()) {
-                    SwiftEventBus.post(IMAVCacheEvent, sender: cache)
+                    SwiftEventBus.post(IMAVCacheManager.IMAVCacheEvent, sender: cache)
                 }
             }
             let taskTuple = self.tasks[requestRange]

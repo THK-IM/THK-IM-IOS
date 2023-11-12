@@ -11,17 +11,25 @@ import RxSwift
 
 class DefaultIMApi: IMApi {
     
+    
     private let messageApi = MoyaProvider<IMMessageApi>(plugins: [NetworkLoggerPlugin()])
     private let sessionApi = MoyaProvider<IMSessionApi>(plugins: [NetworkLoggerPlugin()])
     
-    private let _endpoint: String
+    private let endpoint: String
+    private let token: String
     
-    init(endpoint: String) {
-        self._endpoint = endpoint
+    init(token: String, endpoint: String) {
+        self.endpoint = endpoint
+        self.token = token
     }
     
-    func endpoint() -> String {
-        return self._endpoint
+    func getEndpoint() -> String {
+        return self.endpoint
+    }
+    
+    
+    func getToken() -> String {
+        return self.token
     }
     
     func getLatestModifiedSessions(_ uId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {

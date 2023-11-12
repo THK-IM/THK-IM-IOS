@@ -26,7 +26,7 @@ enum IMSessionApi {
 extension IMSessionApi: TargetType {
     
     var baseURL: URL {
-        return URL.init(string: "\(IMCoreManager.shared.api.endpoint())")!
+        return URL.init(string: "\(IMCoreManager.shared.api.getEndpoint())")!
     }
     
     var path: String {
@@ -80,6 +80,8 @@ extension IMSessionApi: TargetType {
     }
     
     var headers: [String : String]? {
-        return nil
+        var headers = [String: String]()
+        headers["Token"] = "\(IMCoreManager.shared.api.getToken())"
+        return headers
     }
 }

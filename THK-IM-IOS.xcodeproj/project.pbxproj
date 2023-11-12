@@ -10,6 +10,7 @@
 		08F4799AC88630CBD25DF832 /* Pods_THK_IM_IOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */; };
 		A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF52AFF18EC00896B87 /* DateUtils.swift */; };
 		A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF72AFFA9A900896B87 /* MediaViewController.swift */; };
+		A018CDFA2B007E0C00896B87 /* IMAVCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF92B007E0C00896B87 /* IMAVCacheProtocol.swift */; };
 		A02529072AC6CB05001561A0 /* DefaultFileLoadModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */; };
 		A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529082AC6CB82001561A0 /* DownloadTask.swift */; };
 		A025290B2AC6CBA6001561A0 /* UploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290A2AC6CBA6001561A0 /* UploadTask.swift */; };
@@ -193,6 +194,7 @@
 		34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_THK_IM_IOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A018CDF52AFF18EC00896B87 /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		A018CDF72AFFA9A900896B87 /* MediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
+		A018CDF92B007E0C00896B87 /* IMAVCacheProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMAVCacheProtocol.swift; sourceTree = "<group>"; };
 		A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFileLoadModule.swift; sourceTree = "<group>"; };
 		A02529082AC6CB82001561A0 /* DownloadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTask.swift; sourceTree = "<group>"; };
 		A025290A2AC6CBA6001561A0 /* UploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTask.swift; sourceTree = "<group>"; };
@@ -912,6 +914,7 @@
 				A0D68B2F2A888679004D11A5 /* IMAVCacheManager.swift */,
 				A0D68B302A888679004D11A5 /* IMAVCache.swift */,
 				A0D68B312A888679004D11A5 /* IMAVCacheRangeRequest.swift */,
+				A018CDF92B007E0C00896B87 /* IMAVCacheProtocol.swift */,
 			);
 			path = Loader;
 			sourceTree = "<group>";
@@ -1244,6 +1247,7 @@
 				A0D68B7B2A888679004D11A5 /* MessageBean.swift in Sources */,
 				A0D68B7D2A888679004D11A5 /* SessionBean.swift in Sources */,
 				A0D68B742A888679004D11A5 /* AudioUtils.swift in Sources */,
+				A018CDFA2B007E0C00896B87 /* IMAVCacheProtocol.swift in Sources */,
 				A0D68BA12A888679004D11A5 /* IMAudioMsgCellProvider.swift in Sources */,
 				A0D68BC02A888679004D11A5 /* IMMsgSender.swift in Sources */,
 				A0D68BDA2A888679004D11A5 /* IMZoomImageView.swift in Sources */,
