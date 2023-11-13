@@ -5,7 +5,7 @@ PODS:
   - CocoaLumberjack/Swift (3.8.2):
     - CocoaLumberjack/Core
   - GDPerformanceView-Swift (2.1.1)
-  - Kingfisher (7.0.0)
+  - Kingfisher (7.10.0)
   - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
   - Moya/RxSwift (15.0.0):
@@ -41,7 +41,7 @@ DEPENDENCIES:
   - BadgeSwift (= 8.0)
   - CocoaLumberjack/Swift (= 3.8.2)
   - GDPerformanceView-Swift (= 2.1.1)
-  - Kingfisher (= 7.0)
+  - Kingfisher (= 7.10.0)
   - Moya/RxSwift (= 15.0)
   - RxCocoa (= 6.5.0)
   - RxGesture (= 4.0.4)
@@ -91,7 +91,7 @@ SPEC CHECKSUMS:
   BadgeSwift: a81547ffde1f462bb5fc02e3fa3fdcbc1b888354
   CocoaLumberjack: f8d89a516e7710fdb2e9b8f1560b16ec6040eef0
   GDPerformanceView-Swift: 22d964fe40b19e3d914dba2586237d064de8fd77
-  Kingfisher: 5efc54fec3980f92354898532e562cc17f31efb4
+  Kingfisher: a18f05d3b6d37d8650ee4a3e61d57a28fc6207f6
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
@@ -107,6 +107,6 @@ SPEC CHECKSUMS:
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
   ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
 
-PODFILE CHECKSUM: d74f13e977d6f4a0028cefd66fd5a8ec01ca31b8
+PODFILE CHECKSUM: 2d1dc7960f18a9acba53ca9ab2eb857c8af899af
 
 COCOAPODS: 1.12.1

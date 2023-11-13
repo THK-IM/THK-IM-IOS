@@ -41,8 +41,29 @@ class AVCacheRangeRequest {
             headers.add(HTTPHeader(name: "Range", value: self.requestRange))
         }
         
+        let redirector = Redirector(behavior: .modify({ task, request, response  -> URLRequest? in
+            guard let location = response.headers["Location"] else {
+                return nil
+            }
+            do {
+                var newRequest = try request.asURLRequest()
+                newRequest.url = URL.init(string: location)
+                let addHeaders = AVCacheManager.shared.delegate!.header(url: location)
+                if addHeaders != nil {
+                    for header in addHeaders! {
+                        newRequest.setValue(header.value, forHTTPHeaderField: header.key)
+                    }
+                } else {
+                    newRequest.setValue(nil, forHTTPHeaderField: "Token")
+                }
+                return newRequest
+            } catch {
+                return nil
+            }
+        }))
+        
         self.downloadRequest = AF.download(self.urlString, headers: headers)
-            .redirect(using: Redirector(behavior: .follow))
+            .redirect(using: redirector)
             .responseData { [weak self] response in
                 DispatchQueue.global().async {
                     guard let sf = self else {

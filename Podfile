@@ -24,7 +24,7 @@ target 'THK-IM-IOS' do
   pod 'Starscream', '4.0.4'
   pod 'Alamofire', '5.8.1'
   pod 'Moya/RxSwift', '15.0'
-  pod 'Kingfisher', '7.0'
+  pod 'Kingfisher', '7.10.0'
   pod 'SwiftEventBus', :tag => '5.1.0', :git => 'https://github.com/cesarferreira/SwiftEventBus.git'
   pod 'ZLPhotoBrowser', '4.4.6'
   pod 'YbridOpus', '0.8.0'

@@ -35,7 +35,7 @@ public class IMAVCacheProtocol: AVCacheProtocol {
     }
     
     public func header(url: String) -> [String : String]? {
-        if url.hasSuffix(self.endpoint) {
+        if url.hasPrefix(self.endpoint) {
             return ["Token": self.token]
         } else {
             return nil

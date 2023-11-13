@@ -153,7 +153,9 @@ class DefaultFileLoadModule: FileLoadModule {
                         listener.notifyProgress(progress, state, url, path, err)
                     }
                 } else {
-                    listener.notifyProgress(progress, state, url, path, err)
+                    DispatchQueue.global().async {
+                        listener.notifyProgress(progress, state, url, path, err)
+                    }
                 }
             }
             if (state == FileLoadState.Failed.rawValue || state == FileLoadState.Success.rawValue) {
@@ -169,7 +171,9 @@ class DefaultFileLoadModule: FileLoadModule {
                         listener.notifyProgress(progress, state, url, path, err)
                     }
                 } else {
-                    listener.notifyProgress(progress, state, url, path, err)
+                    DispatchQueue.global().async {
+                        listener.notifyProgress(progress, state, url, path, err)
+                    }
                 }
             }
             if (state == FileLoadState.Failed.rawValue || state == FileLoadState.Success.rawValue) {

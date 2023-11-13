@@ -38,25 +38,49 @@ class DownloadTask: LoadTask {
                 try FileManager.default.removeItem(atPath: self.tmpFilePath)
             } catch {
                 notify(progress: 0, state: FileLoadState.Failed.rawValue, err: error)
+                return
             }
         }
         guard let fileLoadModule = self.fileModuleReference.value else {
+            notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError.init(.executableNotLoadable))
             return
         }
         let tempFileURL = NSURL(fileURLWithPath: tmpFilePath) as URL
         let fileUrl = NSURL(fileURLWithPath: self.filePath) as URL
         self.notify(progress: 0, state: FileLoadState.Init.rawValue)
-        let redirector = Redirector(behavior: .follow)
+        let redirector = Redirector(behavior: .modify({ [weak self] task, request, response  -> URLRequest? in
+            guard let location = response.headers["Location"] else {
+                return nil
+            }
+            guard let fileLoadModule = self?.fileModuleReference.value else {
+                return nil
+            }
+            do {
+                var newRequest = try request.asURLRequest()
+                newRequest.url = URL.init(string: location)
+                if location.hasPrefix(fileLoadModule.endpoint) {
+                    if request.headers["Token"] == nil || request.headers["Token"] == "" {
+                        newRequest.addValue(fileLoadModule.token, forHTTPHeaderField: "Token")
+                    }
+                } else {
+                    newRequest.setValue(nil, forHTTPHeaderField: "Token")
+                }
+                return newRequest
+            } catch {
+                return nil
+            }
+        }))
         var headers = HTTPHeaders()
         var realUrl = self.key
         if (!self.key.hasSuffix("http")) {
-            realUrl = "\(fileLoadModule.endpoint)/session/object/download_url?\(downLoadParam)"
+            realUrl = "\(fileLoadModule.endpoint)/session/object/download_url?\(downLoadParam)"            
             headers.add(name: "Token", value: fileLoadModule.token)
         }
-        self.request = AF.download(realUrl, headers: headers, to: { _, response in
-            return (tempFileURL, [.removePreviousFile, .createIntermediateDirectories])
-        })
-        .redirect(using: redirector)
+        self.request = AF.download(
+            realUrl, headers: headers,
+            to: { _, response in
+                return (tempFileURL, [.removePreviousFile, .createIntermediateDirectories])
+            }).redirect(using: redirector)
         .downloadProgress(queue: DispatchQueue.global()) { [weak self] progress in
                 guard let sf = self else {
                     return

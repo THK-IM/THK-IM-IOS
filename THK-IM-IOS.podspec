@@ -108,7 +108,7 @@ Pod::Spec.new do |spec|
     core.dependency 'CocoaLumberjack/Swift', '3.8.2'
     core.dependency 'Starscream', '4.0.4'
     core.dependency 'Moya/RxSwift', '15.0'
-    core.dependency 'Kingfisher', '7.0'
+    core.dependency 'Kingfisher', '7.10.0'
     core.dependency 'SwiftEventBus', :tag => '5.1.0', :git => 'https://github.com/cesarferreira/SwiftEventBus.git'
   end
 
