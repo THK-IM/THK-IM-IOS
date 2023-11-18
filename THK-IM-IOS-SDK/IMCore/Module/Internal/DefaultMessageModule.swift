@@ -9,6 +9,7 @@ import Foundation
 import Moya
 import RxSwift
 import CocoaLumberjack
+import AVFoundation
 
 open class DefaultMessageModule : MessageModule {
     
@@ -241,7 +242,7 @@ open class DefaultMessageModule : MessageModule {
     }
     
     public func sendMessage(_ body: Codable, _ sessionId: Int64, _ type: Int,
-                     _ atUser: String? = nil, _ replyMsgId: Int64? = nil) -> Bool{
+                            _ atUser: String? = nil, _ replyMsgId: Int64? = nil) -> Bool{
         let processor = getMsgProcessor(type)
         return processor.sendMessage(body, sessionId, atUser, replyMsgId)
     }
@@ -342,16 +343,21 @@ open class DefaultMessageModule : MessageModule {
         self.getSession(msg.sessionId)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(
-                onNext: { s in
+                onNext: { [weak self] s in
                     do {
+                        guard let sf = self else {
+                            return
+                        }
                         let unReadCount = try IMCoreManager.shared.database.messageDao.getUnReadCount(msg.sessionId)
                         if (s.mTime < msg.mTime || s.unreadCount != unReadCount) {
-                            let processor = self.getMsgProcessor(msg.type)
-                            s.lastMsg = processor.getSessionDesc(msg: msg)
+                            let processor = self?.getMsgProcessor(msg.type)
+                            s.lastMsg = processor?.getSessionDesc(msg: msg)
                             s.unreadCount = unReadCount
                             s.mTime = msg.cTime
                             try IMCoreManager.shared.database.sessionDao.insertOrUpdateSessions(s)
                             SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
+                            
+                            sf.notifyNewMessage(s, msg)
                         }
                     } catch {
                         DDLogError(error)
@@ -361,6 +367,13 @@ open class DefaultMessageModule : MessageModule {
                     DDLogError(error)
                 }
             ).disposed(by: disposeBag)
+    }
+    
+    public func notifyNewMessage(_ session: Session, _ message: Message) {
+        if (message.type < 0 || message.fromUId == IMCoreManager.shared.uId) {
+            return
+        }
+        AppUtils.newMessageNotify()
     }
     
     public func onSignalReceived(_ subType: Int, _ body: String) {

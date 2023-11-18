@@ -104,6 +104,12 @@ public protocol MessageModule : BaseModule {
     
     
     /**
+     * session下有新消息，发出提示音/震动等通知
+     */
+    func notifyNewMessage(_ session: Session, _ message: Message)
+    
+    
+    /**
      * 取消所有执行中的任务
      */
     func cancelAllTasks()

@@ -246,20 +246,22 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func insertMessages(_ messages: Array<Message>) {
-        let count = messages.count
-        if count == 1 {
-            self.insertMessage(messages[0])
-        } else if messages.count > 1 {
-            let messagesWithTimeLine = self.appendMessages(messages)
-            let firstPos = findInsertPosition(messagesWithTimeLine[0])
-            self.messages.insert(contentsOf: messagesWithTimeLine, at: firstPos)
-            var paths = Array<IndexPath>()
-            for i in (firstPos ..< firstPos + messagesWithTimeLine.count) {
-                paths.append(IndexPath.init(row: i, section: 0))
+        var realInsertMsgs = Array<Message>()
+        for m in messages {
+            let pos = self.findPosition(m)
+            if (pos == -1) {
+                realInsertMsgs.append(m)
+            } else {
+                if (self.messages[pos].sendStatus != m.sendStatus) {
+                    self.messages[pos].sendStatus = m.sendStatus
+                    self.messages[pos].msgId = m.msgId
+                    self.messageTableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
+                }
             }
-            UIView.setAnimationsEnabled(false)
-            self.messageTableView.insertRows(at: paths, with: .none)
-            UIView.setAnimationsEnabled(true)
+        }
+        
+        for m in realInsertMsgs {
+            self.insertMessage(m)
         }
     }
     
@@ -369,7 +371,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func onMsgCellLongClick(message: Message, position: Int, view: UIView) {
-//        self.sender?.setSelectMode(true, message: message)
+        //        self.sender?.setSelectMode(true, message: message)
         self.sender?.popupMessageOperatorPanel(view, message)
     }
     
