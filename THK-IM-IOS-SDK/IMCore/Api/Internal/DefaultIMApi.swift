@@ -9,7 +9,7 @@ import Foundation
 import Moya
 import RxSwift
 
-class DefaultIMApi: IMApi {
+public class DefaultIMApi: IMApi {
     
     
     private let messageApi = MoyaProvider<IMMessageApi>(plugins: [NetworkLoggerPlugin()])
@@ -18,21 +18,21 @@ class DefaultIMApi: IMApi {
     private let endpoint: String
     private let token: String
     
-    init(token: String, endpoint: String) {
+    public init(token: String, endpoint: String) {
         self.endpoint = endpoint
         self.token = token
     }
     
-    func getEndpoint() -> String {
+    public func getEndpoint() -> String {
         return self.endpoint
     }
     
     
-    func getToken() -> String {
+    public func getToken() -> String {
         return self.token
     }
     
-    func getLatestModifiedSessions(_ uId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
+    public func getLatestModifiedSessions(_ uId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
         return sessionApi.rx
             .request(.queryLatestSession(uId, 0, count, mTime))
             .asObservable()
@@ -47,7 +47,7 @@ class DefaultIMApi: IMApi {
             })
     }
     
-    func querySession(_ uId: Int64, _ sessionId: Int64) -> Observable<Session> {
+    public func querySession(_ uId: Int64, _ sessionId: Int64) -> Observable<Session> {
         return sessionApi.rx
             .request(.querySession(uId, sessionId))
             .asObservable()
@@ -58,7 +58,7 @@ class DefaultIMApi: IMApi {
             })
     }
     
-    func createSession(_ uId: Int64, _ sessionType: Int, _ entityId: Int64, _ members: Set<Int64>?) -> Observable<Session> {
+    public func createSession(_ uId: Int64, _ sessionType: Int, _ entityId: Int64, _ members: Set<Int64>?) -> Observable<Session> {
         let reqBean = CreateSessionBean(uId: uId, type: sessionType, entityId: entityId, members: members)
         return sessionApi.rx
             .request(.createSession(reqBean))
@@ -70,14 +70,14 @@ class DefaultIMApi: IMApi {
             })
     }
     
-    func deleteSession(_ uId: Int64, session: Session)-> Observable<Void> {
+    public func deleteSession(_ uId: Int64, session: Session)-> Observable<Void> {
         return sessionApi.rx
             .request(.deleteSession(uId, session.id))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }
 
-    func updateSession(_ uId: Int64, session: Session)-> Observable<Void> {
+    public func updateSession(_ uId: Int64, session: Session)-> Observable<Void> {
         let bean = UpdateSessionBean(uId: uId, sId: session.id, top: session.topTimestamp, status: session.status)
         return sessionApi.rx
             .request(.updateSession(bean))
@@ -85,7 +85,7 @@ class DefaultIMApi: IMApi {
             .compose(RxTransformer.shared.response2Void())
     }
     
-    func sendMessageToServer(msg: Message) -> Observable<Message> {
+    public func sendMessageToServer(msg: Message) -> Observable<Message> {
         let reqBean = MessageBean(msg: msg)
         return messageApi.rx
             .request(.sendMsg(reqBean))
@@ -102,7 +102,7 @@ class DefaultIMApi: IMApi {
             })
     }
     
-    func ackMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
+    public func ackMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
         let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
             .request(.ackMsgs(reqBean))
@@ -110,7 +110,7 @@ class DefaultIMApi: IMApi {
             .compose(RxTransformer.shared.response2Void())
     }
     
-    func readMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
+    public func readMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
         let reqBean = ReadMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
             .request(.readMsgs(reqBean))
@@ -118,7 +118,7 @@ class DefaultIMApi: IMApi {
             .compose(RxTransformer.shared.response2Void())
     }
     
-    func revokeMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64) -> Observable<Void> {
+    public func revokeMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64) -> Observable<Void> {
         var msgIds = Set<Int64>()
         msgIds.insert(msgId)
         let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
@@ -128,7 +128,7 @@ class DefaultIMApi: IMApi {
             .compose(RxTransformer.shared.response2Void())
     }
     
-    func reeditMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64, _ body: String) -> Observable<Void> {
+    public func reeditMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64, _ body: String) -> Observable<Void> {
         var msgIds = Set<Int64>()
         msgIds.insert(msgId)
         let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
@@ -138,7 +138,7 @@ class DefaultIMApi: IMApi {
             .compose(RxTransformer.shared.response2Void())
     }
     
-    func deleteMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
+    public func deleteMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
         let reqBean = DeleteMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
         return messageApi.rx
             .request(.deleteMsgs(reqBean))
@@ -146,7 +146,7 @@ class DefaultIMApi: IMApi {
             .compose(RxTransformer.shared.response2Void())
     }
     
-    func getLatestMessages(_ uId: Int64, _ cTime: Int64, _ count: Int) -> Observable<Array<Message>> {
+    public func getLatestMessages(_ uId: Int64, _ cTime: Int64, _ count: Int) -> Observable<Array<Message>> {
         return messageApi.rx
             .request(.queryLatestMsg(uId, 0, count, cTime))
             .asObservable()
