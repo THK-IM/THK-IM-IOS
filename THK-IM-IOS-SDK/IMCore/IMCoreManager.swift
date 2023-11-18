@@ -9,9 +9,9 @@ import Foundation
 import CocoaLumberjack
 import RxSwift
 
-public class IMCoreManager: SignalListener {
+open class IMCoreManager: SignalListener {
     
-    static let shared = IMCoreManager()
+    public static let shared = IMCoreManager()
     
     private var moduleDic = [Int: BaseModule]()
     private var disposeBag = DisposeBag()
@@ -113,12 +113,12 @@ public class IMCoreManager: SignalListener {
         }
     }
     
-    func connect() {
+    public func connect() {
         self._signalModule?.setSignalListener(self)
         self._signalModule?.connect()
     }
     
-    func registerModule(_ type: Int, _ md: BaseModule) {
+    public func registerModule(_ type: Int, _ md: BaseModule) {
         moduleDic[type] = md
     }
     
