@@ -11,7 +11,7 @@ import UIKit
 
 public class Previewer : IMPreviewer {
     
-    init(token: String, endpoint: String) {
+    public init(token: String, endpoint: String) {
         AVCacheManager.shared.delegate = IMAVCacheProtocol(token: token, endpoint: endpoint)
     }
     

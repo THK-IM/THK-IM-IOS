@@ -9,7 +9,7 @@ import Foundation
 import AVFoundation
 import Accelerate
 
-func calculateDecibel(from data: Data) -> Double {
+public func calculateDecibel(from data: Data) -> Double {
     // 将 PCM 数据转换为 Int16 数组
     let samples = data.withUnsafeBytes {
         Array(UnsafeBufferPointer<Int16>(start: $0.baseAddress!.assumingMemoryBound(to: Int16.self), count: data.count/MemoryLayout<Int16>.size))
@@ -29,7 +29,7 @@ func calculateDecibel(from data: Data) -> Double {
     return 20 * log10(averageAmplitude)
 }
 
-func getInt8Array(from data: Data) -> [Int8]? {
+public func getInt8Array(from data: Data) -> [Int8]? {
     let count = data.count / MemoryLayout<Int8>.size
     var int8Array = [Int8](repeating: 0, count: count)
     (data as NSData).getBytes(&int8Array, length:count * MemoryLayout<Int8>.size)

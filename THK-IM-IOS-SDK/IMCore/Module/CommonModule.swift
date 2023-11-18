@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol CommonModule: BaseModule {
+public protocol CommonModule: BaseModule {
     
     func getSeverTime() -> Int64
     

@@ -8,10 +8,10 @@
 import AVFoundation
 import CocoaLumberjack
 
-class OggOpusAudioRecorder {
+public class OggOpusAudioRecorder {
     
     private let LogTag = "OggOpusAudioRecorder"
-    static let shared = OggOpusAudioRecorder()
+    public static let shared = OggOpusAudioRecorder()
     
     private let callbackInterval = 200 // 单位ms
     private var _callback : AudioCallback?
@@ -43,7 +43,7 @@ class OggOpusAudioRecorder {
         _bufferCount = _audioFormat.mBytesPerPacket * UInt32((_audioFormat.mSampleRate/10))
     }
     
-    func startRecording(
+    public func startRecording(
         _ filePath: String,
         _ maxDuration: Int = 60,
         _ callback: @escaping AudioCallback
@@ -65,12 +65,12 @@ class OggOpusAudioRecorder {
         }
     }
     
-    func isRecording() -> Bool  {
+    public func isRecording() -> Bool  {
         return self._audioQueue != nil
     }
     
     // 停止录音
-    func stopRecording() {
+    public func stopRecording() {
         DispatchQueue.global().asyncAfter(deadline: .now()+1, execute: {[weak self] in
             self?._audioQueue = nil
         })

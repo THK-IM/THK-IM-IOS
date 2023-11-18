@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import AVFoundation
 
-class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
+public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     
     private var url: URL? = nil
     private var seconds: Int = 0
@@ -173,19 +173,19 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         }
     }
     
-    func initDuration(_ seconds: Int) {
+    public func initDuration(_ seconds: Int) {
         self.seconds = seconds
         self.progressView.value = 0
         self.playButton.isSelected = false
         self.timeLabel.text = DateUtils.secondToDuration(seconds: seconds)
     }
     
-    func initCover(_ path: String) {
+    public func initCover(_ path: String) {
         self.coverPath = path
         self.playView.ca_setImagePath(path: path)
     }
     
-    func initDataSource(_ url: URL?) {
+    public func initDataSource(_ url: URL?) {
         if self.url != nil {
             if self.url!.absoluteString == url?.absoluteString {
                 return
@@ -196,7 +196,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         self.prepare()
     }
     
-    func prepare() {
+    public func prepare() {
         guard let url = self.url else {
             return
         }
@@ -217,7 +217,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         self.playView.layer.addSublayer(playerLayer)
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "loadedTimeRanges" {
         }
         if keyPath == "status" {
@@ -228,17 +228,17 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         }
     }
     
-    func play() {
+    public func play() {
         self.setupTimer()
         self.resume()
     }
     
-    func pause() {
+    public func pause() {
         self.player.pause()
         self.playButton.isSelected = false
     }
     
-    func resume() {
+    public func resume() {
         if self.observer == nil {
             self.setupTimer()
         }
@@ -250,7 +250,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         self.playButton.isSelected = true
     }
     
-    func destroy() {
+    public func destroy() {
         self.player.currentItem?.removeObserver(self, forKeyPath: "loadedTimeRanges")
         self.pause()
         self.destroyTimer()
@@ -262,7 +262,7 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         }
     }
     
-    func seekTo(time: CMTime) {
+    public func seekTo(time: CMTime) {
         player.seek(to: time)
     }
     
@@ -298,27 +298,27 @@ class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     }
     
     
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel authenticationChallenge: URLAuthenticationChallenge) {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel authenticationChallenge: URLAuthenticationChallenge) {
         print("IMCacheVideoPlayerView resourceLoader authenticationChallenge")
     }
     
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
         print("IMCacheVideoPlayerView resourceLoader didCancel")
         AVCacheManager.shared.cancelRequest(loadingRequest)
     }
     
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         let response = AVCacheManager.shared.addRequest(loadingRequest)
         print("IMCacheVideoPlayerView resourceLoader shouldWaitForLoadingOfRequestedResource \(Thread.current) \(response)")
         return response
     }
     
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest) -> Bool {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest) -> Bool {
         print("IMCacheVideoPlayerView resourceLoader shouldWaitForRenewalOfRequestedResource")
         return true
     }
     
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForResponseTo authenticationChallenge: URLAuthenticationChallenge) -> Bool {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForResponseTo authenticationChallenge: URLAuthenticationChallenge) -> Bool {
         return true
     }
     

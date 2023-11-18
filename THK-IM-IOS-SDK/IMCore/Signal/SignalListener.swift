@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol SignalListener {
+public protocol SignalListener {
     
     func onSignalStatusChange(_ status: SignalStatus)
     

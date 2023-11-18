@@ -7,16 +7,16 @@
 
 import UIKit
 
-class DismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+public class DismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
     let duration = 0.4
     var origin: CGPoint?
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let fromView = transitionContext.view(forKey: .from) else { return }
         
         let duration = transitionDuration(using: transitionContext)

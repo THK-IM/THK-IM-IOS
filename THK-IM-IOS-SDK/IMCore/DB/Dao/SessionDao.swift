@@ -8,7 +8,7 @@
 import Foundation
 import WCDBSwift
 
-protocol SessionDao {
+public protocol SessionDao {
     
     /**
      * 批量更新session

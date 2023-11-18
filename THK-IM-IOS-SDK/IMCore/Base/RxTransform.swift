@@ -9,31 +9,31 @@ import Foundation
 import RxSwift
 import Moya
 
-class RxTransformer {
+public class RxTransformer {
     
-    static let shared = RxTransformer(queueSize: 16)
+    public static let shared = RxTransformer(queueSize: 16)
     
     var scheduler : ImmediateSchedulerType
     
-    init(queueSize: Int) {
+    public init(queueSize: Int) {
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = queueSize
         self.scheduler = RxSwift.OperationQueueScheduler(operationQueue: operationQueue)
     }
     
-    func io2Main<T>() -> ObservableTransformer<T, T> {
+    public func io2Main<T>() -> ObservableTransformer<T, T> {
         return ObservableTransformer({ upstream in
             upstream.subscribe(on: self.scheduler).observe(on: MainScheduler.instance)
         })
     }
     
-    func io2Io<T>() -> ObservableTransformer<T, T> {
+    public func io2Io<T>() -> ObservableTransformer<T, T> {
         return ObservableTransformer({ upstream in
             upstream.subscribe(on: self.scheduler).observe(on: self.scheduler)
         })
     }
     
-    func response2Bean<T: Decodable>(_ type: T.Type) -> ObservableTransformer<Response, T> {
+    public func response2Bean<T: Decodable>(_ type: T.Type) -> ObservableTransformer<Response, T> {
         return ObservableTransformer({ upstream in
             upstream.flatMap({ (response) -> Observable<T> in
                 if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -47,7 +47,7 @@ class RxTransformer {
         })
     }
     
-    func response2Void() -> ObservableTransformer<Response, Void> {
+    public func response2Void() -> ObservableTransformer<Response, Void> {
         return ObservableTransformer({ upstream in
             upstream.flatMap({ (response) -> Observable<Void> in
                 if (response.statusCode >= 200 && response.statusCode < 300) {

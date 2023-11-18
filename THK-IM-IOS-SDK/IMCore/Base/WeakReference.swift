@@ -7,9 +7,9 @@
 
 import Foundation
 
-class WeakReference<T: AnyObject> {
-  weak var value: T?
-  init (value: T) {
-    self.value = value
-  }
+public class WeakReference<T: AnyObject> {
+    weak var value: T?
+    public init (value: T) {
+        self.value = value
+    }
 }

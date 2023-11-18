@@ -8,7 +8,7 @@
 import Foundation
 import MobileCoreServices
 
-open class MimeType {
+public class MimeType {
     
     static let shared = MimeType()
     

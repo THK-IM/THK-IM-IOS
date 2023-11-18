@@ -7,14 +7,14 @@
 
 import UIKit
 
-class CircleProgressView: UIView {
+public class CircleProgressView: UIView {
 
     // 当前进度
     private var progress = 0
     
     private var progressLabel: UILabel?
 
-    func setupView() {
+    public func setupView() {
         self.backgroundColor = UIColor.init(hex: "333333").withAlphaComponent(0.5)
         self.layer.cornerRadius = self.frame.width / 2
         self.progressLabel = UILabel(frame: CGRect.init(x: 0, y: 0, width: self.frame.width*2/3, height: self.frame.height/2))
@@ -26,7 +26,7 @@ class CircleProgressView: UIView {
     }
 
     // 更新进度条
-    func setProgress(to newProgress: Int) {
+    public func setProgress(to newProgress: Int) {
         self.progressLabel?.text = String(newProgress)
     }
 

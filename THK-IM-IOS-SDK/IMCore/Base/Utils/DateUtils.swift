@@ -10,14 +10,14 @@ import Foundation
 
 public class DateUtils {
     
-    static func secondToDuration(seconds: Int) -> String {
+    public static func secondToDuration(seconds: Int) -> String {
         let h = seconds / 3600
         let m = seconds / 60
         let s = seconds % 60
         return h == .zero ? String(format: "%02ld:%02ld", m, s) : String(format: "%02ld:%02ld:%02ld", h, m, s)
     }
     
-    static func timeToMsgTime(ms: Int64, now: Int64) -> String {
+    public static func timeToMsgTime(ms: Int64, now: Int64) -> String {
         let nowDate = Date(timeIntervalSince1970: TimeInterval(now/1000))
         let showDate = Date(timeIntervalSince1970: TimeInterval(ms/1000))
         

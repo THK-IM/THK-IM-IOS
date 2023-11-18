@@ -15,7 +15,7 @@ import CocoaLumberjack
 
 public class Provider: IMProvider {
     
-    init(token: String) {
+    public init(token: String) {
         ZLPhotoConfiguration.default()
             .cameraConfiguration
             .maxRecordDuration(300)

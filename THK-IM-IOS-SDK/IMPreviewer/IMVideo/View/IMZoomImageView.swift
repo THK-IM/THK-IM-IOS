@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
+public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
     
     lazy var _zoomImageView: UIImageView = {
         let view = UIImageView()
@@ -29,20 +29,20 @@ class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
         self.delegate = self
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func createZoomScrollView() {
+    public func createZoomScrollView() {
         _zoomImageView.frame = self.frame
         self.addSubview(_zoomImageView)
     }
     
-    func setImagePath(_ path: String) {
+    public func setImagePath(_ path: String) {
         _zoomImageView.ca_setImagePath(path: path)
     }
     
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+    public func scrollViewDidZoom(_ scrollView: UIScrollView) {
         SwiftEventBus.post("zoom", sender: self.zoomScale)
         if (self.zoomScale == 1.0) {
             self.isScrollEnabled = false
@@ -62,11 +62,11 @@ class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
         _zoomImageView.frame = rect
     }
     
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self._zoomImageView
     }
     
-    func addVideoLayer(_ playLayer: AVPlayerLayer) {
+    public func addVideoLayer(_ playLayer: AVPlayerLayer) {
         playLayer.videoGravity = .resizeAspect
         playLayer.frame = self._zoomImageView.frame
         self._zoomImageView.layer.addSublayer(playLayer)

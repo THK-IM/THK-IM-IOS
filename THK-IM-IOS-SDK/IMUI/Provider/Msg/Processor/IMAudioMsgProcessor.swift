@@ -9,17 +9,17 @@ import Foundation
 import RxSwift
 import CocoaLumberjack
 
-class IMAudioMsgProcessor : BaseMsgProcessor {
+open class IMAudioMsgProcessor : BaseMsgProcessor {
     
-    override func messageType() -> Int {
+    open override func messageType() -> Int {
         return MsgType.Audio.rawValue
     }
     
-    override func getSessionDesc(msg: Message) -> String {
+    open override func getSessionDesc(msg: Message) -> String {
         return "[Audio]"
     }
     
-    override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
+    open override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
         do {
             if (message.data == nil) {
                 return Observable.error(CocoaError.init(.fileNoSuchFile))
@@ -64,7 +64,7 @@ class IMAudioMsgProcessor : BaseMsgProcessor {
         }
     }
     
-    override func uploadObservable(_ entity: Message) -> Observable<Message> {
+    open override func uploadObservable(_ entity: Message) -> Observable<Message> {
         return self.uploadAudio(entity)
     }
     
@@ -150,7 +150,7 @@ class IMAudioMsgProcessor : BaseMsgProcessor {
     }
     
     
-    override func downloadMsgContent(_ message: Message, resourceType: String) -> Bool {
+    open override func downloadMsgContent(_ message: Message, resourceType: String) -> Bool {
         do {
             var data = IMAudioMsgData()
             if (message.data != nil) {

@@ -15,7 +15,7 @@ open class DefaultCommonModule : CommonModule {
     private var connId = ""
     private let lock = NSLock()
     
-    func getSeverTime() -> Int64 {
+    public func getSeverTime() -> Int64 {
         lock.lock()
         defer {lock.unlock()}
         if (timeMap[client] == nil || timeMap[server] == nil) {
@@ -25,7 +25,7 @@ open class DefaultCommonModule : CommonModule {
         }
     }
     
-    func getConnId() -> String {
+    public func getConnId() -> String {
         return connId
     }
     

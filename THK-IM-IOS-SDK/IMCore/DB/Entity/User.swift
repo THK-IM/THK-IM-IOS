@@ -12,21 +12,21 @@ import WCDBSwift
 
 public final class User: TableCodable {
     // 用户id
-    var id: Int64
+    public var id: Int64
     // 用户名称
-    var name: String
+    public var name: String
     // 用户头像
-    var avatar: String
+    public var avatar: String
     // 用户性别
-    var sex: Int = SexType.Unknown.rawValue
+    public var sex: Int = SexType.Unknown.rawValue
     // 用户状态
-    var status: Int = 0
+    public var status: Int = 0
     // 自定义扩展数据 推荐使用json结构存储
-    var extData: String? = nil
+    public var extData: String? = nil
     // 创建时间
-    var cTime: Int64 = 0
+    public var cTime: Int64 = 0
     // 修改时间
-    var mTime: Int64 = 0
+    public var mTime: Int64 = 0
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = User
@@ -45,7 +45,7 @@ public final class User: TableCodable {
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    init(id: Int64, name: String, avatar: String, sex: Int, status: Int, extData: String? = nil, cTime: Int64, mTime: Int64) {
+    public init(id: Int64, name: String, avatar: String, sex: Int, status: Int, extData: String? = nil, cTime: Int64, mTime: Int64) {
         self.id = id
         self.name = name
         self.avatar = avatar

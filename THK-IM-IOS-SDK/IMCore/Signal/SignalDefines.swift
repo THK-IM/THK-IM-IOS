@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Signal: Codable {
+open class Signal: Codable {
     
     var type : Int
     var subType: Int

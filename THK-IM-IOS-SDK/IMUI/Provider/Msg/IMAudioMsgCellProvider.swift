@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
+open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
     
-    override func messageType() -> Int {
+    open override func messageType() -> Int {
         return MsgType.Audio.rawValue
     }
     
-    override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
@@ -27,7 +27,7 @@ class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    override func viewSize(_ message: Message) -> CGSize {
+    open override func viewSize(_ message: Message) -> CGSize {
         let maxWidth = UIScreen.main.bounds.width - 100
         return CGSize(width: maxWidth, height: 40)
     }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ContactModule : BaseModule {
+public protocol ContactModule : BaseModule {
     
     func onNewContactor()
     

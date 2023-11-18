@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import Kingfisher
 
-class IMVideoMsgCell: BaseMsgCell {
+open class IMVideoMsgCell: BaseMsgCell {
     
     private var taskId: String?
     private var downloadListener: FileLoadListener?
@@ -31,11 +31,11 @@ class IMVideoMsgCell: BaseMsgCell {
     private let durationLabel = IMMsgLabelView()
     private let playView = UIImageView()
     
-    override func msgView() -> UIView {
+    open override func msgView() -> UIView {
         return self.view
     }
     
-    override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+    open override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
         super.setMessage(position, messages, session, delegate)
         guard let msg = self.message else {
             return

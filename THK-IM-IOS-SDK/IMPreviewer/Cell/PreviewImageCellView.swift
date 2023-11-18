@@ -8,7 +8,7 @@
 import UIKit
 import CocoaLumberjack
 
-class PreviewImageCellView : PreviewCellView {
+public class PreviewImageCellView : PreviewCellView {
     var cellIndex: Int = 0
     private var taskId: String?
     private var listener: FileLoadListener?
@@ -34,14 +34,14 @@ class PreviewImageCellView : PreviewCellView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupView() {
+    public func setupView() {
         self.contentView.addSubview(imageView)
         self.progressView.center = self.contentView.center
         self.progressView.isHidden = true
         self.contentView.addSubview(progressView)
     }
     
-    func showImage() {
+    public func showImage() {
         guard let message = self.message else {
             return
         }
@@ -68,17 +68,17 @@ class PreviewImageCellView : PreviewCellView {
                 .downloadMsgContent(message, resourceType: IMMsgResourceType.Source.rawValue)
     }
     
-    func setImagePath(_ path: String) {
+    public func setImagePath(_ path: String) {
         let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(path)
         self.imageView.setImagePath(realPath)
     }
     
-    override func startPreview() {
+    public override func startPreview() {
         showImage()
     }
     
     
-    override func stopPreview() {
+    public override func stopPreview() {
         self.imageView.zoomScale = 1.0
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 /**
  * 加载（上传/下载）状态
  */
-enum FileLoadState : Int {
+public enum FileLoadState : Int {
     case Wait = 0,
          Init = 1,
          Ing = 2,

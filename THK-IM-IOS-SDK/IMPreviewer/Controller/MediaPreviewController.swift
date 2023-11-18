@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class MediaPreviewController: UIViewController,
+public class MediaPreviewController: UIViewController,
                               UICollectionViewDataSource,
                               UICollectionViewDelegateFlowLayout,
                               UICollectionViewDelegate,
@@ -48,11 +48,11 @@ class MediaPreviewController: UIViewController,
         return collectionView
     }()
     
-    override var prefersStatusBarHidden: Bool {
+    public override var prefersStatusBarHidden: Bool {
         return true
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.black
         self.navigationController?.setNavigationBarHidden(true, animated: false)
@@ -185,15 +185,15 @@ class MediaPreviewController: UIViewController,
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.messages.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return self._collectView.frame.size
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let message = self.messages[indexPath.row]
         if message.type == MsgType.IMAGE.rawValue {
             let cell = collectionView.dequeueReusableCell(
@@ -213,12 +213,12 @@ class MediaPreviewController: UIViewController,
     }
     
     
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let previewCell = cell as! PreviewCellView
         previewCell.stopPreview()
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         self.currentId = self.messages[indexPath.row].id
         if (indexPath.row == 0) {
             self.loadMoreMessage(self.messages[indexPath.row], true)
@@ -230,7 +230,7 @@ class MediaPreviewController: UIViewController,
         previewCell.startPreview()
     }
     
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard let frame = self.enterFrame else {
             return nil
         }
@@ -243,7 +243,7 @@ class MediaPreviewController: UIViewController,
         return animator
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
         coordinator.animate(alongsideTransition: { (context) in

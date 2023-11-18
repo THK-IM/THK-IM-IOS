@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol IMMsgCellOperator: AnyObject {
+public protocol IMMsgCellOperator: AnyObject {
     func onMsgCellClick(message: Message, position:Int, view: UIView)
     func onMsgCellLongClick(message: Message, position:Int, view: UIView)
     func onMsgResendClick(message: Message)

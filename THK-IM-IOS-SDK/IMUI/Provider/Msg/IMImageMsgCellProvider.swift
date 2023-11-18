@@ -9,13 +9,13 @@ import Foundation
 import UIKit
 import CocoaLumberjack
 
-class IMImageMsgCellProvider: IMBaseMessageCellProvider {
+open class IMImageMsgCellProvider: IMBaseMessageCellProvider {
     
-    override func messageType() -> Int {
+    open override func messageType() -> Int {
         return MsgType.IMAGE.rawValue
     }
     
-    override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
@@ -28,7 +28,7 @@ class IMImageMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    override func viewSize(_ message: Message) -> CGSize {
+    open override func viewSize(_ message: Message) -> CGSize {
         var width = 100.0
         var height = 100.0
         do {

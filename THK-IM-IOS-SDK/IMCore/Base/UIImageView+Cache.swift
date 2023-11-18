@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 
-extension UIImageView {
+public extension UIImageView {
     
     func ca_setImagePathWithCorner(path: String, radius: CGFloat) {
         self.layer.cornerRadius = radius

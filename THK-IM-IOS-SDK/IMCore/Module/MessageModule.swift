@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-protocol MessageModule : BaseModule {
+public protocol MessageModule : BaseModule {
     
     /**
      * 注册消息处理器

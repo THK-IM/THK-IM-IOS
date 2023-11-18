@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-protocol IMApi: AnyObject {
+public protocol IMApi: AnyObject {
     
     /**
      * token

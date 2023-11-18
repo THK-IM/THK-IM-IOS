@@ -7,13 +7,13 @@
 
 import Foundation
 
-class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
+open class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
     
-    override func messageType() -> Int {
+    open override func messageType() -> Int {
         return 9999
     }
     
-    override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
@@ -26,7 +26,7 @@ class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    override func canSelected() -> Bool {
+    open override func canSelected() -> Bool {
         return false
     }
     

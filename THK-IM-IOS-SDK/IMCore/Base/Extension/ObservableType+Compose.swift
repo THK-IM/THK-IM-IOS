@@ -8,18 +8,18 @@
 import Foundation
 import RxSwift
 
-struct ObservableTransformer<T, R> {
-    let transformer: (Observable<T>) -> Observable<R>
-    init(_ transformer: @escaping (Observable<T>) -> Observable<R>) {
+public struct ObservableTransformer<T, R> {
+    public let transformer: (Observable<T>) -> Observable<R>
+    public init(_ transformer: @escaping (Observable<T>) -> Observable<R>) {
         self.transformer = transformer
     }
     
-    func call(_ observable: Observable<T>) -> Observable<R> {
+    public func call(_ observable: Observable<T>) -> Observable<R> {
         return transformer(observable)
     }
 }
 
-extension ObservableType {
+public extension ObservableType {
     func compose<R>(_ transformer: ObservableTransformer<Element, R>) -> Observable<R> {
         return transformer.call(self.asObservable())
     }

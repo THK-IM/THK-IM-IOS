@@ -7,17 +7,17 @@
 
 import UIKit
 
-class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+public class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
     var duration = 0.4
     var origin: CGPoint?
     var size: CGSize?
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return duration
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let toVC = transitionContext.viewController(forKey: .to) else {
             return
         }

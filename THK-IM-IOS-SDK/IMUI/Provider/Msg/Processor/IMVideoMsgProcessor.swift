@@ -10,17 +10,17 @@ import RxSwift
 import CocoaLumberjack
 import AVFoundation
 
-class IMVideoMsgProcessor : BaseMsgProcessor {
+open class IMVideoMsgProcessor : BaseMsgProcessor {
     
-    override func messageType() -> Int {
+    open override func messageType() -> Int {
         return MsgType.VIDEO.rawValue
     }
     
-    override func getSessionDesc(msg: Message) -> String {
+    open override func getSessionDesc(msg: Message) -> String {
         return "[video]"
     }
     
-    override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
+    open override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
         do {
             if message.data == nil {
                 return Observable.error(CocoaError.init(.fileNoSuchFile))
@@ -110,7 +110,7 @@ class IMVideoMsgProcessor : BaseMsgProcessor {
     }
     
     
-    override func uploadObservable(_ entity: Message) -> Observable<Message> {
+    open override func uploadObservable(_ entity: Message) -> Observable<Message> {
         let storageModule = IMCoreManager.shared.storageModule
         let fileLoadModule = IMCoreManager.shared.fileLoadModule
         return self.uploadCover(fileLoadModule, storageModule, entity)
@@ -275,7 +275,7 @@ class IMVideoMsgProcessor : BaseMsgProcessor {
         }
     }
     
-    override func downloadMsgContent(_ message: Message, resourceType: String) -> Bool {
+    open override func downloadMsgContent(_ message: Message, resourceType: String) -> Bool {
         do {
             var data = IMVideoMsgData()
             if (message.data != nil) {

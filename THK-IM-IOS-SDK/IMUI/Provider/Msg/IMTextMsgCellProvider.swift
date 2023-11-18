@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-class IMTextMsgCellProvider: IMBaseMessageCellProvider {
+open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
     
-    override func messageType() -> Int {
+    open override func messageType() -> Int {
         return MsgType.TEXT.rawValue
     }
     
-    override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
@@ -27,7 +27,7 @@ class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    override func viewSize(_ message: Message) -> CGSize {
+    open override func viewSize(_ message: Message) -> CGSize {
         let baseSize = super.viewSize(message)
         guard let content = message.content else {
             return baseSize

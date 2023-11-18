@@ -18,11 +18,11 @@ public class IMAudioMsgData: Codable {
         case played = "played"
     }
     
-    init() {
+    public init() {
         self.played = false
     }
     
-    init(path: String? = nil, duration: Int? = nil, played: Bool = false) {
+    public init(path: String? = nil, duration: Int? = nil, played: Bool = false) {
         self.path = path
         self.duration = duration
         self.played = played
@@ -42,10 +42,10 @@ public class IMImageMsgData: Codable {
         case thumbnailPath = "thumbnail_path"
     }
     
-    init() {
+    public init() {
     }
     
-    init(width: Int?, height: Int?, path: String? = nil, thumbnailPath: String? = nil) {
+    public init(width: Int?, height: Int?, path: String? = nil, thumbnailPath: String? = nil) {
         self.width = width
         self.height = height
         self.path = path
@@ -68,10 +68,9 @@ public class IMVideoMsgData: Codable {
         case thumbnailPath = "thumbnail_path"
     }
     
-    init() {
-    }
+    public init() {}
     
-    init(duration: Int?, width: Int?, height:Int?, path: String? = nil, thumbnailPath: String? = nil) {
+    public init(duration: Int?, width: Int?, height:Int?, path: String? = nil, thumbnailPath: String? = nil) {
         self.duration = duration
         self.width = duration
         self.height = height
@@ -93,9 +92,9 @@ public class IMAudioMsgBody: Codable {
         case name = "name"
     }
     
-    init() {}
+    public init() {}
     
-    init(duration: Int?, url: String?, name: String?) {
+    public init(duration: Int?, url: String?, name: String?) {
         self.duration = duration
         self.url = url
         self.name = name
@@ -118,9 +117,9 @@ public class IMImageMsgBody: Codable {
         case thumbnailUrl = "thumbnail_url"
     }
     
-    init() {}
+    public init() {}
     
-    init(width: Int?, height: Int?, thumbnailUrl: String?, url: String?, name: String?) {
+    public init(width: Int?, height: Int?, thumbnailUrl: String?, url: String?, name: String?) {
         self.width = width
         self.height = height
         self.thumbnailUrl = thumbnailUrl
@@ -147,9 +146,9 @@ public class IMVideoMsgBody: Codable {
         case name = "name"
     }
     
-    init() {}
+    public init() {}
     
-    init(duration: Int?, width: Int?, height: Int?, thumbnailUrl: String?, url: String?, name: String?) {
+    public init(duration: Int?, width: Int?, height: Int?, thumbnailUrl: String?, url: String?, name: String?) {
         self.duration = duration
         self.width = width
         self.height = height

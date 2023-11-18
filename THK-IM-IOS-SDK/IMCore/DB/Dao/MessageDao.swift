@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol MessageDao {
+public protocol MessageDao {
     
     /**
      * 根据sessionId查询消息数

@@ -8,9 +8,9 @@
 import AVFoundation
 import CocoaLumberjack
 
-class OggOpusAudioPlayer {
+public class OggOpusAudioPlayer {
     
-    static let shared = OggOpusAudioPlayer()
+    public static let shared = OggOpusAudioPlayer()
     
     private let LogTag = "OggOpusAudioPlayer"
     private let lock = NSLock()
@@ -175,7 +175,7 @@ class OggOpusAudioPlayer {
         return true
     }
     
-    func isPlaying() -> Bool {
+    public func isPlaying() -> Bool {
         lock.lock()
         defer {lock.unlock()}
         if (_audioQueue != nil) {
@@ -184,14 +184,14 @@ class OggOpusAudioPlayer {
         return false
     }
     
-    func currentPlayPath() -> String? {
+    public func currentPlayPath() -> String? {
         if !isPlaying() {
             return nil
         }
         return _filePath
     }
     
-    func startPlaying(_ filePath: String, _ callback: @escaping AudioCallback) -> Bool {
+    public func startPlaying(_ filePath: String, _ callback: @escaping AudioCallback) -> Bool {
         if (self.isPlaying()) {
             return false
         }
@@ -245,7 +245,7 @@ class OggOpusAudioPlayer {
         lock.unlock()
     }
     
-    func stopPlaying() {
+    public func stopPlaying() {
         if (_startTimestamp == nil) {
             _startTimestamp = Date().timeMilliStamp
         }
@@ -257,6 +257,7 @@ class OggOpusAudioPlayer {
         }
         releasePlaying()
     }
+    
     private func doCallback(_ audioPCMData: Data) {
         if (_callback != nil) {
             let now = Date().timeMilliStamp

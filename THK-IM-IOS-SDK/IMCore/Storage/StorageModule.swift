@@ -11,7 +11,7 @@ import Foundation
 /**
  存储协议
  */
-protocol StorageModule : AnyObject {
+public protocol StorageModule : AnyObject {
     
     // 删除文件
     func removeFile(_ fullPath: String)

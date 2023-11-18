@@ -15,33 +15,33 @@ public final class Message: TableCodable, Hashable {
     }
     
     // 消息id(客户端)
-    var id: Int64 = 0
+    public var id: Int64 = 0
     // sessionId
-    var sessionId : Int64 = 0
+    public var sessionId : Int64 = 0
     // 发件人id
-    var fromUId: Int64 = 0
+    public var fromUId: Int64 = 0
     // 消息id(服务端)
-    var msgId: Int64 = 0
+    public var msgId: Int64 = 0
     // 消息类型
-    var type: Int = 0
+    public var type: Int = 0
     // 消息内容, 服务端数据
-    var content: String?
+    public var content: String?
     // 消息内容 本地数据 json格式
-    var data: String?
+    public var data: String?
     // 消息发送状态,值标记
-    var sendStatus: Int = MsgSendStatus.Init.rawValue
+    public var sendStatus: Int = MsgSendStatus.Init.rawValue
     // 消息操作状态 ack/read/revoke/update bit位标记
-    var operateStatus: Int = MsgOperateStatus.Init.rawValue
+    public var operateStatus: Int = MsgOperateStatus.Init.rawValue
     // 已读用户 uId1#uId2
-    var rUsers: String? = nil
+    public var rUsers: String? = nil
     // 引用消息Id
-    var referMsgId: Int64? = nil
+    public var referMsgId: Int64? = nil
     // 消息@人列表, uId1#uId2 || all所有人
-    var atUsers: String? = nil
+    public var atUsers: String? = nil
     // 消息创建时间
-    var cTime: Int64
+    public var cTime: Int64
     // 消息最近修改时间
-    var mTime: Int64
+    public var mTime: Int64
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Message
@@ -67,7 +67,7 @@ public final class Message: TableCodable, Hashable {
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String?, data: String?, 
+    public init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String?, data: String?, 
          sendStatus: Int, operateStatus: Int, rUsers: String? = nil, referMsgId: Int64? = nil,
          atUsers: String? = nil, cTime: Int64, mTime: Int64) {
         self.id = id

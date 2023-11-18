@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-protocol UserModule : BaseModule {
+public protocol UserModule : BaseModule {
     
     // 用户信息更新
     func onUserInfoUpdate(user: User)

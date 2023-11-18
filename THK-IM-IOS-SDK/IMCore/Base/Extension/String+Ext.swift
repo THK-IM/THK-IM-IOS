@@ -9,7 +9,7 @@ import Foundation
 import CommonCrypto
 import UIKit
 
-extension String {
+public extension String {
     var length: Int {
         return self.utf16.count
     }

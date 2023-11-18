@@ -13,16 +13,16 @@ public class IMAVCacheProtocol: AVCacheProtocol {
     private var token: String = ""
     private var endpoint: String = ""
     
-    init(token: String, endpoint: String) {
+    public init(token: String, endpoint: String) {
         self.token = token
         self.endpoint = endpoint
     }
     
-    func getToken() -> String {
+    public func getToken() -> String {
         return self.token
     }
     
-    func getEndpoint() -> String {
+    public func getEndpoint() -> String {
         return self.endpoint
     }
     

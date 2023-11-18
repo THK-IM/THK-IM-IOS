@@ -38,11 +38,11 @@ open class DefaultUserModule : UserModule {
         return image
     }()
     
-    func onUserInfoUpdate(user: User) {
+    public func onUserInfoUpdate(user: User) {
         
     }
     
-    func getUserChatBubble(id: Int64) -> Observable<UIImage> {
+    public func getUserChatBubble(id: Int64) -> Observable<UIImage> {
         return Observable.create({[weak self] observer -> Disposable in
             if id == 0 {
                 if self?.systemBubbleImage == nil {
@@ -70,7 +70,7 @@ open class DefaultUserModule : UserModule {
         })
     }
     
-    func getUserInfo(id: Int64) -> Observable<User> {
+    public func getUserInfo(id: Int64) -> Observable<User> {
         return Observable.create({observer -> Disposable in
             let now = Date().timeMilliStamp
             let user = User(

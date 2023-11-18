@@ -10,35 +10,35 @@ import WCDBSwift
 
 public final class Session: TableCodable {
     // sessionId
-    var id: Int64 = 0
+    public var id: Int64 = 0
     // session类型
-    var type: Int = 0
+    public var type: Int = 0
     // session对象id, 单聊时为对方id, 群聊时为群id
-    var entityId : Int64 = 0
+    public var entityId : Int64 = 0
     // session名称
-    var name: String = ""
+    public var name: String = ""
     // session remark
-    var remark: String = ""
+    public var remark: String = ""
     // 禁言标记位 2^0 全员禁言 2^1 本人禁言
-    var mute: Int = 0
+    public var mute: Int = 0
     // 角色 1 成员 2 管理员 3 超级管理员 4 拥有者
-    var role: Int = 0
+    public var role: Int = 0
     // session状态
-    var status: Int
+    public var status: Int
     // 未读数
-    var unreadCount: Int64 = 0
+    public var unreadCount: Int64 = 0
     // 草稿
-    var draft: String?
+    public var draft: String?
     // 最近一条消息
-    var lastMsg: String? = nil
+    public var lastMsg: String? = nil
     // 置顶时间戳
-    var topTimestamp: Int64 = 0
+    public var topTimestamp: Int64 = 0
     // 自定义扩展数据 推荐使用json结构存储
-    var extData: String? = nil
+    public var extData: String? = nil
     // 消息创建时间
-    var cTime: Int64
+    public var cTime: Int64
     // 消息最近修改时间
-    var mTime: Int64
+    public var mTime: Int64
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
@@ -66,7 +66,7 @@ public final class Session: TableCodable {
     }
     
     
-    init(id: Int64, type: Int, entityId: Int64, name: String, remark: String, mute: Int, role: Int, status: Int,
+    public init(id: Int64, type: Int, entityId: Int64, name: String, remark: String, mute: Int, role: Int, status: Int,
          unreadCount: Int64, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64,
          extData: String? = nil, cTime: Int64, mTime: Int64) {
         self.id = id

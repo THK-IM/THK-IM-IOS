@@ -8,6 +8,6 @@
 
 import Foundation
 
-public class SingleSessionCell: BaseSessionCell {
+open class SingleSessionCell: BaseSessionCell {
     
 }

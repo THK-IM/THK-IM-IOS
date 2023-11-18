@@ -20,7 +20,7 @@ public class IMFile {
     var mimeType: String
     var name: String
     
-    init(data: Data, name: String, mimeType: String) {
+    public init(data: Data, name: String, mimeType: String) {
         self.data = data
         self.mimeType = mimeType
         self.name = name

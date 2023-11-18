@@ -8,7 +8,7 @@
 import Foundation
 import WCDBSwift
 
-protocol UserDao {
+public protocol UserDao {
     /**
      * 插入用户信息
      */

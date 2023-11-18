@@ -9,13 +9,13 @@ import Foundation
 import UIKit
 import CocoaLumberjack
 
-class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
+open class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
     
-    override func messageType() -> Int {
+    open override func messageType() -> Int {
         return MsgType.VIDEO.rawValue
     }
     
-    override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
@@ -28,7 +28,7 @@ class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    override func viewSize(_ message: Message) -> CGSize {
+    open override func viewSize(_ message: Message) -> CGSize {
         var width = 100.0
         var height = 100.0
         do {

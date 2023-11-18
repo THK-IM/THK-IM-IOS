@@ -7,5 +7,5 @@
 
 import Foundation
 
-protocol GroupModule: BaseModule {
+public protocol GroupModule: BaseModule {
 }

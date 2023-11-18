@@ -7,11 +7,11 @@
 
 import Foundation
 
-typealias GCDTask = (_ cancel: Bool) -> ()
+public typealias GCDTask = (_ cancel: Bool) -> ()
 
-class GCDTool: NSObject {
+public class GCDTool: NSObject {
     
-    @discardableResult static func gcdDelay(_ time: TimeInterval, task: @escaping () -> ()) -> GCDTask?{
+    @discardableResult static public func gcdDelay(_ time: TimeInterval, task: @escaping () -> ()) -> GCDTask?{
         
         func dispatch_later(block: @escaping () -> ()) {
             let t = DispatchTime.now() + time
@@ -43,7 +43,7 @@ class GCDTool: NSObject {
         return result
     }
     
-    static func gcdCancel(_ task: GCDTask?) {
+    public static func gcdCancel(_ task: GCDTask?) {
         task?(true)
     }
 }

@@ -9,17 +9,17 @@ import Foundation
 import RxSwift
 import CocoaLumberjack
 
-class IMImageMsgProcessor : BaseMsgProcessor {
+open class IMImageMsgProcessor : BaseMsgProcessor {
     
-    override func messageType() -> Int {
+    open override func messageType() -> Int {
         return MsgType.IMAGE.rawValue
     }
     
-    override func getSessionDesc(msg: Message) -> String {
+    open override func getSessionDesc(msg: Message) -> String {
         return "[Image]"
     }
     
-    override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
+    open override func reprocessingObservable(_ message: Message) -> Observable<Message>? {
         do {
             if message.data == nil {
                 return Observable.error(CocoaError.init(.fileNoSuchFile))
@@ -92,7 +92,7 @@ class IMImageMsgProcessor : BaseMsgProcessor {
     }
     
     
-    override func uploadObservable(_ entity: Message) -> Observable<Message>? {
+    open override func uploadObservable(_ entity: Message) -> Observable<Message>? {
         let storageModule = IMCoreManager.shared.storageModule
         let fileLoadModule = IMCoreManager.shared.fileLoadModule
         return self.uploadThumbImage(fileLoadModule, storageModule, entity)
@@ -262,7 +262,7 @@ class IMImageMsgProcessor : BaseMsgProcessor {
         }
     }
     
-    override func downloadMsgContent(_ message: Message, resourceType: String) -> Bool {
+    open override func downloadMsgContent(_ message: Message, resourceType: String) -> Bool {
         do {
             var data = IMImageMsgData()
             if (message.data != nil) {

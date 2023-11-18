@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension Double {
+public extension Double {
     
     func pxValue() -> Double {
         return Double(UIScreen.main.scale) * self

@@ -10,7 +10,7 @@ import Kingfisher
 
 public class ImageCacheManager: NSObject {
     
-    static let shared = ImageCacheManager()
+    public static let shared = ImageCacheManager()
     
     private override init() {
         ImageCache.default.memoryStorage.config.totalCostLimit = 100 * 1024 * 1024

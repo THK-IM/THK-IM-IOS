@@ -37,7 +37,7 @@ open class IMCoreManager: SignalListener {
     }
     
     private var _api: IMApi?
-    var api: IMApi {
+    public var api: IMApi {
         set {
             self._api = newValue
         }
@@ -47,7 +47,7 @@ open class IMCoreManager: SignalListener {
     }
     
     private var _signalModule: SignalModule?
-    var signalModule: SignalModule {
+    public var signalModule: SignalModule {
         set {
             self._signalModule = newValue
         }
@@ -58,7 +58,7 @@ open class IMCoreManager: SignalListener {
     
     
     private var _database: IMDatabase?
-    var database : IMDatabase{
+    public var database : IMDatabase{
         set {
             self._database = newValue
         }
@@ -70,13 +70,13 @@ open class IMCoreManager: SignalListener {
     
     
     private var _uId: Int64? = nil
-    var uId: Int64 {
+    public var uId: Int64 {
         get {
             return self._uId!
         }
     }
     
-    var severTime : Int64 {
+    public var severTime : Int64 {
         get {
             return self.getCommonModule().getSeverTime()
         }
@@ -92,7 +92,7 @@ open class IMCoreManager: SignalListener {
         DDLog.add(fileLogger)
     }
     
-    func initApplication(_ app : UIApplication, _ uId :Int64, _ debug: Bool) {
+    public func initApplication(_ app : UIApplication, _ uId :Int64, _ debug: Bool) {
         self.initIMLog()
         self._uId = uId
         self._database = IMDatabase(app, uId, debug)
@@ -122,42 +122,42 @@ open class IMCoreManager: SignalListener {
         moduleDic[type] = md
     }
     
-    func getModule(_ type: Int) -> BaseModule? {
+    public func getModule(_ type: Int) -> BaseModule? {
         return moduleDic[type]
     }
     
-    func getCommonModule() -> CommonModule {
+    public func getCommonModule() -> CommonModule {
         return self.getModule(SignalType.Common.rawValue)! as! CommonModule
     }
     
-    func getUserModule() -> UserModule {
+    public func getUserModule() -> UserModule {
         return self.getModule(SignalType.User.rawValue)! as! UserModule
     }
     
-    func getContactorModule() -> ContactModule {
+    public func getContactModule() -> ContactModule {
         return self.getModule(SignalType.Contact.rawValue)! as! ContactModule
     }
     
-    func getGroupModule() -> GroupModule {
+    public func getGroupModule() -> GroupModule {
         return self.getModule(SignalType.Group.rawValue)! as! GroupModule
     }
     
-    func getMessageModule() -> MessageModule {
+    public func getMessageModule() -> MessageModule {
         return self.getModule(SignalType.Message.rawValue)! as! MessageModule
     }
     
-    func getCustomModule() -> CustomModule {
+    public func getCustomModule() -> CustomModule {
         return self.getModule(SignalType.Custom.rawValue)! as! CustomModule
     }
     
-    func onSignalStatusChange(_ status: SignalStatus) {
+    public func onSignalStatusChange(_ status: SignalStatus) {
         if (status == SignalStatus.Connected) {
             getMessageModule().syncOfflineMessages()
         }
         SwiftEventBus.post(IMEvent.OnlineStatusUpdate.rawValue, sender: status)
     }
     
-    func onNewSignal(_ type: Int, _ subType: Int, _ body: String) {
+    public func onNewSignal(_ type: Int, _ subType: Int, _ body: String) {
         let module = getModule(type)
         module?.onSignalReceived(subType, body)
     }

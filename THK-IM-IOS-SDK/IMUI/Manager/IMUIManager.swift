@@ -8,9 +8,9 @@
 import Foundation
 import UIKit
 
-public class IMUIManager: NSObject {
+open class IMUIManager: NSObject {
     
-    static let shared = IMUIManager()
+    public static let shared = IMUIManager()
     
     private var msgCellProviders = [Int:IMBaseMessageCellProvider]()
     private var sessionCellProviders = [Int:IMBaseSessionCellProvider]()
@@ -55,33 +55,33 @@ public class IMUIManager: NSObject {
         
     }
     
-    func registerMsgCellProviders(_ provider: IMBaseMessageCellProvider) {
+    public func registerMsgCellProviders(_ provider: IMBaseMessageCellProvider) {
         lock.lock()
         defer {lock.unlock()}
         self.msgCellProviders[provider.messageType()] = provider
     }
     
-    func getMsgCellProvider(_ type: Int) -> IMBaseMessageCellProvider {
+    public func getMsgCellProvider(_ type: Int) -> IMBaseMessageCellProvider {
         lock.lock()
         defer {lock.unlock()}
         let provider = self.msgCellProviders[type]
         return provider == nil ? self.msgCellProviders[MsgType.UnSupport.rawValue]! : provider!
     }
     
-    func registerSessionCellProvider(_ provider: IMBaseSessionCellProvider) {
+    public func registerSessionCellProvider(_ provider: IMBaseSessionCellProvider) {
         lock.lock()
         defer {lock.unlock()}
         self.sessionCellProviders[provider.sessionType()] = provider
     }
     
-    func getSessionCellProvider(_ type: Int) -> IMBaseSessionCellProvider {
+    public func getSessionCellProvider(_ type: Int) -> IMBaseSessionCellProvider {
         lock.lock()
         defer {lock.unlock()}
         let provider = self.sessionCellProviders[type]
         return provider == nil ? self.sessionCellProviders[0]! : provider!
     }
     
-    func registerBottomFunctionProvider(_ ps: IMBaseFunctionCellProvider...) {
+    public func registerBottomFunctionProvider(_ ps: IMBaseFunctionCellProvider...) {
         lock.lock()
         defer {lock.unlock()}
         for p in ps {
@@ -89,11 +89,11 @@ public class IMUIManager: NSObject {
         }
     }
     
-    func getBottomFunctionProviders() -> Array<IMBaseFunctionCellProvider> {
+    public func getBottomFunctionProviders() -> Array<IMBaseFunctionCellProvider> {
         return bottomFunctionProviders
     }
     
-    func registerPanelProvider(_ ps: IMBasePanelViewProvider...) {
+    public func registerPanelProvider(_ ps: IMBasePanelViewProvider...) {
         lock.lock()
         defer {lock.unlock()}
         for p in ps {
@@ -101,15 +101,15 @@ public class IMUIManager: NSObject {
         }
     }
     
-    func getPanelProviders() -> Array<IMBasePanelViewProvider> {
+    public func getPanelProviders() -> Array<IMBasePanelViewProvider> {
         return panelProviders
     }
     
-    func registerMessageOperator(_ msgOperator: IMMessageOperator) {
+    public func registerMessageOperator(_ msgOperator: IMMessageOperator) {
         msgOperators[msgOperator.id()] = msgOperator
     }
     
-    func getMessageOperators(_ message: Message) -> [IMMessageOperator] {
+    public func getMessageOperators(_ message: Message) -> [IMMessageOperator] {
         var operators = [IMMessageOperator]()
         for msgOperator in msgOperators {
             operators.append(msgOperator.value)
@@ -117,11 +117,11 @@ public class IMUIManager: NSObject {
         return operators
     }
     
-    lazy var bubble: Bubble = {
+    public lazy var bubble: Bubble = {
         return Bubble()
     }()
     
-    lazy var systemBubbleImage = {
+    public lazy var systemBubbleImage = {
         let image = self.bubble.drawRectWithRoundedCorner(
             radius: 6.0, borderWidth: 0.0,
             backgroundColor: UIColor.init(hex: "333333").withAlphaComponent(0.2),
@@ -129,7 +129,7 @@ public class IMUIManager: NSObject {
         return image
     }()
     
-    func cornerBackgroundImage(_ radius: Int, _ color: UIColor) -> UIImage {
+    public func cornerBackgroundImage(_ radius: Int, _ color: UIColor) -> UIImage {
         let key = "\(radius)-\(color.toHexString())"
         var image = cornerImageMap[key]
         if image == nil {
@@ -140,7 +140,7 @@ public class IMUIManager: NSObject {
         return image!
     }
     
-    func initConfig() {
+    public func initConfig() {
         
     }
     

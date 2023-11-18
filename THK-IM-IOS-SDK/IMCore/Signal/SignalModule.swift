@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol SignalModule : AnyObject {
+public protocol SignalModule : AnyObject {
     
     func updateToken(_ token: String)
     

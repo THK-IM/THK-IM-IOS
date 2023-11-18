@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import CocoaLumberjack
 
-class PreviewVideoCellView : PreviewCellView {
+public class PreviewVideoCellView : PreviewCellView {
     
     var cellIndex: Int = 0
     private var taskId: String?
@@ -38,14 +38,14 @@ class PreviewVideoCellView : PreviewCellView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupView() {
+    public func setupView() {
         self.addSubview(self.videoPlayView)
         self.progressView.center = self.contentView.center
         self.progressView.isHidden = true
         self.contentView.addSubview(progressView)
     }
     
-    func showVideo() {
+    public func showVideo() {
         guard let message = self.message else {
             return
         }
@@ -113,7 +113,7 @@ class PreviewVideoCellView : PreviewCellView {
         }
     }
     
-    override func startPreview() {
+    public override func startPreview() {
         SwiftEventBus.onBackgroundThread(self, name: AVCacheManager.IMAVCacheEvent, handler: { [weak self ] result in
             guard let cache = result?.object as? AVCache else {
                 return
@@ -123,7 +123,7 @@ class PreviewVideoCellView : PreviewCellView {
         self.showVideo()
     }
     
-    override func stopPreview() {
+    public override func stopPreview() {
         self.videoPlayView.pause()
         SwiftEventBus.unregister(self, name: AVCacheManager.IMAVCacheEvent)
     }

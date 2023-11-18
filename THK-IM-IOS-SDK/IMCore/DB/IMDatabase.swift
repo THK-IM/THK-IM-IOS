@@ -10,19 +10,18 @@ import WCDBSwift
 import UIKit
 import CocoaLumberjack
 
-class IMDatabase {
+public class IMDatabase {
     
     private weak var app: UIApplication?
     private let database: Database
-    public let messageDao: MessageDao
-    public let sessionDao: SessionDao
-    public let userDao: UserDao
+    public var messageDao: MessageDao
+    public var sessionDao: SessionDao
+    public var userDao: UserDao
     
-    init(_ app: UIApplication, _ uId: Int64, _ debug: Bool) {
+    public init(_ app: UIApplication, _ uId: Int64, _ debug: Bool) {
         self.app = app;
         let env = debug ? "debug" : "release"
         let documentPath = NSHomeDirectory() + "/Documents/im"
-        DDLogDebug("documentPath: " + documentPath.description)
         let filePath = String(format: "%@/%d-%@.db", arguments: [documentPath, uId, env])
         self.database = Database(at: filePath)
         

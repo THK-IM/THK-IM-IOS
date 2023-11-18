@@ -7,13 +7,13 @@
 
 import Foundation
 
-class IMUnSupportMsgProcessor : BaseMsgProcessor {
+open class IMUnSupportMsgProcessor : BaseMsgProcessor {
     
-    override func messageType() -> Int {
+    open override func messageType() -> Int {
         return MsgType.UnSupport.rawValue
     }
     
-    override func getSessionDesc(msg: Message) -> String {
+    open override func getSessionDesc(msg: Message) -> String {
         return "not support message type"
     }
 }

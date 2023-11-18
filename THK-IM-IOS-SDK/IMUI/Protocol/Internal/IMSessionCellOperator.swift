@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol IMSessionCellOperator: AnyObject {
+public protocol IMSessionCellOperator: AnyObject {
     
     func updateSession(_ session: Session)
 

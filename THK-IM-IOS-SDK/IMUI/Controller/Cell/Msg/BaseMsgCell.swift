@@ -97,7 +97,7 @@ open class BaseMsgCell : BaseTableCell {
         return UIView()
     }
     
-    func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+    open func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
         self.message = messages[position]
         self.position = position
         
@@ -190,7 +190,7 @@ open class BaseMsgCell : BaseTableCell {
     /**
      cell 位置0: 中间1: 左边2:右边
      */
-    func cellPosition() -> Int {
+    open func cellPosition() -> Int {
         if cellWrapper is LeftCellWrapper {
             return IMMsgPosType.Left.rawValue
         } else if cellWrapper is RightCellWrapper {

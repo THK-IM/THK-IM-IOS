@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Data {
+public extension Data {
     
     func detectImageType() -> String {
         if self.count < 16 { return "" }

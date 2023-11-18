@@ -11,7 +11,7 @@ import CocoaLumberjack
 
 open class IMBaseMessageCellProvider {
     
-    func getSelfId() -> Int64 {
+    open func getSelfId() -> Int64 {
         return IMCoreManager.shared.uId
     }
     
@@ -19,7 +19,7 @@ open class IMBaseMessageCellProvider {
         return 0
     }
     
-    func viewType(_ msg: Message) -> Int {
+    open func viewType(_ msg: Message) -> Int {
         let msgType = self.messageType()
         let selfId = self.getSelfId()
         switch msg.fromUId {
@@ -32,7 +32,7 @@ open class IMBaseMessageCellProvider {
         }
     }
     
-    func identifier(_ viewType: Int) -> String {
+    open func identifier(_ viewType: Int) -> String {
         let id = "message_cell_\(viewType)"
         return id
     }

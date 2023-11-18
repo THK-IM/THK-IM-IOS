@@ -8,13 +8,13 @@
 
 import Foundation
 
-public class IMSingleSessionCellProvider: IMBaseSessionCellProvider {
+open class IMSingleSessionCellProvider: IMBaseSessionCellProvider {
     
-    public override func sessionType() -> Int {
+    open override func sessionType() -> Int {
         return SessionType.Single.rawValue
     }
     
-    override public func viewCell() -> BaseSessionCell {
+    open override func viewCell() -> BaseSessionCell {
         return SingleSessionCell(style: .default, reuseIdentifier: self.identifier())
     }
 }
