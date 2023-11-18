@@ -503,7 +503,18 @@
 			path = IMProvider;
 			sourceTree = "<group>";
 		};
-		A045CF8C2A92566000654957 /* IMBase */ = {
+		A05006CA2B08640500526713 /* DB */ = {
+			isa = PBXGroup;
+			children = (
+				A0D68AD22A888678004D11A5 /* Entity */,
+				A0D68ADA2A888678004D11A5 /* Dao */,
+				A0D68AD02A888678004D11A5 /* IMDatabase.swift */,
+				A0EA42E52A94904400F64A90 /* IMDatabaseDefines.swift */,
+			);
+			path = DB;
+			sourceTree = "<group>";
+		};
+		A05006CB2B08642300526713 /* Base */ = {
 			isa = PBXGroup;
 			children = (
 				A018CDF42AFF18D400896B87 /* Utils */,
@@ -517,7 +528,7 @@
 				A0D68B642A888679004D11A5 /* MimeType.swift */,
 				A0D68B652A888679004D11A5 /* WeakReference.swift */,
 			);
-			path = IMBase;
+			path = Base;
 			sourceTree = "<group>";
 		};
 		A0C431DB2A909C1600A84D4A /* Resource */ = {
@@ -614,11 +625,9 @@
 		A0D68AAA2A8884E3004D11A5 /* THK-IM-IOS-SDK */ = {
 			isa = PBXGroup;
 			children = (
-				A045CF8C2A92566000654957 /* IMBase */,
 				A0E8ED442AEDE9F6004163BD /* IMPreviewer */,
 				A045CF8B2A92561900654957 /* IMProvider */,
 				A0D68B372A888679004D11A5 /* IMCore */,
-				A0D68ACF2A888678004D11A5 /* IMDB */,
 				A0D68AC02A888678004D11A5 /* IMLive */,
 				A0D68ADE2A888678004D11A5 /* IMUI */,
 			);
@@ -703,17 +712,6 @@
 				A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */,
 			);
 			path = API;
-			sourceTree = "<group>";
-		};
-		A0D68ACF2A888678004D11A5 /* IMDB */ = {
-			isa = PBXGroup;
-			children = (
-				A0D68AD22A888678004D11A5 /* Entity */,
-				A0D68ADA2A888678004D11A5 /* Dao */,
-				A0D68AD02A888678004D11A5 /* IMDatabase.swift */,
-				A0EA42E52A94904400F64A90 /* IMDatabaseDefines.swift */,
-			);
-			path = IMDB;
 			sourceTree = "<group>";
 		};
 		A0D68AD22A888678004D11A5 /* Entity */ = {
@@ -967,6 +965,8 @@
 		A0D68B372A888679004D11A5 /* IMCore */ = {
 			isa = PBXGroup;
 			children = (
+				A05006CB2B08642300526713 /* Base */,
+				A05006CA2B08640500526713 /* DB */,
 				A0EA42F62A94CC3300F64A90 /* Api */,
 				A0D68B3C2A888679004D11A5 /* Module */,
 				A0D68B492A888679004D11A5 /* Processor */,
