@@ -17,8 +17,8 @@ open class IMUIManager: NSObject {
     private var bottomFunctionProviders = [IMBaseFunctionCellProvider]()
     private var panelProviders = [IMBasePanelViewProvider]()
     private var msgOperators = [String: IMMessageOperator]()
-    var contentProvider: IMProvider? = nil
-    var contentPreviewer: IMPreviewer? = nil
+    public var contentProvider: IMProvider? = nil
+    public var contentPreviewer: IMPreviewer? = nil
     
     private var cornerImageMap = [String: UIImage]()
     

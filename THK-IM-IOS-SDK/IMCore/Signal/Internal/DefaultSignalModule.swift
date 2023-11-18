@@ -10,7 +10,7 @@ import Starscream
 import Alamofire
 import CocoaLumberjack
 
-class DefaultSignalModule: SignalModule, WebSocketDelegate {
+public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     
     private var token = ""
     private  var signalListener : SignalListener?
@@ -29,19 +29,19 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
     private var timeoutTask: GCDTask?
     private var reconnectTask: GCDTask?
     
-    init(_ app: UIApplication, _ webSocketUrl: String, _ token: String) {
+    public init(_ app: UIApplication, _ webSocketUrl: String, _ token: String) {
         self.app = app
         self.webSocketUrl = webSocketUrl
         self.token = token
     }
     
-    func updateToken(_ token: String) {
+    public func updateToken(_ token: String) {
         self.token = token
         self.disconnect("update token")
         self.connect()
     }
     
-    func connect() {
+    public func connect() {
         DDLogDebug("DefaultSignalModule: connect start, status: \(self.status) ")
         lock.lock()
         defer {lock.unlock()}
@@ -130,7 +130,7 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
         }
     }
     
-    func disconnect(_ reason: String) {
+    public func disconnect(_ reason: String) {
         lock.lock()
         self.webSocketClient?.forceDisconnect()
         self.signalListener = nil
@@ -138,20 +138,20 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
         self.onStateChange(SignalStatus.DisConnected)
     }
     
-    func getSignalStatus() -> SignalStatus {
+    public func getSignalStatus() -> SignalStatus {
         lock.lock()
         defer { lock.unlock() }
         return self.status
     }
     
-    func setSignalListener(_ listener: SignalListener) {
+    public func setSignalListener(_ listener: SignalListener) {
         lock.lock()
         defer { lock.unlock() }
         self.signalListener = listener
     }
     
     
-    func sendSignal(_ signal: String) {
+    public func sendSignal(_ signal: String) {
         lock.lock()
         defer { lock.unlock() }
         if self.status == SignalStatus.Connected {
@@ -160,7 +160,7 @@ class DefaultSignalModule: SignalModule, WebSocketDelegate {
     }
     
     
-    func didReceive(event: WebSocketEvent, client: WebSocket) {
+    public func didReceive(event: WebSocketEvent, client: WebSocket) {
         switch event {
         case .connected:
             self.retryTimes = 0

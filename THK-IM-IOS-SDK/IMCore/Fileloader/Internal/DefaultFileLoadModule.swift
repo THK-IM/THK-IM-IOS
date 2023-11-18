@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjack
 
 
-class DefaultFileLoadModule: FileLoadModule {
+public class DefaultFileLoadModule: FileLoadModule {
     
     private let cacheExpire: TimeInterval = 10 * 24 * 3600 * 1000 // ms 
     private var downloadTaskMap = [String: (LoadTask, Array<FileLoadListener>)]()
@@ -20,7 +20,7 @@ class DefaultFileLoadModule: FileLoadModule {
     var endpoint: String
     var cacheDirPath: String
     
-    init(_ token: String, _ endpoint: String) {
+    public init(_ token: String, _ endpoint: String) {
         self.token = token
         self.endpoint = endpoint
         cacheDirPath = NSTemporaryDirectory() + "/message_cache"
@@ -80,7 +80,7 @@ class DefaultFileLoadModule: FileLoadModule {
         return "s_id=\(message.sessionId)&u_id=\(message.fromUId)&f_name=\(fileName)&client_id=\(message.id)"
     }
     
-    func download(key: String, message: Message, loadListener: FileLoadListener) {
+    public func download(key: String, message: Message, loadListener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = downloadTaskMap[key]
@@ -94,7 +94,7 @@ class DefaultFileLoadModule: FileLoadModule {
         }
     }
     
-    func upload(path: String, message: Message, loadListener: FileLoadListener) {
+    public func upload(path: String, message: Message, loadListener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = uploadTaskMap[path]
@@ -108,7 +108,7 @@ class DefaultFileLoadModule: FileLoadModule {
         }
     }
     
-    func cancelDownload(url: String) {
+    public func cancelDownload(url: String) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = downloadTaskMap[url]
@@ -119,14 +119,14 @@ class DefaultFileLoadModule: FileLoadModule {
         }
     }
     
-    func cancelDownloadListener(url: String, listener: FileLoadListener) {
+    public func cancelDownloadListener(url: String, listener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = downloadTaskMap[url]
         taskTuple?.1.removeAll(where: { $0 == listener })
     }
     
-    func cancelUpload(path: String) {
+    public func cancelUpload(path: String) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = uploadTaskMap[path]
@@ -137,14 +137,14 @@ class DefaultFileLoadModule: FileLoadModule {
         }
     }
     
-    func cancelUploadListener(path: String, listener: FileLoadListener) {
+    public func cancelUploadListener(path: String, listener: FileLoadListener) {
         lock.lock()
         defer {lock.unlock()}
         var taskTuple = uploadTaskMap[path]
         taskTuple?.1.removeAll(where: { $0 == listener })
     }
     
-    func notifyListeners(progress: Int, state: Int, url: String, path: String, err: Error?) {
+    public func notifyListeners(progress: Int, state: Int, url: String, path: String, err: Error?) {
         let downloadTaskTuple = downloadTaskMap[url]
         if (downloadTaskTuple != nil) {
             for listener in downloadTaskTuple!.1 {

@@ -8,7 +8,7 @@
 import Foundation
 import CocoaLumberjack
 
-class DefaultStorageModule : StorageModule {
+public class DefaultStorageModule : StorageModule {
     
     private let rootPath: String
     
@@ -18,7 +18,7 @@ class DefaultStorageModule : StorageModule {
     
     
     // 删除文件
-    func removeFile(_ fullPath: String) {
+    public func removeFile(_ fullPath: String) {
         do {
             try FileManager.default.removeItem(atPath: fullPath)
         } catch {
@@ -26,7 +26,7 @@ class DefaultStorageModule : StorageModule {
         }
     }
     
-    func sandboxFilePath(_ fullPath: String) -> String {
+    public func sandboxFilePath(_ fullPath: String) -> String {
         var pos = -1
         if let range = fullPath.range(of:"Documents", options: .literal ) {
             if !range.isEmpty {
@@ -42,7 +42,7 @@ class DefaultStorageModule : StorageModule {
         }
     }
     
-    func getFileExt(_ path: String) -> (String, String) {
+    public func getFileExt(_ path: String) -> (String, String) {
         if let dotIndex = path.lastIndex(of: ".") {
             let extIndex = path.index(dotIndex, offsetBy: 1)
             let ext = path[extIndex..<path.endIndex]
@@ -53,7 +53,7 @@ class DefaultStorageModule : StorageModule {
         }
     }
     
-    func getPathsFromFullPath(_ fullPath: String) -> (String, String) {
+    public func getPathsFromFullPath(_ fullPath: String) -> (String, String) {
         if let biasIndex = fullPath.lastIndex(of: "/") {
             let nameIndex = fullPath.index(biasIndex, offsetBy: 1)
             let name = fullPath[nameIndex..<fullPath.endIndex]
@@ -64,12 +64,12 @@ class DefaultStorageModule : StorageModule {
         }
     }
     
-    func getFileExtFromUrl(_ url: String) -> String {
+    public func getFileExtFromUrl(_ url: String) -> String {
         let tuple = self.getFileExt(url)
         return tuple.1
     }
     
-    func saveMediaDataInto(_ fullPath: String, _ data: Data) throws {
+    public func saveMediaDataInto(_ fullPath: String, _ data: Data) throws {
         let fileManager = FileManager.default
         let srcExist = fileManager.fileExists(atPath: fullPath)
         if srcExist {
@@ -82,7 +82,7 @@ class DefaultStorageModule : StorageModule {
         }
     }
     
-    func copyFile(_ srcPath: String, _ dePath: String) throws {
+    public func copyFile(_ srcPath: String, _ dePath: String) throws {
         let fileManager = FileManager.default
         var srcIsDir: ObjCBool = false
         let srcExist = fileManager.fileExists(atPath: srcPath, isDirectory: &srcIsDir)
@@ -107,7 +107,7 @@ class DefaultStorageModule : StorageModule {
         try fileManager.copyItem(atPath: srcPath, toPath: dePath)
     }
     
-    func allocSessionFilePath(_ sId: Int64,  _ fileName: String, _ format: String) -> String {
+    public func allocSessionFilePath(_ sId: Int64,  _ fileName: String, _ format: String) -> String {
         let fileRootPath = "\(getSessionRootPath(sId))/\(format)"
         let fileManager = FileManager.default
         var isDir: ObjCBool = false
@@ -161,16 +161,16 @@ class DefaultStorageModule : StorageModule {
         return "\(rootPath)/session-\(sId)"
     }
     
-    func isAssignedPath(_ path: String, _ format: String, _ sId: Int64) -> Bool {
+    public func isAssignedPath(_ path: String, _ format: String, _ sId: Int64) -> Bool {
         let p = "\(getSessionRootPath(sId))/\(format)"
         return path.starts(with: p)
     }
     
-    func getSessionCacheFiles(_ format: String, _ sId: Int64) -> Array<String> {
+    public func getSessionCacheFiles(_ format: String, _ sId: Int64) -> Array<String> {
         return Array()
     }
     
-    func getSessionCacheSize(_ sId: Int64) -> Int64 {
+    public func getSessionCacheSize(_ sId: Int64) -> Int64 {
         return 0
     }
     
