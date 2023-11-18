@@ -17,7 +17,7 @@ open class IMCoreManager: SignalListener {
     private var disposeBag = DisposeBag()
     
     private var _fileLoadModule: FileLoadModule?
-    var fileLoadModule: FileLoadModule {
+    public var fileLoadModule: FileLoadModule {
         set {
             self._fileLoadModule = newValue
         }
@@ -27,7 +27,7 @@ open class IMCoreManager: SignalListener {
     }
     
     private var _storageModule: StorageModule?
-    var storageModule: StorageModule {
+    public var storageModule: StorageModule {
         set {
             self._storageModule = newValue
         }
