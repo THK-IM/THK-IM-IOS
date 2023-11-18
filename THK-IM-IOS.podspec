@@ -111,17 +111,16 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'IMUI' do |ui|
     ui.source_files = 'THK-IM-IOS-SDK/IMUI/**/*.swift'
-    ui.dependency 'THK-IM-IOS/IMCore'
-    ui.dependency 'SnapKit', '5.6.0'
     ui.dependency "RxGesture", '4.0.4'
+    ui.dependency 'SnapKit', '5.6.0'
     ui.dependency 'Alamofire', '5.8.1'
     ui.dependency 'BadgeSwift', '8.0'
+    ui.dependency 'THK-IM-IOS/IMCore'
   end
 
   spec.subspec 'IMPreviewer' do |previewer|
     previewer.source_files = 'THK-IM-IOS-SDK/IMPreviewer/**/*.swift'
     previewer.dependency 'THK-IM-IOS/IMUI'
-    previewer.dependency 'SnapKit', '5.6.0'
   end
 
   spec.subspec 'IMProvider' do |provider|
