@@ -93,12 +93,11 @@ Pod::Spec.new do |spec|
   spec.source_files  = "THK-IM-IOS-SDK/**/*.swift"
 
 
-  s.requires_arc = true
-  s.framework = 'ImageIO'
+  spec.requires_arc = true
   
-  s.default_subspec = 'IMCore'
+  spec.default_subspec = 'IMCore'
 
-  s.subspec 'IMCore' do |core|
+  spec.subspec 'IMCore' do |core|
     core.source_files = 'THK-IM-IOS-SDK/IMCore/*.swift',
     core.frameworks = 'UIKit', 'Foundation', 'AVFoundation', 'MobileCoreServices'
     core.dependency 'AVFoundation', 'ImageIO'
@@ -112,7 +111,7 @@ Pod::Spec.new do |spec|
     core.dependency 'SwiftEventBus', :tag => '5.1.0', :git => 'https://github.com/cesarferreira/SwiftEventBus.git'
   end
 
-  s.subspec 'IMUI' do |ui|
+  spec.subspec 'IMUI' do |ui|
     ui.source_files = 'THK-IM-IOS-SDK/IMUI/*.swift'
     ui.dependency 'THK-IM-IOS/IMCore'
     ui.dependency 'SnapKit', '5.6.0'
@@ -121,13 +120,13 @@ Pod::Spec.new do |spec|
     ui.dependency 'BadgeSwift', '8.0'
   end
 
-  s.subspec 'IMPreviewer' do |previewer|
+  spec.subspec 'IMPreviewer' do |previewer|
     provider.source_files = 'THK-IM-IOS-SDK/IMPreviewer/*.swift'
     preview.dependency 'THK-IM-IOS/IMUI'
     preview.dependency 'SnapKit', '5.6.0'
   end
 
-  s.subspec 'IMProvider' do |provider|
+  spec.subspec 'IMProvider' do |provider|
     provider.source_files = 'THK-IM-IOS-SDK/IMProvider/*.swift'
     provider.dependency 'THK-IM-IOS/IMUI'
     provider 'ZLPhotoBrowser', '4.4.6'
