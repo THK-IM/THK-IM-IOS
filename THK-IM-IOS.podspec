@@ -98,7 +98,7 @@ Pod::Spec.new do |spec|
   spec.default_subspec = 'IMCore'
 
   spec.subspec 'IMCore' do |core|
-    core.source_files = 'THK-IM-IOS-SDK/IMCore/*.swift',
+    core.source_files = 'THK-IM-IOS-SDK/IMCore/**/*.swift',
     core.frameworks = 'UIKit', 'Foundation', 'AVFoundation', 'MobileCoreServices', 'AVFoundation', 'ImageIO'
     core.dependency 'WCDB.swift', '2.0.1'
     core.dependency 'RxSwift', '6.5.0'
@@ -110,7 +110,7 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'IMUI' do |ui|
-    ui.source_files = 'THK-IM-IOS-SDK/IMUI/*.swift'
+    ui.source_files = 'THK-IM-IOS-SDK/IMUI/**/*.swift'
     ui.dependency 'THK-IM-IOS/IMCore'
     ui.dependency 'SnapKit', '5.6.0'
     ui.dependency "RxGesture", '4.0.4'
@@ -119,13 +119,13 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'IMPreviewer' do |previewer|
-    previewer.source_files = 'THK-IM-IOS-SDK/IMPreviewer/*.swift'
+    previewer.source_files = 'THK-IM-IOS-SDK/IMPreviewer/**/*.swift'
     previewer.dependency 'THK-IM-IOS/IMUI'
     previewer.dependency 'SnapKit', '5.6.0'
   end
 
   spec.subspec 'IMProvider' do |provider|
-    provider.source_files = 'THK-IM-IOS-SDK/IMProvider/*.swift'
+    provider.source_files = 'THK-IM-IOS-SDK/IMProvider/**/*.swift'
     provider.dependency 'THK-IM-IOS/IMUI'
     provider.dependency 'ZLPhotoBrowser', '4.4.6'
     provider.dependency 'YbridOpus', '0.8.0'
