@@ -11,7 +11,6 @@ import UIKit
 import CocoaLumberjack
 import SnapKit
 import Photos
-import SwiftEventBus
 import RxGesture
 import ImageIO
 import CoreServices

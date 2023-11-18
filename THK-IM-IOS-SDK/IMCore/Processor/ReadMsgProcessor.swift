@@ -9,7 +9,6 @@
 import Foundation
 import CocoaLumberjack
 import RxSwift
-import SwiftEventBus
 
 public class ReadMsgProcessor: BaseMsgProcessor {
     

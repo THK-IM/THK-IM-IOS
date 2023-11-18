@@ -8,7 +8,6 @@
 import UIKit
 import CocoaLumberjack
 import Kingfisher
-import SwiftEventBus
 
 class IMAudioMsgCell: BaseMsgCell {
     

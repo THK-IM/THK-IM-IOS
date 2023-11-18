@@ -9,7 +9,6 @@ import Foundation
 import RxSwift
 import UIKit
 import CocoaLumberjack
-import SwiftEventBus
 
 
 class IMSessionViewController : UIViewController, UITableViewDataSource, UITableViewDelegate, IMSessionCellOperator {

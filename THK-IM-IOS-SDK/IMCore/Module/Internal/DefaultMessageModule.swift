@@ -8,7 +8,6 @@
 import Foundation
 import Moya
 import RxSwift
-import SwiftEventBus
 import CocoaLumberjack
 
 open class DefaultMessageModule : MessageModule {

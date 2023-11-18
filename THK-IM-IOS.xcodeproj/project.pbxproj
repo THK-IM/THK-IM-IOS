@@ -45,6 +45,7 @@
 		A03082D92AF67E81001B8373 /* IMSingleSessionCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082D82AF67E81001B8373 /* IMSingleSessionCellProvider.swift */; };
 		A03082DF2AF7BB84001B8373 /* IMSessionCellOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082DE2AF7BB84001B8373 /* IMSessionCellOperator.swift */; };
 		A03082E12AF7BFEC001B8373 /* UpdateSessionBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082E02AF7BFEC001B8373 /* UpdateSessionBean.swift */; };
+		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A0C431DD2A909C1700A84D4A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0C431DC2A909C1600A84D4A /* Images.xcassets */; };
 		A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* LiveManager.swift */; };
 		A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DF2A909C3100A84D4A /* LiveController.swift */; };
@@ -239,6 +240,7 @@
 		A03082D82AF67E81001B8373 /* IMSingleSessionCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSingleSessionCellProvider.swift; sourceTree = "<group>"; };
 		A03082DE2AF7BB84001B8373 /* IMSessionCellOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSessionCellOperator.swift; sourceTree = "<group>"; };
 		A03082E02AF7BFEC001B8373 /* UpdateSessionBean.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSessionBean.swift; sourceTree = "<group>"; };
+		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A0C431DC2A909C1600A84D4A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A0C431DE2A909C3000A84D4A /* LiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveManager.swift; path = API/LiveManager.swift; sourceTree = "<group>"; };
 		A0C431DF2A909C3100A84D4A /* LiveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveController.swift; sourceTree = "<group>"; };
@@ -527,6 +529,7 @@
 				A0D68B632A888679004D11A5 /* GCDTool.swift */,
 				A0D68B642A888679004D11A5 /* MimeType.swift */,
 				A0D68B652A888679004D11A5 /* WeakReference.swift */,
+				A050072C2B086CB200526713 /* SwiftEventBus.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -1411,6 +1414,7 @@
 				A0D68BA42A888679004D11A5 /* IMAudioMsgCell.swift in Sources */,
 				A0EA42E92A94920300F64A90 /* DefaultMessageDao.swift in Sources */,
 				A0D68BA72A888679004D11A5 /* IMTextMsgCell.swift in Sources */,
+				A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */,
 				A0D68BE02A888679004D11A5 /* CommonModule.swift in Sources */,
 				A018CE0A2B00A48C00896B87 /* IMMsgRevokeOperator.swift in Sources */,
 				A0D68B7C2A888679004D11A5 /* CreateSessionBean.swift in Sources */,

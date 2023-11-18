@@ -7,7 +7,6 @@
 
 import UIKit
 import AVFoundation
-import SwiftEventBus
 
 class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
     

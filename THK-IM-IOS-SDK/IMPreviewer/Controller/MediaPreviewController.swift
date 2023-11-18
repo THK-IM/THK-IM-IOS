@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import SwiftEventBus
 import RxSwift
 
 class MediaPreviewController: UIViewController,

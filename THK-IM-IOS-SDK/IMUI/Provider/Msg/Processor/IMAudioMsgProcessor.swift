@@ -8,7 +8,6 @@
 import Foundation
 import RxSwift
 import CocoaLumberjack
-import SwiftEventBus
 
 class IMAudioMsgProcessor : BaseMsgProcessor {
     

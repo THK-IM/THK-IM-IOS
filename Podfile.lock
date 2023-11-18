@@ -22,7 +22,6 @@ PODS:
   - RxSwift (6.5.0)
   - SnapKit (5.6.0)
   - Starscream (4.0.4)
-  - SwiftEventBus (5.0.0)
   - WCDB.swift (2.0.1):
     - WCDB.swift/no-arc (= 2.0.1)
     - WCDBOptimizedSQLCipher (~> 1.4.0)
@@ -48,7 +47,6 @@ DEPENDENCIES:
   - RxSwift (= 6.5.0)
   - SnapKit (= 5.6.0)
   - Starscream (= 4.0.4)
-  - SwiftEventBus (from `https://github.com/cesarferreira/SwiftEventBus.git`, tag `5.1.0`)
   - WCDB.swift (= 2.0.1)
   - WebRTC-SDK (= 114.5735.04)
   - YbridOgg (= 0.8.0)
@@ -76,16 +74,6 @@ SPEC REPOS:
     - YbridOpus
     - ZLPhotoBrowser
 
-EXTERNAL SOURCES:
-  SwiftEventBus:
-    :git: https://github.com/cesarferreira/SwiftEventBus.git
-    :tag: 5.1.0
-
-CHECKOUT OPTIONS:
-  SwiftEventBus:
-    :git: https://github.com/cesarferreira/SwiftEventBus.git
-    :tag: 5.1.0
-
 SPEC CHECKSUMS:
   Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
   BadgeSwift: a81547ffde1f462bb5fc02e3fa3fdcbc1b888354
@@ -99,7 +87,6 @@ SPEC CHECKSUMS:
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
-  SwiftEventBus: 976fdca8270b925c5f8e897f519cc49597e1f13c
   WCDB.swift: 738cf27df8883c47ef732ea02c44e690da5bb66d
   WCDBOptimizedSQLCipher: ef2be79fed278289a309ad0d4d707c55bf166d6d
   WebRTC-SDK: 3a2279e1649c45e2988e574bce645d7ad44e0679
@@ -107,6 +94,6 @@ SPEC CHECKSUMS:
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
   ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
 
-PODFILE CHECKSUM: 2d1dc7960f18a9acba53ca9ab2eb857c8af899af
+PODFILE CHECKSUM: 51eeef3ecd68e6fdd1587b4721d9880cd384d574
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.2

@@ -24,8 +24,8 @@ Pod::Spec.new do |spec|
   #   * Try to keep it short, snappy and to the point.
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
-  spec.description  = <<-DESC
-                   DESC
+  # spec.description  = <<-DESC
+  #                  DESC
 
   spec.homepage     = "https://github.com/THK-IM"
   # spec.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
@@ -64,13 +64,13 @@ Pod::Spec.new do |spec|
   #
 
   # spec.platform     = :ios
-  # spec.platform     = :ios, "5.0"
+  spec.platform     = :ios, "13.0"
 
   #  When using multiple platforms
-  # spec.ios.deployment_target = "5.0"
-  # spec.osx.deployment_target = "10.7"
-  # spec.watchos.deployment_target = "2.0"
-  # spec.tvos.deployment_target = "9.0"
+  spec.ios.deployment_target = "13.0"
+  spec.osx.deployment_target = "10.13"
+  spec.watchos.deployment_target = "7.0"
+  spec.tvos.deployment_target = "12.4"
 
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -79,7 +79,7 @@ Pod::Spec.new do |spec|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  spec.source       = { :git => "https://github.com/THK-IM/THK-IM-IOS", :tag => "#{spec.version}" }
+  spec.source       = { :git => "https://github.com/THK-IM/THK-IM-IOS.git", :tag => "#{spec.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -99,8 +99,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'IMCore' do |core|
     core.source_files = 'THK-IM-IOS-SDK/IMCore/*.swift',
-    core.frameworks = 'UIKit', 'Foundation', 'AVFoundation', 'MobileCoreServices'
-    core.dependency 'AVFoundation', 'ImageIO'
+    core.frameworks = 'UIKit', 'Foundation', 'AVFoundation', 'MobileCoreServices', 'AVFoundation', 'ImageIO'
     core.dependency 'WCDB.swift', '2.0.1'
     core.dependency 'RxSwift', '6.5.0'
     core.dependency 'RxCocoa', '6.5.0'
@@ -108,7 +107,6 @@ Pod::Spec.new do |spec|
     core.dependency 'Starscream', '4.0.4'
     core.dependency 'Moya/RxSwift', '15.0'
     core.dependency 'Kingfisher', '7.10.0'
-    core.dependency 'SwiftEventBus', :tag => '5.1.0', :git => 'https://github.com/cesarferreira/SwiftEventBus.git'
   end
 
   spec.subspec 'IMUI' do |ui|
@@ -121,17 +119,17 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'IMPreviewer' do |previewer|
-    provider.source_files = 'THK-IM-IOS-SDK/IMPreviewer/*.swift'
-    preview.dependency 'THK-IM-IOS/IMUI'
-    preview.dependency 'SnapKit', '5.6.0'
+    previewer.source_files = 'THK-IM-IOS-SDK/IMPreviewer/*.swift'
+    previewer.dependency 'THK-IM-IOS/IMUI'
+    previewer.dependency 'SnapKit', '5.6.0'
   end
 
   spec.subspec 'IMProvider' do |provider|
     provider.source_files = 'THK-IM-IOS-SDK/IMProvider/*.swift'
     provider.dependency 'THK-IM-IOS/IMUI'
-    provider 'ZLPhotoBrowser', '4.4.6'
-    provider 'YbridOpus', '0.8.0'
-    provider 'YbridOgg', '0.8.0'
+    provider.dependency 'ZLPhotoBrowser', '4.4.6'
+    provider.dependency 'YbridOpus', '0.8.0'
+    provider.dependency 'YbridOgg', '0.8.0'
   end
 
 end

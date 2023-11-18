@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 import AVFoundation
 import CocoaLumberjack
-import SwiftEventBus
 
 class PreviewVideoCellView : PreviewCellView {
     

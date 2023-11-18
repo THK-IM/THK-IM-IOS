@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 import CocoaLumberjack
 import Kingfisher
-import SwiftEventBus
 
 class IMImageMsgCell: BaseMsgCell {
     

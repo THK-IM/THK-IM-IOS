@@ -8,7 +8,6 @@ import Foundation
 import Alamofire
 import AVFoundation
 import CocoaLumberjack
-import SwiftEventBus
 
 public class AVCacheManager {
     

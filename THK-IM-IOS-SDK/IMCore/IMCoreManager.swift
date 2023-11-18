@@ -8,7 +8,6 @@
 import Foundation
 import CocoaLumberjack
 import RxSwift
-import SwiftEventBus
 
 public class IMCoreManager: SignalListener {
     
