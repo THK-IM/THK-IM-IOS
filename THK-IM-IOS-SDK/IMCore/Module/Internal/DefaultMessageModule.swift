@@ -247,9 +247,10 @@ open class DefaultMessageModule : MessageModule {
     }
     
     public func sendMessage(_ body: Codable, _ sessionId: Int64, _ type: Int,
-                            _ atUser: String? = nil, _ replyMsgId: Int64? = nil) -> Bool{
+                            _ atUser: String? = nil, _ replyMsgId: Int64? = nil,
+                            _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil){
         let processor = getMsgProcessor(type)
-        return processor.sendMessage(body, sessionId, atUser, replyMsgId)
+        processor.sendMessage(body, sessionId, atUser, replyMsgId, sendStart, sendResult)
     }
     
     public func sendMessageToServer(_ message: Message) -> Observable<Message> {

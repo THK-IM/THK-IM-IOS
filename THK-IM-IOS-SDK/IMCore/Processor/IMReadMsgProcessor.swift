@@ -83,7 +83,8 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
         
     }
     
-    override public func send(_ msg: Message, resend: Bool = false) {
+    override public func send(_ msg: Message, _ resend: Bool = false,
+                              _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil) {
         if (msg.referMsgId == nil || msg.referMsgId! < 0) {
             return
         }

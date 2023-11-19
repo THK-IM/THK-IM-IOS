@@ -73,5 +73,8 @@ public enum IMMsgResourceType: String {
          Source = "source"
 }
 
+public typealias IMSendMsgStart = (_ : Message) -> Void
+
+public typealias IMSendMsgResult = (_ : Message, _: Error?) -> Void
 
 

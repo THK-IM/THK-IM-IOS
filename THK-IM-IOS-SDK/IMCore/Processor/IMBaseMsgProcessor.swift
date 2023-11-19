@@ -119,23 +119,23 @@ open class IMBaseMsgProcessor {
      * 3、文件上传
      * 4、调用api发送消息到服务器
      */
-    open func sendMessage(_ body: Codable, _ sessionId: Int64, _ atUsers: String? = nil, _ rMsgId: Int64? = nil) -> Bool {
+    open func sendMessage(_ body: Codable, _ sessionId: Int64, _ atUsers: String? = nil, _ rMsgId: Int64? = nil,
+                          _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil) -> Void {
         do {
             let originMsg = try self.buildSendMsg(body, sessionId, atUsers, rMsgId)
-            self.send(originMsg)
+            self.send(originMsg, false, sendStart, sendResult)
         } catch {
             DDLogError(error)
-            return false
         }
-        return true
     }
     
-    open func resend(_ msg: Message) {
-        send(msg, resend: true)
+    open func resend(_ msg: Message, _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil) {
+        send(msg, true, sendStart, sendResult)
     }
     
-    open func send(_ msg: Message, resend: Bool = false) {
+    open func send(_ msg: Message, _ resend: Bool = false, _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil) {
         var originMsg = msg
+        sendStart?(originMsg)
         Observable.just(msg)
             .flatMap({ (message) -> Observable<Message> in
                 if (!resend) {
@@ -180,17 +180,18 @@ open class IMBaseMsgProcessor {
             .subscribe(onNext: { msg in
                 do {
                     try self.insertOrUpdateDb(msg)
+                    sendResult?(msg, nil)
                 } catch let error {
-                    DDLogError(error)
+                    sendResult?(msg, error)
                 }
             }, onError: { error in
-                DDLogError(error)
                 originMsg.sendStatus = MsgSendStatus.Failed.rawValue
                 do {
                     try self.updateFailedMsgStatus(msg)
                 } catch let error {
                     DDLogError(error)
                 }
+                sendResult?(msg, error)
             })
             .disposed(by: disposeBag)
     }

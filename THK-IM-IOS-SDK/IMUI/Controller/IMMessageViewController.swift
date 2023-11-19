@@ -302,8 +302,10 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         guard let sessionId = self.session?.id else {
             return
         }
-        let success = IMCoreManager.shared.getMessageModule().sendMessage(body, sessionId, type, nil, nil)
-        DDLogDebug("sendMessage \(success)")
+        IMCoreManager.shared.getMessageModule().sendMessage(body, sessionId, type, nil, nil, { _ in
+            
+        }, { _, _ in
+        })
     }
     
     func choosePhoto() {
@@ -384,8 +386,8 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     }
     
     func readMessage(_ message: Message) {
-        _ = IMCoreManager.shared.getMessageModule().sendMessage(
-            "", message.sessionId, MsgType.READ.rawValue, nil, message.msgId)
+        IMCoreManager.shared.getMessageModule()
+            .sendMessage("", message.sessionId, MsgType.READ.rawValue, nil, message.msgId, nil, nil)
     }
     
     

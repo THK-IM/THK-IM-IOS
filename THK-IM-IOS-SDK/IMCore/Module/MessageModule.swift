@@ -74,7 +74,8 @@ public protocol MessageModule : BaseModule {
     /**
      * 发送消息
      */
-    func sendMessage(_ body: Codable, _ sessionId: Int64, _ type: Int, _ atUser: String?, _ replyMsgId: Int64?) -> Bool
+    func sendMessage(_ body: Codable, _ sessionId: Int64, _ type: Int, _ atUser: String?, _ replyMsgId: Int64?,
+                     _ sendStart: IMSendMsgStart?, _ sendResult: IMSendMsgResult?)
     
     /**
      * 消息发送到服务端
