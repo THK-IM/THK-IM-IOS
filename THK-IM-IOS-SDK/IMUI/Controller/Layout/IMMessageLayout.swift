@@ -74,8 +74,8 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let message = self.messages[indexPath.row]
-        let provider = IMUIManager.shared.getMsgCellProvider(message.type)
+        let msg = self.messages[indexPath.row]
+        let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
         return provider.canSelected()
     }
     
@@ -175,6 +175,9 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
                 return !(self?.messageTableView.isEditing ?? false)
             }
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                if (gestureRecognizer.cancelsTouchesInView) {
+                    return true
+                }
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         })
@@ -383,6 +386,10 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         self.sender?.readMessage(message)
     }
     
+    func setEditText(text: String) {
+        self.sender?.openKeyboard()
+        self.sender?.addInputContent(text: text)
+    }
     
     
     func getContentHeight() -> CGFloat {

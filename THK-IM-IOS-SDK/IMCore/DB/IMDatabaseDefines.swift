@@ -62,8 +62,8 @@ public enum MsgOperateStatus: Int {
  * 消息类型
  */
 public enum MsgType : Int {
-    case REEDIT = -4,   // 重编辑消息
-         Revoke = -3,   // 撤回消息
+    case Revoke = -1001,   // 撤回消息
+         REEDIT = -3,   // 重编辑消息
          READ = -2,     // 读取消息
          ACK = -1,      // 收到消息
          UnSupport = 0, // 未知

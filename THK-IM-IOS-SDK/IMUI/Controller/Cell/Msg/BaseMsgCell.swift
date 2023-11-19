@@ -39,15 +39,20 @@ open class BaseMsgCell : BaseTableCell {
         bubbleView!.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
         let msgView = self.msgView()
         msgContainerView.addSubview(msgView)
         msgView.snp.makeConstraints { make in
-            make.bottom.left.right.top.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         // 点击事件
         msgContainerView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { [weak self] gestureRecognizer, touches in
+                return touches.view == self?.cellWrapper.containerView()
+            }
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                if (gestureRecognizer.cancelsTouchesInView) {
+                    return true
+                }
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         })

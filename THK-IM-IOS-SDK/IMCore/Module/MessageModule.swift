@@ -13,12 +13,12 @@ public protocol MessageModule : BaseModule {
     /**
      * 注册消息处理器
      */
-    func registerMsgProcessor(_ processor: BaseMsgProcessor)
+    func registerMsgProcessor(_ processor: IMBaseMsgProcessor)
     
     /**
      * 获取注册消息处理器
      */
-    func getMsgProcessor(_ msgType: Int) -> BaseMsgProcessor
+    func getMsgProcessor(_ msgType: Int) -> IMBaseMsgProcessor
     
     /**
      * 同步离线消息

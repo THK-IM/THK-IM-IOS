@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import CocoaLumberjack
 
-open class IMAudioMsgProcessor : BaseMsgProcessor {
+open class IMAudioMsgProcessor : IMBaseMsgProcessor {
     
     open override func messageType() -> Int {
         return MsgType.Audio.rawValue

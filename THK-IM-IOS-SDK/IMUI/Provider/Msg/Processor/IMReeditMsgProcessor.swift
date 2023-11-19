@@ -1,5 +1,5 @@
 //
-//  RevokeMsgProcessor.swift
+//  IMReeditMsgProcessor.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/11/4.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class RevokeMsgProcessor: BaseMsgProcessor {
+public class IMReeditMsgProcessor: IMBaseMsgProcessor {
     
     
     override public func messageType() -> Int {

@@ -13,7 +13,7 @@ import AVFoundation
 
 open class DefaultMessageModule : MessageModule {
     
-    private var processorDic = [Int: BaseMsgProcessor]()
+    private var processorDic = [Int: IMBaseMsgProcessor]()
     private let disposeBag = DisposeBag()
     private var lastTimestamp : Int64 = 0
     private var lastSequence : Int = 0
@@ -37,11 +37,11 @@ open class DefaultMessageModule : MessageModule {
         return time
     }
     
-    public func registerMsgProcessor(_ processor: BaseMsgProcessor) {
+    public func registerMsgProcessor(_ processor: IMBaseMsgProcessor) {
         processorDic[processor.messageType()] = processor
     }
     
-    public func getMsgProcessor(_ msgType: Int) -> BaseMsgProcessor {
+    public func getMsgProcessor(_ msgType: Int) -> IMBaseMsgProcessor {
         let processor = processorDic[msgType]
         return (processor != nil) ? (processor!) : processorDic[0]!
     }
@@ -56,6 +56,7 @@ open class DefaultMessageModule : MessageModule {
                 do {
                     var sessionMsgs = [Int64: [Message]]()
                     var unProcessMsgs = [Message]()
+                    var operatorMsgs = [Message]()
                     for msg in messageArray {
                         if msg.fromUId == IMCoreManager.shared.uId {
                             msg.operateStatus = msg.operateStatus |
@@ -66,7 +67,7 @@ open class DefaultMessageModule : MessageModule {
                         msg.sendStatus = MsgSendStatus.Success.rawValue
                         if (msg.type < 0) {
                             // 状态操作消息交给对应消息处理器自己处理
-                            self.getMsgProcessor(msg.type).received(msg)
+                            operatorMsgs.append(msg)
                         } else {
                             // 其他消息批量处理
                             if sessionMsgs[msg.sessionId] == nil {
@@ -78,13 +79,17 @@ open class DefaultMessageModule : MessageModule {
                     }
                     // 批量插入消息
                     if unProcessMsgs.count > 0 {
-                        try IMCoreManager.shared.database.messageDao.insertOrIgnoreMessages(messageArray)
+                        try IMCoreManager.shared.database.messageDao.insertOrIgnoreMessages(unProcessMsgs)
                         // 插入ack
                         for msg in unProcessMsgs {
                             if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                                 self.ackMessageToCache(msg)
                             }
                         }
+                    }
+                    
+                    for operatorMsg in operatorMsgs {
+                        self.getMsgProcessor(operatorMsg.type).received(operatorMsg)
                     }
                     
                     // 更新每个session的最后一条消息
@@ -371,6 +376,9 @@ open class DefaultMessageModule : MessageModule {
     
     public func notifyNewMessage(_ session: Session, _ message: Message) {
         if (message.type < 0 || message.fromUId == IMCoreManager.shared.uId) {
+            return
+        }
+        if (session.status & (SessionStatus.Silence.rawValue) > 0) {
             return
         }
         AppUtils.newMessageNotify()

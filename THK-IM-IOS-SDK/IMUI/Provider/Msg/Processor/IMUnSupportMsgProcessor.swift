@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class IMUnSupportMsgProcessor : BaseMsgProcessor {
+open class IMUnSupportMsgProcessor : IMBaseMsgProcessor {
     
     open override func messageType() -> Int {
         return MsgType.UnSupport.rawValue

@@ -102,9 +102,7 @@ open class IMCoreManager: SignalListener {
         self.registerModule(SignalType.Common.rawValue, DefaultCommonModule())
         self.registerModule(SignalType.Message.rawValue, DefaultMessageModule())
         
-        getMessageModule().registerMsgProcessor(ReadMsgProcessor())
-        getMessageModule().registerMsgProcessor(ReeditMsgProcessor())
-        getMessageModule().registerMsgProcessor(RevokeMsgProcessor())
+        getMessageModule().registerMsgProcessor(IMReadMsgProcessor())
         
         do {
             try self._database?.messageDao.resetSendStatusFailed()

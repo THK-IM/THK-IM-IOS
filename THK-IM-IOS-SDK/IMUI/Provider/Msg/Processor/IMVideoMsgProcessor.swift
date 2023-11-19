@@ -10,7 +10,7 @@ import RxSwift
 import CocoaLumberjack
 import AVFoundation
 
-open class IMVideoMsgProcessor : BaseMsgProcessor {
+open class IMVideoMsgProcessor : IMBaseMsgProcessor {
     
     open override func messageType() -> Int {
         return MsgType.VIDEO.rawValue

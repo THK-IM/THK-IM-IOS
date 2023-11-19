@@ -158,3 +158,24 @@ public class IMVideoMsgBody: Codable {
     }
 }
 
+public class IMRevokeMsgData: Codable {
+    var nick: String
+    var type: Int? = nil
+    var content: String? = nil
+    var data: String? = nil
+    
+    public init(nick: String, type: Int? = nil, content: String? = nil, data: String? = nil) {
+        self.nick = nick
+        self.type = type
+        self.content = content
+        self.data = data
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case nick = "nick"
+        case type = "type"
+        case content = "content"
+        case data = "data"
+    }
+}
+

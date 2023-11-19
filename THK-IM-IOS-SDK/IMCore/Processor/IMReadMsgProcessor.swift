@@ -1,5 +1,5 @@
 //
-//  ReadMsgProcessor.swift
+//  IMReadMsgProcessor.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/11/4.
@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjack
 import RxSwift
 
-public class ReadMsgProcessor: BaseMsgProcessor {
+public class IMReadMsgProcessor: IMBaseMsgProcessor {
     
     private var needReadDic = [Int64: Set<Int64>]()
     private let readLock = NSLock()

@@ -19,11 +19,11 @@ open class IMUnSupportMsgCellProvide: IMBaseMessageCellProvider {
         let identifier = self.identifier(viewType)
         switch viewType {
         case 3 * msgType:  // 中间消息
-            return UnSupportMsgCell(identifier, MiddleCellWrapper(type: cellType))
+            return IMUnSupportMsgCell(identifier, MiddleCellWrapper(type: cellType))
         case 3 * msgType + 2: // 自己消息
-            return UnSupportMsgCell(identifier, RightCellWrapper(type: cellType))
+            return IMUnSupportMsgCell(identifier, RightCellWrapper(type: cellType))
         default: // 他人消息
-            return UnSupportMsgCell(identifier, LeftCellWrapper(type: cellType))
+            return IMUnSupportMsgCell(identifier, LeftCellWrapper(type: cellType))
         }
     }
     

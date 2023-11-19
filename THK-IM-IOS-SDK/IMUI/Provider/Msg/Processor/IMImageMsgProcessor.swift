@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import CocoaLumberjack
 
-open class IMImageMsgProcessor : BaseMsgProcessor {
+open class IMImageMsgProcessor : IMBaseMsgProcessor {
     
     open override func messageType() -> Int {
         return MsgType.IMAGE.rawValue

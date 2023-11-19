@@ -32,6 +32,8 @@ open class IMUIManager: NSObject {
         IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMImageMsgProcessor())
         IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMAudioMsgProcessor())
         IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMVideoMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMReeditMsgProcessor())
+        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMRevokeMsgProcessor())
         
         self.registerMsgCellProviders(IMUnSupportMsgCellProvide())
         self.registerMsgCellProviders(IMTimeLineMsgCellProvider())
@@ -39,6 +41,7 @@ open class IMUIManager: NSObject {
         self.registerMsgCellProviders(IMImageMsgCellProvider())
         self.registerMsgCellProviders(IMAudioMsgCellProvider())
         self.registerMsgCellProviders(IMVideoMsgCellProvider())
+        self.registerMsgCellProviders(IMRevokeMsgCellProvider())
         
         self.registerSessionCellProvider(IMSingleSessionCellProvider())
         

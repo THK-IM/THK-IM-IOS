@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class IMTextMsgProcessor : BaseMsgProcessor {
+open class IMTextMsgProcessor : IMBaseMsgProcessor {
     
     open override func messageType() -> Int {
         return MsgType.TEXT.rawValue

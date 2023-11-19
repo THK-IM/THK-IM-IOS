@@ -1,5 +1,5 @@
 //
-//  UnSupportMsgCell.swift
+//  IMUnSupportMsgCell.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/6.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class UnSupportMsgCell: BaseMsgCell {
+class IMUnSupportMsgCell: BaseMsgCell {
     
     private let view = IMMsgLabelView()
     

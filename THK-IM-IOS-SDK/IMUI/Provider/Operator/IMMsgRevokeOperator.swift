@@ -22,7 +22,9 @@ public class IMMsgRevokeOperator: IMMessageOperator {
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {
-        //
+        IMCoreManager.shared.getMessageModule()
+            .getMsgProcessor(MsgType.Revoke.rawValue)
+            .send(message)
     }
     
     

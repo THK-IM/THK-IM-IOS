@@ -12,9 +12,6 @@ import Kingfisher
 
 open class IMVideoMsgCell: BaseMsgCell {
     
-    private var taskId: String?
-    private var downloadListener: FileLoadListener?
-    
     private lazy var view: UIImageView = {
         let view = UIImageView()
         durationLabel.font = UIFont.systemFont(ofSize: 10)

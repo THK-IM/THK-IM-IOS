@@ -119,11 +119,9 @@ public class DefaultIMApi: IMApi {
     }
     
     public func revokeMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64) -> Observable<Void> {
-        var msgIds = Set<Int64>()
-        msgIds.insert(msgId)
-        let reqBean = AckMsgBean(sessionId: sessionId, uId: uId, msgIds: msgIds)
+        let reqBean = RevokeMsgBean(sessionId: sessionId, uId: uId, msgId: msgId)
         return messageApi.rx
-            .request(.ackMsgs(reqBean))
+            .request(.revokeMsg(reqBean))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }

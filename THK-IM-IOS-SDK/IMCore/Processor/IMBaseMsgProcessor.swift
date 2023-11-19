@@ -1,5 +1,5 @@
 //
-//  BaseMsgProcessor.swift
+//  IMBaseMsgProcessor.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/13.
@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import CocoaLumberjack
 
-open class BaseMsgProcessor {
+open class IMBaseMsgProcessor {
     
     open var disposeBag = DisposeBag()
     open var downloadUrls = [String]()
@@ -238,7 +238,7 @@ open class BaseMsgProcessor {
      */
     open func isShow(msg: Message)-> Bool {
         // type小于0是操作类型消息
-        return msg.type > 0
+        return msg.type > 0 || msg.type < -1000
     }
     
     /**
