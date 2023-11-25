@@ -47,8 +47,8 @@ open class BaseMsgCell : BaseTableCell {
         showMessageStatus()
         // 点击事件
         msgView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
-            delegate.touchReceptionPolicy = .custom { [weak self] gestureRecognizer, touches in
-                return touches.view == self?.cellWrapper.containerView()
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return touches.view == msgView
             }
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
                 if (gestureRecognizer.cancelsTouchesInView) {
