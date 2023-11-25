@@ -281,7 +281,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             .disposed(by: self.disposeBag)
     }
     
-    func openSession(_ session: Session) {
+    open func openSession(_ session: Session) {
         let messageController = IMMessageViewController()
         messageController.session = session
         self.navigationController?.pushViewController(messageController, animated: true)

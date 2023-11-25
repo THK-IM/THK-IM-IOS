@@ -22,7 +22,7 @@ public class IMMsgForwardOperator: IMMessageOperator {
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {
-        //
+        sender.forwardMessageToSession(messages: [message], forwardType: 0)
     }
     
     

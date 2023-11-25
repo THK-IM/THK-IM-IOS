@@ -66,4 +66,19 @@ public protocol IMMsgSender : AnyObject {
     
     /// 弹出消息操作面板弹窗
     func popupMessageOperatorPanel(_ view: UIView, _ message: Message)
+    
+    /// show loading
+    func showLoading(text: String)
+
+    /// dismiss Loading
+    func dismissLoading()
+
+    /// show message
+    func showMessage(text: String, success: Bool)
+
+    /// 发送消息到session forwardType 0单条转发, 1合并转发
+    func forwardMessageToSession(messages: Array<Message>, forwardType: Int)
+
+    /// 转发选定的消息 forwardType 0单条转发, 1合并转发
+    func forwardSelectedMessages(forwardType: Int)
 }

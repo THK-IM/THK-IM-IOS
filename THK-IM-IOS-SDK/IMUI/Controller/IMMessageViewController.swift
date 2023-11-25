@@ -17,6 +17,7 @@ import CoreServices
 
 class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     
+    
     var session: Session? = nil
     private var containerView = UIView()
     //    private var alwaysShowView = UIView()
@@ -408,6 +409,27 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         let frame = CGRect(x: (Int(screenWidth)-popupWidth)/2, y: y, width: popupWidth, height: popupHeight)
         let popupView = IMMessageOperatorPopupView(frame: frame)
         popupView.show(rowCount, operators, self, message)
+    }
+    
+    
+    func showLoading(text: String) {
+        
+    }
+    
+    func dismissLoading() {
+        
+    }
+    
+    func showMessage(text: String, success: Bool) {
+        
+    }
+    
+    func forwardMessageToSession(messages: Array<Message>, forwardType: Int) {
+        IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: messages)
+    }
+    
+    func forwardSelectedMessages(forwardType: Int) {
+        
     }
     
     private func sendVideo(_ data: Data, ext: String) throws {

@@ -51,9 +51,9 @@ class ForwardMessageBean: Codable {
         self.status = try container.decodeIfPresent(Int.self, forKey: .status) ?? 0
         self.atUsers = try container.decodeIfPresent(String.self, forKey: .atUsers)
         self.cTime = try container.decodeIfPresent(Int64.self, forKey: .cTime) ?? 0
-        self.forwardSid = try container.decodeIfPresent(Int64.self, forKey: .cTime) ?? nil
-        self.forwardFromUIds = try container.decodeIfPresent(Set<Int64>.self, forKey: .cTime) ?? nil
-        self.forwardClientIds = try container.decodeIfPresent(Set<Int64>.self, forKey: .cTime) ?? nil
+        self.forwardSid = try container.decodeIfPresent(Int64.self, forKey: .forwardSid) ?? nil
+        self.forwardFromUIds = try container.decodeIfPresent(Set<Int64>.self, forKey: .forwardFromUIds) ?? nil
+        self.forwardClientIds = try container.decodeIfPresent(Set<Int64>.self, forKey: .forwardClientIds) ?? nil
     }
     
     
