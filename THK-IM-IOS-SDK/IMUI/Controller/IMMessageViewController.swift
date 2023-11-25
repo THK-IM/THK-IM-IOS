@@ -298,11 +298,11 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     }
     
     
-    func sendMessage(_ type: Int, _ body: Codable) {
+    func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable?) {
         guard let sessionId = self.session?.id else {
             return
         }
-        IMCoreManager.shared.getMessageModule().sendMessage(sessionId, type, body, nil, nil, nil, { _, _ in
+        IMCoreManager.shared.getMessageModule().sendMessage(sessionId, type, body, data, nil, nil, { _, _ in
         })
     }
     
@@ -417,7 +417,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
         let videoData = IMVideoMsgData()
         videoData.path = localPath
-        self.sendMessage(MsgType.VIDEO.rawValue, videoData)
+        self.sendMessage(MsgType.VIDEO.rawValue, nil, videoData)
     }
     
     private func sendImage(_ data: Data, ext: String) throws {
@@ -426,7 +426,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
             .allocSessionFilePath((self.session?.id)!, fileName, IMFileFormat.Image.rawValue)
         try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
         let imageData = IMImageMsgData(width: nil, height: nil, path: localPath, thumbnailPath: nil)
-        self.sendMessage(MsgType.IMAGE.rawValue, imageData)
+        self.sendMessage(MsgType.IMAGE.rawValue, nil, imageData)
     }
     
     func previewMessage(_ msg: Message, _ position: Int,  _ originView: UIView) {

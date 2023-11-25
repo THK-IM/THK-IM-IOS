@@ -17,7 +17,7 @@ public protocol IMMsgSender : AnyObject {
     func resendMessage(_ msg: Message)
     
     /// 发送消息
-    func sendMessage(_ type: Int, _ body: Codable)
+    func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable?)
     
     /// 发送输入框内容
     func sendInputContent()
