@@ -10,24 +10,29 @@ import CocoaLumberjack
 
 class IMTextMsgCell: BaseMsgCell {
     
-    private let textView = IMMsgLabelView()
-    
-    override func msgView() -> UIView {
-        self.textView.sizeToFit()
-        self.textView.numberOfLines = 0
-        self.textView.font = UIFont.boldSystemFont(ofSize: 16)
-        self.textView.padding = UIEdgeInsets.init(top: 8, left: 8, bottom: 8, right: 8)
+    private lazy var textView: IMMsgLabelView = {
+        let view = IMMsgLabelView()
+        view.sizeToFit()
+        view.numberOfLines = 0
+        view.font = UIFont.boldSystemFont(ofSize: 16)
+        view.padding = UIEdgeInsets.init(top: 8, left: 8, bottom: 8, right: 8)
         
         if self.cellPosition() == IMMsgPosType.Left.rawValue {
-            self.textView.textColor = UIColor.black
-            self.textView.textAlignment = .left
+            view.textColor = UIColor.black
+            view.textAlignment = .left
         } else if self.cellPosition() == IMMsgPosType.Right.rawValue {
-            self.textView.textColor = UIColor.black
-            self.textView.textAlignment = .left
+            view.textColor = UIColor.black
+            view.textAlignment = .left
         } else {
-            self.textView.textColor = UIColor.white
-            self.textView.textAlignment = .center
+            view.textColor = UIColor.white
+            view.textAlignment = .center
         }
+        return view
+    }()
+    
+    
+    
+    override func msgView() -> UIView {
         return self.textView
     }
     

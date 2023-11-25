@@ -179,3 +179,29 @@ public class IMRevokeMsgData: Codable {
     }
 }
 
+public class IMRecordMsgBody: Codable {
+    var title: String
+    var messages: Array<Message>
+    var content: String
+    
+    init(title: String, messages: Array<Message>, content: String) {
+        self.title = title
+        self.messages = messages
+        self.content = content
+    }
+    
+    func clone() -> IMRecordMsgBody {
+        var array = Array<Message>()
+        for m in self.messages {
+            array.append(m.clone())
+        }
+        return IMRecordMsgBody(title: self.title, messages: array, content: self.content)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case title = "title"
+        case messages = "messages"
+        case content = "content"
+    }
+}
+

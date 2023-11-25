@@ -8,11 +8,13 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class IMSessionChooseViewController: IMSessionViewController {
     
     var forwardType: Int?
     var messages: Array<Message>?
+    let disposeBag = DisposeBag()
     
     public static func popup(vc: UIViewController, forwardType: Int, messages: Array<Message>) {
         let choose = IMSessionChooseViewController()
@@ -24,6 +26,11 @@ class IMSessionChooseViewController: IMSessionViewController {
         transition.subtype = .fromTop
         vc.navigationController?.view.layer.add(transition, forKey: kCATransition)
         vc.navigationController?.pushViewController(choose, animated: false)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.navigationItem.title = "选择一个聊天"
     }
     
     override func openSession(_ session: Session) {
@@ -38,15 +45,24 @@ class IMSessionChooseViewController: IMSessionViewController {
                 IMCoreManager.shared.getMessageModule().getMsgProcessor(m.type)
                     .forwardMessage(m, session.id)
             }
+            self.pop()
         } else { // 转发历史记录
-            
+            self.buildRecordBody(messages: messages, session: session)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { recordBody in
+                    let newBody = recordBody.clone()
+                    for m in newBody.messages {
+                        m.operateStatus = 0
+                        m.sendStatus = 0
+                        m.rUsers = nil
+                        m.data = nil
+                    }
+                    IMCoreManager.shared.getMessageModule().sendMessage(session.id, MsgType.Record.rawValue, newBody, recordBody, nil, nil, nil)
+                }, onCompleted: { [weak self] in
+                    self?.pop()
+                }).disposed(by: self.disposeBag)
         }
-        self.pop()
     }
-    
-    private func buildRecordBody() {
-    }
-    
     
     private func pop() {
         let transition = CATransition.init()
@@ -56,6 +72,39 @@ class IMSessionChooseViewController: IMSessionViewController {
         transition.timingFunction = CAMediaTimingFunction.init(name: .easeInEaseOut)
         self.navigationController?.view.layer.add(transition, forKey: kCATransition)
         self.navigationController?.popViewController(animated: false)
+    }
+    
+    private func buildRecordBody(messages: Array<Message>, session: Session) -> Observable<IMRecordMsgBody> {
+        var uIds = Set<Int64>()
+        for m in messages {
+            uIds.insert(m.fromUId)
+        }
+        return IMCoreManager.shared.getUserModule().getUserInfo(ids: uIds).flatMap({ (userMap) -> Observable<IMRecordMsgBody> in
+            var content = ""
+            var i = 0
+            for m in messages {
+                let userName = userMap[m.fromUId]?.name ?? "XX"
+                let subContent = IMCoreManager.shared.getMessageModule().getMsgProcessor(m.type).getSessionDesc(msg: m)
+                content = "\(content)\(userName):\(subContent)"
+                i += 1
+                if (i < messages.count - 1) {
+                    content += "\n"
+                }
+            }
+            let recordBody = IMRecordMsgBody(title: "", messages: messages, content: content)
+            
+            return Observable.just(recordBody)
+        }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
+            let selfId = IMCoreManager.shared.uId
+            return IMCoreManager.shared.getUserModule().getUserInfo(id: selfId).flatMap({ (user) ->  Observable<IMRecordMsgBody> in
+                recordBody.title = user.name
+                return Observable.just(recordBody)
+            })
+        }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
+            let title: String = (session.type == SessionType.Group.rawValue) ? "的群聊记录" : "的聊天记录"
+            recordBody.title = "\(recordBody.title)\(title)"
+            return Observable.just(recordBody)
+        })
     }
     
     

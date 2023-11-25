@@ -33,27 +33,8 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
             return baseSize
         }
         let maxWidth = UIScreen.main.bounds.width - 112
-        let height = self.heightWithString(content, UIFont.boldSystemFont(ofSize: 16), maxWidth)
-        return CGSize(width: baseSize.width, height: height + baseSize.height)
-    }
-    
-    
-    private func heightWithString(_ text: String, _ font: UIFont, _ maxWidth: CGFloat) -> CGFloat {
-        var height: CGFloat = 0
-        if text.isEmpty {
-            height = 0
-        } else {
-            var attribute = [NSAttributedString.Key: Any]()
-            attribute[.font] = font
-            let retSize = (text as NSString).boundingRect(
-                with: CGSize(width: maxWidth,height: CGFloat.greatestFiniteMagnitude),
-                options: [.usesLineFragmentOrigin, .usesFontLeading],
-                attributes: attribute,
-                context: nil
-            ).size
-            height = retSize.height
-        }
-        return height
+        let height = self.heightWithString(content, UIFont.boldSystemFont(ofSize: 12), maxWidth)
+        return CGSize(width: baseSize.width, height: height + 41)
     }
     
 }

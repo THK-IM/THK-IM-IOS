@@ -69,6 +69,9 @@
 		A0D51DC62B09EFF800E21E75 /* RevokeMsgBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC52B09EFF800E21E75 /* RevokeMsgBean.swift */; };
 		A0D51DC82B11ABC600E21E75 /* ForwardMessageBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC72B11ABC600E21E75 /* ForwardMessageBean.swift */; };
 		A0D51DCA2B11BBDE00E21E75 /* IMSessionChooseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC92B11BBDE00E21E75 /* IMSessionChooseViewController.swift */; };
+		A0D51DCC2B11D93700E21E75 /* IMRecordMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCB2B11D93700E21E75 /* IMRecordMsgCell.swift */; };
+		A0D51DCE2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCD2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift */; };
+		A0D51DD02B11DFB400E21E75 /* IMRecordMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCF2B11DFB400E21E75 /* IMRecordMsgProcessor.swift */; };
 		A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A962A88838A004D11A5 /* AppDelegate.swift */; };
 		A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A982A88838A004D11A5 /* SceneDelegate.swift */; };
 		A0D68A9B2A88838A004D11A5 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A9A2A88838A004D11A5 /* MainViewController.swift */; };
@@ -270,6 +273,9 @@
 		A0D51DC52B09EFF800E21E75 /* RevokeMsgBean.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevokeMsgBean.swift; sourceTree = "<group>"; };
 		A0D51DC72B11ABC600E21E75 /* ForwardMessageBean.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardMessageBean.swift; sourceTree = "<group>"; };
 		A0D51DC92B11BBDE00E21E75 /* IMSessionChooseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSessionChooseViewController.swift; sourceTree = "<group>"; };
+		A0D51DCB2B11D93700E21E75 /* IMRecordMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgCell.swift; sourceTree = "<group>"; };
+		A0D51DCD2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgCellProvider.swift; sourceTree = "<group>"; };
+		A0D51DCF2B11DFB400E21E75 /* IMRecordMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgProcessor.swift; sourceTree = "<group>"; };
 		A0D68A932A88838A004D11A5 /* THK-IM-IOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "THK-IM-IOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0D68A962A88838A004D11A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A0D68A982A88838A004D11A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -479,6 +485,7 @@
 				A0D68B4B2A888679004D11A5 /* IMAudioMsgProcessor.swift */,
 				A0D68B4C2A888679004D11A5 /* IMImageMsgProcessor.swift */,
 				A0D68B542A888679004D11A5 /* IMTextMsgProcessor.swift */,
+				A0D51DCF2B11DFB400E21E75 /* IMRecordMsgProcessor.swift */,
 			);
 			path = Processor;
 			sourceTree = "<group>";
@@ -816,6 +823,7 @@
 				A0D68AF52A888678004D11A5 /* IMDefaultSessionCellProvider.swift */,
 				A0D68AF62A888678004D11A5 /* IMImageMsgCellProvider.swift */,
 				A0D51DC32B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift */,
+				A0D51DCD2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift */,
 			);
 			path = Msg;
 			sourceTree = "<group>";
@@ -830,6 +838,7 @@
 				A0D68AF22A888678004D11A5 /* IMTextMsgCell.swift */,
 				A0D68AF32A888678004D11A5 /* IMUnSupportMsgCell.swift */,
 				A0D51DC12B09E40E00E21E75 /* IMRevokeMsgCell.swift */,
+				A0D51DCB2B11D93700E21E75 /* IMRecordMsgCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -1352,9 +1361,11 @@
 				A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */,
 				A0C431EA2A909CB200A84D4A /* BaseParticipant.swift in Sources */,
 				A0D68BE52A888679004D11A5 /* DefaultCommonModule.swift in Sources */,
+				A0D51DCE2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift in Sources */,
 				A0D68BDE2A888679004D11A5 /* ObservableType+Compose.swift in Sources */,
 				A0C431E92A909CB200A84D4A /* LocalParticipant.swift in Sources */,
 				A025291E2ACC344D001561A0 /* Provider.swift in Sources */,
+				A0D51DCC2B11D93700E21E75 /* IMRecordMsgCell.swift in Sources */,
 				A0D68BC12A888679004D11A5 /* IMMsgPreviewer.swift in Sources */,
 				A0D51DC82B11ABC600E21E75 /* ForwardMessageBean.swift in Sources */,
 				A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */,
@@ -1374,6 +1385,7 @@
 				A0EA42ED2A94928400F64A90 /* DefaultSessionDao.swift in Sources */,
 				A0D68B7F2A888679004D11A5 /* ListBean.swift in Sources */,
 				A0D68BF32A888679004D11A5 /* IMTextMsgProcessor.swift in Sources */,
+				A0D51DD02B11DFB400E21E75 /* IMRecordMsgProcessor.swift in Sources */,
 				A0D68BD72A888679004D11A5 /* AVCacheRangeRequest.swift in Sources */,
 				A0D68B752A888679004D11A5 /* OpusError.swift in Sources */,
 				A0D68BE62A888679004D11A5 /* CustomModule.swift in Sources */,

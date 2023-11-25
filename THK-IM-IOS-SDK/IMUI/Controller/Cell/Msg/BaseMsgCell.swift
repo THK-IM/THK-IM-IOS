@@ -28,22 +28,23 @@ open class BaseMsgCell : BaseTableCell {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         selectionStyle = .blue
         cellWrapper.attach(contentView)
-        initMsgView()
+        let msgContainerView = cellWrapper.containerView()
+        self.bubbleView = UIImageView()
+        msgContainerView.insertSubview(self.bubbleView!, at: 0)
+        let msgView = self.msgView()
+        msgContainerView.addSubview(msgView)
         self.backgroundColor = UIColor.clear
     }
     
     func initMsgView() {
         let msgContainerView = cellWrapper.containerView()
-        self.bubbleView = UIImageView()
-        msgContainerView.insertSubview(self.bubbleView!, at: 0)
         bubbleView!.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        let msgView = self.msgView()
-        msgContainerView.addSubview(msgView)
-        msgView.snp.makeConstraints { make in
+        self.msgView().snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        showMessageStatus()
         // 点击事件
         msgContainerView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
             delegate.touchReceptionPolicy = .custom { [weak self] gestureRecognizer, touches in
@@ -77,16 +78,44 @@ open class BaseMsgCell : BaseTableCell {
                 )
             })
             .disposed(by: disposeBag)
-        guard let resendButton = self.cellWrapper.resendButton() else {
-            return
+        let resendButton = self.cellWrapper.resendButton()
+        if (resendButton != nil) {
+            resendButton!.rx.tap
+                .subscribe(onNext: { [weak self] data in
+                    guard let msg = self?.message else {
+                        return
+                    }
+                    self?.delegate?.onMsgResendClick(message: msg)
+                }).disposed(by: self.disposeBag)
         }
-        resendButton.rx.tap
-            .subscribe(onNext: { [weak self] data in
-                guard let msg = self?.message else {
-                    return
-                }
-                self?.delegate?.onMsgResendClick(message: msg)
-            }).disposed(by: self.disposeBag)
+        let fromUId = self.message?.fromUId
+        if (self.showAvatar() && fromUId != nil) {
+            self.cellWrapper.avatarView()?.isHidden = false
+            IMCoreManager.shared.getUserModule()
+                .getUserInfo(id: fromUId!)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { [weak self] user in
+                    guard let sf = self else {
+                        return
+                    }
+                    sf.updateUserInfo(user: user)
+                }).disposed(by: disposeBag)
+        } else {
+            self.cellWrapper.avatarView()?.isHidden = true
+        }
+        if (self.hasBubble() && fromUId != nil) {
+            IMCoreManager.shared.getUserModule()
+                .getUserChatBubble(id: fromUId!)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { [weak self] image in
+                    guard let sf = self else {
+                        return
+                    }
+                    sf.updateUserBubble(image: image)
+                }).disposed(by: self.disposeBag)
+        } else {
+            updateUserBubble(image: nil)
+        }
     }
     
     open func removeMsgView() {
@@ -105,38 +134,7 @@ open class BaseMsgCell : BaseTableCell {
     open func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
         self.message = messages[position]
         self.position = position
-        
-        showMessageStatus()
-        guard let fUId = self.message?.fromUId else {
-            return
-        }
-        if self.showAvatar() {
-            self.cellWrapper.avatarView()?.isHidden = false
-            IMCoreManager.shared.getUserModule()
-                .getUserInfo(id: fUId)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] user in
-                    guard let sf = self else {
-                        return
-                    }
-                    sf.updateUserInfo(user: user)
-                }).disposed(by: disposeBag)
-        } else {
-            self.cellWrapper.avatarView()?.isHidden = true
-        }
-        if self.hasBubble() {
-            IMCoreManager.shared.getUserModule()
-                .getUserChatBubble(id: fUId)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] image in
-                    guard let sf = self else {
-                        return
-                    }
-                    sf.updateUserBubble(image: image)
-                }).disposed(by: disposeBag)
-        } else {
-            updateUserBubble(image: nil)
-        }
+        initMsgView()
     }
     
     private func updateUserInfo(user: User) {

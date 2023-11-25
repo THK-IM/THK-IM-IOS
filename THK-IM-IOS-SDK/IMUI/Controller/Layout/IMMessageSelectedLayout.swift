@@ -92,7 +92,7 @@ class IMMessageSelectedLayout: UIView {
                 guard let sf = self else {
                     return
                 }
-                sf.sender?.setSelectMode(false, message: nil)
+                sf.sender?.forwardSelectedMessages(forwardType: 1)
             })
             .disposed(by: disposeBag)
         self.cancelButton.rx.tapGesture()

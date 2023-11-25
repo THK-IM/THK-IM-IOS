@@ -429,7 +429,10 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     }
     
     func forwardSelectedMessages(forwardType: Int) {
-        
+        let messages = self.messageLayout.getSelectMessages()
+        if (messages.count > 0 && session != nil) {
+            IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: Array(messages))
+        }
     }
     
     private func sendVideo(_ data: Data, ext: String) throws {

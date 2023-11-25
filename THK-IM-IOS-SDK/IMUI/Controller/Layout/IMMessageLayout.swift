@@ -387,7 +387,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func setEditText(text: String) {
-        self.sender?.openKeyboard()
+        _ = self.sender?.openKeyboard()
         self.sender?.addInputContent(text: text)
     }
     

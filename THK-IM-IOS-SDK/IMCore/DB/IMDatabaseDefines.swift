@@ -62,20 +62,18 @@ public enum MsgOperateStatus: Int {
  * 消息类型
  */
 public enum MsgType : Int {
-    case Revoke = -1001,   // 撤回消息
-         REEDIT = -3,   // 重编辑消息
-         READ = -2,     // 读取消息
-         ACK = -1,      // 收到消息
-         UnSupport = 0, // 未知
-         TEXT = 1,      // 文本
-         EMOJI = 2,     // 表情图片
-         Audio = 3,     // 语音
-         IMAGE = 4,     // 图片
-         RICH  = 5,     // 富文本
-         VIDEO = 6,     // 视频
-         FILE = 7,      // 文件
-         LOCATION = 8,  // 定位
-         CALL = 9       // 通话
+    case Revoke = -1001,    // 撤回消息
+         REEDIT = -3,       // 重编辑消息
+         READ = -2,         // 读取消息
+         ACK = -1,          // 收到消息
+         UnSupport = 0,     // 未知
+         TEXT = 1,          // 文本
+         EMOJI = 2,         // 表情图片
+         Audio = 3,         // 语音
+         IMAGE = 4,         // 图片
+         RICH  = 5,         // 富文本
+         VIDEO = 6,         // 视频
+         Record = 7         // 消息记录
 }
 
 /**

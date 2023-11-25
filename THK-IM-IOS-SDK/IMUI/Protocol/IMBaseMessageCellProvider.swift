@@ -70,4 +70,22 @@ open class IMBaseMessageCellProvider {
         return true
     }
     
+    open func heightWithString(_ text: String, _ font: UIFont, _ maxWidth: CGFloat) -> CGFloat {
+        var height: CGFloat = 0
+        if text.isEmpty {
+            height = 0
+        } else {
+            var attribute = [NSAttributedString.Key: Any]()
+            attribute[.font] = font
+            let retSize = (text as NSString).boundingRect(
+                with: CGSize(width: maxWidth,height: CGFloat.greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                attributes: attribute,
+                context: nil
+            ).size
+            height = retSize.height
+        }
+        return height
+    }
+    
 }
