@@ -64,6 +64,7 @@ class AVCacheRangeRequest {
         
         self.downloadRequest = AF.download(self.urlString, headers: headers)
             .redirect(using: redirector)
+            .validate(statusCode: 200..<300)
             .responseData { [weak self] response in
                 DispatchQueue.global().async {
                     guard let sf = self else {

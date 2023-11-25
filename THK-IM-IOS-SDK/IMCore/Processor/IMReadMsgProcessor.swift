@@ -37,6 +37,10 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
             return
         }
         do {
+            let dbMsg = try IMCoreManager.shared.database.messageDao.findMessageById(msg.id, msg.fromUId, msg.sessionId)
+            if (dbMsg != nil) {
+                return 
+            }
             DDLogInfo("ReadMsgProcessor received msg \(msg.id) \(msg.fromUId) \(msg.operateStatus)")
             let referMsg = try IMCoreManager.shared.database.messageDao.findMessageByMsgId(msg.referMsgId!, msg.sessionId)
             if (referMsg != nil) {
@@ -83,8 +87,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
         
     }
     
-    override public func send(_ msg: Message, _ resend: Bool = false,
-                              _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil) {
+    override public func send(_ msg: Message, _ resend: Bool = false, _ sendResult: IMSendMsgResult? = nil) {
         if (msg.referMsgId == nil || msg.referMsgId! < 0) {
             return
         }

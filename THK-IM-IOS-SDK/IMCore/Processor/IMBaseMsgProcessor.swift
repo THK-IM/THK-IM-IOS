@@ -14,8 +14,8 @@ open class IMBaseMsgProcessor {
     open var disposeBag = DisposeBag()
     open var downloadUrls = [String]()
     
-    func getMessageModule() -> MessageModule {
-        return IMCoreManager.shared.getMessageModule()
+    open func messageType() -> Int {
+        return 0
     }
     
     /**
@@ -70,6 +70,11 @@ open class IMBaseMsgProcessor {
         return nil
     }
     
+    // 发送到服务器
+    open func sendToServer(_ message: Message) -> Observable<Message> {
+        return IMCoreManager.shared.api.sendMessageToServer(msg: message)
+    }
+    
     /**
      * 消息内容下载
      */
@@ -77,18 +82,31 @@ open class IMBaseMsgProcessor {
         return true
     }
     
-    open func buildSendMsg(_ body :Codable, _ sessionId: Int64, _ atUIdStr: String? = nil, _ rMsgId: Int64? = nil) throws -> Message {
-        var content: String? = nil
-        var data = ""
-        if (body is String) {
-            content = body as! String?
-        } else {
-            let jsonData = try JSONEncoder().encode(body)
-            guard let jsonBody = String(data: jsonData, encoding: .utf8) else {
-                throw CocoaError.init(.coderInvalidValue)
+    open func buildSendMsg(_ sessionId: Int64, _ body :Codable?, _ data: Codable?, _ atUIdStr: String? = nil, _ rMsgId: Int64? = nil) throws -> Message {
+        var dbBody: String? = nil
+        if (body != nil) {
+            if (body is String) {
+                dbBody = body as! String?
+            } else {
+                let jsonBody = try? JSONEncoder().encode(body!)
+                if (jsonBody != nil) {
+                    dbBody = String(data: jsonBody!, encoding: .utf8)
+                }
             }
-            data = jsonBody
         }
+        
+        var dbData: String? = nil
+        if (data != nil) {
+            if (data is String) {
+                dbData = data as! String?
+            } else {
+                let jsonData = try? JSONEncoder().encode(data!)
+                if (jsonData != nil) {
+                    dbData = String(data: jsonData!, encoding: .utf8)
+                }
+            }
+        }
+        
         let clientId = IMCoreManager.shared.getMessageModule().generateNewMsgId()
         let now = IMCoreManager.shared.getCommonModule().getSeverTime()
         let operateStatus = MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
@@ -99,8 +117,8 @@ open class IMBaseMsgProcessor {
             fromUId: IMCoreManager.shared.uId,
             msgId: -clientId,
             type: messageType(),
-            content: content, 
-            data: data,
+            content: dbBody,
+            data: dbData,
             sendStatus: MsgSendStatus.Init.rawValue,
             operateStatus: operateStatus,
             rUsers: nil,
@@ -119,23 +137,22 @@ open class IMBaseMsgProcessor {
      * 3、文件上传
      * 4、调用api发送消息到服务器
      */
-    open func sendMessage(_ body: Codable, _ sessionId: Int64, _ atUsers: String? = nil, _ rMsgId: Int64? = nil,
-                          _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil) -> Void {
+    open func sendMessage(_ sessionId: Int64, _ body: Codable?, _ data: Codable? , _ atUsers: String? = nil, _ rMsgId: Int64? = nil,
+                          _ sendResult: IMSendMsgResult? = nil) -> Void {
         do {
-            let originMsg = try self.buildSendMsg(body, sessionId, atUsers, rMsgId)
-            self.send(originMsg, false, sendStart, sendResult)
+            let originMsg = try self.buildSendMsg(sessionId, body, data, atUsers, rMsgId)
+            self.send(originMsg, false, sendResult)
         } catch {
             DDLogError(error)
         }
     }
     
-    open func resend(_ msg: Message, _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil) {
-        send(msg, true, sendStart, sendResult)
+    open func resend(_ msg: Message, _ sendResult: IMSendMsgResult? = nil) {
+        send(msg, true, sendResult)
     }
     
-    open func send(_ msg: Message, _ resend: Bool = false, _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil) {
+    open func send(_ msg: Message, _ resend: Bool = false, _ sendResult: IMSendMsgResult? = nil) {
         var originMsg = msg
-        sendStart?(originMsg)
         Observable.just(msg)
             .flatMap({ (message) -> Observable<Message> in
                 if (!resend) {
@@ -169,12 +186,12 @@ open class IMBaseMsgProcessor {
                     return Observable.just(message)
                 }
             })
-            .flatMap({ (message) -> Observable<Message> in
+            .flatMap({ [self] (message) -> Observable<Message> in
                 originMsg = message // 防止失败时缺失数据
                 // 消息发送到服务端
                 message.sendStatus = MsgSendStatus.Sending.rawValue
                 try self.insertOrUpdateDb(message, false)
-                return IMCoreManager.shared.api.sendMessageToServer(msg:message)
+                return sendToServer(message)
             })
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { msg in
@@ -196,8 +213,31 @@ open class IMBaseMsgProcessor {
             .disposed(by: disposeBag)
     }
     
-    open func messageType() -> Int {
-        return 0
+    /**
+     * 转发消息
+     */
+    open func forwardMessage(_ msg: Message, _ sId: Int64, _ sendResult: IMSendMsgResult? = nil) {
+        let oldSessionId = msg.sessionId
+        let oldMsgClientId = msg.id
+        let oldFromUserId = msg.fromUId
+        let forwardMessage = msg.clone()
+        forwardMessage.id = IMCoreManager.shared.getMessageModule().generateNewMsgId()
+        forwardMessage.fromUId = IMCoreManager.shared.uId
+        forwardMessage.sessionId = sId
+        forwardMessage.operateStatus = MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+        forwardMessage.sendStatus = MsgSendStatus.Init.rawValue
+        forwardMessage.cTime = IMCoreManager.shared.getCommonModule().getSeverTime()
+        forwardMessage.mTime = forwardMessage.cTime
+        
+        IMCoreManager.shared.api
+            .forwardMessages(forwardMessage, forwardSid: oldSessionId, fromUserIds: [oldFromUserId], clientMsgIds: [oldMsgClientId])
+            .compose(RxTransformer.shared.io2Io())
+            .subscribe(onNext: { m in
+                sendResult?(m, nil)
+            }, onError: { err in
+                sendResult?(forwardMessage, err)
+            }).disposed(by: self.disposeBag)
+        
     }
     
     /**

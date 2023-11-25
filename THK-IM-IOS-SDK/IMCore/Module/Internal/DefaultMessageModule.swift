@@ -246,11 +246,10 @@ open class DefaultMessageModule : MessageModule {
         return (current-epoch) << 22 + Int64(snowFlakeMachine << 12) + Int64(self.lastSequence)
     }
     
-    public func sendMessage(_ body: Codable, _ sessionId: Int64, _ type: Int,
-                            _ atUser: String? = nil, _ replyMsgId: Int64? = nil,
-                            _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil){
+    public func sendMessage(_ sessionId: Int64, _ type: Int, _ body: Codable?, _ data: Codable?, _ atUser: String? = nil,
+                            _ replyMsgId: Int64? = nil, _ sendResult: IMSendMsgResult? = nil){
         let processor = getMsgProcessor(type)
-        processor.sendMessage(body, sessionId, atUser, replyMsgId, sendStart, sendResult)
+        processor.sendMessage(sessionId, body, data, atUser, replyMsgId, sendResult)
     }
     
     public func sendMessageToServer(_ message: Message) -> Observable<Message> {

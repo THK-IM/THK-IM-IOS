@@ -302,9 +302,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         guard let sessionId = self.session?.id else {
             return
         }
-        IMCoreManager.shared.getMessageModule().sendMessage(body, sessionId, type, nil, nil, { _ in
-            
-        }, { _, _ in
+        IMCoreManager.shared.getMessageModule().sendMessage(sessionId, type, body, nil, nil, nil, { _, _ in
         })
     }
     
@@ -387,7 +385,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     
     func readMessage(_ message: Message) {
         IMCoreManager.shared.getMessageModule()
-            .sendMessage("", message.sessionId, MsgType.READ.rawValue, nil, message.msgId, nil, nil)
+            .sendMessage(message.sessionId, MsgType.READ.rawValue, nil, nil, nil, message.msgId, nil)
     }
     
     

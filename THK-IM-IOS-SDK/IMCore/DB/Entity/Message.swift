@@ -86,6 +86,14 @@ public final class Message: TableCodable, Hashable {
         self.mTime = mTime
     }
     
+    public func clone() -> Message {
+        return Message(
+            id: self.id, sessionId: self.sessionId, fromUId: self.fromUId, msgId: self.msgId,
+            type: self.type, content: self.content, data: self.data, sendStatus: self.sendStatus,
+            operateStatus: self.operateStatus, cTime: self.cTime, mTime: self.mTime
+        )
+    }
+    
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

@@ -20,6 +20,8 @@ enum IMMessageApi {
     case readMsgs(_ bean: ReadMsgBean)
     /// 撤回消息
     case revokeMsg(_ bean: RevokeMsgBean)
+    /// 转发消息
+    case forwardMsg(_ bean: ForwardMessageBean)
     /// 删除消息
     case deleteMsgs(_ bean: DeleteMsgBean)
 }
@@ -43,6 +45,8 @@ extension IMMessageApi: TargetType {
             return "/message/read"
         case .revokeMsg:
             return "/message/revoke"
+        case .forwardMsg:
+            return "/message/forward"
         case .deleteMsgs:
             return "/message"
         }
@@ -59,6 +63,8 @@ extension IMMessageApi: TargetType {
         case .readMsgs:
             return .post
         case .revokeMsg:
+            return .post
+        case .forwardMsg:
             return .post
         case .deleteMsgs:
             return .delete
@@ -77,6 +83,8 @@ extension IMMessageApi: TargetType {
         case let .readMsgs(bean):
             return .requestJSONEncodable(bean)
         case let .revokeMsg(bean):
+            return .requestJSONEncodable(bean)
+        case let .forwardMsg(bean):
             return .requestJSONEncodable(bean)
         case let .deleteMsgs(bean):
             return .requestJSONEncodable(bean)

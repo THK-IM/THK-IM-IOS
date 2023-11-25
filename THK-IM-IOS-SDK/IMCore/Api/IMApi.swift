@@ -72,6 +72,11 @@ public protocol IMApi: AnyObject {
     func reeditMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64, _ body: String) -> Observable<Void>
     
     /**
+     * 转发消息
+     */
+    func forwardMessages(_ msg: Message, forwardSid: Int64, fromUserIds: Set<Int64>, clientMsgIds: Set<Int64>) -> Observable<Message>
+    
+    /**
      * 删除消息
      */
     func deleteMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void>

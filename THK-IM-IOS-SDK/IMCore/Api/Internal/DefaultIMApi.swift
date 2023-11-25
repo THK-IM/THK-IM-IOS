@@ -11,7 +11,6 @@ import RxSwift
 
 public class DefaultIMApi: IMApi {
     
-    
     private let messageApi = MoyaProvider<IMMessageApi>(plugins: [NetworkLoggerPlugin()])
     private let sessionApi = MoyaProvider<IMSessionApi>(plugins: [NetworkLoggerPlugin()])
     
@@ -134,6 +133,24 @@ public class DefaultIMApi: IMApi {
             .request(.ackMsgs(reqBean))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
+    }
+    
+    
+    public func forwardMessages(_ msg: Message, forwardSid: Int64, fromUserIds: Set<Int64>, clientMsgIds: Set<Int64>) -> Observable<Message> {
+        let reqBean = ForwardMessageBean(msg: msg, forwardSid: forwardSid, forwardFromUIds: fromUserIds, forwardClientIds: clientMsgIds)
+        return messageApi.rx
+            .request(.forwardMsg(reqBean))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Bean(ForwardMessageBean.self))
+            .flatMap({ (bean) -> Observable<Message> in
+                msg.msgId = bean.msgId
+                msg.cTime = bean.cTime
+                msg.sendStatus = MsgSendStatus.Success.rawValue
+                msg.operateStatus = MsgOperateStatus.Ack.rawValue
+                            | MsgOperateStatus.ClientRead.rawValue
+                            | MsgOperateStatus.ServerRead.rawValue
+                return Observable.just(msg)
+            })
     }
     
     public func deleteMessages(_ uId: Int64, _ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {

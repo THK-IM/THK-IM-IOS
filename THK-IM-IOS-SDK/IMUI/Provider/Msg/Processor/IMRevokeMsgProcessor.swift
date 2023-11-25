@@ -16,12 +16,10 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
         return MsgType.Revoke.rawValue
     }
     
-    override public func send(_ msg: Message, _ resend: Bool = false,
-                              _ sendStart: IMSendMsgStart? = nil, _ sendResult: IMSendMsgResult? = nil) {
+    override public func send(_ msg: Message, _ resend: Bool = false, _ sendResult: IMSendMsgResult? = nil) {
         if (msg.fromUId != IMCoreManager.shared.uId) {
             return
         }
-        sendStart?(msg)
         IMCoreManager.shared.api.revokeMessage(msg.fromUId, msg.sessionId, msg.msgId)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: {
