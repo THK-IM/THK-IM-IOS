@@ -39,23 +39,4 @@ class MiddleCellWrapper : CellWrapper {
         return self._containerView
     }
     
-//    func avatarView() -> UIImageView? {
-//        return nil
-//    }
-//
-//    func nickView() -> UILabel? {
-//        return nil
-//    }
-//
-//    func statusView() -> UIView? {
-//        return nil
-//    }
-//
-//    func resendButton() -> UIButton? {
-//        return nil
-//    }
-//
-//    func readStatusView() -> UIView? {
-//        return nil
-//    }
 }

@@ -203,5 +203,6 @@ public class IMRecordMsgBody: Codable {
         case messages = "messages"
         case content = "content"
     }
+    
 }
 

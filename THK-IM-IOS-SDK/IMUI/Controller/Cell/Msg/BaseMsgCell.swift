@@ -37,16 +37,16 @@ open class BaseMsgCell : BaseTableCell {
     }
     
     func initMsgView() {
-        let msgContainerView = cellWrapper.containerView()
+        let msgView = self.msgView()
         bubbleView!.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(msgView)
         }
-        self.msgView().snp.makeConstraints { make in
+        msgView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         showMessageStatus()
         // 点击事件
-        msgContainerView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+        msgView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
             delegate.touchReceptionPolicy = .custom { [weak self] gestureRecognizer, touches in
                 return touches.view == self?.cellWrapper.containerView()
             }
@@ -68,7 +68,7 @@ open class BaseMsgCell : BaseTableCell {
         .disposed(by: disposeBag)
         
         // 长按事件
-        msgContainerView.rx.longPressGesture()
+        msgView.rx.longPressGesture()
             .when(.began)
             .subscribe(onNext: { [weak self]  _ in
                 self?.delegate?.onMsgCellLongClick(

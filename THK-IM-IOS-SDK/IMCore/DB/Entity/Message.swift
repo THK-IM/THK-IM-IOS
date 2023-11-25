@@ -38,6 +38,7 @@ public final class Message: TableCodable, Hashable {
     public var referMsgId: Int64? = nil
     // 消息@人列表, uId1#uId2 || all所有人
     public var atUsers: String? = nil
+    public var extData: String? = nil
     // 消息创建时间
     public var cTime: Int64
     // 消息最近修改时间
@@ -56,11 +57,12 @@ public final class Message: TableCodable, Hashable {
         case msgId = "msg_id"
         case type = "type"
         case content = "content"
+        case data = "data"
         case sendStatus = "send_status"
         case operateStatus = "opr_status"
         case referMsgId = "r_msg_id"
         case atUsers = "at_users"
-        case data = "data"
+        case extData = "ext_data"
         case cTime = "c_time"
         case mTime = "m_time"
     }

@@ -52,31 +52,6 @@ class IMRecordMsgCell: BaseMsgCell {
         view.addSubview(self.recordContentView)
         view.addSubview(self.lineView)
         view.addSubview(self.descView)
-        
-        self.recordTitleView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
-            make.height.equalTo(20)
-        }
-        self.recordContentView.snp.makeConstraints { make in
-            make.top.equalTo(self.recordTitleView.snp.bottom)
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
-            make.height.equalTo(40)
-        }
-        self.lineView.snp.makeConstraints { make in
-            make.top.equalTo(self.recordContentView.snp.bottom)
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
-            make.height.equalTo(1)
-        }
-        self.descView.snp.makeConstraints { make in
-            make.top.equalTo(self.lineView.snp.bottom)
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
-            make.height.equalTo(20)
-        }
         return view
     }()
     
@@ -90,12 +65,49 @@ class IMRecordMsgCell: BaseMsgCell {
     
     override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
         super.setMessage(position, messages, session, delegate)
+        guard let msg = self.message else {
+            return
+        }
         guard let content = message?.content else {
             return
         }
         guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
             return
         }
+        let size = IMUIManager.shared.getMsgCellProvider(msg.type).viewSize(msg)
+        self.recordView.removeConstraints(self.recordView.constraints)
+        self.recordView.snp.makeConstraints { make in
+            make.height.equalTo(size.height)
+        }
+        
+        self.recordTitleView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(4)
+            make.left.equalToSuperview().offset(4)
+            make.right.equalToSuperview().offset(-4)
+            make.height.equalTo(16)
+        }
+        
+        self.descView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-4)
+            make.left.equalToSuperview().offset(4)
+            make.right.equalToSuperview().offset(-4)
+            make.height.equalTo(16)
+        }
+        
+        self.lineView.snp.makeConstraints { make in
+            make.bottom.equalTo(self.descView.snp.top)
+            make.left.equalToSuperview().offset(4)
+            make.right.equalToSuperview().offset(-4)
+            make.height.equalTo(1)
+        }
+        
+        self.recordContentView.snp.makeConstraints { make in
+            make.top.equalTo(self.recordTitleView.snp.bottom)
+            make.left.equalToSuperview().offset(4)
+            make.right.equalToSuperview().offset(-4)
+            make.bottom.equalTo(self.lineView.snp.top)
+        }
+        
         self.recordTitleView.text = recordBody.title
         self.recordContentView.text = recordBody.content
         self.descView.text = "聊天记录"
