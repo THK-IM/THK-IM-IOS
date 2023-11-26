@@ -37,12 +37,12 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
             return
         }
         do {
-            let dbMsg = try IMCoreManager.shared.database.messageDao.findMessageById(msg.id, msg.fromUId, msg.sessionId)
+            let dbMsg = try IMCoreManager.shared.database.messageDao().findMessageById(msg.id, msg.fromUId, msg.sessionId)
             if (dbMsg != nil) {
                 return 
             }
             DDLogInfo("ReadMsgProcessor received msg \(msg.id) \(msg.fromUId) \(msg.operateStatus)")
-            let referMsg = try IMCoreManager.shared.database.messageDao.findMessageByMsgId(msg.referMsgId!, msg.sessionId)
+            let referMsg = try IMCoreManager.shared.database.messageDao().findMessageByMsgId(msg.referMsgId!, msg.sessionId)
             if (referMsg != nil) {
                 DDLogInfo("ReadMsgProcessor received referMsg \(referMsg!.id) \(referMsg!.fromUId) \(referMsg!.operateStatus)")
                 if (msg.fromUId == IMCoreManager.shared.uId) {
@@ -52,13 +52,13 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                                                 MsgOperateStatus.Ack.rawValue
                     referMsg!.mTime = msg.cTime
                     try insertOrUpdateDb(referMsg!, true, false)
-                    let session = try IMCoreManager.shared.database.sessionDao.findSessionById(msg.sessionId)
+                    let session = try IMCoreManager.shared.database.sessionDao().findSessionById(msg.sessionId)
                     if (session != nil) {
-                        let count = try IMCoreManager.shared.database.messageDao.getUnReadCount(session!.id)
+                        let count = try IMCoreManager.shared.database.messageDao().getUnReadCount(session!.id)
                         if (session!.unreadCount != count || session!.mTime < msg.mTime) {
                             session!.unreadCount = count
                             session!.mTime = IMCoreManager.shared.getCommonModule().getSeverTime()
-                            try IMCoreManager.shared.database.sessionDao.updateSessions(session!)
+                            try IMCoreManager.shared.database.sessionDao().updateSessions(session!)
                             SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
                         }
                     }
@@ -93,19 +93,19 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
         }
         Observable.create({observer -> Disposable in
             do {
-                try IMCoreManager.shared.database.messageDao
+                try IMCoreManager.shared.database.messageDao()
                     .updateMessageOperationStatus(
                         msg.sessionId,
                         [msg.referMsgId!],
                         MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.Ack.rawValue
                     )
-                let session = try IMCoreManager.shared.database.sessionDao.findSessionById(msg.sessionId)
+                let session = try IMCoreManager.shared.database.sessionDao().findSessionById(msg.sessionId)
                 if (session != nil) {
-                    let count = try IMCoreManager.shared.database.messageDao.getUnReadCount(session!.id)
+                    let count = try IMCoreManager.shared.database.messageDao().getUnReadCount(session!.id)
                     if (session!.unreadCount != count || session!.mTime < msg.mTime) {
                         session!.unreadCount = count
                         session!.mTime = msg.mTime
-                        try IMCoreManager.shared.database.sessionDao.updateSessions(session!)
+                        try IMCoreManager.shared.database.sessionDao().updateSessions(session!)
                         SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
                     }
                 }
@@ -157,7 +157,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                 },
                 onCompleted: {
                     do {
-                        try IMCoreManager.shared.database.messageDao.updateMessageOperationStatus(
+                        try IMCoreManager.shared.database.messageDao().updateMessageOperationStatus(
                                 sessionId,
                                 msgIds.compactMap({$0}),
                                 MsgOperateStatus.ServerRead.rawValue

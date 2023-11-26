@@ -256,10 +256,10 @@ public class MediaPreviewController: UIViewController,
         Observable.just(message)
             .map({ message in
                 if (older) {
-                    let messages = try IMCoreManager.shared.database.messageDao.findOlderMessages(message.msgId, [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue], message.sessionId, 10)
+                    let messages = try IMCoreManager.shared.database.messageDao().findOlderMessages(message.msgId, [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue], message.sessionId, 10)
                     return messages
                 } else {
-                    let messages = try IMCoreManager.shared.database.messageDao.findNewerMessages(message.msgId, [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue], message.sessionId, 10)
+                    let messages = try IMCoreManager.shared.database.messageDao().findNewerMessages(message.msgId, [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue], message.sessionId, 10)
                     return messages
                 }
             })

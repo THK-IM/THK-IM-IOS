@@ -490,7 +490,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     private func fetchMoreMessage(_ msgId: Int64, _ sessionId: Int64, _ before: Bool, _ count: Int) -> [Message] {
         do {
             let types = [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue]
-            let msgDao = IMCoreManager.shared.database.messageDao
+            let msgDao = IMCoreManager.shared.database.messageDao()
             var messages: [Message]
             if before {
                 messages = try msgDao.findOlderMessages(msgId, types, sessionId, count)

@@ -72,6 +72,7 @@
 		A0D51DCC2B11D93700E21E75 /* IMRecordMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCB2B11D93700E21E75 /* IMRecordMsgCell.swift */; };
 		A0D51DCE2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCD2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift */; };
 		A0D51DD02B11DFB400E21E75 /* IMRecordMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCF2B11DFB400E21E75 /* IMRecordMsgProcessor.swift */; };
+		A0D51DD32B12EF3600E21E75 /* DefaultIMDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DD22B12EF3600E21E75 /* DefaultIMDatabase.swift */; };
 		A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A962A88838A004D11A5 /* AppDelegate.swift */; };
 		A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A982A88838A004D11A5 /* SceneDelegate.swift */; };
 		A0D68A9B2A88838A004D11A5 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A9A2A88838A004D11A5 /* MainViewController.swift */; };
@@ -276,6 +277,7 @@
 		A0D51DCB2B11D93700E21E75 /* IMRecordMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgCell.swift; sourceTree = "<group>"; };
 		A0D51DCD2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgCellProvider.swift; sourceTree = "<group>"; };
 		A0D51DCF2B11DFB400E21E75 /* IMRecordMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgProcessor.swift; sourceTree = "<group>"; };
+		A0D51DD22B12EF3600E21E75 /* DefaultIMDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultIMDatabase.swift; sourceTree = "<group>"; };
 		A0D68A932A88838A004D11A5 /* THK-IM-IOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "THK-IM-IOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0D68A962A88838A004D11A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A0D68A982A88838A004D11A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -531,10 +533,10 @@
 		A05006CA2B08640500526713 /* DB */ = {
 			isa = PBXGroup;
 			children = (
+				A0D51DD12B12EEAE00E21E75 /* Internal */,
 				A0D68AD22A888678004D11A5 /* Entity */,
 				A0D68ADA2A888678004D11A5 /* Dao */,
 				A0D68AD02A888678004D11A5 /* IMDatabase.swift */,
-				A0EA42E52A94904400F64A90 /* IMDatabaseDefines.swift */,
 			);
 			path = DB;
 			sourceTree = "<group>";
@@ -609,6 +611,26 @@
 				A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */,
 			);
 			path = Session;
+			sourceTree = "<group>";
+		};
+		A0D51DD12B12EEAE00E21E75 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				A0D51DD42B12EFA900E21E75 /* Dao */,
+				A02578C92AA4398E00A66CEF /* TableName.swift */,
+				A0D51DD22B12EF3600E21E75 /* DefaultIMDatabase.swift */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		A0D51DD42B12EFA900E21E75 /* Dao */ = {
+			isa = PBXGroup;
+			children = (
+				A0EA42E82A94920300F64A90 /* DefaultMessageDao.swift */,
+				A0EA42EA2A94925600F64A90 /* DefaultUserDao.swift */,
+				A0EA42EC2A94928400F64A90 /* DefaultSessionDao.swift */,
+			);
+			path = Dao;
 			sourceTree = "<group>";
 		};
 		A0D68A8A2A88838A004D11A5 = {
@@ -755,11 +777,9 @@
 		A0D68ADA2A888678004D11A5 /* Dao */ = {
 			isa = PBXGroup;
 			children = (
-				A0EA42E72A9491BD00F64A90 /* Internal */,
 				A0D68ADB2A888678004D11A5 /* MessageDao.swift */,
 				A0D68ADC2A888678004D11A5 /* UserDao.swift */,
 				A0D68ADD2A888678004D11A5 /* SessionDao.swift */,
-				A02578C92AA4398E00A66CEF /* TableName.swift */,
 			);
 			path = Dao;
 			sourceTree = "<group>";
@@ -1007,6 +1027,7 @@
 				A0D68B6B2A888679004D11A5 /* Signal */,
 				A0EA42EE2A94B06900F64A90 /* IMCoreDefines.swift */,
 				A0D68B662A888679004D11A5 /* IMCoreManager.swift */,
+				A0EA42E52A94904400F64A90 /* IMDatabaseDefines.swift */,
 			);
 			path = IMCore;
 			sourceTree = "<group>";
@@ -1112,16 +1133,6 @@
 				A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */,
 				A02529162ACADE72001561A0 /* IMMsgCellOperator.swift */,
 				A03082DE2AF7BB84001B8373 /* IMSessionCellOperator.swift */,
-			);
-			path = Internal;
-			sourceTree = "<group>";
-		};
-		A0EA42E72A9491BD00F64A90 /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				A0EA42E82A94920300F64A90 /* DefaultMessageDao.swift */,
-				A0EA42EA2A94925600F64A90 /* DefaultUserDao.swift */,
-				A0EA42EC2A94928400F64A90 /* DefaultSessionDao.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -1392,6 +1403,7 @@
 				A0D68BFB2A888679004D11A5 /* Bubble.swift in Sources */,
 				A0D68BB12A888679004D11A5 /* IMBasePanelViewProvider.swift in Sources */,
 				A02529152ACAD527001561A0 /* IMUIDefines.swift in Sources */,
+				A0D51DD32B12EF3600E21E75 /* DefaultIMDatabase.swift in Sources */,
 				A0D68BAF2A888679004D11A5 /* IMCameraFunctionProvider.swift in Sources */,
 				A0D68C032A888679004D11A5 /* DefaultStorageModule.swift in Sources */,
 				A0D68B972A888679004D11A5 /* MessageDao.swift in Sources */,

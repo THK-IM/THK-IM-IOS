@@ -63,11 +63,11 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
             let data = IMRevokeMsgData(nick: nickname)
             var existed = false
             if (msg.referMsgId != nil) {
-                let dbMsg = try IMCoreManager.shared.database.messageDao
+                let dbMsg = try IMCoreManager.shared.database.messageDao()
                     .findMessageByMsgId(msg.referMsgId!, msg.sessionId)
                 if (dbMsg != nil) {
                     existed = true
-                    try IMCoreManager.shared.database.messageDao.deleteMessages([dbMsg!])
+                    try IMCoreManager.shared.database.messageDao().deleteMessages([dbMsg!])
                     SwiftEventBus.post(IMEvent.MsgDelete.rawValue, sender: dbMsg)
                     if (dbMsg?.fromUId == IMCoreManager.shared.uId) {
                         data.content = dbMsg!.content
@@ -79,7 +79,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
             let revokeData = try JSONEncoder().encode(data)
             msg.data = String(data: revokeData, encoding: .utf8)
             if (existed) {
-                try IMCoreManager.shared.database.messageDao.insertOrIgnoreMessages([msg])
+                try IMCoreManager.shared.database.messageDao().insertOrIgnoreMessages([msg])
                 SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
                 IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
             }

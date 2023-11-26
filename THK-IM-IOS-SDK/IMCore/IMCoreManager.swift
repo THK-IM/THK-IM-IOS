@@ -95,7 +95,7 @@ open class IMCoreManager: SignalListener {
     public func initApplication(_ app : UIApplication, _ uId :Int64, _ debug: Bool) {
         self.initIMLog()
         self._uId = uId
-        self._database = IMDatabase(app, uId, debug)
+        self._database = DefaultIMDatabase(app, uId, debug)
         self._storageModule = DefaultStorageModule(uId)
         
         self.registerModule(SignalType.User.rawValue, DefaultUserModule())
@@ -103,15 +103,10 @@ open class IMCoreManager: SignalListener {
         self.registerModule(SignalType.Message.rawValue, DefaultMessageModule())
         
         getMessageModule().registerMsgProcessor(IMReadMsgProcessor())
-        
-        do {
-            try self._database?.messageDao.resetSendStatusFailed()
-        } catch {
-            DDLogError("initApplication: \(error)")
-        }
     }
     
     public func connect() {
+        self.database.open()
         self._signalModule?.setSignalListener(self)
         self._signalModule?.connect()
     }

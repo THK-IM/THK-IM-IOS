@@ -10,31 +10,16 @@ import WCDBSwift
 import UIKit
 import CocoaLumberjack
 
-public class IMDatabase {
+public protocol IMDatabase {
     
-    private weak var app: UIApplication?
-    private let database: Database
-    public var messageDao: MessageDao
-    public var sessionDao: SessionDao
-    public var userDao: UserDao
+    func open()
     
-    public init(_ app: UIApplication, _ uId: Int64, _ debug: Bool) {
-        self.app = app;
-        let env = debug ? "debug" : "release"
-        let documentPath = NSHomeDirectory() + "/Documents/im"
-        let filePath = String(format: "%@/%d-%@.db", arguments: [documentPath, uId, env])
-        self.database = Database(at: filePath)
-        
-        do {
-            try self.database.create(table: TableName.User.rawValue, of: User.self)
-            try self.database.create(table: TableName.Message.rawValue, of: Message.self)
-            try self.database.create(table: TableName.Session.rawValue, of: Session.self)
-        } catch {
-            DDLogError(error)
-        }
-        
-        self.messageDao = DefaultMessageDao(self.database, TableName.Message.rawValue)
-        self.sessionDao = DefaultSessionDao(self.database, TableName.Session.rawValue)
-        self.userDao = DefaultUserDao(self.database, TableName.User.rawValue)
-    }
+    func close()
+    
+    func messageDao() -> MessageDao
+    
+    func userDao() -> UserDao
+    
+    func sessionDao() -> SessionDao
+    
 }
