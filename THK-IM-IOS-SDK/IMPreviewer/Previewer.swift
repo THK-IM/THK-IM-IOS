@@ -18,7 +18,7 @@ public class Previewer : IMPreviewer {
         AVCacheManager.shared.delegate = IMAVCacheProtocol(token: token, endpoint: endpoint)
     }
     
-    public func previewMessage(_ controller: UIViewController, items: [Message], view: UIView, defaultId: Int64) {
+    public func previewMessage(_ controller: UIViewController, _ items: [Message], _ view: UIView, _ defaultId: Int64) {
         controller.definesPresentationContext = true
         let mediaPreviewController = IMMediaPreviewController()
         mediaPreviewController.messages = items
@@ -31,7 +31,7 @@ public class Previewer : IMPreviewer {
     }
     
     
-    public func previewRecordMessage(controller: UIViewController, originSession: Session, message: Message) {
+    public func previewRecordMessage(_ controller: UIViewController, _ originSession: Session, _ message: Message) {
         if let recordMessage = try? JSONDecoder().decode(IMRecordMsgBody.self, from: message.content?.data(using: .utf8) ?? Data()) {
             Observable.just(message)
                 .flatMap({ msg -> Observable<Array<Message>> in

@@ -483,10 +483,10 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
             let current = msg
             ay.append(current)
             ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, false, 5))
-            IMUIManager.shared.contentPreviewer?.previewMessage(self, items: ay, view: originView, defaultId: msg.msgId)
+            IMUIManager.shared.contentPreviewer?.previewMessage(self, ay, originView, msg.msgId)
         } else if msg.type == MsgType.Record.rawValue {
             if (session != nil) {
-                IMUIManager.shared.contentPreviewer?.previewRecordMessage(controller: self, originSession: session!, message: msg)
+                IMUIManager.shared.contentPreviewer?.previewRecordMessage(self, session!, msg)
             }
         }
     }
