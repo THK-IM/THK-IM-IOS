@@ -63,8 +63,8 @@ class IMRecordMsgCell: BaseMsgCell {
         return true
     }
     
-    override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
-        super.setMessage(position, messages, session, delegate)
+    open override func setMessage(_ mode: Int, _ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+        super.setMessage(mode, position, messages, session, delegate)
         guard let msg = self.message else {
             return
         }
@@ -78,6 +78,7 @@ class IMRecordMsgCell: BaseMsgCell {
         self.recordView.removeConstraints(self.recordView.constraints)
         self.recordView.snp.makeConstraints { make in
             make.height.equalTo(size.height)
+            make.width.greaterThanOrEqualTo(200)
         }
         
         self.recordTitleView.snp.makeConstraints { make in

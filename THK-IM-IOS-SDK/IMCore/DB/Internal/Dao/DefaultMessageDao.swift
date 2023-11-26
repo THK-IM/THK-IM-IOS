@@ -201,7 +201,7 @@ class DefaultMessageDao : MessageDao {
     func queryMessageBySidAndCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
-            where: Message.Properties.sessionId == sessionId && Message.Properties.cTime < cTime && (Message.Properties.type > 0 || Message.Properties.type < -1000),
+            where: Message.Properties.sessionId == sessionId && Message.Properties.cTime < cTime && Message.Properties.type > 0,
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             limit: count
         )

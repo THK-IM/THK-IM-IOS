@@ -52,12 +52,12 @@ class IMSessionChooseViewController: IMSessionViewController {
                 .subscribe(onNext: { recordBody in
                     let newBody = recordBody.clone()
                     for m in newBody.messages {
-                        m.operateStatus = 0
-                        m.sendStatus = 0
+                        m.operateStatus = MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+                        m.sendStatus = MsgSendStatus.Success.rawValue
                         m.rUsers = nil
                         m.data = nil
                     }
-                    IMCoreManager.shared.getMessageModule().sendMessage(session.id, MsgType.Record.rawValue, newBody, recordBody, nil, nil, nil)
+                    IMCoreManager.shared.getMessageModule().sendMessage(session.id, MsgType.Record.rawValue, newBody, nil, nil, nil, nil)
                 }, onCompleted: { [weak self] in
                     self?.pop()
                 }).disposed(by: self.disposeBag)

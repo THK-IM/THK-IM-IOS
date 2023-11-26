@@ -262,20 +262,21 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
         }
     }
     
-    open override func downloadMsgContent(_ message: Message, resourceType: String) -> Bool {
+    open override func downloadMsgContent(_ msg: Message, resourceType: String) -> Bool {
         do {
+            let newMessage = msg.clone()
             var data = IMImageMsgData()
-            if (message.data != nil) {
+            if (newMessage.data != nil) {
                 data = try JSONDecoder().decode(
                     IMImageMsgData.self,
-                    from: message.data!.data(using: .utf8) ?? Data()
+                    from: newMessage.data!.data(using: .utf8) ?? Data()
                 )
             }
             var body = IMImageMsgBody()
-            if (message.content != nil) {
+            if (newMessage.content != nil) {
                 body = try JSONDecoder().decode(
                     IMImageMsgBody.self,
-                    from: message.content!.data(using: .utf8) ?? Data()
+                    from: newMessage.content!.data(using: .utf8) ?? Data()
                 )
             } else {
                 return false
@@ -306,7 +307,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
             }
             
             let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
-                message.sessionId, fileName!, IMFileFormat.Image.rawValue)
+                newMessage.sessionId, fileName!, IMFileFormat.Image.rawValue)
             let loadListener = FileLoadListener(
                 {[weak self] progress, state, url, path, err in
                     SwiftEventBus.post(
@@ -332,10 +333,9 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
                                 data.width = body.width!
                                 data.height = body.height!
                                 let d = try JSONEncoder().encode(data)
-                                message.data = String(data: d, encoding: .utf8)!
-                                try self?.insertOrUpdateDb(message, true, false)
+                                newMessage.data = String(data: d, encoding: .utf8)!
+                                try self?.insertOrUpdateDb(newMessage, true, false)
                             }
-                            
                         } catch {
                             DDLogError(error)
                         }
@@ -356,7 +356,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
                     return false
                 }
             )
-            IMCoreManager.shared.fileLoadModule.download(key: downloadUrl!, message: message, loadListener: loadListener)
+            IMCoreManager.shared.fileLoadModule.download(key: downloadUrl!, message: newMessage, loadListener: loadListener)
         } catch {
             DDLogError(error)
         }

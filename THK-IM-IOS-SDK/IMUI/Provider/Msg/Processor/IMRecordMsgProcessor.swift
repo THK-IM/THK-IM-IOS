@@ -15,6 +15,21 @@ open class IMRecordMsgProcessor : IMBaseMsgProcessor {
         return MsgType.Record.rawValue
     }
     
+    override open func received(_ msg: Message) {
+        super.received(msg)
+        if let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: msg.content?.data(using: .utf8) ?? Data()) {
+            try? IMCoreManager.shared.database.messageDao().insertOrIgnoreMessages(recordBody.messages)
+        }
+    }
+    
+    override open func reprocessingObservable(_ message: Message) -> Observable<Message>? {
+        if let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: message.content?.data(using: .utf8) ?? Data()) {
+            try? IMCoreManager.shared.database.messageDao().insertOrIgnoreMessages(recordBody.messages)
+        }
+        return Observable.just(message)
+    }
+    
+    
     override open func sendToServer(_ message: Message) -> Observable<Message> {
         if (message.content == nil) {
             return super.sendToServer(message)
@@ -41,6 +56,10 @@ open class IMRecordMsgProcessor : IMBaseMsgProcessor {
             fromUserIds: recordFromUIds,
             clientMsgIds: recordClientIds
         )
+    }
+    
+    override public func needReprocess(msg: Message) -> Bool {
+        return true
     }
     
     

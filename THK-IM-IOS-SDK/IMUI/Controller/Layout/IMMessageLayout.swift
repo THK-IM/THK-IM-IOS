@@ -11,6 +11,7 @@ import CocoaLumberjack
 
 class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsgCellOperator {
     
+    var mode: Int = 0 // 0 正常模式，1预览消息记录模式
     var session: Session? = nil
     var messages: Array<Message> = Array()
     private var selectedMessages: Set<Message> = Set()
@@ -27,6 +28,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     private let timeLineInterval = 5 * 60 * 1000
     private let lock = NSLock()
     private var lastResize = 0.0
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,7 +52,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         if cell == nil {
             cell = provider.viewCell(viewType, (self.session?.type)!)
         }
-        (cell as! BaseMsgCell).setMessage(indexPath.row, self.messages, self.session!, self)
+        (cell as! BaseMsgCell).setMessage(self.mode, indexPath.row, self.messages, self.session!, self)
         (cell as! BaseMsgCell).selectedBackgroundView = UIView()
         (cell as! BaseMsgCell).isSelected = selectedMessages.contains(msg)
         (cell as! BaseMsgCell).multipleSelectionBackgroundView = UIView(frame: cell!.bounds)
@@ -99,6 +101,9 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (mode == 1) {
+            return
+        }
         let offsetY = self.messageTableView.contentOffset.y
         if (offsetY < -20) {
             if (isLoadAble && !self.messageTableView.isDragging ) {
@@ -132,7 +137,6 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         if (isLoading) {
             return
         }
-        
         isLoading = true
         var latestMsgTime: Int64 = 0
         if (self.messages.count == 0) {
@@ -374,7 +378,6 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func onMsgCellLongClick(message: Message, position: Int, view: UIView) {
-        //        self.sender?.setSelectMode(true, message: message)
         self.sender?.popupMessageOperatorPanel(view, message)
     }
     

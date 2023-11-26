@@ -56,7 +56,7 @@ open class DefaultMessageModule : MessageModule {
                 do {
                     var sessionMsgs = [Int64: [Message]]()
                     var unProcessMsgs = [Message]()
-                    var operatorMsgs = [Message]()
+                    var needReprocessMsgs = [Message]()
                     for msg in messageArray {
                         if msg.fromUId == IMCoreManager.shared.uId {
                             msg.operateStatus = msg.operateStatus |
@@ -65,9 +65,9 @@ open class DefaultMessageModule : MessageModule {
                             MsgOperateStatus.ServerRead.rawValue
                         }
                         msg.sendStatus = MsgSendStatus.Success.rawValue
-                        if (msg.type < 0) {
+                        if (self.getMsgProcessor(msg.type).needReprocess(msg: msg)) {
                             // 状态操作消息交给对应消息处理器自己处理
-                            operatorMsgs.append(msg)
+                            needReprocessMsgs.append(msg)
                         } else {
                             // 其他消息批量处理
                             if sessionMsgs[msg.sessionId] == nil {
@@ -88,8 +88,8 @@ open class DefaultMessageModule : MessageModule {
                         }
                     }
                     
-                    for operatorMsg in operatorMsgs {
-                        self.getMsgProcessor(operatorMsg.type).received(operatorMsg)
+                    for needReprocessMsg in needReprocessMsgs {
+                        self.getMsgProcessor(needReprocessMsg.type).received(needReprocessMsg)
                     }
                     
                     // 更新每个session的最后一条消息

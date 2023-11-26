@@ -19,7 +19,7 @@ open class BaseMsgCell : BaseTableCell {
     var cellWrapper: CellWrapper
     var message: Message? = nil
     var position: Int? = nil
-    
+    var mode: Int = 0
     let disposeBag: DisposeBag = DisposeBag()
     var bubbleView: UIImageView?
     
@@ -51,9 +51,9 @@ open class BaseMsgCell : BaseTableCell {
                 return touches.view == msgView
             }
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
-                if (gestureRecognizer.cancelsTouchesInView) {
-                    return true
-                }
+//                if (gestureRecognizer.cancelsTouchesInView) {
+//                    return true
+//                }
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         })
@@ -131,7 +131,8 @@ open class BaseMsgCell : BaseTableCell {
         return UIView()
     }
     
-    open func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+    open func setMessage(_ mode: Int, _ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+        self.mode = mode
         self.message = messages[position]
         self.position = position
         initMsgView()
@@ -171,7 +172,9 @@ open class BaseMsgCell : BaseTableCell {
     
     open override func appear() {
         self.cellWrapper.appear()
-        self.readMessage()
+        if (self.mode == 0) {
+            self.readMessage()
+        }
     }
     
     open override func disappear() {

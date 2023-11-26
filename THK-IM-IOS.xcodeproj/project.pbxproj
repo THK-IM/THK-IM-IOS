@@ -73,6 +73,7 @@
 		A0D51DCE2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCD2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift */; };
 		A0D51DD02B11DFB400E21E75 /* IMRecordMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCF2B11DFB400E21E75 /* IMRecordMsgProcessor.swift */; };
 		A0D51DD32B12EF3600E21E75 /* DefaultIMDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DD22B12EF3600E21E75 /* DefaultIMDatabase.swift */; };
+		A0D51DD62B12FBC100E21E75 /* IMRecordMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DD52B12FBC100E21E75 /* IMRecordMessageViewController.swift */; };
 		A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A962A88838A004D11A5 /* AppDelegate.swift */; };
 		A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A982A88838A004D11A5 /* SceneDelegate.swift */; };
 		A0D68A9B2A88838A004D11A5 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A9A2A88838A004D11A5 /* MainViewController.swift */; };
@@ -278,6 +279,7 @@
 		A0D51DCD2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgCellProvider.swift; sourceTree = "<group>"; };
 		A0D51DCF2B11DFB400E21E75 /* IMRecordMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgProcessor.swift; sourceTree = "<group>"; };
 		A0D51DD22B12EF3600E21E75 /* DefaultIMDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultIMDatabase.swift; sourceTree = "<group>"; };
+		A0D51DD52B12FBC100E21E75 /* IMRecordMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMessageViewController.swift; sourceTree = "<group>"; };
 		A0D68A932A88838A004D11A5 /* THK-IM-IOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "THK-IM-IOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0D68A962A88838A004D11A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A0D68A982A88838A004D11A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -891,6 +893,7 @@
 				A0D68B132A888678004D11A5 /* Cell */,
 				A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */,
 				A0D68B022A888678004D11A5 /* IMMessageViewController.swift */,
+				A0D51DD52B12FBC100E21E75 /* IMRecordMessageViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1314,6 +1317,7 @@
 				A0E8ED4A2AEDEE42004163BD /* Previewer.swift in Sources */,
 				A0D68BB72A888679004D11A5 /* IMMessageLayout.swift in Sources */,
 				A0D51DCA2B11BBDE00E21E75 /* IMSessionChooseViewController.swift in Sources */,
+				A0D51DD62B12FBC100E21E75 /* IMRecordMessageViewController.swift in Sources */,
 				A0D68BB82A888679004D11A5 /* IMMessageSelectedLayout.swift in Sources */,
 				A0EA42F12A94B3BE00F64A90 /* FileLoadState.swift in Sources */,
 				A0D68C072A888679004D11A5 /* SignalModule.swift in Sources */,

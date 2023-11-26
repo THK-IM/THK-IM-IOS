@@ -181,4 +181,8 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
         readLock.unlock()
     }
     
+    override public func needReprocess(msg: Message) -> Bool {
+        return true
+    }
+    
 }

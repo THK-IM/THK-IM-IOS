@@ -87,6 +87,10 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
         }
     }
     
+    override public func needReprocess(msg: Message) -> Bool {
+        return true
+    }
+    
     override public func getSessionDesc(msg: Message) -> String {
         if (msg.data != nil) {
             do {
