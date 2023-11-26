@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-public class MediaPreviewController: UIViewController,
+public class IMMediaPreviewController: UIViewController,
                               UICollectionViewDataSource,
                               UICollectionViewDelegateFlowLayout,
                               UICollectionViewDelegate,
@@ -219,7 +219,7 @@ public class MediaPreviewController: UIViewController,
     }
     
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        self.currentId = self.messages[indexPath.row].id
+        self.currentId = self.messages[indexPath.row].msgId
         if (indexPath.row == 0) {
             self.loadMoreMessage(self.messages[indexPath.row], true)
         } else if (indexPath.row == self.messages.count - 1) {

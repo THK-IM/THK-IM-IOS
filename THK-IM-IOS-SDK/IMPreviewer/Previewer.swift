@@ -8,8 +8,11 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 public class Previewer : IMPreviewer {
+    
+    private let disposeBag = DisposeBag()
     
     public init(token: String, endpoint: String) {
         AVCacheManager.shared.delegate = IMAVCacheProtocol(token: token, endpoint: endpoint)
@@ -17,7 +20,7 @@ public class Previewer : IMPreviewer {
     
     public func previewMessage(_ controller: UIViewController, items: [Message], view: UIView, defaultId: Int64) {
         controller.definesPresentationContext = true
-        let mediaPreviewController = MediaPreviewController()
+        let mediaPreviewController = IMMediaPreviewController()
         mediaPreviewController.messages = items
         let absoluteFrame = view.convert(view.bounds, to: nil)
         mediaPreviewController.enterFrame = absoluteFrame
@@ -25,6 +28,35 @@ public class Previewer : IMPreviewer {
         mediaPreviewController.modalPresentationStyle = .overFullScreen
         mediaPreviewController.transitioningDelegate = mediaPreviewController
         controller.present(mediaPreviewController, animated: true)
+    }
+    
+    
+    public func previewRecordMessage(controller: UIViewController, originSession: Session, message: Message) {
+        if let recordMessage = try? JSONDecoder().decode(IMRecordMsgBody.self, from: message.content?.data(using: .utf8) ?? Data()) {
+            Observable.just(message)
+                .flatMap({ msg -> Observable<Array<Message>> in
+                    var dbMsgs = Array<Message>()
+                    for m in recordMessage.messages {
+                        let dbMsg = try? IMCoreManager.shared.database.messageDao().findMessageByMsgId(m.msgId, m.sessionId)
+                        if (dbMsg == nil) {
+                            try? IMCoreManager.shared.database.messageDao().insertOrIgnoreMessages([m])
+                            dbMsgs.append(m)
+                        } else {
+                            dbMsgs.append(dbMsg!)
+                        }
+                    }
+                    return Observable.just(dbMsgs)
+                })
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { messages in
+                    let recordVc = IMRecordMessageViewController()
+                    recordVc.originSession = originSession
+                    recordVc.recordMessages = messages
+                    recordVc.recordTitle = recordMessage.title
+                    recordVc.session = Session(id: 0, type: SessionType.MsgRecord.rawValue, entityId: 0, name: "", remark: "", mute: 0, role: 0, status: 0, unreadCount: 0, topTimestamp: 0, cTime: 0, mTime: 0)
+                    controller.navigationController?.pushViewController(recordVc, animated: true)
+                }).disposed(by: self.disposeBag)
+        }
     }
     
 }

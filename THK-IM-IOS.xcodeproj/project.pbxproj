@@ -150,7 +150,7 @@
 		A0D68BC92A888679004D11A5 /* BaseSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */; };
 		A0D68BCA2A888679004D11A5 /* IMSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */; };
 		A0D68BCB2A888679004D11A5 /* IMUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1F2A888678004D11A5 /* IMUIManager.swift */; };
-		A0D68BCD2A888679004D11A5 /* MediaPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B232A888678004D11A5 /* MediaPreviewController.swift */; };
+		A0D68BCD2A888679004D11A5 /* IMMediaPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B232A888678004D11A5 /* IMMediaPreviewController.swift */; };
 		A0D68BCE2A888679004D11A5 /* DismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B242A888678004D11A5 /* DismissAnimator.swift */; };
 		A0D68BCF2A888679004D11A5 /* PresentAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B252A888678004D11A5 /* PresentAnimator.swift */; };
 		A0D68BD12A888679004D11A5 /* PreviewVideoCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B292A888678004D11A5 /* PreviewVideoCellView.swift */; };
@@ -358,7 +358,7 @@
 		A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseSessionCell.swift; sourceTree = "<group>"; };
 		A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSessionViewController.swift; sourceTree = "<group>"; };
 		A0D68B1F2A888678004D11A5 /* IMUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUIManager.swift; sourceTree = "<group>"; };
-		A0D68B232A888678004D11A5 /* MediaPreviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPreviewController.swift; sourceTree = "<group>"; };
+		A0D68B232A888678004D11A5 /* IMMediaPreviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMediaPreviewController.swift; sourceTree = "<group>"; };
 		A0D68B242A888678004D11A5 /* DismissAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissAnimator.swift; sourceTree = "<group>"; };
 		A0D68B252A888678004D11A5 /* PresentAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentAnimator.swift; sourceTree = "<group>"; };
 		A0D68B292A888678004D11A5 /* PreviewVideoCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewVideoCellView.swift; sourceTree = "<group>"; };
@@ -893,7 +893,6 @@
 				A0D68B132A888678004D11A5 /* Cell */,
 				A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */,
 				A0D68B022A888678004D11A5 /* IMMessageViewController.swift */,
-				A0D51DD52B12FBC100E21E75 /* IMRecordMessageViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -971,7 +970,8 @@
 		A0D68B212A888678004D11A5 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B232A888678004D11A5 /* MediaPreviewController.swift */,
+				A0D51DD52B12FBC100E21E75 /* IMRecordMessageViewController.swift */,
+				A0D68B232A888678004D11A5 /* IMMediaPreviewController.swift */,
 				A0D68B242A888678004D11A5 /* DismissAnimator.swift */,
 				A0D68B252A888678004D11A5 /* PresentAnimator.swift */,
 			);
@@ -1459,7 +1459,7 @@
 				A02578C82AA427BD00A66CEF /* DefaultLiveApi.swift in Sources */,
 				A0D68BAA2A888679004D11A5 /* IMDefaultSessionCellProvider.swift in Sources */,
 				A0CC9F742AFC88F200801B25 /* IMTabCell.swift in Sources */,
-				A0D68BCD2A888679004D11A5 /* MediaPreviewController.swift in Sources */,
+				A0D68BCD2A888679004D11A5 /* IMMediaPreviewController.swift in Sources */,
 				A018CDFC2B00856B00896B87 /* IMAVCacheProtocol.swift in Sources */,
 				A0D68B9A2A888679004D11A5 /* UIImageView+Cache.swift in Sources */,
 				A0D68BDB2A888679004D11A5 /* IMVideoCachePlayerView.swift in Sources */,

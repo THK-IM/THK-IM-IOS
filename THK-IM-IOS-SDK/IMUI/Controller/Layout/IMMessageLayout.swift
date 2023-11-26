@@ -52,7 +52,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         if cell == nil {
             cell = provider.viewCell(viewType, (self.session?.type)!)
         }
-        (cell as! BaseMsgCell).setMessage(self.mode, indexPath.row, self.messages, self.session!, self)
+        (cell as! BaseMsgCell).setMessage(indexPath.row, self.messages, self.session!, self)
         (cell as! BaseMsgCell).selectedBackgroundView = UIView()
         (cell as! BaseMsgCell).isSelected = selectedMessages.contains(msg)
         (cell as! BaseMsgCell).multipleSelectionBackgroundView = UIView(frame: cell!.bounds)
@@ -101,7 +101,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (mode == 1) {
+        if (session?.type == SessionType.MsgRecord.rawValue) {
             return
         }
         let offsetY = self.messageTableView.contentOffset.y

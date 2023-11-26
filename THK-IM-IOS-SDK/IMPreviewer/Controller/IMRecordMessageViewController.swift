@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class IMRecordMessageViewController: UIViewController {
+class IMRecordMessageViewController: UIViewController, IMMsgPreviewer {
     
     var recordTitle: String? = nil
     var recordMessages: Array<Message>? = nil
@@ -26,6 +26,7 @@ class IMRecordMessageViewController: UIViewController {
         
         self.messageLayout.session = session
         self.messageLayout.mode = 1
+        self.messageLayout.previewer = self
         self.view.addSubview(messageLayout)
         if let messages = self.recordMessages {
             self.messageLayout.addMessage(messages)
@@ -34,8 +35,6 @@ class IMRecordMessageViewController: UIViewController {
         messageLayout.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
-        
     }
     
     private func initEvent() {
@@ -66,4 +65,12 @@ class IMRecordMessageViewController: UIViewController {
             }
         })
     }
+    
+    
+    func previewMessage(_ msg: Message, _ position: Int, _ originView: UIView) {
+        if msg.type == MsgType.IMAGE.rawValue || msg.type == MsgType.VIDEO.rawValue {
+            IMUIManager.shared.contentPreviewer?.previewMessage(self, items: [msg], view: originView, defaultId: msg.msgId)
+        }
+    }
+    
 }

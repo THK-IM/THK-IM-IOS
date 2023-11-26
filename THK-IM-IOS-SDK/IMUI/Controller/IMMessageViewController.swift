@@ -483,34 +483,11 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
             let current = msg
             ay.append(current)
             ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, false, 5))
-            IMUIManager.shared.contentPreviewer?.previewMessage(self, items: ay, view: originView, defaultId: msg.id)
+            IMUIManager.shared.contentPreviewer?.previewMessage(self, items: ay, view: originView, defaultId: msg.msgId)
         } else if msg.type == MsgType.Record.rawValue {
-            if let recordMessage = try? JSONDecoder().decode(IMRecordMsgBody.self, from: msg.content?.data(using: .utf8) ?? Data()) {
-                Observable.just(msg)
-                    .flatMap({ msg -> Observable<Array<Message>> in
-                        var dbMsgs = Array<Message>()
-                            for m in recordMessage.messages {
-                                let dbMsg = try? IMCoreManager.shared.database.messageDao().findMessageByMsgId(m.msgId, m.sessionId)
-                                if (dbMsg == nil) {
-                                    try? IMCoreManager.shared.database.messageDao().insertOrIgnoreMessages([m])
-                                    dbMsgs.append(m)
-                                } else {
-                                    dbMsgs.append(dbMsg!)
-                                }
-                            }
-                        return Observable.just(dbMsgs)
-                    })
-                    .compose(RxTransformer.shared.io2Main())
-                    .subscribe(onNext: { messages in
-                        let recordVc = IMRecordMessageViewController()
-                        recordVc.originSession = self.session
-                        recordVc.recordMessages = messages
-                        recordVc.recordTitle = recordMessage.title
-                        recordVc.session = Session(id: 0, type: SessionType.Group.rawValue, entityId: 0, name: "", remark: "", mute: 0, role: 0, status: 0, unreadCount: 0, topTimestamp: 0, cTime: 0, mTime: 0)
-                        self.navigationController?.pushViewController(recordVc, animated: true)
-                    }).disposed(by: self.disposeBag)
+            if (session != nil) {
+                IMUIManager.shared.contentPreviewer?.previewRecordMessage(controller: self, originSession: session!, message: msg)
             }
-            
         }
     }
     

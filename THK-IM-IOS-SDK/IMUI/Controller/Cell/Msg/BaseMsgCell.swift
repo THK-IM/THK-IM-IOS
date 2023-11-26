@@ -18,8 +18,8 @@ open class BaseMsgCell : BaseTableCell {
     weak var delegate: IMMsgCellOperator? = nil
     var cellWrapper: CellWrapper
     var message: Message? = nil
+    var session: Session? = nil
     var position: Int? = nil
-    var mode: Int = 0
     let disposeBag: DisposeBag = DisposeBag()
     var bubbleView: UIImageView?
     
@@ -131,10 +131,10 @@ open class BaseMsgCell : BaseTableCell {
         return UIView()
     }
     
-    open func setMessage(_ mode: Int, _ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
-        self.mode = mode
+    open func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
         self.message = messages[position]
         self.position = position
+        self.session = session
         initMsgView()
     }
     
@@ -172,7 +172,9 @@ open class BaseMsgCell : BaseTableCell {
     
     open override func appear() {
         self.cellWrapper.appear()
-        if (self.mode == 0) {
+        if (session?.type == SessionType.Single.rawValue ||
+            session?.type == SessionType.Group.rawValue
+        ) {
             self.readMessage()
         }
     }

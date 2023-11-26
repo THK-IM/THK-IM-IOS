@@ -13,7 +13,8 @@ import Foundation
 public enum SessionType: Int {
     case Single = 1,
          Group = 2,
-         SuperGroup = 3
+         SuperGroup = 3,
+         MsgRecord = 0
 }
 
 /**
@@ -54,8 +55,7 @@ public enum MsgOperateStatus: Int {
          Ack = 1,        // 用户已接收
          ClientRead = 2, // 用户已读
          ServerRead = 4, // 用户已告知服务端已读
-         Revoke = 8,     // 用户撤回
-         Update = 16     // 用户更新消息（重新编辑等操作）
+         Update = 8      // 用户更新消息（重新编辑等操作）
 }
 
 /**

@@ -12,5 +12,8 @@ import UIKit
 public protocol IMPreviewer: AnyObject  {
     
     func previewMessage(_ controller: UIViewController, items: [Message], view: UIView, defaultId: Int64)
+    
+    /// 预览消息记录
+    func previewRecordMessage(controller: UIViewController, originSession: Session, message: Message)
 
 }

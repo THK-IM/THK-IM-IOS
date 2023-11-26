@@ -65,8 +65,8 @@ class IMRevokeMsgCell: BaseMsgCell {
         return self.revokeView
     }
     
-    open override func setMessage(_ mode: Int, _ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
-        super.setMessage(mode, position, messages, session, delegate)
+    open override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+        super.setMessage(position, messages, session, delegate)
         guard let msg = self.message else {
             return
         }

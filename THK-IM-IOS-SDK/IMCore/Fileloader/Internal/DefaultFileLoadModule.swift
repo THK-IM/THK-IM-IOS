@@ -71,7 +71,7 @@ public class DefaultFileLoadModule: FileLoadModule {
         if key.hasSuffix("http") {
             return ""
         } else {
-            return "s_id=\(message.sessionId)1&id=\(key)"
+            return "s_id=\(message.sessionId)&id=\(key)"
         }
     }
     
