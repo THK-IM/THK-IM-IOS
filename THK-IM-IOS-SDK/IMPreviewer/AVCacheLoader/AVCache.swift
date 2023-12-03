@@ -82,7 +82,7 @@ class AVCache{
                 do {
                     try FileManager.default.removeItem(atPath: infoFilePath)
                 } catch {
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 }
             } else {
                 let content = FileManager.default.contents(atPath: infoFilePath)
@@ -90,7 +90,7 @@ class AVCache{
                     do {
                         cacheInfo = try JSONDecoder().decode(AVCacheInfo.self, from: content!)
                     } catch {
-                        DDLogError(error)
+                        DDLogError("\(error)")
                     }
                 }
             }
@@ -214,7 +214,7 @@ class AVCache{
                 }
                 FileManager.default.createFile(atPath: self.cacheInfoFilePath, contents: data)
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
         }
         self.cacheInfo.contentType = responseType
@@ -252,7 +252,7 @@ class AVCache{
             self.cacheInfo.contentLength = length
             return true
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         return false
     }
@@ -349,7 +349,7 @@ class AVCache{
             }
             try tmpFile.close()
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         return data.count > 0 ? data: nil
     }

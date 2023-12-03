@@ -88,7 +88,7 @@ class IMAudioMsgCell: BaseMsgCell {
                     self.statusView.isHidden = true
                 }
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
             return
         }
@@ -107,7 +107,7 @@ class IMAudioMsgCell: BaseMsgCell {
                         .downloadMsgContent(msg, resourceType: IMMsgResourceType.Source.rawValue)
                 }
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
         }
     }

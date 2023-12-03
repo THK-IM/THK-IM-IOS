@@ -45,7 +45,7 @@ class IMImageMsgCell: BaseMsgCell {
                     self.view.isHidden = false
                 }
             } catch {
-                DDLogError(error)
+                DDLogDebug("\(error)")
             }
             return
         }
@@ -60,7 +60,7 @@ class IMImageMsgCell: BaseMsgCell {
                         .downloadMsgContent(msg, resourceType: IMMsgResourceType.Thumbnail.rawValue)
                 }
             } catch {
-                DDLogError(error)
+                DDLogDebug("\(error)")
             }
         }
 

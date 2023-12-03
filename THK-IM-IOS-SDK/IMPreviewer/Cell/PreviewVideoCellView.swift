@@ -76,7 +76,7 @@ public class PreviewVideoCellView : PreviewCellView {
                 coverUrl = body.thumbnailUrl
             }
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         
         self.videoPlayView.initDuration(duration)
@@ -177,7 +177,7 @@ public class PreviewVideoCellView : PreviewCellView {
                 }
             }
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
     }
     

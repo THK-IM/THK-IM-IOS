@@ -84,7 +84,7 @@ class IMRevokeMsgCell: BaseMsgCell {
                     self.textView.text = "\(revokeData.nick)撤回了一条消息"
                 } catch {
                     self.textView.text = "对方撤回了一条消息"
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 }
             } else {
                 self.textView.text = "对方撤回了一条消息"
@@ -111,7 +111,7 @@ class IMRevokeMsgCell: BaseMsgCell {
                     self.delegate?.setEditText(text: revokeData.content!)
                 }
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
         }
     }

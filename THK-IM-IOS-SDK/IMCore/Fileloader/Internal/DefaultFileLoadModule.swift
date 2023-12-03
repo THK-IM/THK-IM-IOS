@@ -32,14 +32,14 @@ public class DefaultFileLoadModule: FileLoadModule {
                     try FileManager.default.removeItem(atPath: cacheDirPath)
                     try FileManager.default.createDirectory(atPath: cacheDirPath, withIntermediateDirectories: true)
                 } catch {
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 }
             }
         } else {
             do {
                 try FileManager.default.createDirectory(atPath: cacheDirPath, withIntermediateDirectories: true)
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
         }
         
@@ -61,7 +61,7 @@ public class DefaultFileLoadModule: FileLoadModule {
                 }
             }
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         
     }

@@ -42,7 +42,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
             }
             return Observable.just(entity)
         } catch {
-            DDLogInfo(error)
+            DDLogError("\(error)")
             return Observable.error(error)
         }
     }
@@ -153,7 +153,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
                                 observer.onNext(entity)
                                 observer.onCompleted()
                             } catch {
-                                DDLogError(error)
+                                DDLogError("\(error)")
                                 observer.onError(error)
                             }
                             break
@@ -176,7 +176,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
                 return Disposables.create()
             })
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
             return Observable.error(error)
         }
     }
@@ -233,7 +233,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
                                 observer.onNext(entity)
                                 observer.onCompleted()
                             } catch {
-                                DDLogError(error)
+                                DDLogError("\(error)")
                                 observer.onError(error)
                             }
                             break
@@ -257,7 +257,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
                 return Disposables.create()
             })
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
             return Observable.error(error)
         }
     }
@@ -337,7 +337,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
                                 try self?.insertOrUpdateDb(newMessage, true, false)
                             }
                         } catch {
-                            DDLogError(error)
+                            DDLogError("\(error)")
                         }
                         self?.downloadUrls.removeAll(where: { it in
                             return it == downloadUrl!
@@ -358,7 +358,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
             )
             IMCoreManager.shared.fileLoadModule.download(key: downloadUrl!, message: newMessage, loadListener: loadListener)
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         
         return true

@@ -32,7 +32,7 @@ class DefaultIMDatabase: IMDatabase {
             try self.database.create(table: TableName.Message.rawValue, of: Message.self)
             try self.database.create(table: TableName.Session.rawValue, of: Session.self)
         } catch {
-            DDLogError(error)
+            DDLogDebug("\(error)")
         }
         
         self.messageDaoImp = DefaultMessageDao(self.database, TableName.Message.rawValue)

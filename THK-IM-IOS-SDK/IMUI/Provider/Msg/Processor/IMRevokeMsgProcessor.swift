@@ -97,7 +97,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
                 let revokeData = try JSONDecoder().decode(IMRevokeMsgData.self, from: msg.data!.data(using: .utf8) ?? Data())
                 return "\(revokeData.nick)撤回了一条消息"
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
         }
         return ""

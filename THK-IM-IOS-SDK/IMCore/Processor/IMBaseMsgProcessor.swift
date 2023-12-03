@@ -143,7 +143,7 @@ open class IMBaseMsgProcessor {
             let originMsg = try self.buildSendMsg(sessionId, body, data, atUsers, rMsgId)
             self.send(originMsg, false, sendResult)
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
     }
     
@@ -206,7 +206,7 @@ open class IMBaseMsgProcessor {
                 do {
                     try self.updateFailedMsgStatus(msg)
                 } catch let error {
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 }
                 sendResult?(msg, error)
             })

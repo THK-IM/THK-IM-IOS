@@ -399,7 +399,6 @@ class IMInputLayout: UIView, UITextViewDelegate {
     func sendInputContent() {
         let textMessage = self.textView.text
         if (textMessage != nil && textMessage!.length > 0) {
-            DDLogDebug(textMessage!)
             self.sender?.sendMessage(MsgType.TEXT.rawValue, textMessage!, nil)
             self.textView.text = nil
         }

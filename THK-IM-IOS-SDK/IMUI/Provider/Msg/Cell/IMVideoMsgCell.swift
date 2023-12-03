@@ -67,7 +67,7 @@ open class IMVideoMsgCell: BaseMsgCell {
                     self.view.isHidden = false
                 }
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
             return
         }
@@ -85,7 +85,7 @@ open class IMVideoMsgCell: BaseMsgCell {
                         .downloadMsgContent(msg, resourceType: IMMsgResourceType.Thumbnail.rawValue)
                 }
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
         }
 

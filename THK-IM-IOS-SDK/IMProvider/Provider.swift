@@ -43,7 +43,7 @@ public class Provider: IMProvider {
                     let name = videoUrl!.lastPathComponent
                     sf.sendResult(data, name, "video/\(ext)", imContentResult)
                 } catch {
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 }
             } else if image != nil {
                 if image!.pngData() != nil {
@@ -68,7 +68,7 @@ public class Provider: IMProvider {
                     try sf.onMediaResult(r, isOriginal, imContentResult)
                 }
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
         }
         ps.showPhotoLibrary(sender: controller)
@@ -130,7 +130,7 @@ public class Provider: IMProvider {
                     let name = urlAsset.url.lastPathComponent
                     sf.sendResult(data, name, "video/\(ext)", imContentResult)
                 } catch {
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 }
             }
             break

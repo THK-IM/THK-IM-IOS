@@ -60,7 +60,7 @@ open class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
                 return CGSize(width: calWidth, height: calHeight)
             }
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         return super.viewSize(message)
     }

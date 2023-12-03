@@ -116,7 +116,7 @@ public class AVCacheManager {
                 }
             }
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         return dirPath
     }

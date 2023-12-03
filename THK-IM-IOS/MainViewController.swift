@@ -97,11 +97,8 @@ class MainViewController: UIViewController, PerformanceMonitorDelegate {
         textView6.rx.tap
             .asObservable()
             .compose(RxTransformer.shared.io2Main())
-            .subscribe(onNext: { [weak self] in
+            .subscribe(onNext: {
                 do {
-                    guard let sf = self else {
-                        return
-                    }
                     let sessions = try IMCoreManager.shared.database
                         .sessionDao().findSessions(1708851739664322560, IMCoreManager.shared.severTime)
                     if (sessions != nil) {

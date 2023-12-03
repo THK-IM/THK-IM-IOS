@@ -72,10 +72,7 @@ class UploadTask: LoadTask {
             self.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError(.fileNoSuchFile))
             return
         }
-        guard let fileLoadModule = self.fileModuleReference.value else {
-            self.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError(.executableLoad))
-            return
-        }
+        
         let method = HTTPMethod(rawValue: params.method)
         self.uploadRequest = AF.upload(
             multipartFormData: { [weak self] multipartFormData in

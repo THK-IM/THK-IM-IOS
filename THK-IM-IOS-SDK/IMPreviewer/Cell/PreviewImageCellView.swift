@@ -57,7 +57,7 @@ public class PreviewImageCellView : PreviewCellView {
                     startDownload(message)
                 }
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
             return
         }

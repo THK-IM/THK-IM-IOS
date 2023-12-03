@@ -143,14 +143,14 @@ public class DefaultStorageModule : StorageModule {
                 do {
                     try fileManager.removeItem(atPath: fileRootPath)
                 } catch {
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 }
             }
         }
         do {
             try fileManager.createDirectory(atPath: fileRootPath, withIntermediateDirectories: true)
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         
         return "\(fileRootPath)/\(fileName)"

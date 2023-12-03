@@ -153,7 +153,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
             .compose(RxTransformer.shared.io2Io())
             .subscribe(
                 onError: { error in
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 },
                 onCompleted: {
                     do {

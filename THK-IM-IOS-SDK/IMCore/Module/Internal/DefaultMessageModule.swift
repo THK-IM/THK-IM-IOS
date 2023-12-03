@@ -101,7 +101,7 @@ open class DefaultMessageModule : MessageModule {
                         }
                     }
                 } catch {
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 }
                 
                 if (messageArray.last != nil) {
@@ -181,7 +181,7 @@ open class DefaultMessageModule : MessageModule {
                 observer.onCompleted()
             } catch {
                 observer.onError(error)
-                DDLogError(error)
+                DDLogError("\(error)")
             }
             return Disposables.create()
         })
@@ -199,7 +199,7 @@ open class DefaultMessageModule : MessageModule {
                 observer.onCompleted()
             } catch {
                 observer.onError(error)
-                DDLogError(error)
+                DDLogError("\(error)")
             }
             return Disposables.create()
         })
@@ -294,7 +294,7 @@ open class DefaultMessageModule : MessageModule {
             .compose(RxTransformer.shared.io2Io())
             .subscribe(
                 onError: { error in
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 },
                 onCompleted: {
                     self.ackMessageSuccess(sessionId, msgIds)
@@ -365,11 +365,11 @@ open class DefaultMessageModule : MessageModule {
                             sf.notifyNewMessage(s, msg)
                         }
                     } catch {
-                        DDLogError(error)
+                        DDLogError("\(error)")
                     }
                 },
                 onError: { error in
-                    DDLogError(error)
+                    DDLogError("\(error)")
                 }
             ).disposed(by: disposeBag)
     }
@@ -393,10 +393,10 @@ open class DefaultMessageModule : MessageModule {
                 let msg = msgBean.toMessage()
                 onNewMessage(msg)
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
         } else {
-            DDLogError(String(format: "subType: %d message not support", subType))
+            DDLogError("subType: \(subType) message not support")
         }
     }
     

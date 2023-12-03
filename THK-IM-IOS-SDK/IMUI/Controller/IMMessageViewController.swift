@@ -328,7 +328,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
                     }
                 }
             } catch {
-                DDLogError(error)
+                DDLogDebug("\(error)")
             }
         }
     }
@@ -354,7 +354,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
                     }
                 }
             } catch {
-                DDLogError(error)
+                DDLogError("\(error)")
             }
         }
     }
@@ -504,7 +504,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
             }
             return messages
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         return []
     }

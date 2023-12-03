@@ -94,7 +94,7 @@ public class OggOpusAudioPlayer {
             AudioQueueSetParameter(_audioQueue!, kAudioQueueParam_Volume, 1.0)
             
         } catch {
-            DDLogDebug(error)
+            DDLogError("\(error)")
             return false
         }
         return true
@@ -107,7 +107,7 @@ public class OggOpusAudioPlayer {
             try AVAudioSession.sharedInstance().setActive(false)
             try self._audioFile?.close()
         } catch {
-            DDLogError(error)
+            DDLogError("\(error)")
         }
         let queue = self._audioQueue
         if (queue != nil) {

@@ -137,13 +137,8 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let h = self.sessionTableView!.frame.height
         let distance = self.sessionTableView!.contentSize.height - self.sessionTableView!.contentOffset.y
-        DDLogDebug("scrollViewDidScroll, h:" + h.description + ", dis: " + distance.description)
         if (h > distance) {
-            DDLogDebug("scrollViewDidScroll loadSessions start")
             self.loadSessions()
-        }
-        if (self.sessionTableView!.contentOffset.y < 0) {
-            DDLogDebug("scrollViewDidScroll 最顶部")
         }
     }
     
