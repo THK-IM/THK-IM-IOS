@@ -109,7 +109,7 @@ public class PreviewVideoCellView : PreviewCellView {
         if (url.hasPrefix("http")) {
             return url
         } else {
-            return "\(IMCoreManager.shared.api.getEndpoint())/session/object/download_url?id=\(url)&s_id=\(message.sessionId)"
+            return "\(IMCoreManager.shared.api.getEndpoint())/session/object/download_url?id=\(url)"
         }
     }
     
