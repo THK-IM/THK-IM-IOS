@@ -198,6 +198,16 @@ class DefaultMessageDao : MessageDao {
         )
     }
     
+    /**
+     * 删除session下的所有消息
+     */
+    func deleteSessionMessages(_ sessionId: Int64) throws {
+        try self.database?.delete(
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId
+        )
+    }
+    
     func queryMessageBySidAndCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,

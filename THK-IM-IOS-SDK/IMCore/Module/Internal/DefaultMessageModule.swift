@@ -411,6 +411,7 @@ open class DefaultMessageModule : MessageModule {
     private func deleteLocalSession(_ session: Session) -> Observable<Void> {
         return Observable.create({observer -> Disposable in
             do {
+                try IMCoreManager.shared.database.messageDao().deleteSessionMessages(session.id)
                 try IMCoreManager.shared.database.sessionDao().deleteSessions(session)
             } catch {
                 observer.onError(error)

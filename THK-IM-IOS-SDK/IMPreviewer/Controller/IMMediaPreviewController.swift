@@ -64,7 +64,7 @@ public class IMMediaPreviewController: UIViewController,
         var position = 0
         if self.messages.count > 0 {
             for i in 0 ..< self.messages.count {
-                if self.messages[i].id == self.defaultId {
+                if self.messages[i].msgId == self.defaultId {
                     position = i
                 }
             }

@@ -295,7 +295,7 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
             
             var fileName = body.name
             if (resourceType == IMMsgResourceType.Thumbnail.rawValue) {
-                fileName = "thumb_\(body.name!)"
+                fileName = "\(body.name!)_thumb"
             } else {
                 downloadUrl = body.url
             }

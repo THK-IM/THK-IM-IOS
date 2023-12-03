@@ -96,6 +96,11 @@ public protocol MessageDao {
     func deleteMessagesByCTimeInclude(_ startTime: Int64, _ endTime: Int64) throws
     
     /**
+     * 删除session下的所有消息
+     */
+    func deleteSessionMessages(_ sessionId: Int64) throws
+    
+    /**
      * 查询session下某时间之后的消息
      */
     func queryMessageBySidAndCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) throws -> Array<Message>?
