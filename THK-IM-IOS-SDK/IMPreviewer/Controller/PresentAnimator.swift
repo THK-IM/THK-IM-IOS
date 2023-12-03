@@ -21,6 +21,9 @@ public class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         guard let toVC = transitionContext.viewController(forKey: .to) else {
             return
         }
+        guard let animationView = toVC.view.subviews.first else {
+            return
+        }
         let containerView = transitionContext.containerView
         
         let x = (origin?.x ?? 0)
@@ -42,8 +45,9 @@ public class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         // 组合平移和放大变换
         let combinedTransform = translationTransform.concatenating(scaleTransform)
         // 设置转场前的初始状态
-        toVC.view.transform = combinedTransform
-        toVC.view.alpha = 0.01
+        animationView.transform = combinedTransform
+        
+        toVC.view.alpha = 0.1
         containerView.addSubview(toVC.view)
         // 执行转场动画
         UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
@@ -52,7 +56,7 @@ public class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             let scaleTransform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             // 组合平移和放大变换
             let combinedTransform = translationTransform.concatenating(scaleTransform)
-            toVC.view.transform = combinedTransform
+            animationView.transform = combinedTransform
             toVC.view.alpha = 1.0
         }) { (finished) in
             // 完成转场
