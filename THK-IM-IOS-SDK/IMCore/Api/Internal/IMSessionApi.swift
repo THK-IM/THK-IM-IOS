@@ -11,7 +11,7 @@ import Moya
 
 enum IMSessionApi {
     /// 创建会话
-    case createSession(_ bean: CreateSessionBean)
+    case createSession(_ req: CreateSessionVo)
     /// 查询最近会话列表
     case queryLatestSession(_ uId: Int64, _ offset :Int, _ count: Int, _ mTime: Int64)
     /// 查询单个会话
@@ -19,7 +19,7 @@ enum IMSessionApi {
     /// 删除session
     case deleteSession(_ uId: Int64, _ sessionId: Int64)
     /// 更新session
-    case updateSession(_ bean: UpdateSessionBean)
+    case updateSession(_ req: UpdateSessionVo)
 }
 
 
@@ -61,8 +61,8 @@ extension IMSessionApi: TargetType {
     
     var task: Moya.Task {
         switch self {
-        case let .createSession(bean):
-            return .requestJSONEncodable(bean)
+        case let .createSession(vo):
+            return .requestJSONEncodable(vo)
         case let .queryLatestSession(uId, offset, count, mTime):
             let urlParameters = ["u_id": uId, "offset": offset, "size": count, "m_Time": mTime] as [String : Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
@@ -70,8 +70,8 @@ extension IMSessionApi: TargetType {
             return .requestPlain
         case .deleteSession:
             return .requestPlain
-        case let .updateSession(bean):
-            return .requestJSONEncodable(bean)
+        case let .updateSession(vo):
+            return .requestJSONEncodable(vo)
         }
     }
     

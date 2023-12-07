@@ -1,5 +1,5 @@
 //
-//  RevokeMsgBean.swift
+//  RevokeMsgVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/11/19.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RevokeMsgBean: Codable {
+class RevokeMsgVo: Codable {
     var sessionId: Int64
     var msgId: Int64
     var uId: Int64

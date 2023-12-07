@@ -1,5 +1,5 @@
 //
-//  MessageBean.swift
+//  MessageVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/21.
@@ -8,7 +8,7 @@
 import Foundation
 
 
-class MessageBean: Codable {
+class MessageVo: Codable {
     var clientId: Int64 = 0
     var fUId: Int64 = 0
     var sessionId : Int64 = 0
@@ -18,6 +18,7 @@ class MessageBean: Codable {
     var status: Int? = nil
     var rMsgId: Int64? = nil
     var atUsers: String? = nil
+    var extData: String? = nil
     var cTime: Int64 = 0
     
     init(msg: Message) {
@@ -29,6 +30,7 @@ class MessageBean: Codable {
         self.body = msg.content ?? ""
         self.rMsgId = msg.referMsgId
         self.atUsers = msg.atUsers
+        self.extData = msg.extData
         self.cTime = msg.cTime
     }
     
@@ -43,6 +45,7 @@ class MessageBean: Codable {
         self.rMsgId = try container.decodeIfPresent(Int64.self, forKey: .rMsgId)
         self.status = try container.decodeIfPresent(Int.self, forKey: .status) ?? 0
         self.atUsers = try container.decodeIfPresent(String.self, forKey: .atUsers)
+        self.extData = try container.decodeIfPresent(String.self, forKey: .extData)
         self.cTime = try container.decodeIfPresent(Int64.self, forKey: .cTime) ?? 0
     }
     
@@ -68,6 +71,7 @@ class MessageBean: Codable {
         case status = "status"
         case rMsgId = "r_msg_id"
         case atUsers = "at_users"
+        case extData = "ext_data"
         case cTime = "c_time"
     }
     
@@ -79,7 +83,7 @@ class MessageBean: Codable {
         let message = Message(
             id: self.clientId, sessionId: self.sessionId, fromUId: self.fUId, msgId: self.msgId,
             type: self.type, content: self.body, data: nil, sendStatus: MsgSendStatus.Success.rawValue,
-            operateStatus: oprStatus!, referMsgId: self.rMsgId, cTime: self.cTime, mTime: self.cTime)
+            operateStatus: oprStatus!, referMsgId: self.rMsgId, extData: self.extData, cTime: self.cTime, mTime: self.cTime)
         return message
     }
 }

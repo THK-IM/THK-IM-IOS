@@ -1,14 +1,14 @@
 //
-//  ErrorBean.swift
-//  demo
+//  DeleteMsgVo.swift
+//  THK-IM-IOS
 //
-//  Created by vizoss on 2023/5/21.
+//  Created by vizoss on 2023/5/27.
 //
 
 import Foundation
 
 
-class ErrorBean : Codable {
+class ErrorVo : Codable {
     
     var code: Int
     var message: String

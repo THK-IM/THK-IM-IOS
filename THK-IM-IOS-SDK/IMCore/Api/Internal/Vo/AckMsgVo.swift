@@ -1,5 +1,5 @@
 //
-//  DeleteMsgBean.swift
+//  AckMsgVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/27.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DeleteMsgBean: Codable {
+class AckMsgVo: Codable {
     var sessionId: Int64 = 0
     var msgIds: Set<Int64>
     var uId: Int64 = 0

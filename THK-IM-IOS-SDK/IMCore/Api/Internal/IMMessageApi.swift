@@ -11,19 +11,19 @@ import Moya
 
 enum IMMessageApi {
     /// 发送消息
-    case sendMsg(_ bean: MessageBean)
+    case sendMsg(_ req: MessageVo)
     /// 查询最新消息
     case queryLatestMsg(_ uId: Int64, _ offset :Int, _ count: Int, _ cTime: Int64)
     /// 消息ack
-    case ackMsgs(_ bean: AckMsgBean)
+    case ackMsgs(_ req: AckMsgVo)
     /// 已读消息
-    case readMsgs(_ bean: ReadMsgBean)
+    case readMsgs(_ req: ReadMsgVo)
     /// 撤回消息
-    case revokeMsg(_ bean: RevokeMsgBean)
+    case revokeMsg(_ req: RevokeMsgVo)
     /// 转发消息
-    case forwardMsg(_ bean: ForwardMessageBean)
+    case forwardMsg(_ req: ForwardMessageVo)
     /// 删除消息
-    case deleteMsgs(_ bean: DeleteMsgBean)
+    case deleteMsgs(_ req: DeleteMsgVo)
 }
 
 
@@ -73,21 +73,21 @@ extension IMMessageApi: TargetType {
     
     var task: Moya.Task {
         switch self {
-        case let .sendMsg(bean):
-            return .requestJSONEncodable(bean)
+        case let .sendMsg(req):
+            return .requestJSONEncodable(req)
         case let .queryLatestMsg(uId, offset, count, cTime):
             let urlParameters = ["u_id": uId, "offset": offset, "count": count, "c_time": cTime] as [String : Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
-        case let .ackMsgs(bean):
-            return .requestJSONEncodable(bean)
-        case let .readMsgs(bean):
-            return .requestJSONEncodable(bean)
-        case let .revokeMsg(bean):
-            return .requestJSONEncodable(bean)
-        case let .forwardMsg(bean):
-            return .requestJSONEncodable(bean)
-        case let .deleteMsgs(bean):
-            return .requestJSONEncodable(bean)
+        case let .ackMsgs(req):
+            return .requestJSONEncodable(req)
+        case let .readMsgs(req):
+            return .requestJSONEncodable(req)
+        case let .revokeMsg(req):
+            return .requestJSONEncodable(req)
+        case let .forwardMsg(req):
+            return .requestJSONEncodable(req)
+        case let .deleteMsgs(req):
+            return .requestJSONEncodable(req)
         }
     }
     

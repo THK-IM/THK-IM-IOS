@@ -44,7 +44,7 @@ public protocol MessageModule : BaseModule {
     /**
      * 分页获取本地session
      */
-    func queryLocalSessions(_ count: Int, _ mTime: Int64) -> Observable<Array<Session>>
+    func queryLocalSessions(_ parentId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>>
     
     /**
      * 分页获取本地message

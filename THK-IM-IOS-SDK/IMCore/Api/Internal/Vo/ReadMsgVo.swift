@@ -1,5 +1,5 @@
 //
-//  ReadMsgBean.swift
+//  ReadMsgVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/11/4.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ReadMsgBean: Codable {
+class ReadMsgVo: Codable {
     var sessionId: Int64 = 0
     var msgIds: Set<Int64>
     var uId: Int64 = 0

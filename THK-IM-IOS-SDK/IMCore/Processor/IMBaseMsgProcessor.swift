@@ -123,6 +123,7 @@ open class IMBaseMsgProcessor {
             operateStatus: operateStatus,
             rUsers: nil,
             referMsgId: rMsgId,
+            extData: nil,
             atUsers: atUIdStr,
             cTime: now,
             mTime: now

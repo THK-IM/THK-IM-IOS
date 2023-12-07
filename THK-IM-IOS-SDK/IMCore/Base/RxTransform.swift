@@ -40,7 +40,7 @@ public class RxTransformer {
                     let body = try JSONDecoder().decode(type, from: response.data)
                     return Observable.just(body)
                 } else {
-                    let errorBean = try JSONDecoder().decode(ErrorBean.self, from: response.data)
+                    let errorBean = try JSONDecoder().decode(ErrorVo.self, from: response.data)
                     return Observable.error(Exception.IMHttp(errorBean.code, errorBean.message))
                 }
             })
@@ -53,7 +53,7 @@ public class RxTransformer {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     return Observable.empty()
                 } else {
-                    let errorBean = try JSONDecoder().decode(ErrorBean.self, from: response.data)
+                    let errorBean = try JSONDecoder().decode(ErrorVo.self, from: response.data)
                     return Observable.error(Exception.IMHttp(errorBean.code, errorBean.message))
                 }
             })

@@ -100,7 +100,7 @@ class MainViewController: UIViewController, PerformanceMonitorDelegate {
             .subscribe(onNext: {
                 do {
                     let sessions = try IMCoreManager.shared.database
-                        .sessionDao().findSessions(1708851739664322560, IMCoreManager.shared.severTime)
+                        .sessionDao().findSessions(0, 1708851739664322560, IMCoreManager.shared.severTime)
                     if (sessions != nil) {
                         for session in sessions! {
                             print("\(session.id) \(session.entityId)")

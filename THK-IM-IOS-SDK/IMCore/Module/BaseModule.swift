@@ -9,5 +9,5 @@ import Foundation
 
 public protocol BaseModule : AnyObject {
     
-    func onSignalReceived(_ subType: Int, _ body: String)
+    func onSignalReceived(_ type: Int, _ body: String)
 }

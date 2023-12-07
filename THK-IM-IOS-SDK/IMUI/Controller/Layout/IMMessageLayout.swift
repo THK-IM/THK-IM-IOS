@@ -196,7 +196,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         let id = IMCoreManager.shared.getMessageModule().generateNewMsgId()
         let message = Message(
             id: id, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0, type: 0, content: "", data: "",
-            sendStatus: 0, operateStatus: 0, referMsgId: nil, atUsers: nil, cTime: 0, mTime: 0
+            sendStatus: 0, operateStatus: 0, referMsgId: nil, extData: nil, atUsers: nil, cTime: 0, mTime: 0
         )
         message.cTime = cTime
         message.type = 9999

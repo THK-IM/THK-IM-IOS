@@ -1,5 +1,5 @@
 //
-//  SessionBean.swift
+//  SessionVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/21.
@@ -7,8 +7,9 @@
 
 import Foundation
 
-class SessionBean: Codable {
+class SessionVo: Codable {
     var sessionId: Int64
+    var parentId: Int64
     var type: Int
     var entityId : Int64
     var name: String
@@ -23,6 +24,7 @@ class SessionBean: Codable {
     
     enum CodingKeys: String, CodingKey {
         case sessionId = "s_id"
+        case parentId = "parent_id"
         case type = "type"
         case entityId = "entity_id"
         case name = "name"
@@ -38,9 +40,9 @@ class SessionBean: Codable {
     
     func toSession() -> Session {
         let session = Session(
-            id: self.sessionId, type: self.type, entityId: self.entityId, name: self.name, remark: self.remark,
-            mute: self.mute, role: self.role, status: self.status, unreadCount: 0, topTimestamp: top ?? 0,
-            extData: extData, cTime: cTime, mTime: mTime
+            id: self.sessionId, parentId: self.parentId, type: self.type, entityId: self.entityId, name: self.name,
+            remark: self.remark, mute: self.mute, role: self.role, status: self.status, unreadCount: 0,
+            topTimestamp: top ?? 0, extData: extData, cTime: cTime, mTime: mTime
         )
         return session
     }

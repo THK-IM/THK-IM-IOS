@@ -9,11 +9,6 @@ import Foundation
 import WCDBSwift
 
 public final class Message: TableCodable, Hashable {
-    
-    public static func == (lhs: Message, rhs: Message) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
     // 消息id(客户端)
     public var id: Int64 = 0
     // sessionId
@@ -69,9 +64,9 @@ public final class Message: TableCodable, Hashable {
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    public init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String?, data: String?, 
-         sendStatus: Int, operateStatus: Int, rUsers: String? = nil, referMsgId: Int64? = nil,
-         atUsers: String? = nil, cTime: Int64, mTime: Int64) {
+    public init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String?, data: String?,
+                sendStatus: Int, operateStatus: Int, rUsers: String? = nil, referMsgId: Int64? = nil, extData: String?,
+                atUsers: String? = nil, cTime: Int64, mTime: Int64) {
         self.id = id
         self.sessionId = sessionId
         self.fromUId = fromUId
@@ -84,6 +79,7 @@ public final class Message: TableCodable, Hashable {
         self.rUsers = rUsers
         self.referMsgId = referMsgId
         self.atUsers = atUsers
+        self.extData = extData
         self.cTime = cTime
         self.mTime = mTime
     }
@@ -92,12 +88,18 @@ public final class Message: TableCodable, Hashable {
         return Message(
             id: self.id, sessionId: self.sessionId, fromUId: self.fromUId, msgId: self.msgId,
             type: self.type, content: self.content, data: self.data, sendStatus: self.sendStatus,
-            operateStatus: self.operateStatus, cTime: self.cTime, mTime: self.mTime
+            operateStatus: self.operateStatus, extData: self.extData, cTime: self.cTime, mTime: self.mTime
         )
     }
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    
+    
+    public static func == (lhs: Message, rhs: Message) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     
 }

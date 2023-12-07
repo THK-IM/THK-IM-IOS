@@ -104,7 +104,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
                 return
             }
             if sf.status == SignalStatus.Connected {
-                sf.sendSignal(Signal.heatBeat)
+                sf.sendSignal(Signal.ping)
                 sf.startHeatBeatTask()
             }
         }
@@ -122,7 +122,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             do {
                 let signal = try JSONDecoder().decode(Signal.self, from: signalData!)
                 lock.lock()
-                self.signalListener?.onNewSignal(signal.type, signal.subType, signal.body)
+                self.signalListener?.onNewSignal(signal.type, signal.body)
                 lock.unlock()
             } catch {
                 DDLogError("DefaultSignalModule onTextMessage error: \(error)")

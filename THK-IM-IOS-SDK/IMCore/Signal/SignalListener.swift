@@ -11,6 +11,6 @@ public protocol SignalListener {
     
     func onSignalStatusChange(_ status: SignalStatus)
     
-    func onNewSignal(_ type: Int, _ subType: Int, _ body: String)
+    func onNewSignal(_ type: Int, _ body: String)
     
 }

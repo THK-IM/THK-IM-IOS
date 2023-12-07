@@ -38,14 +38,14 @@ open class DefaultCommonModule : CommonModule {
         }
     }
     
-    public func onSignalReceived(_ subType: Int, _ body: String) {
-        if subType == CommonSubType.PONG.rawValue {
+    public func onSignalReceived(_ type: Int, _ body: String) {
+        if type == SignalType.SignalPong.rawValue {
             IMCoreManager.shared.getMessageModule().ackMessagesToServer()
-        } else if subType == CommonSubType.ServerTime.rawValue {
+        } else if type == SignalType.SignalPong.rawValue {
             let time = Int64(body)
             self.setSeverTime(time)
-        } else if subType == CommonSubType.ConnId.rawValue {
+        } else if type == SignalType.SignalConnId.rawValue {
             connId = body
-        }
+        } 
     }
 }

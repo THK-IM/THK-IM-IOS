@@ -1,5 +1,5 @@
 //
-//  ListBean.swift
+//  ListVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/21.
@@ -8,7 +8,7 @@
 import Foundation
 
 
-class ListBean<T: Codable> : Codable {
+class ListVo<T: Codable> : Codable {
     
     var data: Array<T>
     

@@ -1,5 +1,5 @@
 //
-//  UpdateSessionBean.swift
+//  UpdateSessionVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/11/5.
@@ -8,18 +8,20 @@
 
 import Foundation
 
-class UpdateSessionBean: Codable {
+class UpdateSessionVo: Codable {
     
     var uId: Int64
     var sId: Int64
     var top : Int64?
     var status: Int?
+    var parentId: Int64?
     
-    init(uId: Int64, sId: Int64, top: Int64? = nil, status: Int? = nil) {
+    init(uId: Int64, sId: Int64, top: Int64? = nil, status: Int? = nil, parentId: Int64? = nil) {
         self.uId = uId
         self.sId = sId
         self.top = top
         self.status = status
+        self.parentId = parentId
     }
     
     
@@ -28,5 +30,6 @@ class UpdateSessionBean: Codable {
         case sId = "s_id"
         case top = "top"
         case status = "status"
+        case parentId = "parent_id"
     }
 }

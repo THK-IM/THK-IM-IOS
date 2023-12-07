@@ -43,8 +43,9 @@ public protocol SessionDao {
     
     /**
      * 查询mTim之后的session数组
+     * @param parentId 父sessionId
      * @param count 数量
      * @param mTime 修改时间
      */
-    func findSessions(_ count: Int, _ mTime: Int64) throws -> Array<Session>?
+    func findSessions(_ parentId: Int64, _ count: Int, _ mTime: Int64) throws -> Array<Session>?
 }

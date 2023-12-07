@@ -12,10 +12,7 @@ import RxSwift
 open class IMCoreManager: SignalListener {
     
     public static let shared = IMCoreManager()
-    
-    private var moduleDic = [Int: BaseModule]()
     private var disposeBag = DisposeBag()
-    
     private var _fileLoadModule: FileLoadModule?
     public var fileLoadModule: FileLoadModule {
         set {
@@ -82,7 +79,21 @@ open class IMCoreManager: SignalListener {
         }
     }
     
-    private init() {}
+    var commonModule: CommonModule
+    var userModule: UserModule
+    var contactModule: ContactModule
+    var groupModule: GroupModule
+    var messageModule: MessageModule
+    var customModule: CustomModule
+    
+    private init() {
+        self.commonModule = DefaultCommonModule()
+        self.userModule = DefaultUserModule()
+        self.contactModule = DefaultContactModule()
+        self.groupModule = DefaultGroupModule()
+        self.messageModule = DefaultMessageModule()
+        self.customModule = DefaultCustomModule()
+    }
     
     private func initIMLog() {
         DDLog.add(DDOSLogger.sharedInstance) // Uses os_log
@@ -98,10 +109,6 @@ open class IMCoreManager: SignalListener {
         self._database = DefaultIMDatabase(app, uId, debug)
         self._storageModule = DefaultStorageModule(uId)
         
-        self.registerModule(SignalType.User.rawValue, DefaultUserModule())
-        self.registerModule(SignalType.Common.rawValue, DefaultCommonModule())
-        self.registerModule(SignalType.Message.rawValue, DefaultMessageModule())
-        
         getMessageModule().registerMsgProcessor(IMReadMsgProcessor())
     }
     
@@ -111,36 +118,28 @@ open class IMCoreManager: SignalListener {
         self._signalModule?.connect()
     }
     
-    public func registerModule(_ type: Int, _ md: BaseModule) {
-        moduleDic[type] = md
-    }
-    
-    public func getModule(_ type: Int) -> BaseModule? {
-        return moduleDic[type]
-    }
-    
     public func getCommonModule() -> CommonModule {
-        return self.getModule(SignalType.Common.rawValue)! as! CommonModule
+        return self.commonModule
     }
     
     public func getUserModule() -> UserModule {
-        return self.getModule(SignalType.User.rawValue)! as! UserModule
+        return self.userModule
     }
     
     public func getContactModule() -> ContactModule {
-        return self.getModule(SignalType.Contact.rawValue)! as! ContactModule
+        return self.contactModule
     }
     
     public func getGroupModule() -> GroupModule {
-        return self.getModule(SignalType.Group.rawValue)! as! GroupModule
+        return self.groupModule
     }
     
     public func getMessageModule() -> MessageModule {
-        return self.getModule(SignalType.Message.rawValue)! as! MessageModule
+        return self.messageModule
     }
     
     public func getCustomModule() -> CustomModule {
-        return self.getModule(SignalType.Custom.rawValue)! as! CustomModule
+        return self.customModule
     }
     
     public func onSignalStatusChange(_ status: SignalStatus) {
@@ -150,9 +149,20 @@ open class IMCoreManager: SignalListener {
         SwiftEventBus.post(IMEvent.OnlineStatusUpdate.rawValue, sender: status)
     }
     
-    public func onNewSignal(_ type: Int, _ subType: Int, _ body: String) {
-        let module = getModule(type)
-        module?.onSignalReceived(subType, body)
+    public func onNewSignal(_ type: Int, _ body: String) {
+        if (type == SignalType.SignalNewMessage.rawValue) {
+            messageModule.onSignalReceived(type, body)
+        } else if (type < 100) {
+            commonModule.onSignalReceived(type, body)
+        } else if (type < 200) {
+            userModule.onSignalReceived(type, body)
+        } else if (type < 300) {
+            contactModule.onSignalReceived(type, body)
+        } else if (type < 400) {
+            groupModule.onSignalReceived(type, body)
+        } else {
+            customModule.onSignalReceived(type, body)
+        }
     }
     
 }

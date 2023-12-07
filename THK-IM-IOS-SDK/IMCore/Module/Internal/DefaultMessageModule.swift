@@ -169,10 +169,10 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    public func queryLocalSessions(_ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
+    public func queryLocalSessions(_ parentId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
         return Observable.create({observer -> Disposable in
             do {
-                let sessions = try IMCoreManager.shared.database.sessionDao().findSessions(count, mTime)
+                let sessions = try IMCoreManager.shared.database.sessionDao().findSessions(parentId, count, mTime)
                 if (sessions != nil) {
                     observer.onNext(sessions!)
                 } else {
@@ -384,19 +384,15 @@ open class DefaultMessageModule : MessageModule {
         AppUtils.newMessageNotify()
     }
     
-    public func onSignalReceived(_ subType: Int, _ body: String) {
-        if subType == 0 {
-            do {
-                let msgBean = try JSONDecoder().decode(
-                    MessageBean.self,
-                    from: body.data(using: String.Encoding.utf8)!)
-                let msg = msgBean.toMessage()
-                onNewMessage(msg)
-            } catch {
-                DDLogError("\(error)")
-            }
-        } else {
-            DDLogError("subType: \(subType) message not support")
+    public func onSignalReceived(_ type: Int, _ body: String) {
+        do {
+            let msgBean = try JSONDecoder().decode(
+                MessageVo.self,
+                from: body.data(using: String.Encoding.utf8)!)
+            let msg = msgBean.toMessage()
+            onNewMessage(msg)
+        } catch {
+            DDLogError("\(error)")
         }
     }
     

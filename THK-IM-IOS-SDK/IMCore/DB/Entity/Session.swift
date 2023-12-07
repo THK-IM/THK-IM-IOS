@@ -11,6 +11,8 @@ import WCDBSwift
 public final class Session: TableCodable {
     // sessionId
     public var id: Int64 = 0
+    // 父sessionId
+    public var parentId: Int64 = 0
     // session类型
     public var type: Int = 0
     // session对象id, 单聊时为对方id, 群聊时为群id
@@ -47,8 +49,10 @@ public final class Session: TableCodable {
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
             BindColumnConstraint(id, isPrimary: true)
             BindMultiUnique(type, entityId, onConflict: ConflictAction.Replace)
+            BindIndex(parentId, mTime, namedWith: "session_parent_id_m_time_idx", isUnique: false)
         }
         case id = "id"
+        case parentId = "parentId"
         case type = "type"
         case entityId = "entity_id"
         case name = "name"
@@ -66,10 +70,11 @@ public final class Session: TableCodable {
     }
     
     
-    public init(id: Int64, type: Int, entityId: Int64, name: String, remark: String, mute: Int, role: Int, status: Int,
+    public init(id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, remark: String, mute: Int, role: Int, status: Int,
          unreadCount: Int64, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64,
          extData: String? = nil, cTime: Int64, mTime: Int64) {
         self.id = id
+        self.parentId = parentId
         self.type = type
         self.entityId = entityId
         self.name = name
@@ -88,7 +93,7 @@ public final class Session: TableCodable {
     
     public static func emptySession() -> Session {
         return Session(
-            id: 0, type: 0, entityId: 0, name: "", remark: "", mute: 0, role: 0,
+            id: 0, parentId: 0, type: 0, entityId: 0, name: "", remark: "", mute: 0, role: 0,
             status: 0, unreadCount: 0, topTimestamp: 0, cTime: 0, mTime: 0
         )
     }

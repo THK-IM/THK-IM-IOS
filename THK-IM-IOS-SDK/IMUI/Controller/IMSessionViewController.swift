@@ -20,6 +20,8 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     private var isLoading = false
     private let lock = NSLock()
     
+    var parentId: Int64 = 0
+    
     deinit {
         print("IMSessionViewController, de init")
     }
@@ -49,7 +51,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             latestSessionTime = self.sessions[self.sessions.count-1].mTime
         }
         IMCoreManager.shared.getMessageModule()
-            .queryLocalSessions(20, latestSessionTime)
+            .queryLocalSessions(self.parentId, 20, latestSessionTime)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self ]value in
                 self?.sessions.append(contentsOf: value)
