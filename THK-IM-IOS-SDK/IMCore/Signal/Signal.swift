@@ -13,7 +13,7 @@ open class Signal: Codable {
     var body: String
     
     static var ping : String {
-        let signal = Signal(SignalType.SignalPing.rawValue, "ping")
+        let signal = Signal(SignalType.SignalHeatBeat.rawValue, "ping")
         let data = try! JSONEncoder().encode(signal)
         return String(data: data, encoding: .utf8)!
     }
@@ -30,20 +30,12 @@ open class Signal: Codable {
     
 }
 
-public enum SignalStatus: Int {
-    case Init = 0,
-         Connecting = 1,
-         Connected = 2,
-         DisConnected = 3
-}
-
 public enum SignalType: Int {
     
     case SignalNewMessage = 0,
-        SignalPing = 1,
-        SignalPong = 2,
-        SignalSyncTime = 3,
-        SignalConnId = 4,
-        SignalKickOffUser = 5
+        SignalHeatBeat = 1,
+        SignalSyncTime = 2,
+        SignalConnId = 3,
+        SignalKickOffUser = 4
 }
 

@@ -7,6 +7,13 @@
 
 import Foundation
 
+public enum SignalStatus: Int {
+    case Init = 0,
+         Connecting = 1,
+         Connected = 2,
+         DisConnected = 3
+}
+
 public enum SessionStatus: Int {
     case Reject = 1,
         Silence = 2

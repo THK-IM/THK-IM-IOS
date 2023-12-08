@@ -52,7 +52,7 @@ public final class Session: TableCodable {
             BindIndex(parentId, mTime, namedWith: "session_parent_id_m_time_idx", isUnique: false)
         }
         case id = "id"
-        case parentId = "parentId"
+        case parentId = "parent_id"
         case type = "type"
         case entityId = "entity_id"
         case name = "name"
