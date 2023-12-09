@@ -34,17 +34,11 @@ open class BaseMsgCell : BaseTableCell {
         let msgView = self.msgView()
         msgContainerView.addSubview(msgView)
         self.backgroundColor = UIColor.clear
+        self.setupEvent()
     }
     
-    func initMsgView() {
+    func setupEvent() {
         let msgView = self.msgView()
-        bubbleView!.snp.makeConstraints { make in
-            make.edges.equalTo(msgView)
-        }
-        msgView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        showMessageStatus()
         // 点击事件
         msgView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
             delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
@@ -88,6 +82,18 @@ open class BaseMsgCell : BaseTableCell {
                     self?.delegate?.onMsgResendClick(message: msg)
                 }).disposed(by: self.disposeBag)
         }
+    }
+    
+    func initMsgView() {
+        let msgView = self.msgView()
+        bubbleView!.snp.makeConstraints { make in
+            make.edges.equalTo(msgView)
+        }
+        msgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        showMessageStatus()
+        
         let fromUId = self.message?.fromUId
         if (self.showAvatar() && fromUId != nil) {
             self.cellWrapper.avatarView()?.isHidden = false

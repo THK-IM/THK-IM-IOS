@@ -19,9 +19,8 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     private var webSocketUrl = ""
     private weak var app: UIApplication?
     private var webSocketClient: WebSocket?
-    private var retryTimes : Float = 0
-    private let timeout = 5
-    private let reconnectInterval: Float = 0.5
+    private let connectTimeout = 5.0
+    private let reconnectInterval: Float = 3.0
     private let heatBeatInterval = 10
     private let lock = NSLock.init()
     
@@ -53,7 +52,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
         }
         self.onStateChange(SignalStatus.Connecting)
         var request = URLRequest(url: URL(string: self.webSocketUrl)!)
-        request.timeoutInterval = 5.0
+        request.timeoutInterval = connectTimeout
         request.setValue(self.token, forHTTPHeaderField: "token")
         request.setValue("Ios", forHTTPHeaderField: "platform")
         self.webSocketClient = WebSocket(request: request)
@@ -63,7 +62,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     
     private func startTimeoutTask() {
         GCDTool.gcdCancel(self.timeoutTask)
-        self.timeoutTask = GCDTool.gcdDelay(TimeInterval(timeout)) { [weak self] in
+        self.timeoutTask = GCDTool.gcdDelay(TimeInterval(connectTimeout)) { [weak self] in
             guard let sf = self else {
                 return
             }
@@ -81,10 +80,8 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     
     private func startReconnectTask() {
         GCDTool.gcdCancel(self.reconnectTask)
-        self.retryTimes = self.retryTimes + 1
-        let delay = self.retryTimes * reconnectInterval > 5 ? 5 : self.retryTimes * reconnectInterval
-        DDLogDebug("DefaultSignalModule startReconnectTask, delay: \(delay)")
-        self.reconnectTask = GCDTool.gcdDelay(TimeInterval(delay)) { [weak self] in
+        DDLogDebug("DefaultSignalModule startReconnectTask \(self.status)")
+        self.reconnectTask = GCDTool.gcdDelay(TimeInterval(reconnectInterval)) { [weak self] in
             guard let sf = self else {
                 return
             }
@@ -94,7 +91,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     
     private func cancelReconnectTask() {
         GCDTool.gcdCancel(self.reconnectTask)
-        self.hearBeatTask = nil
+        self.reconnectTask = nil
     }
     
     private func startHeatBeatTask() {
@@ -163,7 +160,6 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     public func didReceive(event: WebSocketEvent, client: WebSocket) {
         switch event {
         case .connected:
-            self.retryTimes = 0
             DDLogDebug("DefaultSignalModule: connected")
             onStateChange(SignalStatus.Connected)
             break
@@ -205,27 +201,27 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     }
     
     private func onStateChange(_ status: SignalStatus) {
+        DDLogDebug("DefaultSignalModule: onStateChange \(status)")
         if (self.status != status) {
             self.status = status
             self.signalListener?.onSignalStatusChange(status)
-        }
-        if (self.status == SignalStatus.Connecting) {
-            // 连接中，只跑超时任务
-            cancelHeatBeatTask()
-            cancelReconnectTask()
-            startTimeoutTask()
-        } else if (self.status == SignalStatus.DisConnected) {
-            // 连接断开，只跑重连任务
-            cancelTimeoutTask()
-            cancelHeatBeatTask()
-            startReconnectTask()
-        } else if (self.status == SignalStatus.Connected) {
-            // 连接成功，只跑心跳任务
-            cancelTimeoutTask()
-            cancelReconnectTask()
-            startHeatBeatTask()
-        } else {
             
+            if (self.status == SignalStatus.Connecting) {
+                // 连接中，只跑超时任务
+                cancelHeatBeatTask()
+                cancelReconnectTask()
+                startTimeoutTask()
+            } else if (self.status == SignalStatus.DisConnected) {
+                // 连接断开，只跑重连任务
+                cancelTimeoutTask()
+                cancelHeatBeatTask()
+                startReconnectTask()
+            } else if (self.status == SignalStatus.Connected) {
+                // 连接成功，只跑心跳任务
+                cancelTimeoutTask()
+                cancelReconnectTask()
+                startHeatBeatTask()
+            }
         }
     }
     

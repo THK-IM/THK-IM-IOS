@@ -54,10 +54,12 @@ open class DefaultMessageModule : MessageModule {
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { messageArray in
                 do {
+                    DDLogInfo("processSessionByMessage syncOfflineMessages: \(messageArray.count)")
                     var sessionMsgs = [Int64: [Message]]()
                     var unProcessMsgs = [Message]()
                     var needReprocessMsgs = [Message]()
                     for msg in messageArray {
+                        DDLogInfo("processSessionByMessage syncOfflineMessages: \(msg.type) \(msg.content)")
                         if msg.fromUId == IMCoreManager.shared.uId {
                             msg.operateStatus = msg.operateStatus |
                             MsgOperateStatus.Ack.rawValue |
@@ -354,6 +356,7 @@ open class DefaultMessageModule : MessageModule {
                             return
                         }
                         let unReadCount = try IMCoreManager.shared.database.messageDao().getUnReadCount(msg.sessionId)
+                        DDLogInfo("processSessionByMessage msg: \(msg.content) session: \(s.lastMsg), \(s.mTime), \(msg.mTime), \(s.unreadCount), \(unReadCount)")
                         if (s.mTime < msg.mTime || s.unreadCount != unReadCount) {
                             let processor = self?.getMsgProcessor(msg.type)
                             s.lastMsg = processor?.getSessionDesc(msg: msg)
@@ -365,11 +368,11 @@ open class DefaultMessageModule : MessageModule {
                             sf.notifyNewMessage(s, msg)
                         }
                     } catch {
-                        DDLogError("\(error)")
+                        DDLogError("processSessionByMessage \(error)")
                     }
                 },
                 onError: { error in
-                    DDLogError("\(error)")
+                    DDLogError("processSessionByMessage \(error)")
                 }
             ).disposed(by: disposeBag)
     }
