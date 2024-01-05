@@ -211,6 +211,8 @@
 		A0F031032B220C120058B05B /* DefaultGroupModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031022B220C120058B05B /* DefaultGroupModule.swift */; };
 		A0F031052B220C6C0058B05B /* DefaultCustomModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031042B220C6C0058B05B /* DefaultCustomModule.swift */; };
 		A0F031072B2217250058B05B /* ErrorVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031062B2217250058B05B /* ErrorVo.swift */; };
+		A0FCA8D32B484A5B00FC6E47 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8D22B484A5B00FC6E47 /* WelcomeViewController.swift */; };
+		A0FCA8D72B484AB300FC6E47 /* IMBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8D62B484AB300FC6E47 /* IMBaseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -422,6 +424,8 @@
 		A0F031022B220C120058B05B /* DefaultGroupModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultGroupModule.swift; sourceTree = "<group>"; };
 		A0F031042B220C6C0058B05B /* DefaultCustomModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCustomModule.swift; sourceTree = "<group>"; };
 		A0F031062B2217250058B05B /* ErrorVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorVo.swift; sourceTree = "<group>"; };
+		A0FCA8D22B484A5B00FC6E47 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		A0FCA8D62B484AB300FC6E47 /* IMBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMBaseViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -664,6 +668,7 @@
 		A0D68A952A88838A004D11A5 /* THK-IM-IOS */ = {
 			isa = PBXGroup;
 			children = (
+				A0FCA8D42B484A7A00FC6E47 /* UI */,
 				A0C431F92A909D2500A84D4A /* View */,
 				A0D68A962A88838A004D11A5 /* AppDelegate.swift */,
 				A0D68A982A88838A004D11A5 /* SceneDelegate.swift */,
@@ -1170,6 +1175,23 @@
 			path = Internal;
 			sourceTree = "<group>";
 		};
+		A0FCA8D42B484A7A00FC6E47 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA8D52B484A8B00FC6E47 /* Base */,
+				A0FCA8D22B484A5B00FC6E47 /* WelcomeViewController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		A0FCA8D52B484A8B00FC6E47 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA8D62B484AB300FC6E47 /* IMBaseViewController.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1319,6 +1341,7 @@
 				A0EA42FB2A94CCE200F64A90 /* DefaultIMApi.swift in Sources */,
 				A0D68BC72A888679004D11A5 /* BaseTableCell.swift in Sources */,
 				A018CE012B00A00B00896B87 /* IMMessageOperator.swift in Sources */,
+				A0FCA8D32B484A5B00FC6E47 /* WelcomeViewController.swift in Sources */,
 				A03082E12AF7BFEC001B8373 /* UpdateSessionVo.swift in Sources */,
 				A0E8ED482AEDED23004163BD /* IMPreviewer.swift in Sources */,
 				A0D68BA92A888679004D11A5 /* IMUnSupportMsgCellProvider.swift in Sources */,
@@ -1341,6 +1364,7 @@
 				A0C431F52A909CCE00A84D4A /* PublishBean.swift in Sources */,
 				A0D68BE72A888679004D11A5 /* MessageModule.swift in Sources */,
 				A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */,
+				A0FCA8D72B484AB300FC6E47 /* IMBaseViewController.swift in Sources */,
 				A0D68BB32A888679004D11A5 /* IMBaseFunctionCellProvider.swift in Sources */,
 				A0D68BAD2A888679004D11A5 /* IMUnicodeEmojiCell.swift in Sources */,
 				A018CE0C2B00A4A200896B87 /* IMMsgReplyOperator.swift in Sources */,
@@ -1642,7 +1666,7 @@
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "需要麦克风权限";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "需要照片权限";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1676,7 +1700,7 @@
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "需要麦克风权限";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "需要照片权限";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
