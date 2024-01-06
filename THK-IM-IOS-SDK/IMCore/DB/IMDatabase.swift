@@ -22,4 +22,10 @@ public protocol IMDatabase {
     
     func sessionDao() -> SessionDao
     
+    func sessionMemberDao() -> SessionMemberDao
+    
+    func groupDao() -> GroupDao
+    
+    func contactDao() -> ContactDao
+    
 }

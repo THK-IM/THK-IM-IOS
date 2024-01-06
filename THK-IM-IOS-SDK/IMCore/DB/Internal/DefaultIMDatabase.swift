@@ -13,11 +13,15 @@ import CocoaLumberjack
 
 class DefaultIMDatabase: IMDatabase {
     
+    
     private weak var app: UIApplication?
     private let database: Database
     private let messageDaoImp: MessageDao
     private let sessionDaoImp: SessionDao
     private let userDaoImp: UserDao
+    private let contactDaoImp: ContactDao
+    private let groupDaoImp: GroupDao
+    private let sessionMemberDaoImp: SessionMemberDao
     
     public init(_ app: UIApplication, _ uId: Int64, _ debug: Bool) {
         self.app = app
@@ -38,6 +42,9 @@ class DefaultIMDatabase: IMDatabase {
         self.messageDaoImp = DefaultMessageDao(self.database, TableName.Message.rawValue)
         self.sessionDaoImp = DefaultSessionDao(self.database, TableName.Session.rawValue)
         self.userDaoImp = DefaultUserDao(self.database, TableName.User.rawValue)
+        self.contactDaoImp = DefaultContactDao(self.database, TableName.Contact.rawValue)
+        self.groupDaoImp = DefaultGroupDao(self.database, TableName.Group.rawValue)
+        self.sessionMemberDaoImp = DefaultSessionMemberDao(self.database, TableName.SessionMember.rawValue)
     }
     
     
@@ -59,5 +66,17 @@ class DefaultIMDatabase: IMDatabase {
     
     public func sessionDao() -> SessionDao {
         return self.sessionDaoImp
+    }
+    
+    func sessionMemberDao() -> SessionMemberDao {
+        return self.sessionMemberDaoImp
+    }
+    
+    func groupDao() -> GroupDao {
+        return self.groupDaoImp
+    }
+    
+    func contactDao() -> ContactDao {
+        return self.contactDaoImp
     }
 }

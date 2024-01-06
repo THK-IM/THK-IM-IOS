@@ -13,6 +13,8 @@ import Foundation
 public enum TableName: String {
     case Message = "message",
          Session = "session",
-         User = "user"
-         
+         User = "user",
+         Group = "group_",
+         Contact = "contact",
+         SessionMember = "session_member"
 }
