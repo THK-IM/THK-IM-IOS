@@ -49,4 +49,9 @@ public class AppUtils {
         return 0
     }
     
+    public static func getVersion() -> String {
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        return appVersion ?? "0.0.0"
+    }
+    
 }

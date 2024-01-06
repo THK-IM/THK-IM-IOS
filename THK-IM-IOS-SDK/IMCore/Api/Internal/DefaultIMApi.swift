@@ -11,15 +11,20 @@ import RxSwift
 
 public class DefaultIMApi: IMApi {
     
-    private let messageApi = MoyaProvider<IMMessageApi>(plugins: [NetworkLoggerPlugin()])
-    private let sessionApi = MoyaProvider<IMSessionApi>(plugins: [NetworkLoggerPlugin()])
-    
     private let endpoint: String
-    private let token: String
+    private var token: String
+    private let apiInterceptor: APITokenInterceptor
+    private let messageApi:MoyaProvider<IMMessageApi>
+    private let sessionApi:MoyaProvider<IMSessionApi>
+    
     
     public init(token: String, endpoint: String) {
         self.endpoint = endpoint
         self.token = token
+        self.apiInterceptor = APITokenInterceptor(token: token)
+        self.apiInterceptor.addValidEndpoint(endpoint: endpoint)
+        self.sessionApi = MoyaProvider<IMSessionApi>(plugins: [self.apiInterceptor])
+        self.messageApi = MoyaProvider<IMMessageApi>(plugins: [self.apiInterceptor])
     }
     
     public func getEndpoint() -> String {
@@ -29,6 +34,11 @@ public class DefaultIMApi: IMApi {
     
     public func getToken() -> String {
         return self.token
+    }
+    
+    public func updateToken(token: String) {
+        self.token = token
+        self.apiInterceptor.updateToken(token: token)
     }
     
     public func getLatestModifiedSessions(_ uId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {

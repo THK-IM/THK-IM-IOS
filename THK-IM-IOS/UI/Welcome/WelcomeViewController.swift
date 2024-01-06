@@ -145,6 +145,8 @@ class WelcomeViewController: BaseViewController {
     
     func initIM(token: String, uId: Int64) {
         DataRepository.shared.updateToken(token: token)
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        delegate?.initIM(token: token, uId: uId)
         let mainVc = MainViewController()
         let window = AppUtils.getWindow()
         window?.rootViewController = mainVc

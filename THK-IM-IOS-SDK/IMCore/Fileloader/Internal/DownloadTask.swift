@@ -59,11 +59,11 @@ class DownloadTask: LoadTask {
                 var newRequest = try request.asURLRequest()
                 newRequest.url = URL.init(string: location)
                 if location.hasPrefix(fileLoadModule.endpoint) {
-                    if request.headers["Token"] == nil || request.headers["Token"] == "" {
-                        newRequest.addValue(fileLoadModule.token, forHTTPHeaderField: "Token")
+                    if request.headers[APITokenInterceptor.tokenKey] == nil || request.headers[APITokenInterceptor.tokenKey] == "" {
+                        newRequest.addValue(fileLoadModule.token, forHTTPHeaderField: APITokenInterceptor.tokenKey)
                     }
                 } else {
-                    newRequest.setValue(nil, forHTTPHeaderField: "Token")
+                    newRequest.setValue(nil, forHTTPHeaderField: APITokenInterceptor.tokenKey)
                 }
                 return newRequest
             } catch {

@@ -33,7 +33,9 @@ class AVCacheRangeRequest {
             let addHeaders = AVCacheManager.shared.delegate!.header(url: urlString)
             if (addHeaders != nil) {
                 for addHeader in addHeaders! {
-                    headers.add(HTTPHeader(name: addHeader.key, value: addHeader.value))
+                    if (addHeader.value != nil) {
+                        headers.add(HTTPHeader(name: addHeader.key, value: addHeader.value!))
+                    }
                 }
             }
         }
@@ -53,8 +55,6 @@ class AVCacheRangeRequest {
                     for header in addHeaders! {
                         newRequest.setValue(header.value, forHTTPHeaderField: header.key)
                     }
-                } else {
-                    newRequest.setValue(nil, forHTTPHeaderField: "Token")
                 }
                 return newRequest
             } catch {

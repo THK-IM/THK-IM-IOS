@@ -238,6 +238,21 @@
 		A0FCA90F2B496D3800FC6E47 /* DefaultContactDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA90E2B496D3800FC6E47 /* DefaultContactDao.swift */; };
 		A0FCA9112B496E9F00FC6E47 /* DefaultGroupDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9102B496E9F00FC6E47 /* DefaultGroupDao.swift */; };
 		A0FCA9152B4970AB00FC6E47 /* DefaultSessionMemberDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9142B4970AB00FC6E47 /* DefaultSessionMemberDao.swift */; };
+		A0FCA9192B4983F600FC6E47 /* ContactApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9182B4983F600FC6E47 /* ContactApi.swift */; };
+		A0FCA91C2B49844200FC6E47 /* ApplyFriendVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA91B2B49844200FC6E47 /* ApplyFriendVo.swift */; };
+		A0FCA91E2B4984A900FC6E47 /* BlackVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA91D2B4984A900FC6E47 /* BlackVo.swift */; };
+		A0FCA9222B4984F800FC6E47 /* ContactSessionCreateVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9212B4984F800FC6E47 /* ContactSessionCreateVo.swift */; };
+		A0FCA9242B49852C00FC6E47 /* ContactVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9232B49852C00FC6E47 /* ContactVo.swift */; };
+		A0FCA9262B49863600FC6E47 /* FollowVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9252B49863600FC6E47 /* FollowVo.swift */; };
+		A0FCA9282B49866000FC6E47 /* ReviewFriendApplyVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9272B49866000FC6E47 /* ReviewFriendApplyVo.swift */; };
+		A0FCA92A2B4986B700FC6E47 /* UpdateNoteNameVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9292B4986B700FC6E47 /* UpdateNoteNameVo.swift */; };
+		A0FCA92C2B498A5B00FC6E47 /* CreateGroupVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA92B2B498A5B00FC6E47 /* CreateGroupVo.swift */; };
+		A0FCA92E2B498A7000FC6E47 /* DeleteGroupVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA92D2B498A7000FC6E47 /* DeleteGroupVo.swift */; };
+		A0FCA9302B498A8300FC6E47 /* GroupVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA92F2B498A8300FC6E47 /* GroupVo.swift */; };
+		A0FCA9322B498A9600FC6E47 /* JoinGroupVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9312B498A9600FC6E47 /* JoinGroupVo.swift */; };
+		A0FCA9342B498AB200FC6E47 /* TransferGroupVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9332B498AB200FC6E47 /* TransferGroupVo.swift */; };
+		A0FCA9362B498AC700FC6E47 /* UpdateGroupVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9352B498AC700FC6E47 /* UpdateGroupVo.swift */; };
+		A0FCA9392B498D2000FC6E47 /* GroupApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9382B498D2000FC6E47 /* GroupApi.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -476,6 +491,21 @@
 		A0FCA90E2B496D3800FC6E47 /* DefaultContactDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultContactDao.swift; sourceTree = "<group>"; };
 		A0FCA9102B496E9F00FC6E47 /* DefaultGroupDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultGroupDao.swift; sourceTree = "<group>"; };
 		A0FCA9142B4970AB00FC6E47 /* DefaultSessionMemberDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSessionMemberDao.swift; sourceTree = "<group>"; };
+		A0FCA9182B4983F600FC6E47 /* ContactApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactApi.swift; sourceTree = "<group>"; };
+		A0FCA91B2B49844200FC6E47 /* ApplyFriendVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyFriendVo.swift; sourceTree = "<group>"; };
+		A0FCA91D2B4984A900FC6E47 /* BlackVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackVo.swift; sourceTree = "<group>"; };
+		A0FCA9212B4984F800FC6E47 /* ContactSessionCreateVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSessionCreateVo.swift; sourceTree = "<group>"; };
+		A0FCA9232B49852C00FC6E47 /* ContactVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactVo.swift; sourceTree = "<group>"; };
+		A0FCA9252B49863600FC6E47 /* FollowVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowVo.swift; sourceTree = "<group>"; };
+		A0FCA9272B49866000FC6E47 /* ReviewFriendApplyVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFriendApplyVo.swift; sourceTree = "<group>"; };
+		A0FCA9292B4986B700FC6E47 /* UpdateNoteNameVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateNoteNameVo.swift; sourceTree = "<group>"; };
+		A0FCA92B2B498A5B00FC6E47 /* CreateGroupVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupVo.swift; sourceTree = "<group>"; };
+		A0FCA92D2B498A7000FC6E47 /* DeleteGroupVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteGroupVo.swift; sourceTree = "<group>"; };
+		A0FCA92F2B498A8300FC6E47 /* GroupVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVo.swift; sourceTree = "<group>"; };
+		A0FCA9312B498A9600FC6E47 /* JoinGroupVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinGroupVo.swift; sourceTree = "<group>"; };
+		A0FCA9332B498AB200FC6E47 /* TransferGroupVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferGroupVo.swift; sourceTree = "<group>"; };
+		A0FCA9352B498AC700FC6E47 /* UpdateGroupVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateGroupVo.swift; sourceTree = "<group>"; };
+		A0FCA9382B498D2000FC6E47 /* GroupApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupApi.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1251,6 +1281,8 @@
 		A0FCA8D82B48E63600FC6E47 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				A0FCA9172B49752F00FC6E47 /* Group */,
+				A0FCA9162B49752500FC6E47 /* Contact */,
 				A0FCA8DB2B48E8F800FC6E47 /* User */,
 				A0FCA8D92B48E66000FC6E47 /* DataRepository.swift */,
 			);
@@ -1305,6 +1337,51 @@
 				A0FCA8FE2B4931EC00FC6E47 /* SessionViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		A0FCA9162B49752500FC6E47 /* Contact */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA91A2B49842B00FC6E47 /* Vo */,
+				A0FCA9182B4983F600FC6E47 /* ContactApi.swift */,
+			);
+			path = Contact;
+			sourceTree = "<group>";
+		};
+		A0FCA9172B49752F00FC6E47 /* Group */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA9372B498D0B00FC6E47 /* Vo */,
+				A0FCA9382B498D2000FC6E47 /* GroupApi.swift */,
+			);
+			path = Group;
+			sourceTree = "<group>";
+		};
+		A0FCA91A2B49842B00FC6E47 /* Vo */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA91B2B49844200FC6E47 /* ApplyFriendVo.swift */,
+				A0FCA91D2B4984A900FC6E47 /* BlackVo.swift */,
+				A0FCA9212B4984F800FC6E47 /* ContactSessionCreateVo.swift */,
+				A0FCA9232B49852C00FC6E47 /* ContactVo.swift */,
+				A0FCA9252B49863600FC6E47 /* FollowVo.swift */,
+				A0FCA9272B49866000FC6E47 /* ReviewFriendApplyVo.swift */,
+				A0FCA9292B4986B700FC6E47 /* UpdateNoteNameVo.swift */,
+			);
+			path = Vo;
+			sourceTree = "<group>";
+		};
+		A0FCA9372B498D0B00FC6E47 /* Vo */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA92B2B498A5B00FC6E47 /* CreateGroupVo.swift */,
+				A0FCA92D2B498A7000FC6E47 /* DeleteGroupVo.swift */,
+				A0FCA92F2B498A8300FC6E47 /* GroupVo.swift */,
+				A0FCA9312B498A9600FC6E47 /* JoinGroupVo.swift */,
+				A0FCA9332B498AB200FC6E47 /* TransferGroupVo.swift */,
+				A0FCA9352B498AC700FC6E47 /* UpdateGroupVo.swift */,
+			);
+			path = Vo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1438,6 +1515,7 @@
 				A0FCA8E62B48EF1700FC6E47 /* TokenLoginReq.swift in Sources */,
 				A0D68BB22A888679004D11A5 /* IMBaseMessageCellProvider.swift in Sources */,
 				A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiPanelProvider.swift in Sources */,
+				A0FCA9362B498AC700FC6E47 /* UpdateGroupVo.swift in Sources */,
 				A0F031072B2217250058B05B /* CodeMessage.swift in Sources */,
 				A0FCA9152B4970AB00FC6E47 /* DefaultSessionMemberDao.swift in Sources */,
 				A0FCA9032B4952CD00FC6E47 /* Contact.swift in Sources */,
@@ -1448,6 +1526,7 @@
 				A0D68BC42A888679004D11A5 /* CellWrapper.swift in Sources */,
 				A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */,
 				A0FCA8EA2B48EF7500FC6E47 /* UserBasicInfoVo.swift in Sources */,
+				A0FCA9302B498A8300FC6E47 /* GroupVo.swift in Sources */,
 				A0D68B7E2A888679004D11A5 /* AckMsgVo.swift in Sources */,
 				A0D68BFC2A888679004D11A5 /* RxTransform.swift in Sources */,
 				A018CE062B00A46200896B87 /* IMMsgCopyOperator.swift in Sources */,
@@ -1455,8 +1534,10 @@
 				A0D68B812A888679004D11A5 /* CodeMessageError.swift in Sources */,
 				A0D68BCB2A888679004D11A5 /* IMUIManager.swift in Sources */,
 				A0D68B792A888679004D11A5 /* DeleteMsgVo.swift in Sources */,
+				A0FCA9322B498A9600FC6E47 /* JoinGroupVo.swift in Sources */,
 				A0D68BA02A888679004D11A5 /* IMVideoMsgCellProvider.swift in Sources */,
 				A0FCA90B2B4959AC00FC6E47 /* GroupDao.swift in Sources */,
+				A0FCA9242B49852C00FC6E47 /* ContactVo.swift in Sources */,
 				A0F031032B220C120058B05B /* DefaultGroupModule.swift in Sources */,
 				A02529172ACADE72001561A0 /* IMMsgCellOperator.swift in Sources */,
 				A0FCA8FD2B4921A100FC6E47 /* UIIMage+Scale.swift in Sources */,
@@ -1471,6 +1552,8 @@
 				A0D68BD42A888679004D11A5 /* VideoController.swift in Sources */,
 				A03082CD2AF66AF1001B8373 /* IMReadMsgProcessor.swift in Sources */,
 				A0D68B802A888679004D11A5 /* IMSessionApi.swift in Sources */,
+				A0FCA92C2B498A5B00FC6E47 /* CreateGroupVo.swift in Sources */,
+				A0FCA9342B498AB200FC6E47 /* TransferGroupVo.swift in Sources */,
 				A0E8ED4A2AEDEE42004163BD /* Previewer.swift in Sources */,
 				A0D68BB72A888679004D11A5 /* IMMessageLayout.swift in Sources */,
 				A0D51DCA2B11BBDE00E21E75 /* IMSessionChooseViewController.swift in Sources */,
@@ -1516,6 +1599,7 @@
 				A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */,
 				A0D68C092A888679004D11A5 /* SignalListener.swift in Sources */,
 				A0D68BAE2A888679004D11A5 /* IMUnicodeEmojiPanelView.swift in Sources */,
+				A0FCA92A2B4986B700FC6E47 /* UpdateNoteNameVo.swift in Sources */,
 				A0D68B9C2A888679004D11A5 /* String+Ext.swift in Sources */,
 				A018CE0E2B00A4BB00896B87 /* IMMsgMultiSelectOperator.swift in Sources */,
 				A0D68BE32A888679004D11A5 /* DefaultMessageModule.swift in Sources */,
@@ -1545,6 +1629,7 @@
 				A0D68BE52A888679004D11A5 /* DefaultCommonModule.swift in Sources */,
 				A0D51DCE2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift in Sources */,
 				A0D68BDE2A888679004D11A5 /* ObservableType+Compose.swift in Sources */,
+				A0FCA9192B4983F600FC6E47 /* ContactApi.swift in Sources */,
 				A0C431E92A909CB200A84D4A /* LocalParticipant.swift in Sources */,
 				A025291E2ACC344D001561A0 /* Provider.swift in Sources */,
 				A0FCA8E42B48ECB600FC6E47 /* RegisterVo.swift in Sources */,
@@ -1556,16 +1641,19 @@
 				A050072F2B08BC9700526713 /* AppUtils.swift in Sources */,
 				A0D68BF22A888679004D11A5 /* IMUnSupportMsgProcessor.swift in Sources */,
 				A0D68C012A888679004D11A5 /* WeakReference.swift in Sources */,
+				A0FCA91C2B49844200FC6E47 /* ApplyFriendVo.swift in Sources */,
 				A0C431F62A909CCE00A84D4A /* CreateRoomBean.swift in Sources */,
 				A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */,
 				A0E8ED4C2AEDF23B004163BD /* PreviewCellView.swift in Sources */,
 				A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */,
+				A0FCA9282B49866000FC6E47 /* ReviewFriendApplyVo.swift in Sources */,
 				A0FCA8FF2B4931EC00FC6E47 /* SessionViewController.swift in Sources */,
 				A018CDFF2B008F6F00896B87 /* IMMessageOperatorPopupView.swift in Sources */,
 				A02578BF2AA2F23100A66CEF /* IMMsgBodyDefines.swift in Sources */,
 				A018CE102B00ADE400896B87 /* IMMessageOperatorItemView.swift in Sources */,
 				A025290D2AC6CD1F001561A0 /* LoadTask.swift in Sources */,
 				A0D68BEC2A888679004D11A5 /* IMImageMsgProcessor.swift in Sources */,
+				A0FCA91E2B4984A900FC6E47 /* BlackVo.swift in Sources */,
 				A0FCA9052B4953FD00FC6E47 /* Group.swift in Sources */,
 				A0EA42ED2A94928400F64A90 /* DefaultSessionDao.swift in Sources */,
 				A0D68B7F2A888679004D11A5 /* ListVo.swift in Sources */,
@@ -1587,9 +1675,12 @@
 				A0D68BE22A888679004D11A5 /* UserModule.swift in Sources */,
 				A0C431F72A909CCE00A84D4A /* PlayBean.swift in Sources */,
 				A0D68B922A888679004D11A5 /* Message.swift in Sources */,
+				A0FCA9222B4984F800FC6E47 /* ContactSessionCreateVo.swift in Sources */,
 				A0D68BF12A888679004D11A5 /* IMBaseMsgProcessor.swift in Sources */,
 				A0FCA8EC2B48F60500FC6E47 /* APITokenInterceptor.swift in Sources */,
 				A0C431F32A909CCE00A84D4A /* StreamApi.swift in Sources */,
+				A0FCA9392B498D2000FC6E47 /* GroupApi.swift in Sources */,
+				A0FCA9262B49863600FC6E47 /* FollowVo.swift in Sources */,
 				A0D68BFA2A888679004D11A5 /* FileLoadModule.swift in Sources */,
 				A0D68BA62A888679004D11A5 /* IMTimeLineMsgCell.swift in Sources */,
 				A0D68BD22A888679004D11A5 /* PreviewImageCellView.swift in Sources */,
@@ -1626,6 +1717,7 @@
 				A0D68B9B2A888679004D11A5 /* UIColor+HexString.swift in Sources */,
 				A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */,
 				A0D68B9E2A888679004D11A5 /* IMBaseSessionCellProvider.swift in Sources */,
+				A0FCA92E2B498A7000FC6E47 /* DeleteGroupVo.swift in Sources */,
 				A0D68BA82A888679004D11A5 /* IMUnSupportMsgCell.swift in Sources */,
 				A0D68B762A888679004D11A5 /* OGGDecoder.swift in Sources */,
 				A0D68C002A888679004D11A5 /* MimeType.swift in Sources */,

@@ -14,7 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        initIM(application)
         return true
     }
     
@@ -31,18 +30,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
     
-    func initIM(_ application: UIApplication) {
-        DataRepository.shared.initApplication(app: application)
+    func initIM(token: String, uId: Int64) {
+        DataRepository.shared.initApplication(app: UIApplication.shared)
         let debug = true
-        let uId : Int64 = 15498
-        let token = String(uId)
         let apiEndpoint = "http://api.thkim.com"
         let wsEndpoint = "ws://ws.thkim.com/ws"
-        IMCoreManager.shared.initApplication(application, uId, debug)
+        IMCoreManager.shared.initApplication(UIApplication.shared, uId, debug)
         IMCoreManager.shared.api = DefaultIMApi(token: token, endpoint: apiEndpoint)
-        IMCoreManager.shared.signalModule = DefaultSignalModule(application, wsEndpoint, "\(uId)")
+        IMCoreManager.shared.signalModule = DefaultSignalModule(UIApplication.shared, wsEndpoint, token)
+        IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule(token, apiEndpoint)
         
-        IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule("\(uId)", apiEndpoint)
         IMUIManager.shared.initConfig()
         IMUIManager.shared.contentProvider = Provider(token: token)
         IMUIManager.shared.contentPreviewer = Previewer(token: token, endpoint: apiEndpoint)

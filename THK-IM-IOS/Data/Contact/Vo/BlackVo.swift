@@ -1,5 +1,5 @@
 //
-//  RegisterVo.swift
+//  BlackVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/1/6.
@@ -8,14 +8,13 @@
 
 import Foundation
 
-class RegisterVo: Codable {
-    var token: String
-    var user: UserVo
+class BlackVo: Codable {
+    
+    var uId: Int64
+    var contactId: Int64
     
     enum CodingKeys: String, CodingKey {
-        case token = "token"
-        case user = "user"
+        case uId = "u_id"
+        case contactId = "contact_id"
     }
-    
 }
-

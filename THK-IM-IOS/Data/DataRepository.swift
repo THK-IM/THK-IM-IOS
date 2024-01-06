@@ -23,16 +23,30 @@ public class DataRepository: NSObject {
     lazy var userApi:MoyaProvider<UserApi> = {
         return _userApi!
     }()
+    lazy var contactApi:MoyaProvider<ContactApi> = {
+        return _contactApi!
+    }()
+    lazy var groupApi:MoyaProvider<GroupApi> = {
+        return _groupApi!
+    }()
     
     private var _app: UIApplication?
     private var _apiTokenInterceptor: APITokenInterceptor?
     private var _userApi: MoyaProvider<UserApi>?
+    private var _contactApi: MoyaProvider<ContactApi>?
+    private var _groupApi: MoyaProvider<GroupApi>?
     
     func initApplication(app: UIApplication) {
         self._app = app
         let token = self.getUserToken()
         self._apiTokenInterceptor = APITokenInterceptor(token: token)
+        self._apiTokenInterceptor?.addValidEndpoint(endpoint: getApiHost(type: "user"))
+        self._apiTokenInterceptor?.addValidEndpoint(endpoint: getApiHost(type: "contact"))
+        self._apiTokenInterceptor?.addValidEndpoint(endpoint: getApiHost(type: "group"))
+        self._apiTokenInterceptor?.addValidEndpoint(endpoint: getApiHost(type: "msg"))
         self._userApi = MoyaProvider<UserApi>(plugins: [_apiTokenInterceptor!])
+        self._contactApi = MoyaProvider<ContactApi>(plugins: [_apiTokenInterceptor!])
+        self._groupApi = MoyaProvider<GroupApi>(plugins: [_apiTokenInterceptor!])
     }
     
     func updateToken(token: String) {

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 import Moya
 
 enum UserApi {
@@ -41,7 +40,7 @@ extension UserApi: TargetType {
         case let .queryUser(id):
             return "/user/query/\(id)"
         case .searchUserByDisplayId:
-            return "/user/user"
+            return "/user/query"
         }
     }
     
@@ -70,10 +69,6 @@ extension UserApi: TargetType {
             let urlParameters = ["display_id": displayId] as [String : Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         }
-    }
-    
-    var validationType: Moya.ValidationType {
-        return .none
     }
     
 }

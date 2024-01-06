@@ -13,31 +13,50 @@ public class APITokenInterceptor: PluginType {
     
     private var token: String?
     
-    private let tokenKey = "Authorization"
-    private let clientVersionKey = "Client-Version"
-    private let platformKey = "Client-Platform"
+    static let tokenKey = "Authorization"
+    static let clientVersionKey = "Client-Version"
+    static let platformKey = "Client-Platform"
+    
+    private var validEndpoints: Set<String>
     
     init(token: String? = nil) {
         self.token = token
+        self.validEndpoints = Set()
     }
     
     public func updateToken(token: String) {
         self.token = token
     }
     
+    public func addValidEndpoint(endpoint: String) {
+        self.validEndpoints.insert(endpoint)
+    }
+    
     public func prepare(_ request: URLRequest, target: TargetType) -> URLRequest {
         var newRequest = request
-        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-            newRequest.setValue(appVersion, forHTTPHeaderField: clientVersionKey)
+        let isValidEndpoint = isValidEndpoint(url: request.url?.absoluteString ?? "")
+        if (isValidEndpoint) {
+            newRequest.setValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.clientVersionKey)
+            if (token != nil) {
+                let value = "Bearer \(token!)"
+                newRequest.setValue(value, forHTTPHeaderField: APITokenInterceptor.tokenKey)
+            }
+            newRequest.setValue("IOS", forHTTPHeaderField: APITokenInterceptor.platformKey)
         } else {
-            newRequest.setValue("0.0.0", forHTTPHeaderField: clientVersionKey)
+            newRequest.headers.remove(name: APITokenInterceptor.clientVersionKey)
+            newRequest.headers.remove(name: APITokenInterceptor.tokenKey)
+            newRequest.headers.remove(name: APITokenInterceptor.platformKey)
         }
-        if (token != nil) {
-            let value = "Bearer \(token!)"
-            newRequest.setValue(value, forHTTPHeaderField: tokenKey)
-        }
-        newRequest.setValue("IOS", forHTTPHeaderField: platformKey)
         return newRequest
+    }
+    
+    func isValidEndpoint(url: String) -> Bool {
+        for validEndpoint in validEndpoints {
+            if (url.starts(with: validEndpoint)) {
+                return true
+            }
+        }
+        return false
     }
     
 }

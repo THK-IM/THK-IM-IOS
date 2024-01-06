@@ -96,8 +96,6 @@ extension IMMessageApi: TargetType {
     }
     
     var headers: [String : String]? {
-        var headers = [String: String]()
-        headers["Token"] = "\(IMCoreManager.shared.api.getToken())"
-        return headers
+        return nil
     }
 }

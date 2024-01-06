@@ -34,11 +34,19 @@ public class IMAVCacheProtocol: AVCacheProtocol {
         return 200
     }
     
-    public func header(url: String) -> [String : String]? {
+    public func header(url: String) -> [String : String?]? {
         if url.hasPrefix(self.endpoint) {
-            return ["Token": self.token]
+            return [
+                APITokenInterceptor.tokenKey: self.token,
+                APITokenInterceptor.clientVersionKey: AppUtils.getVersion(),
+                APITokenInterceptor.platformKey: "IOS",
+            ]
         } else {
-            return nil
+            return [
+                APITokenInterceptor.tokenKey: nil,
+                APITokenInterceptor.clientVersionKey: nil,
+                APITokenInterceptor.platformKey: nil,
+            ]
         }
     }
     

@@ -1,5 +1,5 @@
 //
-//  RegisterVo.swift
+//  DeleteGroupVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/1/6.
@@ -8,14 +8,13 @@
 
 import Foundation
 
-class RegisterVo: Codable {
-    var token: String
-    var user: UserVo
+class DeleteGroupVo: Codable {
+    var groupId: Int64
+    var uId: Int64
     
     enum CodingKeys: String, CodingKey {
-        case token = "token"
-        case user = "user"
+        case groupId = "group_id"
+        case uId = "u_id"
     }
     
 }
-

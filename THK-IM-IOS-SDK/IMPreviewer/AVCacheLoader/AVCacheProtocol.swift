@@ -14,7 +14,7 @@ public protocol AVCacheProtocol: AnyObject {
     
     func maxCacheCount() -> Int
     
-    func header(url: String) -> [String: String]?
+    func header(url: String) -> [String: String?]?
     
     func cacheDirPath() -> String
     
