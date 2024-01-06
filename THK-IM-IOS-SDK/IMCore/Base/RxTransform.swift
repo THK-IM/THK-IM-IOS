@@ -40,8 +40,14 @@ public class RxTransformer {
                     let body = try JSONDecoder().decode(type, from: response.data)
                     return Observable.just(body)
                 } else {
-                    let errorBean = try JSONDecoder().decode(ErrorVo.self, from: response.data)
-                    return Observable.error(Exception.IMHttp(errorBean.code, errorBean.message))
+                    var codeMsg = try? JSONDecoder().decode(CodeMessage.self, from: response.data)
+                    if (codeMsg != nil) {
+                        return Observable.error(CodeMessageError(codeMsg: codeMsg!))
+                    } else {
+                        let msg = String(data: response.data, encoding: .utf8) ?? ""
+                        codeMsg = CodeMessage(code: response.statusCode, message: msg)
+                        return Observable.error(CodeMessageError(codeMsg: codeMsg!))
+                    }
                 }
             })
         })
@@ -53,8 +59,14 @@ public class RxTransformer {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     return Observable.empty()
                 } else {
-                    let errorBean = try JSONDecoder().decode(ErrorVo.self, from: response.data)
-                    return Observable.error(Exception.IMHttp(errorBean.code, errorBean.message))
+                    var codeMsg = try? JSONDecoder().decode(CodeMessage.self, from: response.data)
+                    if (codeMsg != nil) {
+                        return Observable.error(CodeMessageError(codeMsg: codeMsg!))
+                    } else {
+                        let msg = String(data: response.data, encoding: .utf8) ?? ""
+                        codeMsg = CodeMessage(code: response.statusCode, message: msg)
+                        return Observable.error(CodeMessageError(codeMsg: codeMsg!))
+                    }
                 }
             })
         })

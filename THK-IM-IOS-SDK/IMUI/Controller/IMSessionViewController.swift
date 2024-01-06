@@ -13,8 +13,7 @@ import CocoaLumberjack
 
 class IMSessionViewController : UIViewController, UITableViewDataSource, UITableViewDelegate, IMSessionCellOperator {
     
-    
-    private var sessionTableView : UITableView?
+    private var sessionTableView = UITableView()
     private var sessions: Array<Session> = Array()
     private let disposeBag = DisposeBag()
     private var isLoading = false
@@ -28,13 +27,12 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let frame = self.view.frame
-        self.sessionTableView = UITableView(frame: frame)
-        self.sessionTableView?.rowHeight = UITableView.automaticDimension
-        self.sessionTableView?.estimatedRowHeight = 100
-        self.sessionTableView?.dataSource = self
-        self.sessionTableView?.delegate = self
-        self.view.addSubview(self.sessionTableView!)
+        self.sessionTableView.rowHeight = UITableView.automaticDimension
+        self.sessionTableView.estimatedRowHeight = 100
+        self.sessionTableView.dataSource = self
+        self.sessionTableView.delegate = self
+        self.view.addSubview(self.sessionTableView)
+        self.sessionTableView.frame = self.view.frame
         self.loadSessions()
     }
     
@@ -55,7 +53,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self ]value in
                 self?.sessions.append(contentsOf: value)
-                self?.sessionTableView?.reloadData()
+                self?.sessionTableView.reloadData()
                 if (value.count >= 20) {
                     self?.isLoading = false
                 }
@@ -69,7 +67,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     }
     
     private func onSessionUpdate(_ session: Session) {
-        guard let tableView = self.sessionTableView else { return }
+        let tableView = self.sessionTableView
         let oldPos = findPosition(session)
         if (oldPos >= 0 && oldPos < self.sessions.count) {
             self.sessions.remove(at: oldPos)
@@ -103,7 +101,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     private func onSessionRemove(_ session: Session) {
         lock.lock()
         defer {lock.unlock()}
-        guard let tableView = self.sessionTableView else { return }
+        let tableView = self.sessionTableView
         let pos = findPosition(session)
         if (pos != -1) {
             // 老session，替换reload
@@ -137,8 +135,8 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     }
     
     internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let h = self.sessionTableView!.frame.height
-        let distance = self.sessionTableView!.contentSize.height - self.sessionTableView!.contentOffset.y
+        let h = self.sessionTableView.frame.height
+        let distance = self.sessionTableView.contentSize.height - self.sessionTableView.contentOffset.y
         if (h > distance) {
             self.loadSessions()
         }

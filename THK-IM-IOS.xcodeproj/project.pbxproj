@@ -76,7 +76,7 @@
 		A0D51DD62B12FBC100E21E75 /* IMRecordMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DD52B12FBC100E21E75 /* IMRecordMessageViewController.swift */; };
 		A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A962A88838A004D11A5 /* AppDelegate.swift */; };
 		A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A982A88838A004D11A5 /* SceneDelegate.swift */; };
-		A0D68A9B2A88838A004D11A5 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A9A2A88838A004D11A5 /* MainViewController.swift */; };
+		A0D68A9B2A88838A004D11A5 /* MainTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68A9A2A88838A004D11A5 /* MainTextViewController.swift */; };
 		A0D68A9E2A88838A004D11A5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0D68A9C2A88838A004D11A5 /* Main.storyboard */; };
 		A0D68AA02A88838C004D11A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0D68A9F2A88838C004D11A5 /* Assets.xcassets */; };
 		A0D68AA32A88838C004D11A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0D68AA12A88838C004D11A5 /* LaunchScreen.storyboard */; };
@@ -93,7 +93,7 @@
 		A0D68B7E2A888679004D11A5 /* AckMsgVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABA2A888678004D11A5 /* AckMsgVo.swift */; };
 		A0D68B7F2A888679004D11A5 /* ListVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABB2A888678004D11A5 /* ListVo.swift */; };
 		A0D68B802A888679004D11A5 /* IMSessionApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABC2A888678004D11A5 /* IMSessionApi.swift */; };
-		A0D68B812A888679004D11A5 /* Exception.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABE2A888678004D11A5 /* Exception.swift */; };
+		A0D68B812A888679004D11A5 /* CodeMessageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABE2A888678004D11A5 /* CodeMessageError.swift */; };
 		A0D68B822A888679004D11A5 /* IMMessageApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABF2A888678004D11A5 /* IMMessageApi.swift */; };
 		A0D68B8E2A888679004D11A5 /* IMDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AD02A888678004D11A5 /* IMDatabase.swift */; };
 		A0D68B912A888679004D11A5 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AD42A888678004D11A5 /* Session.swift */; };
@@ -210,9 +210,25 @@
 		A0F031012B220B940058B05B /* DefaultContactModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031002B220B940058B05B /* DefaultContactModule.swift */; };
 		A0F031032B220C120058B05B /* DefaultGroupModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031022B220C120058B05B /* DefaultGroupModule.swift */; };
 		A0F031052B220C6C0058B05B /* DefaultCustomModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031042B220C6C0058B05B /* DefaultCustomModule.swift */; };
-		A0F031072B2217250058B05B /* ErrorVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031062B2217250058B05B /* ErrorVo.swift */; };
+		A0F031072B2217250058B05B /* CodeMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031062B2217250058B05B /* CodeMessage.swift */; };
 		A0FCA8D32B484A5B00FC6E47 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8D22B484A5B00FC6E47 /* WelcomeViewController.swift */; };
-		A0FCA8D72B484AB300FC6E47 /* IMBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8D62B484AB300FC6E47 /* IMBaseViewController.swift */; };
+		A0FCA8D72B484AB300FC6E47 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8D62B484AB300FC6E47 /* BaseViewController.swift */; };
+		A0FCA8DA2B48E66000FC6E47 /* DataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8D92B48E66000FC6E47 /* DataRepository.swift */; };
+		A0FCA8DE2B48E92300FC6E47 /* UserVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8DD2B48E92300FC6E47 /* UserVo.swift */; };
+		A0FCA8E02B48EBC200FC6E47 /* UserApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8DF2B48EBC200FC6E47 /* UserApi.swift */; };
+		A0FCA8E22B48EC4200FC6E47 /* RegisterReq.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8E12B48EC4200FC6E47 /* RegisterReq.swift */; };
+		A0FCA8E42B48ECB600FC6E47 /* RegisterVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8E32B48ECB600FC6E47 /* RegisterVo.swift */; };
+		A0FCA8E62B48EF1700FC6E47 /* TokenLoginReq.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8E52B48EF1700FC6E47 /* TokenLoginReq.swift */; };
+		A0FCA8E82B48EF4700FC6E47 /* LoginVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8E72B48EF4700FC6E47 /* LoginVo.swift */; };
+		A0FCA8EA2B48EF7500FC6E47 /* UserBasicInfoVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8E92B48EF7500FC6E47 /* UserBasicInfoVo.swift */; };
+		A0FCA8EC2B48F60500FC6E47 /* APITokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8EB2B48F60500FC6E47 /* APITokenInterceptor.swift */; };
+		A0FCA8F32B4917D500FC6E47 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8F22B4917D500FC6E47 /* MainViewController.swift */; };
+		A0FCA8F72B4919C100FC6E47 /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8F62B4919C100FC6E47 /* ContactViewController.swift */; };
+		A0FCA8F92B4919DE00FC6E47 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8F82B4919DE00FC6E47 /* GroupViewController.swift */; };
+		A0FCA8FB2B4919F100FC6E47 /* MineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8FA2B4919F100FC6E47 /* MineViewController.swift */; };
+		A0FCA8FD2B4921A100FC6E47 /* UIIMage+Scale.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8FC2B4921A100FC6E47 /* UIIMage+Scale.swift */; };
+		A0FCA8FF2B4931EC00FC6E47 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8FE2B4931EC00FC6E47 /* SessionViewController.swift */; };
+		A0FCA9012B493CE900FC6E47 /* ViewController+TitleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9002B493CE900FC6E47 /* ViewController+TitleBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -288,7 +304,7 @@
 		A0D68A932A88838A004D11A5 /* THK-IM-IOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "THK-IM-IOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0D68A962A88838A004D11A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A0D68A982A88838A004D11A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		A0D68A9A2A88838A004D11A5 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		A0D68A9A2A88838A004D11A5 /* MainTextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTextViewController.swift; sourceTree = "<group>"; };
 		A0D68A9D2A88838A004D11A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A0D68A9F2A88838C004D11A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A0D68AA22A88838C004D11A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -306,7 +322,7 @@
 		A0D68ABA2A888678004D11A5 /* AckMsgVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AckMsgVo.swift; sourceTree = "<group>"; };
 		A0D68ABB2A888678004D11A5 /* ListVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListVo.swift; sourceTree = "<group>"; };
 		A0D68ABC2A888678004D11A5 /* IMSessionApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSessionApi.swift; sourceTree = "<group>"; };
-		A0D68ABE2A888678004D11A5 /* Exception.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Exception.swift; sourceTree = "<group>"; };
+		A0D68ABE2A888678004D11A5 /* CodeMessageError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeMessageError.swift; sourceTree = "<group>"; };
 		A0D68ABF2A888678004D11A5 /* IMMessageApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMessageApi.swift; sourceTree = "<group>"; };
 		A0D68AD02A888678004D11A5 /* IMDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMDatabase.swift; sourceTree = "<group>"; };
 		A0D68AD42A888678004D11A5 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -423,9 +439,25 @@
 		A0F031002B220B940058B05B /* DefaultContactModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultContactModule.swift; sourceTree = "<group>"; };
 		A0F031022B220C120058B05B /* DefaultGroupModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultGroupModule.swift; sourceTree = "<group>"; };
 		A0F031042B220C6C0058B05B /* DefaultCustomModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCustomModule.swift; sourceTree = "<group>"; };
-		A0F031062B2217250058B05B /* ErrorVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorVo.swift; sourceTree = "<group>"; };
+		A0F031062B2217250058B05B /* CodeMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeMessage.swift; sourceTree = "<group>"; };
 		A0FCA8D22B484A5B00FC6E47 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
-		A0FCA8D62B484AB300FC6E47 /* IMBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMBaseViewController.swift; sourceTree = "<group>"; };
+		A0FCA8D62B484AB300FC6E47 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		A0FCA8D92B48E66000FC6E47 /* DataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRepository.swift; sourceTree = "<group>"; };
+		A0FCA8DD2B48E92300FC6E47 /* UserVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVo.swift; sourceTree = "<group>"; };
+		A0FCA8DF2B48EBC200FC6E47 /* UserApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApi.swift; sourceTree = "<group>"; };
+		A0FCA8E12B48EC4200FC6E47 /* RegisterReq.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterReq.swift; sourceTree = "<group>"; };
+		A0FCA8E32B48ECB600FC6E47 /* RegisterVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVo.swift; sourceTree = "<group>"; };
+		A0FCA8E52B48EF1700FC6E47 /* TokenLoginReq.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenLoginReq.swift; sourceTree = "<group>"; };
+		A0FCA8E72B48EF4700FC6E47 /* LoginVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVo.swift; sourceTree = "<group>"; };
+		A0FCA8E92B48EF7500FC6E47 /* UserBasicInfoVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBasicInfoVo.swift; sourceTree = "<group>"; };
+		A0FCA8EB2B48F60500FC6E47 /* APITokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITokenInterceptor.swift; sourceTree = "<group>"; };
+		A0FCA8F22B4917D500FC6E47 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		A0FCA8F62B4919C100FC6E47 /* ContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
+		A0FCA8F82B4919DE00FC6E47 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
+		A0FCA8FA2B4919F100FC6E47 /* MineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineViewController.swift; sourceTree = "<group>"; };
+		A0FCA8FC2B4921A100FC6E47 /* UIIMage+Scale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIIMage+Scale.swift"; sourceTree = "<group>"; };
+		A0FCA8FE2B4931EC00FC6E47 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
+		A0FCA9002B493CE900FC6E47 /* ViewController+TitleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+TitleBar.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -563,7 +595,8 @@
 				A0D68B622A888679004D11A5 /* ImageCompress.swift */,
 				A0EA42FC2A99A60200F64A90 /* ImageCacheManager.swift */,
 				A0D68B602A888679004D11A5 /* RxTransform.swift */,
-				A0F031062B2217250058B05B /* ErrorVo.swift */,
+				A0F031062B2217250058B05B /* CodeMessage.swift */,
+				A0D68ABE2A888678004D11A5 /* CodeMessageError.swift */,
 				A0D68B632A888679004D11A5 /* GCDTool.swift */,
 				A0D68B642A888679004D11A5 /* MimeType.swift */,
 				A0D68B652A888679004D11A5 /* WeakReference.swift */,
@@ -668,11 +701,12 @@
 		A0D68A952A88838A004D11A5 /* THK-IM-IOS */ = {
 			isa = PBXGroup;
 			children = (
+				A0FCA8D82B48E63600FC6E47 /* Data */,
 				A0FCA8D42B484A7A00FC6E47 /* UI */,
 				A0C431F92A909D2500A84D4A /* View */,
 				A0D68A962A88838A004D11A5 /* AppDelegate.swift */,
 				A0D68A982A88838A004D11A5 /* SceneDelegate.swift */,
-				A0D68A9A2A88838A004D11A5 /* MainViewController.swift */,
+				A0D68A9A2A88838A004D11A5 /* MainTextViewController.swift */,
 				A0D68B2D2A888679004D11A5 /* VideoController.swift */,
 				A0C431DF2A909C3100A84D4A /* LiveController.swift */,
 				A018CDF72AFFA9A900896B87 /* MediaViewController.swift */,
@@ -732,14 +766,6 @@
 				A0D51DC72B11ABC600E21E75 /* ForwardMessageVo.swift */,
 			);
 			path = Vo;
-			sourceTree = "<group>";
-		};
-		A0D68ABD2A888678004D11A5 /* Exception */ = {
-			isa = PBXGroup;
-			children = (
-				A0D68ABE2A888678004D11A5 /* Exception.swift */,
-			);
-			path = Exception;
 			sourceTree = "<group>";
 		};
 		A0D68AC02A888678004D11A5 /* IMLive */ = {
@@ -819,6 +845,7 @@
 				A0D68AE22A888678004D11A5 /* String+Ext.swift */,
 				A025291F2ADAE496001561A0 /* Double+DP.swift */,
 				A02529212ADBD5BF001561A0 /* Data+HexString.swift */,
+				A0FCA8FC2B4921A100FC6E47 /* UIIMage+Scale.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1167,10 +1194,10 @@
 			isa = PBXGroup;
 			children = (
 				A0D68AB42A888678004D11A5 /* Vo */,
-				A0D68ABD2A888678004D11A5 /* Exception */,
 				A0D68ABF2A888678004D11A5 /* IMMessageApi.swift */,
 				A0D68ABC2A888678004D11A5 /* IMSessionApi.swift */,
 				A0EA42FA2A94CCE200F64A90 /* DefaultIMApi.swift */,
+				A0FCA8EB2B48F60500FC6E47 /* APITokenInterceptor.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -1179,7 +1206,8 @@
 			isa = PBXGroup;
 			children = (
 				A0FCA8D52B484A8B00FC6E47 /* Base */,
-				A0FCA8D22B484A5B00FC6E47 /* WelcomeViewController.swift */,
+				A0FCA8F02B49178300FC6E47 /* Main */,
+				A0FCA8EF2B49176D00FC6E47 /* Welcome */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1187,9 +1215,69 @@
 		A0FCA8D52B484A8B00FC6E47 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				A0FCA8D62B484AB300FC6E47 /* IMBaseViewController.swift */,
+				A0FCA8D62B484AB300FC6E47 /* BaseViewController.swift */,
+				A0FCA9002B493CE900FC6E47 /* ViewController+TitleBar.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		A0FCA8D82B48E63600FC6E47 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA8DB2B48E8F800FC6E47 /* User */,
+				A0FCA8D92B48E66000FC6E47 /* DataRepository.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		A0FCA8DB2B48E8F800FC6E47 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA8DC2B48E90E00FC6E47 /* Vo */,
+				A0FCA8DF2B48EBC200FC6E47 /* UserApi.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		A0FCA8DC2B48E90E00FC6E47 /* Vo */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA8DD2B48E92300FC6E47 /* UserVo.swift */,
+				A0FCA8E12B48EC4200FC6E47 /* RegisterReq.swift */,
+				A0FCA8E32B48ECB600FC6E47 /* RegisterVo.swift */,
+				A0FCA8E52B48EF1700FC6E47 /* TokenLoginReq.swift */,
+				A0FCA8E72B48EF4700FC6E47 /* LoginVo.swift */,
+				A0FCA8E92B48EF7500FC6E47 /* UserBasicInfoVo.swift */,
+			);
+			path = Vo;
+			sourceTree = "<group>";
+		};
+		A0FCA8EF2B49176D00FC6E47 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA8D22B484A5B00FC6E47 /* WelcomeViewController.swift */,
+			);
+			path = Welcome;
+			sourceTree = "<group>";
+		};
+		A0FCA8F02B49178300FC6E47 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA8F52B49199E00FC6E47 /* ViewControllers */,
+				A0FCA8F22B4917D500FC6E47 /* MainViewController.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		A0FCA8F52B49199E00FC6E47 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA8F62B4919C100FC6E47 /* ContactViewController.swift */,
+				A0FCA8F82B4919DE00FC6E47 /* GroupViewController.swift */,
+				A0FCA8FA2B4919F100FC6E47 /* MineViewController.swift */,
+				A0FCA8FE2B4931EC00FC6E47 /* SessionViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1316,27 +1404,32 @@
 				A0D68B772A888679004D11A5 /* OGGEncoder.swift in Sources */,
 				A0D68BD32A888679004D11A5 /* CircleProgressView.swift in Sources */,
 				A018CE082B00A47300896B87 /* IMMsgForwardOperator.swift in Sources */,
+				A0FCA8E02B48EBC200FC6E47 /* UserApi.swift in Sources */,
 				A025290B2AC6CBA6001561A0 /* UploadTask.swift in Sources */,
 				A03082D12AF66C31001B8373 /* IMRevokeMsgProcessor.swift in Sources */,
+				A0FCA8FB2B4919F100FC6E47 /* MineViewController.swift in Sources */,
+				A0FCA8E62B48EF1700FC6E47 /* TokenLoginReq.swift in Sources */,
 				A0D68BB22A888679004D11A5 /* IMBaseMessageCellProvider.swift in Sources */,
 				A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiPanelProvider.swift in Sources */,
-				A0F031072B2217250058B05B /* ErrorVo.swift in Sources */,
+				A0F031072B2217250058B05B /* CodeMessage.swift in Sources */,
 				A0D68BD52A888679004D11A5 /* AVCacheManager.swift in Sources */,
 				A0C431EB2A909CB200A84D4A /* RemoteParticipant.swift in Sources */,
 				A0D68BC62A888679004D11A5 /* RightCellWrapper.swift in Sources */,
 				A0D68B782A888679004D11A5 /* OggOpusAudioRecorder.swift in Sources */,
 				A0D68BC42A888679004D11A5 /* CellWrapper.swift in Sources */,
 				A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */,
+				A0FCA8EA2B48EF7500FC6E47 /* UserBasicInfoVo.swift in Sources */,
 				A0D68B7E2A888679004D11A5 /* AckMsgVo.swift in Sources */,
 				A0D68BFC2A888679004D11A5 /* RxTransform.swift in Sources */,
 				A018CE062B00A46200896B87 /* IMMsgCopyOperator.swift in Sources */,
 				A0D68BD12A888679004D11A5 /* PreviewVideoCellView.swift in Sources */,
-				A0D68B812A888679004D11A5 /* Exception.swift in Sources */,
+				A0D68B812A888679004D11A5 /* CodeMessageError.swift in Sources */,
 				A0D68BCB2A888679004D11A5 /* IMUIManager.swift in Sources */,
 				A0D68B792A888679004D11A5 /* DeleteMsgVo.swift in Sources */,
 				A0D68BA02A888679004D11A5 /* IMVideoMsgCellProvider.swift in Sources */,
 				A0F031032B220C120058B05B /* DefaultGroupModule.swift in Sources */,
 				A02529172ACADE72001561A0 /* IMMsgCellOperator.swift in Sources */,
+				A0FCA8FD2B4921A100FC6E47 /* UIIMage+Scale.swift in Sources */,
 				A02529222ADBD5BF001561A0 /* Data+HexString.swift in Sources */,
 				A0EA42FB2A94CCE200F64A90 /* DefaultIMApi.swift in Sources */,
 				A0D68BC72A888679004D11A5 /* BaseTableCell.swift in Sources */,
@@ -1362,11 +1455,15 @@
 				A0D68BF92A888679004D11A5 /* FileLoadListener.swift in Sources */,
 				A0D68BEA2A888679004D11A5 /* IMVideoMsgProcessor.swift in Sources */,
 				A0C431F52A909CCE00A84D4A /* PublishBean.swift in Sources */,
+				A0FCA8DA2B48E66000FC6E47 /* DataRepository.swift in Sources */,
+				A0FCA8F72B4919C100FC6E47 /* ContactViewController.swift in Sources */,
 				A0D68BE72A888679004D11A5 /* MessageModule.swift in Sources */,
 				A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */,
-				A0FCA8D72B484AB300FC6E47 /* IMBaseViewController.swift in Sources */,
+				A0FCA8D72B484AB300FC6E47 /* BaseViewController.swift in Sources */,
 				A0D68BB32A888679004D11A5 /* IMBaseFunctionCellProvider.swift in Sources */,
 				A0D68BAD2A888679004D11A5 /* IMUnicodeEmojiCell.swift in Sources */,
+				A0FCA8E82B48EF4700FC6E47 /* LoginVo.swift in Sources */,
+				A0FCA8DE2B48E92300FC6E47 /* UserVo.swift in Sources */,
 				A018CE0C2B00A4A200896B87 /* IMMsgReplyOperator.swift in Sources */,
 				A0D68B7B2A888679004D11A5 /* MessageVo.swift in Sources */,
 				A0D68B7D2A888679004D11A5 /* SessionVo.swift in Sources */,
@@ -1376,9 +1473,10 @@
 				A0D68BC02A888679004D11A5 /* IMMsgSender.swift in Sources */,
 				A0D68BDA2A888679004D11A5 /* IMZoomImageView.swift in Sources */,
 				A025291A2ACC31CA001561A0 /* IMProvider.swift in Sources */,
+				A0FCA8F92B4919DE00FC6E47 /* GroupViewController.swift in Sources */,
 				A0EA42E62A94904400F64A90 /* IMDatabaseDefines.swift in Sources */,
 				A0D68BC22A888679004D11A5 /* MiddleCellWrapper.swift in Sources */,
-				A0D68A9B2A88838A004D11A5 /* MainViewController.swift in Sources */,
+				A0D68A9B2A88838A004D11A5 /* MainTextViewController.swift in Sources */,
 				A0D68BA52A888679004D11A5 /* IMImageMsgCell.swift in Sources */,
 				A0D68BEB2A888679004D11A5 /* IMAudioMsgProcessor.swift in Sources */,
 				A0D68BBF2A888679004D11A5 /* IMMsgLabelView.swift in Sources */,
@@ -1416,6 +1514,7 @@
 				A0D68BDE2A888679004D11A5 /* ObservableType+Compose.swift in Sources */,
 				A0C431E92A909CB200A84D4A /* LocalParticipant.swift in Sources */,
 				A025291E2ACC344D001561A0 /* Provider.swift in Sources */,
+				A0FCA8E42B48ECB600FC6E47 /* RegisterVo.swift in Sources */,
 				A0D51DCC2B11D93700E21E75 /* IMRecordMsgCell.swift in Sources */,
 				A0D68BC12A888679004D11A5 /* IMMsgPreviewer.swift in Sources */,
 				A0D51DC82B11ABC600E21E75 /* ForwardMessageVo.swift in Sources */,
@@ -1428,6 +1527,7 @@
 				A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */,
 				A0E8ED4C2AEDF23B004163BD /* PreviewCellView.swift in Sources */,
 				A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */,
+				A0FCA8FF2B4931EC00FC6E47 /* SessionViewController.swift in Sources */,
 				A018CDFF2B008F6F00896B87 /* IMMessageOperatorPopupView.swift in Sources */,
 				A02578BF2AA2F23100A66CEF /* IMMsgBodyDefines.swift in Sources */,
 				A018CE102B00ADE400896B87 /* IMMessageOperatorItemView.swift in Sources */,
@@ -1444,6 +1544,7 @@
 				A0D68BB12A888679004D11A5 /* IMBasePanelViewProvider.swift in Sources */,
 				A02529152ACAD527001561A0 /* IMUIDefines.swift in Sources */,
 				A0D51DD32B12EF3600E21E75 /* DefaultIMDatabase.swift in Sources */,
+				A0FCA9012B493CE900FC6E47 /* ViewController+TitleBar.swift in Sources */,
 				A0D68BAF2A888679004D11A5 /* IMCameraFunctionProvider.swift in Sources */,
 				A0D68C032A888679004D11A5 /* DefaultStorageModule.swift in Sources */,
 				A0D68B972A888679004D11A5 /* MessageDao.swift in Sources */,
@@ -1453,6 +1554,7 @@
 				A0C431F72A909CCE00A84D4A /* PlayBean.swift in Sources */,
 				A0D68B922A888679004D11A5 /* Message.swift in Sources */,
 				A0D68BF12A888679004D11A5 /* IMBaseMsgProcessor.swift in Sources */,
+				A0FCA8EC2B48F60500FC6E47 /* APITokenInterceptor.swift in Sources */,
 				A0C431F32A909CCE00A84D4A /* StreamApi.swift in Sources */,
 				A0D68BFA2A888679004D11A5 /* FileLoadModule.swift in Sources */,
 				A0D68BA62A888679004D11A5 /* IMTimeLineMsgCell.swift in Sources */,
@@ -1481,6 +1583,7 @@
 				A0C431FC2A909D2500A84D4A /* UIRtcMsgCell.swift in Sources */,
 				A0D68BE92A888679004D11A5 /* BaseModule.swift in Sources */,
 				A0D68BE42A888679004D11A5 /* DefaultUserModule.swift in Sources */,
+				A0FCA8E22B48EC4200FC6E47 /* RegisterReq.swift in Sources */,
 				A03082CF2AF66BD7001B8373 /* IMReeditMsgProcessor.swift in Sources */,
 				A0F031012B220B940058B05B /* DefaultContactModule.swift in Sources */,
 				A0D68BBD2A888679004D11A5 /* IMTabPanelView.swift in Sources */,
@@ -1491,6 +1594,7 @@
 				A0D68BA82A888679004D11A5 /* IMUnSupportMsgCell.swift in Sources */,
 				A0D68B762A888679004D11A5 /* OGGDecoder.swift in Sources */,
 				A0D68C002A888679004D11A5 /* MimeType.swift in Sources */,
+				A0FCA8F32B4917D500FC6E47 /* MainViewController.swift in Sources */,
 				A0D68C052A888679004D11A5 /* DefaultSignalModule.swift in Sources */,
 				A02578C82AA427BD00A66CEF /* DefaultLiveApi.swift in Sources */,
 				A0D68BAA2A888679004D11A5 /* IMDefaultSessionCellProvider.swift in Sources */,

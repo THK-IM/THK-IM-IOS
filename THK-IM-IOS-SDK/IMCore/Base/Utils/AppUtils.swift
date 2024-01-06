@@ -29,4 +29,24 @@ public class AppUtils {
         }
     }
     
+    public static func getWindow() -> UIWindow? {
+        if #available(iOS 13.0, *) {
+            return UIApplication.shared.windows.first
+        } else {
+            return UIApplication.shared.keyWindow
+        }
+    }
+    
+    public static func getStatusBarHeight() -> CGFloat {
+        if #available(iOS 13.0, *) {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                let statusBarHeight = windowScene.statusBarManager?.statusBarFrame.height ?? 0
+                return statusBarHeight
+            }
+        } else {
+            return UIApplication.shared.statusBarFrame.height
+        }
+        return 0
+    }
+    
 }

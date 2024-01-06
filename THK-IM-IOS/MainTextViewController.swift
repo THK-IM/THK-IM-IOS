@@ -1,5 +1,5 @@
 //
-//  MainViewController.swift
+//  MainTextViewController.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/13.
@@ -13,7 +13,7 @@ import CocoaLumberjack
 import GDPerformanceView_Swift
 
 
-class MainViewController: UIViewController, PerformanceMonitorDelegate {
+class MainTextViewController: UIViewController, PerformanceMonitorDelegate {
     
     func performanceMonitor(didReport performanceReport: PerformanceReport) {
     }

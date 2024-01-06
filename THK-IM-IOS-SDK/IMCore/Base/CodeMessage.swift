@@ -8,7 +8,7 @@
 import Foundation
 
 
-class ErrorVo : Codable {
+class CodeMessage : Codable {
     
     var code: Int
     var message: String

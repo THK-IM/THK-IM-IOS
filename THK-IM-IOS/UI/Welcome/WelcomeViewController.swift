@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CocoaLumberjack
 
-class WelcomeViewController: IMBaseViewController {
+class WelcomeViewController: BaseViewController {
     
     override func viewDidLoad() {
         let logoView = UIImageView()
@@ -22,8 +23,15 @@ class WelcomeViewController: IMBaseViewController {
             make.top.equalToSuperview().offset(110)
         }
         
-        
-        
+        if let token = DataRepository.shared.getUserToken() {
+            if let user = DataRepository.shared.getUser() {
+                self.initIM(token: token, uId: user.id)
+            } else {
+                self.loginByToken(token: token)
+            }
+        } else {
+            self.showLoginUI()
+        }
     }
     
     private func showLoginUI() {
@@ -93,6 +101,53 @@ class WelcomeViewController: IMBaseViewController {
         quickRegisterButton.setTitleColor(UIColor.white, for: .normal)
         quickRegisterButton.setBackgroundImage(quickRegisterImage, for: .normal)
         quickRegisterButton.setBackgroundImage(quickRegisterPressedImage, for: .highlighted)
+        quickRegisterButton.rx.tap.asObservable().subscribe(onNext: { [weak self] in
+            self?.quickRegister()
+        }).disposed(by: self.disposeBag)
+    }
+    
+    
+    func quickRegister() {
+        let registerReq = RegisterReq()
+        DataRepository.shared.userApi.rx.request(.register(registerReq))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Bean(RegisterVo.self))
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] registerVo in
+                self?.saveUserInfo(token: registerVo.token, user: registerVo.user)
+            }, onError: { error in
+                DDLogError("quickRegister \(error)")
+            }).disposed(by: self.disposeBag)
+    }
+    
+    
+    func loginByToken(token: String) {
+        let tokenLoginReq = TokenLoginReq(token: token)
+        DataRepository.shared.userApi.rx.request(.loginByToken(tokenLoginReq))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Bean(LoginVo.self))
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] loginVo in
+                self?.saveUserInfo(token: loginVo.token, user: loginVo.user)
+            }, onError: { error in
+                if (error is CodeMessageError) {
+                    DDLogError("loginByToken \(error) 2313131")
+                }
+            }).disposed(by: self.disposeBag)
+        
+    }
+    
+    func saveUserInfo(token: String, user: UserVo) {
+        DataRepository.shared.saveUserInfo(token: token, userVo: user)
+        DataRepository.shared.updateToken(token: token)
+        self.initIM(token: token, uId: user.id)
+    }
+    
+    func initIM(token: String, uId: Int64) {
+        DataRepository.shared.updateToken(token: token)
+        let mainVc = MainViewController()
+        let window = AppUtils.getWindow()
+        window?.rootViewController = mainVc
     }
     
 }

@@ -32,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func initIM(_ application: UIApplication) {
+        DataRepository.shared.initApplication(app: application)
         let debug = true
         let uId : Int64 = 15498
         let token = String(uId)

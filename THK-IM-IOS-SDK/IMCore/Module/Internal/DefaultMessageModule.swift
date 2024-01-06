@@ -59,7 +59,7 @@ open class DefaultMessageModule : MessageModule {
                     var unProcessMsgs = [Message]()
                     var needReprocessMsgs = [Message]()
                     for msg in messageArray {
-                        DDLogInfo("processSessionByMessage syncOfflineMessages: \(msg.type) \(msg.content)")
+                        DDLogInfo("processSessionByMessage syncOfflineMessages: \(msg.type) \(msg.content ?? "")")
                         if msg.fromUId == IMCoreManager.shared.uId {
                             msg.operateStatus = msg.operateStatus |
                             MsgOperateStatus.Ack.rawValue |
