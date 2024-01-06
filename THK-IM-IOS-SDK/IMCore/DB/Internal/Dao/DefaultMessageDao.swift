@@ -9,7 +9,7 @@ import Foundation
 import WCDBSwift
 import CocoaLumberjack
 
-class DefaultMessageDao : MessageDao {
+open class DefaultMessageDao : MessageDao {
     
     weak var database: Database?
     let tableName: String
@@ -19,7 +19,7 @@ class DefaultMessageDao : MessageDao {
         self.tableName = tableName
     }
     
-    func findMessageCountBySid(_ sessionId: Int64) throws -> Int64 {
+    public func findSessionMessageCount(_ sessionId: Int64) throws -> Int64 {
         return try self.database!.getValue(
             on: Message.Properties.msgId.count(),
             fromTable: self.tableName,
@@ -28,7 +28,7 @@ class DefaultMessageDao : MessageDao {
     }
     
     
-    func findMessageByMsgId(_ msgId: Int64, _ sessionId: Int64) throws -> Message? {
+    public func findByMsgId(_ msgId: Int64, _ sessionId: Int64) throws -> Message? {
         return try self.database?.getObject(
             on: Message.Properties.all,
             fromTable: self.tableName,
@@ -36,7 +36,7 @@ class DefaultMessageDao : MessageDao {
         )
     }
     
-    func findMessageById(_ id: Int64, _ fromUId: Int64, _ sessionId: Int64) throws -> Message? {
+    public func findById(_ id: Int64, _ fromUId: Int64, _ sessionId: Int64) throws -> Message? {
         return try self.database?.getObject(
             on: Message.Properties.all,
             fromTable: self.tableName,
@@ -46,31 +46,31 @@ class DefaultMessageDao : MessageDao {
         )
     }
     
-    func findOlderMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
-        let msg = try self.findMessageByMsgId(msgId, sessionId)
+    public func findOlderMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
+        let msg = try self.findByMsgId(msgId, sessionId)
         guard let time = msg?.cTime else {
             return []
         }
-        return try self.queryMessageBySidAndBeforeCTime(sessionId, msgId, types, time, count) ?? []
+        return try self.findBySidAndTypesBeforeCTime(sessionId, msgId, types, time, count) ?? []
     }
     
-    func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
-        let msg = try self.findMessageByMsgId(msgId, sessionId)
+    public func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
+        let msg = try self.findByMsgId(msgId, sessionId)
         guard let time = msg?.cTime else {
             return []
         }
-        return try self.queryMessageBySidAndAfterCTime(sessionId, msgId, types, time, count) ?? []
+        return try self.queryBySidAndTypesAfterCTime(sessionId, msgId, types, time, count) ?? []
     }
     
-    func insertOrReplaceMessages(_ messages: [Message]) throws {
+    public func insertOrReplace(_ messages: [Message]) throws {
         try self.database?.insertOrReplace(messages, intoTable: self.tableName)
     }
     
-    func insertOrIgnoreMessages(_ messages: [Message]) throws {
+    public func insertOrIgnore(_ messages: [Message]) throws {
         try self.database?.insertOrIgnore(messages, intoTable: self.tableName)
     }
     
-    func updateMessages(_ messages: Message...) throws {
+    public func update(_ messages: Message...) throws {
         for message in messages {
             try self.database?.update(
                 table: self.tableName,
@@ -81,7 +81,7 @@ class DefaultMessageDao : MessageDao {
         }
     }
 
-    func updateMessageContent(_ sessionId: Int64, _ id: Int64, _ fromUId: Int64, _ content: String) throws {
+    public func updateContent(_ sessionId: Int64, _ id: Int64, _ fromUId: Int64, _ content: String) throws {
         let update = StatementUpdate().update(table:self.tableName)
             .set(Message.Properties.operateStatus)
             .to(content)
@@ -93,7 +93,7 @@ class DefaultMessageDao : MessageDao {
         try self.database?.exec(update)
     }
     
-    func updateMessageOperationStatus(_ sessionId: Int64, _ msgIds: [Int64], _ operateStatus: Int) throws {
+    public func updateOperationStatus(_ sessionId: Int64, _ msgIds: [Int64], _ operateStatus: Int) throws {
         DDLogInfo("updateMessageOperationStatus \(msgIds) \(operateStatus)")
         let operateStatusColumn = Column(named: "opr_status")
         let expression1 = Expression(with: operateStatusColumn)
@@ -113,7 +113,7 @@ class DefaultMessageDao : MessageDao {
     /**
      * 重置消息发送状态为失败
      */
-    func resetSendStatusFailed() throws {
+    public func resetSendStatusFailed() throws {
         let update = StatementUpdate()
             .update(table:self.tableName)
             .set(Message.Properties.sendStatus)
@@ -128,7 +128,7 @@ class DefaultMessageDao : MessageDao {
     /**
      * 获取session下的未读数
      */
-    func getUnReadCount(_ sessionId: Int64) throws -> Int64 {
+    public func getUnReadCount(_ sessionId: Int64) throws -> Int64 {
         guard let res = try self.database?.getValue(
             on: Message.Properties.msgId.count(),
             fromTable: self.tableName,
@@ -141,20 +141,11 @@ class DefaultMessageDao : MessageDao {
         return Int64(res)
     }
     
-//    func getUnReadCountMessages(_ sessionId: Int64) throws -> [Message]? {
-//        return try self.database?.getObjects(
-//            on: Message.Properties.all,
-//            fromTable: self.tableName,
-//            where: Message.Properties.sessionId == sessionId &&
-//                (Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue != 2)
-//        )
-//    }
-    
     
     /**
      * 更新消息发送状态
      */
-    func updateSendStatus(_ sessionId: Int64, _ id: Int64, _ fromUId: Int64, _ status: Int) throws {
+    public func updateSendStatus(_ sessionId: Int64, _ id: Int64, _ fromUId: Int64, _ status: Int) throws {
         let update = StatementUpdate()
             .update(table:self.tableName)
             .set(Message.Properties.sendStatus)
@@ -168,7 +159,7 @@ class DefaultMessageDao : MessageDao {
     }
 
     
-    func deleteMessages(_ messages: Message...) throws {
+    public func delete(_ messages: Message...) throws {
         var ids = Array<Int64>()
         for message in messages {
             ids.append(message.id)
@@ -176,7 +167,7 @@ class DefaultMessageDao : MessageDao {
         try self.database?.delete(fromTable: self.tableName, where: Message.Properties.id.in(ids))
     }
     
-    func deleteMessages(_ messages: [Message]) throws {
+    public func delete(_ messages: [Message]) throws {
         var ids = Array<Int64>()
         for message in messages {
             ids.append(message.id)
@@ -184,14 +175,14 @@ class DefaultMessageDao : MessageDao {
         try self.database?.delete(fromTable: self.tableName, where: Message.Properties.id.in(ids))
     }
     
-    func deleteMessagesByCTimeExclude(_ startTime: Int64, _ endTime: Int64) throws {
+    public func deleteByCTimeExclude(_ startTime: Int64, _ endTime: Int64) throws {
         try self.database?.delete(
             fromTable: self.tableName,
             where: Message.Properties.cTime < startTime || Message.Properties.cTime > endTime
         )
     }
     
-    func deleteMessagesByCTimeInclude(_ startTime: Int64, _ endTime: Int64) throws {
+    public func deleteByIncludeCTime(_ startTime: Int64, _ endTime: Int64) throws {
         try self.database?.delete(
             fromTable: self.tableName,
             where: Message.Properties.cTime >= startTime && Message.Properties.cTime <= endTime
@@ -201,14 +192,14 @@ class DefaultMessageDao : MessageDao {
     /**
      * 删除session下的所有消息
      */
-    func deleteSessionMessages(_ sessionId: Int64) throws {
+    public func deleteBySessionId(_ sessionId: Int64) throws {
         try self.database?.delete(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId
         )
     }
     
-    func queryMessageBySidAndCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
+    public func findBySidAfterCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId && Message.Properties.cTime < cTime && Message.Properties.type > 0,
@@ -218,7 +209,7 @@ class DefaultMessageDao : MessageDao {
     }
     
     // 查询ctime之前的消息
-    func queryMessageBySidAndBeforeCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
+    public func findBySidAndTypesBeforeCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
@@ -231,7 +222,7 @@ class DefaultMessageDao : MessageDao {
     }
     
     // 查询ctime之后的消息
-    func queryMessageBySidAndAfterCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
+    public func queryBySidAndTypesAfterCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
@@ -243,7 +234,7 @@ class DefaultMessageDao : MessageDao {
         )
     }
     
-    func findLastMessageBySessionId(_ sessionId: Int64) throws -> Message? {
+    public func findLastMessageBySessionId(_ sessionId: Int64) throws -> Message? {
         return try self.database?.getObject(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&

@@ -9,14 +9,26 @@ import Foundation
 import WCDBSwift
 
 public protocol UserDao {
+    
     /**
      * 插入用户信息
      */
-    func insertUsers(_ users: User...) throws
+    func insertOrReplace(_ users: User...) throws
+    
+    /**
+     * 插入用户信息
+     */
+    func insertOrIgnore(_ users: User...) throws
+    
+    
+    func delete(_ user: User) throws
     
     /**
      * 查询用户信息
      */
-    func queryUserInfo(_ id: Int64) throws -> User?
+    func findById(_ id: Int64) throws -> User?
+    
+    
+    func findByIds(_ ids: Set<Int64>) -> [User]?
     
 }

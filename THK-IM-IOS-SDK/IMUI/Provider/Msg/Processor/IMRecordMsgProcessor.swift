@@ -18,13 +18,13 @@ open class IMRecordMsgProcessor : IMBaseMsgProcessor {
     override open func received(_ msg: Message) {
         super.received(msg)
         if let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: msg.content?.data(using: .utf8) ?? Data()) {
-            try? IMCoreManager.shared.database.messageDao().insertOrIgnoreMessages(recordBody.messages)
+            try? IMCoreManager.shared.database.messageDao().insertOrIgnore(recordBody.messages)
         }
     }
     
     override open func reprocessingObservable(_ message: Message) -> Observable<Message>? {
         if let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: message.content?.data(using: .utf8) ?? Data()) {
-            try? IMCoreManager.shared.database.messageDao().insertOrIgnoreMessages(recordBody.messages)
+            try? IMCoreManager.shared.database.messageDao().insertOrIgnore(recordBody.messages)
         }
         return Observable.just(message)
     }

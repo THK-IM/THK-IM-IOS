@@ -5,14 +5,13 @@
 //  Created by vizoss on 2023/5/18.
 //
 
-import Foundation
-
-import Foundation
 import WCDBSwift
 
 public final class User: TableCodable {
     // 用户id
     public var id: Int64
+    // 显示id
+    public var displayId: String
     // 用户名称
     public var name: String
     // 用户头像
@@ -34,6 +33,7 @@ public final class User: TableCodable {
             BindColumnConstraint(id, isPrimary: true, onConflict: .Replace)
         }
         case id = "id"
+        case displayId = "display_id"
         case name = "name"
         case avatar = "avatar"
         case sex="sex"
@@ -45,8 +45,11 @@ public final class User: TableCodable {
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    public init(id: Int64, name: String, avatar: String, sex: Int, status: Int, extData: String? = nil, cTime: Int64, mTime: Int64) {
+    public init(id: Int64, displayId: String, name: String, avatar: String, sex: Int, status: Int,
+                extData: String? = nil, cTime: Int64, mTime: Int64)
+    {
         self.id = id
+        self.displayId = displayId
         self.name = name
         self.avatar = avatar
         self.sex = sex

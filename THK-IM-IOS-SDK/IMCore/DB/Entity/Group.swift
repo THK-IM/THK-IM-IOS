@@ -1,0 +1,49 @@
+//
+//  Group.swift
+//  THK-IM-IOS
+//
+//  Created by vizoss on 2024/1/6.
+//  Copyright © 2024 THK. All rights reserved.
+//
+
+import Foundation
+import WCDBSwift
+
+public final class Group: TableCodable {
+    public var id: Int64
+    public var displayId: String
+    public var name: String
+    public var sessionId: Int64
+    public var ownerId: Int64
+    public var avatar: String
+    public var announce: String
+    public var qrcode: String
+    public var enterFlag: Int
+    public var memberCount: Int
+    public var extData: String?
+    public var cTime: Int64
+    public var mTime: Int64
+    
+    public enum CodingKeys: String, CodingTableKey {
+        public typealias Root = Group
+        public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
+            BindColumnConstraint(id, isPrimary: true, onConflict: .Replace)
+            BindIndex(sessionId, namedWith: "group_session_idx", isUnique: false)
+        }
+        case id = "id"
+        case displayId = "display_id"
+        case name = "name"
+        case sessionId = "session_id"
+        case ownerId = "owner_id"
+        case avatar = "avatar"
+        case announce = "announce"
+        case qrcode = "qrcode"
+        case enterFlag = "enter_flag"
+        case memberCount = "member_count"
+        case extData = "ext_data"
+        case cTime = "c_time"
+        case mTime = "m_time"
+    }
+    
+    public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
+}

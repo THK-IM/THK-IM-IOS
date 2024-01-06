@@ -64,7 +64,7 @@ class MainTextViewController: UIViewController, PerformanceMonitorDelegate {
             .subscribe(onNext: { data in
                 print(data)
                 do {
-                    try IMCoreManager.shared.database.sessionDao().insertOrUpdateSessions(data)
+                    try IMCoreManager.shared.database.sessionDao().insertOrUpdate(data)
                 } catch {
                     print(error)
                 }
@@ -100,7 +100,7 @@ class MainTextViewController: UIViewController, PerformanceMonitorDelegate {
             .subscribe(onNext: {
                 do {
                     let sessions = try IMCoreManager.shared.database
-                        .sessionDao().findSessions(0, 1708851739664322560, IMCoreManager.shared.severTime)
+                        .sessionDao().findByParentId(0, 1708851739664322560, IMCoreManager.shared.severTime)
                     if (sessions != nil) {
                         for session in sessions! {
                             print("\(session.id) \(session.entityId)")

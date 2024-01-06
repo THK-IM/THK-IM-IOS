@@ -229,6 +229,15 @@
 		A0FCA8FD2B4921A100FC6E47 /* UIIMage+Scale.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8FC2B4921A100FC6E47 /* UIIMage+Scale.swift */; };
 		A0FCA8FF2B4931EC00FC6E47 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8FE2B4931EC00FC6E47 /* SessionViewController.swift */; };
 		A0FCA9012B493CE900FC6E47 /* ViewController+TitleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9002B493CE900FC6E47 /* ViewController+TitleBar.swift */; };
+		A0FCA9032B4952CD00FC6E47 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9022B4952CD00FC6E47 /* Contact.swift */; };
+		A0FCA9052B4953FD00FC6E47 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9042B4953FD00FC6E47 /* Group.swift */; };
+		A0FCA9072B49558200FC6E47 /* SessionMember.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9062B49558200FC6E47 /* SessionMember.swift */; };
+		A0FCA9092B49599A00FC6E47 /* ContactDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9082B49599A00FC6E47 /* ContactDao.swift */; };
+		A0FCA90B2B4959AC00FC6E47 /* GroupDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA90A2B4959AC00FC6E47 /* GroupDao.swift */; };
+		A0FCA90D2B4959C400FC6E47 /* SessionMemberDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA90C2B4959C400FC6E47 /* SessionMemberDao.swift */; };
+		A0FCA90F2B496D3800FC6E47 /* DefaultContactDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA90E2B496D3800FC6E47 /* DefaultContactDao.swift */; };
+		A0FCA9112B496E9F00FC6E47 /* DefaultGroupDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9102B496E9F00FC6E47 /* DefaultGroupDao.swift */; };
+		A0FCA9152B4970AB00FC6E47 /* DefaultSessionMemberDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9142B4970AB00FC6E47 /* DefaultSessionMemberDao.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -458,6 +467,15 @@
 		A0FCA8FC2B4921A100FC6E47 /* UIIMage+Scale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIIMage+Scale.swift"; sourceTree = "<group>"; };
 		A0FCA8FE2B4931EC00FC6E47 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
 		A0FCA9002B493CE900FC6E47 /* ViewController+TitleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+TitleBar.swift"; sourceTree = "<group>"; };
+		A0FCA9022B4952CD00FC6E47 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		A0FCA9042B4953FD00FC6E47 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		A0FCA9062B49558200FC6E47 /* SessionMember.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMember.swift; sourceTree = "<group>"; };
+		A0FCA9082B49599A00FC6E47 /* ContactDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDao.swift; sourceTree = "<group>"; };
+		A0FCA90A2B4959AC00FC6E47 /* GroupDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDao.swift; sourceTree = "<group>"; };
+		A0FCA90C2B4959C400FC6E47 /* SessionMemberDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMemberDao.swift; sourceTree = "<group>"; };
+		A0FCA90E2B496D3800FC6E47 /* DefaultContactDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultContactDao.swift; sourceTree = "<group>"; };
+		A0FCA9102B496E9F00FC6E47 /* DefaultGroupDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultGroupDao.swift; sourceTree = "<group>"; };
+		A0FCA9142B4970AB00FC6E47 /* DefaultSessionMemberDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSessionMemberDao.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -675,6 +693,9 @@
 				A0EA42E82A94920300F64A90 /* DefaultMessageDao.swift */,
 				A0EA42EA2A94925600F64A90 /* DefaultUserDao.swift */,
 				A0EA42EC2A94928400F64A90 /* DefaultSessionDao.swift */,
+				A0FCA90E2B496D3800FC6E47 /* DefaultContactDao.swift */,
+				A0FCA9102B496E9F00FC6E47 /* DefaultGroupDao.swift */,
+				A0FCA9142B4970AB00FC6E47 /* DefaultSessionMemberDao.swift */,
 			);
 			path = Dao;
 			sourceTree = "<group>";
@@ -809,6 +830,9 @@
 				A0D68AD42A888678004D11A5 /* Session.swift */,
 				A0D68AD52A888678004D11A5 /* Message.swift */,
 				A0D68AD62A888678004D11A5 /* User.swift */,
+				A0FCA9022B4952CD00FC6E47 /* Contact.swift */,
+				A0FCA9042B4953FD00FC6E47 /* Group.swift */,
+				A0FCA9062B49558200FC6E47 /* SessionMember.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -819,6 +843,9 @@
 				A0D68ADB2A888678004D11A5 /* MessageDao.swift */,
 				A0D68ADC2A888678004D11A5 /* UserDao.swift */,
 				A0D68ADD2A888678004D11A5 /* SessionDao.swift */,
+				A0FCA9082B49599A00FC6E47 /* ContactDao.swift */,
+				A0FCA90A2B4959AC00FC6E47 /* GroupDao.swift */,
+				A0FCA90C2B4959C400FC6E47 /* SessionMemberDao.swift */,
 			);
 			path = Dao;
 			sourceTree = "<group>";
@@ -1412,6 +1439,8 @@
 				A0D68BB22A888679004D11A5 /* IMBaseMessageCellProvider.swift in Sources */,
 				A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiPanelProvider.swift in Sources */,
 				A0F031072B2217250058B05B /* CodeMessage.swift in Sources */,
+				A0FCA9152B4970AB00FC6E47 /* DefaultSessionMemberDao.swift in Sources */,
+				A0FCA9032B4952CD00FC6E47 /* Contact.swift in Sources */,
 				A0D68BD52A888679004D11A5 /* AVCacheManager.swift in Sources */,
 				A0C431EB2A909CB200A84D4A /* RemoteParticipant.swift in Sources */,
 				A0D68BC62A888679004D11A5 /* RightCellWrapper.swift in Sources */,
@@ -1427,6 +1456,7 @@
 				A0D68BCB2A888679004D11A5 /* IMUIManager.swift in Sources */,
 				A0D68B792A888679004D11A5 /* DeleteMsgVo.swift in Sources */,
 				A0D68BA02A888679004D11A5 /* IMVideoMsgCellProvider.swift in Sources */,
+				A0FCA90B2B4959AC00FC6E47 /* GroupDao.swift in Sources */,
 				A0F031032B220C120058B05B /* DefaultGroupModule.swift in Sources */,
 				A02529172ACADE72001561A0 /* IMMsgCellOperator.swift in Sources */,
 				A0FCA8FD2B4921A100FC6E47 /* UIIMage+Scale.swift in Sources */,
@@ -1451,6 +1481,7 @@
 				A0F031052B220C6C0058B05B /* DefaultCustomModule.swift in Sources */,
 				A0D68BBC2A888679004D11A5 /* IMFunctionCell.swift in Sources */,
 				A0EA42FD2A99A60200F64A90 /* ImageCacheManager.swift in Sources */,
+				A0FCA9112B496E9F00FC6E47 /* DefaultGroupDao.swift in Sources */,
 				A02529202ADAE496001561A0 /* Double+DP.swift in Sources */,
 				A0D68BF92A888679004D11A5 /* FileLoadListener.swift in Sources */,
 				A0D68BEA2A888679004D11A5 /* IMVideoMsgProcessor.swift in Sources */,
@@ -1477,6 +1508,7 @@
 				A0EA42E62A94904400F64A90 /* IMDatabaseDefines.swift in Sources */,
 				A0D68BC22A888679004D11A5 /* MiddleCellWrapper.swift in Sources */,
 				A0D68A9B2A88838A004D11A5 /* MainTextViewController.swift in Sources */,
+				A0FCA9092B49599A00FC6E47 /* ContactDao.swift in Sources */,
 				A0D68BA52A888679004D11A5 /* IMImageMsgCell.swift in Sources */,
 				A0D68BEB2A888679004D11A5 /* IMAudioMsgProcessor.swift in Sources */,
 				A0D68BBF2A888679004D11A5 /* IMMsgLabelView.swift in Sources */,
@@ -1508,6 +1540,7 @@
 				A0D68B732A888679004D11A5 /* OggOpusAudioPlayer.swift in Sources */,
 				A0D68BA32A888679004D11A5 /* IMVideoMsgCell.swift in Sources */,
 				A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */,
+				A0FCA90F2B496D3800FC6E47 /* DefaultContactDao.swift in Sources */,
 				A0C431EA2A909CB200A84D4A /* BaseParticipant.swift in Sources */,
 				A0D68BE52A888679004D11A5 /* DefaultCommonModule.swift in Sources */,
 				A0D51DCE2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift in Sources */,
@@ -1533,6 +1566,7 @@
 				A018CE102B00ADE400896B87 /* IMMessageOperatorItemView.swift in Sources */,
 				A025290D2AC6CD1F001561A0 /* LoadTask.swift in Sources */,
 				A0D68BEC2A888679004D11A5 /* IMImageMsgProcessor.swift in Sources */,
+				A0FCA9052B4953FD00FC6E47 /* Group.swift in Sources */,
 				A0EA42ED2A94928400F64A90 /* DefaultSessionDao.swift in Sources */,
 				A0D68B7F2A888679004D11A5 /* ListVo.swift in Sources */,
 				A0D68BF32A888679004D11A5 /* IMTextMsgProcessor.swift in Sources */,
@@ -1571,6 +1605,7 @@
 				A02578C62AA4269B00A66CEF /* LiveApi.swift in Sources */,
 				A0EA42F82A94CC5300F64A90 /* IMApi.swift in Sources */,
 				A0D68BA22A888679004D11A5 /* IMTextMsgCellProvider.swift in Sources */,
+				A0FCA9072B49558200FC6E47 /* SessionMember.swift in Sources */,
 				A0D68C022A888679004D11A5 /* IMCoreManager.swift in Sources */,
 				A0D68BDD2A888679004D11A5 /* Date+TimeStamp.swift in Sources */,
 				A0D68B8E2A888679004D11A5 /* IMDatabase.swift in Sources */,
@@ -1595,6 +1630,7 @@
 				A0D68B762A888679004D11A5 /* OGGDecoder.swift in Sources */,
 				A0D68C002A888679004D11A5 /* MimeType.swift in Sources */,
 				A0FCA8F32B4917D500FC6E47 /* MainViewController.swift in Sources */,
+				A0FCA90D2B4959C400FC6E47 /* SessionMemberDao.swift in Sources */,
 				A0D68C052A888679004D11A5 /* DefaultSignalModule.swift in Sources */,
 				A02578C82AA427BD00A66CEF /* DefaultLiveApi.swift in Sources */,
 				A0D68BAA2A888679004D11A5 /* IMDefaultSessionCellProvider.swift in Sources */,

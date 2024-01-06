@@ -19,6 +19,8 @@ public final class Session: TableCodable {
     public var entityId : Int64 = 0
     // session名称
     public var name: String = ""
+    // note_name
+    public var noteName: String? = nil
     // session remark
     public var remark: String = ""
     // 禁言标记位 2^0 全员禁言 2^1 本人禁言
@@ -37,6 +39,12 @@ public final class Session: TableCodable {
     public var topTimestamp: Int64 = 0
     // 自定义扩展数据 推荐使用json结构存储
     public var extData: String? = nil
+    // 成员同步时间
+    public var memberSyncTime: Int64 = 0
+    // 成员数
+    public var memberCount: Int = 0
+    // 删除标记
+    public var deleted: Int = 0
     // 消息创建时间
     public var cTime: Int64
     // 消息最近修改时间
@@ -56,6 +64,7 @@ public final class Session: TableCodable {
         case type = "type"
         case entityId = "entity_id"
         case name = "name"
+        case noteName = "note_name"
         case remark = "remark"
         case mute = "mute"
         case status = "status"
@@ -65,19 +74,25 @@ public final class Session: TableCodable {
         case lastMsg = "last_msg"
         case topTimestamp = "top_timestamp"
         case extData = "ext_data"
+        case memberSyncTime = "member_sync_time"
+        case memberCount = "member_count"
+        case deleted = "deleted"
         case cTime = "c_time"
         case mTime = "m_time"
     }
     
     
-    public init(id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, remark: String, mute: Int, role: Int, status: Int,
-         unreadCount: Int64, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64,
-         extData: String? = nil, cTime: Int64, mTime: Int64) {
+    public init(
+        id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, noteName: String?, remark: String, mute: Int,
+        role: Int, status: Int, unreadCount: Int64, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64,
+        extData: String? = nil, memberSyncTime: Int64, memberCount: Int, deleted: Int, cTime: Int64, mTime: Int64)
+    {
         self.id = id
         self.parentId = parentId
         self.type = type
         self.entityId = entityId
         self.name = name
+        self.noteName = noteName
         self.remark = remark
         self.mute = mute
         self.role = role
@@ -87,14 +102,18 @@ public final class Session: TableCodable {
         self.lastMsg = lastMsg
         self.topTimestamp = topTimestamp
         self.extData = extData
+        self.memberSyncTime = memberSyncTime
+        self.memberCount = memberCount
+        self.deleted = deleted
         self.cTime = cTime
         self.mTime = mTime
     }
     
     public static func emptySession() -> Session {
         return Session(
-            id: 0, parentId: 0, type: 0, entityId: 0, name: "", remark: "", mute: 0, role: 0,
-            status: 0, unreadCount: 0, topTimestamp: 0, cTime: 0, mTime: 0
+            id: 0, parentId: 0, type: 0, entityId: 0, name: "", noteName: nil, remark: "", mute: 0,
+            role: 0, status: 0, unreadCount: 0, topTimestamp: 0, memberSyncTime: 0, memberCount: 0,
+            deleted: 0, cTime: 0, mTime: 0
         )
     }
     

@@ -81,7 +81,7 @@ open class DefaultMessageModule : MessageModule {
                     }
                     // 批量插入消息
                     if unProcessMsgs.count > 0 {
-                        try IMCoreManager.shared.database.messageDao().insertOrIgnoreMessages(unProcessMsgs)
+                        try IMCoreManager.shared.database.messageDao().insertOrIgnore(unProcessMsgs)
                         // 插入ack
                         for msg in unProcessMsgs {
                             if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
@@ -129,7 +129,7 @@ open class DefaultMessageModule : MessageModule {
         let sessionType = SessionType.Single.rawValue
         return Observable.create({observer -> Disposable in
             do {
-                var session = try IMCoreManager.shared.database.sessionDao().findSessionByEntityId(entityId, sessionType)
+                var session = try IMCoreManager.shared.database.sessionDao().findByEntityId(entityId, sessionType)
                 if (session == nil) {
                     session = Session.emptySession()
                 }
@@ -152,7 +152,7 @@ open class DefaultMessageModule : MessageModule {
     public func getSession(_ sessionId: Int64) -> Observable<Session> {
         return Observable.create({observer -> Disposable in
             do {
-                var session = try IMCoreManager.shared.database.sessionDao().findSessionById(sessionId)
+                var session = try IMCoreManager.shared.database.sessionDao().findById(sessionId)
                 if (session == nil) {
                     session = Session.emptySession()
                 }
@@ -174,7 +174,7 @@ open class DefaultMessageModule : MessageModule {
     public func queryLocalSessions(_ parentId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
         return Observable.create({observer -> Disposable in
             do {
-                let sessions = try IMCoreManager.shared.database.sessionDao().findSessions(parentId, count, mTime)
+                let sessions = try IMCoreManager.shared.database.sessionDao().findByParentId(parentId, count, mTime)
                 if (sessions != nil) {
                     observer.onNext(sessions!)
                 } else {
@@ -192,7 +192,7 @@ open class DefaultMessageModule : MessageModule {
     public func queryLocalMessages(_ sessionId: Int64, _ cTime: Int64, _ count: Int) -> Observable<Array<Message>> {
         return Observable.create({observer -> Disposable in
             do {
-                let messages = try IMCoreManager.shared.database.messageDao().queryMessageBySidAndCTime(sessionId, cTime, count)
+                let messages = try IMCoreManager.shared.database.messageDao().findBySidAfterCTime(sessionId, cTime, count)
                 if (messages != nil) {
                     observer.onNext(messages!)
                 } else {
@@ -276,7 +276,7 @@ open class DefaultMessageModule : MessageModule {
         do {
             try IMCoreManager.shared.database
                 .messageDao()
-                .updateMessageOperationStatus(sessionId, msgIds.compactMap({$0}), MsgOperateStatus.Ack.rawValue)
+                .updateOperationStatus(sessionId, msgIds.compactMap({$0}), MsgOperateStatus.Ack.rawValue)
         } catch {
             DDLogError("ackMessageSuccess error: \(error)")
         }
@@ -322,7 +322,7 @@ open class DefaultMessageModule : MessageModule {
     private func deleteLocalMessages(_ messages: Array<Message>) -> Observable<Void> {
         return Observable.create({observer -> Disposable in
             do {
-                try IMCoreManager.shared.database.messageDao().deleteMessages(messages)
+                try IMCoreManager.shared.database.messageDao().delete(messages)
                 SwiftEventBus.post(IMEvent.BatchMsgDelete.rawValue, sender: messages)
             } catch {
                 observer.onError(error)
@@ -362,7 +362,7 @@ open class DefaultMessageModule : MessageModule {
                             s.lastMsg = processor?.getSessionDesc(msg: msg)
                             s.unreadCount = unReadCount
                             s.mTime = msg.cTime
-                            try IMCoreManager.shared.database.sessionDao().insertOrUpdateSessions(s)
+                            try IMCoreManager.shared.database.sessionDao().insertOrUpdate(s)
                             SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
                             
                             sf.notifyNewMessage(s, msg)
@@ -410,8 +410,8 @@ open class DefaultMessageModule : MessageModule {
     private func deleteLocalSession(_ session: Session) -> Observable<Void> {
         return Observable.create({observer -> Disposable in
             do {
-                try IMCoreManager.shared.database.messageDao().deleteSessionMessages(session.id)
-                try IMCoreManager.shared.database.sessionDao().deleteSessions(session)
+                try IMCoreManager.shared.database.messageDao().deleteBySessionId(session.id)
+                try IMCoreManager.shared.database.sessionDao().delete(session)
             } catch {
                 observer.onError(error)
             }
@@ -428,7 +428,7 @@ open class DefaultMessageModule : MessageModule {
     private func updateLocalSession(_ session: Session) -> Observable<Void> {
         return Observable.create({observer -> Disposable in
             do {
-                try IMCoreManager.shared.database.sessionDao().updateSessions(session)
+                try IMCoreManager.shared.database.sessionDao().update(session)
                 
             } catch {
                 observer.onError(error)

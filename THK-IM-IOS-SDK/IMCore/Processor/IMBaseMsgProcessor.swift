@@ -23,7 +23,7 @@ open class IMBaseMsgProcessor {
      */
     open func received(_ msg: Message){
         do {
-            let dbMsg = try IMCoreManager.shared.database.messageDao().findMessageById(msg.id, msg.fromUId, msg.sessionId)
+            let dbMsg = try IMCoreManager.shared.database.messageDao().findById(msg.id, msg.fromUId, msg.sessionId)
             if (dbMsg == nil) {
                 // 数据库不存在
                 if (msg.fromUId == IMCoreManager.shared.uId) {
@@ -245,7 +245,7 @@ open class IMBaseMsgProcessor {
      * 【插入或更新消息状态】
      */
     open func insertOrUpdateDb(_ msg: Message, _ notify: Bool = true, _ notifySession: Bool = true) throws {
-        try IMCoreManager.shared.database.messageDao().insertOrReplaceMessages([msg])
+        try IMCoreManager.shared.database.messageDao().insertOrReplace([msg])
         if notify {
             SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
         }

@@ -74,7 +74,7 @@ open class DefaultUserModule : UserModule {
         return Observable.create({observer -> Disposable in
             let now = Date().timeMilliStamp
             let user = User(
-                id: id, name: "user-\(id)", avatar: "https://picsum.photos/300/300",
+                id: id, displayId: "", name: "user-\(id)", avatar: "https://picsum.photos/300/300",
                 sex: 0, status: 1, cTime: now, mTime: now
             )
             observer.onNext(user)
@@ -90,7 +90,7 @@ open class DefaultUserModule : UserModule {
             var userMap = Dictionary<Int64, User>()
             for id in ids {
                 let user = User(
-                    id: id, name: "user-\(id)", avatar: "https://picsum.photos/300/300",
+                    id: id, displayId: "", name: "user-\(id)", avatar: "https://picsum.photos/300/300",
                     sex: 0, status: 1, cTime: now, mTime: now
                 )
                 userMap[user.id] = user
