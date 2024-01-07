@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        DataRepository.shared.initApplication(app: UIApplication.shared)
         return true
     }
     
@@ -31,11 +32,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func initIM(token: String, uId: Int64) {
-        DataRepository.shared.initApplication(app: UIApplication.shared)
         let debug = true
         let apiEndpoint = "http://api.thkim.com"
         let wsEndpoint = "ws://ws.thkim.com/ws"
         IMCoreManager.shared.initApplication(UIApplication.shared, uId, debug)
+        IMCoreManager.shared.userModule = IMUserModule()
+        IMCoreManager.shared.contactModule = IMContactModule()
+        IMCoreManager.shared.groupModule = IMGroupModule()
+        
         IMCoreManager.shared.api = DefaultIMApi(token: token, endpoint: apiEndpoint)
         IMCoreManager.shared.signalModule = DefaultSignalModule(UIApplication.shared, wsEndpoint, token)
         IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule(token, apiEndpoint)

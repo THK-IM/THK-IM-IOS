@@ -63,6 +63,7 @@
 		A0C431F82A909CCE00A84D4A /* JoinRoomBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */; };
 		A0C431FC2A909D2500A84D4A /* UIRtcMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431FA2A909D2500A84D4A /* UIRtcMsgCell.swift */; };
 		A0C431FD2A909D2500A84D4A /* ParticipantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431FB2A909D2500A84D4A /* ParticipantView.swift */; };
+		A0CA4E622B4A87A40031DDDB /* NavigationItemLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA4E612B4A87A40031DDDB /* NavigationItemLayout.swift */; };
 		A0CC9F742AFC88F200801B25 /* IMTabCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CC9F732AFC88F200801B25 /* IMTabCell.swift */; };
 		A0D51DC22B09E40E00E21E75 /* IMRevokeMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC12B09E40E00E21E75 /* IMRevokeMsgCell.swift */; };
 		A0D51DC42B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC32B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift */; };
@@ -317,6 +318,7 @@
 		A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinRoomBean.swift; sourceTree = "<group>"; };
 		A0C431FA2A909D2500A84D4A /* UIRtcMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIRtcMsgCell.swift; sourceTree = "<group>"; };
 		A0C431FB2A909D2500A84D4A /* ParticipantView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantView.swift; sourceTree = "<group>"; };
+		A0CA4E612B4A87A40031DDDB /* NavigationItemLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItemLayout.swift; sourceTree = "<group>"; };
 		A0CC9F732AFC88F200801B25 /* IMTabCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMTabCell.swift; sourceTree = "<group>"; };
 		A0D51DC12B09E40E00E21E75 /* IMRevokeMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgCell.swift; sourceTree = "<group>"; };
 		A0D51DC32B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgCellProvider.swift; sourceTree = "<group>"; };
@@ -1269,6 +1271,7 @@
 		A0FCA8D42B484A7A00FC6E47 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				A0FCA9412B4A7E5D00FC6E47 /* Component */,
 				A0FCA8D52B484A8B00FC6E47 /* Base */,
 				A0FCA8F02B49178300FC6E47 /* Main */,
 				A0FCA8EF2B49176D00FC6E47 /* Welcome */,
@@ -1399,6 +1402,14 @@
 				A0FCA93F2B4A782E00FC6E47 /* IMGroupModule.swift */,
 			);
 			path = Module;
+			sourceTree = "<group>";
+		};
+		A0FCA9412B4A7E5D00FC6E47 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				A0CA4E612B4A87A40031DDDB /* NavigationItemLayout.swift */,
+			);
+			path = Component;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1758,6 +1769,7 @@
 				A0D68BE02A888679004D11A5 /* CommonModule.swift in Sources */,
 				A018CE0A2B00A48C00896B87 /* IMMsgRevokeOperator.swift in Sources */,
 				A0D68B7C2A888679004D11A5 /* CreateSessionVo.swift in Sources */,
+				A0CA4E622B4A87A40031DDDB /* NavigationItemLayout.swift in Sources */,
 				A02578CA2AA4398E00A66CEF /* TableName.swift in Sources */,
 				A0EA42EB2A94925600F64A90 /* DefaultUserDao.swift in Sources */,
 				A0D68BBA2A888679004D11A5 /* IMSpeakView.swift in Sources */,

@@ -15,7 +15,6 @@ class ContactViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.contactTableView.backgroundColor = UIColor.white
-        
         let statusBarHeight = AppUtils.getStatusBarHeight()
         let navigationItemHeight = self.navigationController?.navigationBar.frame.height ?? 0
         let top = statusBarHeight + navigationItemHeight
