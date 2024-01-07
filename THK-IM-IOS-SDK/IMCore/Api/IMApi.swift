@@ -28,23 +28,23 @@ public protocol IMApi: AnyObject {
     /**
      * 获取与用户的session
      */
-    func querySession(_ uId: Int64, _ sessionId: Int64) -> Observable<Session>
+    func queryUserSession(_ uId: Int64, _ sessionId: Int64) -> Observable<Session>
+    
     
     /**
-     * 创建会话
+     * 获取与用户的session
      */
-    func createSession(_ uId: Int64, _ sessionType: Int, _ entityId: Int64, _ members: Set<Int64>?) -> Observable<Session>
-    
+    func queryUserSession(_ uId: Int64, _ entityId: Int64, _ type: Int) -> Observable<Session>
     
     /**
      * 删除用户session
      */
-    func deleteSession(_ uId: Int64, session: Session)-> Observable<Void>
+    func deleteUserSession(_ uId: Int64, session: Session)-> Observable<Void>
 
     /**
      * 根新用户session
      */
-    func updateSession(_ uId: Int64, session: Session)-> Observable<Void>
+    func updateUserSession(_ uId: Int64, session: Session)-> Observable<Void>
     
     /**
      * 发送消息到服务端

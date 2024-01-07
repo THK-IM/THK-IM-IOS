@@ -145,6 +145,8 @@ open class IMCoreManager: SignalListener {
     public func onSignalStatusChange(_ status: SignalStatus) {
         if (status == SignalStatus.Connected) {
             getMessageModule().syncOfflineMessages()
+            getContactModule().syncContacts()
+            getMessageModule().syncLatestSessionsFromServer()
         }
         SwiftEventBus.post(IMEvent.OnlineStatusUpdate.rawValue, sender: status)
     }

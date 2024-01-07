@@ -55,12 +55,16 @@ open class BaseViewController: UIViewController {
     }
     
     open func menuImages(menu: String) -> UIImage? {
+        var image: UIImage? = nil
         if (menu == "add") {
-            return UIImage(named: "ic_titlebar_add")?.scaledToSize(CGSize(width: 24, height: 24))
+            image = UIImage(named: "ic_titlebar_add")
         } else if (menu == "search") {
-            return UIImage(named: "ic_titlebar_search")?.scaledToSize(CGSize(width: 24, height: 24))
+            image = UIImage(named: "ic_titlebar_search")
         }
-        return nil
+        if image == nil {
+            return image
+        }
+        return image!.scaledToSize(CGSize(width: 24, height: 24))
     }
     
     open func onMenuClick(menu: String) {

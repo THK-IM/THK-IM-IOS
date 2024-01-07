@@ -47,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IMUIManager.shared.initConfig()
         IMUIManager.shared.contentProvider = Provider(token: token)
         IMUIManager.shared.contentPreviewer = Previewer(token: token, endpoint: apiEndpoint)
+        IMUIManager.shared.pageRouter = ExternalPageRouter()
         IMCoreManager.shared.connect()
         
     }

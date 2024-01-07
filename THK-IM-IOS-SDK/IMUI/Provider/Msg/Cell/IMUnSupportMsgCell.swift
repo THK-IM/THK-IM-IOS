@@ -17,6 +17,16 @@ class IMUnSupportMsgCell: BaseMsgCell {
         self.view.numberOfLines = 0
         self.view.font = UIFont.boldSystemFont(ofSize: 14)
         self.view.padding = UIEdgeInsets.init(top: 4, left: 4, bottom: 4, right: 4)
+        if self.cellPosition() == IMMsgPosType.Left.rawValue {
+            view.textColor = UIColor.black
+            view.textAlignment = .left
+        } else if self.cellPosition() == IMMsgPosType.Right.rawValue {
+            view.textColor = UIColor.white
+            view.textAlignment = .left
+        } else {
+            view.textColor = UIColor.white
+            view.textAlignment = .center
+        }
         return self.view
     }
     

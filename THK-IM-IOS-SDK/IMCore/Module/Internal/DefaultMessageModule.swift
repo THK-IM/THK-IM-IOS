@@ -209,31 +209,6 @@ open class DefaultMessageModule : MessageModule {
             .disposed(by: disposeBag)
     }
     
-    
-    public func createSingleSession(_ entityId: Int64) -> Observable<Session> {
-        let sessionType = SessionType.Single.rawValue
-        return Observable.create({observer -> Disposable in
-            do {
-                var session = try IMCoreManager.shared.database.sessionDao().findByEntityId(entityId, sessionType)
-                if (session == nil) {
-                    session = Session.emptySession()
-                }
-                observer.onNext(session!)
-                observer.onCompleted()
-            } catch {
-                observer.onError(error)
-            }
-            return Disposables.create()
-        }).flatMap({ (session) -> Observable<Session> in
-            if (session.id > 0) {
-                return Observable.just(session)
-            } else {
-                let uId = IMCoreManager.shared.uId
-                return IMCoreManager.shared.api.createSession(uId, sessionType, entityId, nil)
-            }
-        })
-    }
-    
     public func getSession(_ sessionId: Int64) -> Observable<Session> {
         return Observable.create({observer -> Disposable in
             do {
@@ -251,7 +226,38 @@ open class DefaultMessageModule : MessageModule {
             if (session.id > 0) {
                 return Observable.just(session)
             } else {
-                return IMCoreManager.shared.api.querySession(IMCoreManager.shared.uId, sessionId)
+                return IMCoreManager.shared.api.queryUserSession(IMCoreManager.shared.uId, sessionId)
+                    .flatMap({ session in
+                        try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
+                        return Observable.just(session)
+                    })
+            }
+        })
+    }
+    
+    
+    public func getSession(_ entityId: Int64, _ type: Int) -> Observable<Session> {
+        return Observable.create({observer -> Disposable in
+            do {
+                var session = try IMCoreManager.shared.database.sessionDao().findByEntityId(entityId, type)
+                if (session == nil) {
+                    session = Session.emptySession()
+                }
+                observer.onNext(session!)
+                observer.onCompleted()
+            } catch {
+                observer.onError(error)
+            }
+            return Disposables.create()
+        }).flatMap({ (session) -> Observable<Session> in
+            if (session.id > 0) {
+                return Observable.just(session)
+            } else {
+                return IMCoreManager.shared.api.queryUserSession(IMCoreManager.shared.uId, entityId, type)
+                    .flatMap({ session in
+                        try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
+                        return Observable.just(session)
+                    })
             }
         })
     }
@@ -506,7 +512,7 @@ open class DefaultMessageModule : MessageModule {
     }
     
     private func deleteServerSession(_ session: Session) -> Observable<Void> {
-        return IMCoreManager.shared.api.deleteSession(IMCoreManager.shared.uId, session: session)
+        return IMCoreManager.shared.api.deleteUserSession(IMCoreManager.shared.uId, session: session)
     }
     
     private func updateLocalSession(_ session: Session) -> Observable<Void> {
@@ -524,7 +530,7 @@ open class DefaultMessageModule : MessageModule {
     }
     
     private func updateServerSession(_ session: Session) -> Observable<Void> {
-        return IMCoreManager.shared.api.updateSession(IMCoreManager.shared.uId, session: session)
+        return IMCoreManager.shared.api.updateUserSession(IMCoreManager.shared.uId, session: session)
     }
     
 }

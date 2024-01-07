@@ -56,18 +56,9 @@ class MainTextViewController: UIViewController, PerformanceMonitorDelegate {
         textView1.setTitleColor(UIColor.white, for: .normal)
         textView1.rx.tap
             .compose(RxTransformer.shared.io2Main())
-            .flatMap({ (value) -> Observable<Session> in
-//                let entityId = Int64(arc4random() % 100000) + 100
-                let entityId = Int64(4)
-                return IMCoreManager.shared.getMessageModule().createSingleSession(entityId)
-            })
             .subscribe(onNext: { data in
                 print(data)
-                do {
-                    try IMCoreManager.shared.database.sessionDao().insertOrUpdate([data])
-                } catch {
-                    print(error)
-                }
+                
             }, onError: { error in
                 print(error)
             }).disposed(by: self.disposeBag)

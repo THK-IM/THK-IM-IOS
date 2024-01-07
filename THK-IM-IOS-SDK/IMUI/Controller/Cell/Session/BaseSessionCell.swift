@@ -118,8 +118,7 @@ open class BaseSessionCell : BaseTableCell {
     }
     
     func setSession(_ session: Session) {
-        self.avatarView.ca_setImageUrlWithCorner(url: "https://picsum.photos/300/300", radius: 6)
-        self.nickView.text = String(format: "nick-%d", session.entityId)
+        self.showSessionEntityInfo(session)
         self.msgView.text = session.lastMsg
         let dateString = DateUtils.timeToMsgTime(ms: session.mTime, now: IMCoreManager.shared.severTime)
         self.lastTimeView.text = dateString
@@ -137,6 +136,10 @@ open class BaseSessionCell : BaseTableCell {
         } else {
             silenceView.image = nil
         }
+    }
+    
+    open func showSessionEntityInfo(_ session: Session) {
+        
     }
     
 }

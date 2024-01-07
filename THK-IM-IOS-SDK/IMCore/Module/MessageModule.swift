@@ -30,16 +30,18 @@ public protocol MessageModule : BaseModule {
      * 同步最近session
      */
     func syncLatestSessionsFromServer()
-    
-    /**
-     * 先查本地数据库后查服务端
-     */
-    func createSingleSession(_ entityId: Int64) -> Observable<Session>
+
     
     /**
      * 获取session, 先查本地数据库后查服务端
      */
     func getSession(_ sessionId: Int64) -> Observable<Session>
+    
+    
+    /**
+     * 获取session, 先查本地数据库后查服务端
+     */
+    func getSession(_ entityId: Int64, _ type: Int) -> Observable<Session>
     
     /**
      * 分页获取本地session

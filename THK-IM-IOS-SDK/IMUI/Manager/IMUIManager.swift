@@ -19,6 +19,8 @@ open class IMUIManager: NSObject {
     private var msgOperators = [String: IMMessageOperator]()
     public var contentProvider: IMProvider? = nil
     public var contentPreviewer: IMPreviewer? = nil
+    public var pageRouter: IMPageRouter? = nil
+    
     
     private var cornerImageMap = [String: UIImage]()
     

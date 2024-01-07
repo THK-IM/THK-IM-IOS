@@ -33,6 +33,9 @@ class DefaultIMDatabase: IMDatabase {
     
         do {
             try self.database.create(table: TableName.User.rawValue, of: User.self)
+            try self.database.create(table: TableName.Contact.rawValue, of: Contact.self)
+            try self.database.create(table: TableName.Group.rawValue, of: Group.self)
+            try self.database.create(table: TableName.SessionMember.rawValue, of: SessionMember.self)
             try self.database.create(table: TableName.Message.rawValue, of: Message.self)
             try self.database.create(table: TableName.Session.rawValue, of: Session.self)
         } catch {

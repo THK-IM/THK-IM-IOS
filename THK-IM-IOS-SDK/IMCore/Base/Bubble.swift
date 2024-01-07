@@ -47,13 +47,13 @@ open class Bubble {
         context.addArc(
             tangent1End: CGPoint(x: halfBorderWidth, y: halfBorderWidth),
             tangent2End: CGPoint(x: width - halfBorderWidth, y: halfBorderWidth),
-            radius: pos == 3 ? 0 : radius
+            radius: pos == 1 ? 0 : radius
         )
         // 右上角
         context.addArc(
             tangent1End: CGPoint(x: width - halfBorderWidth, y: halfBorderWidth),
             tangent2End: CGPoint(x: width - halfBorderWidth, y: radius + halfBorderWidth),
-            radius: pos == 4 ? 0 : radius
+            radius: pos == 2 ? 0 : radius
         )
         context.drawPath(using: .fillStroke)
         let output = UIGraphicsGetImageFromCurrentImageContext()

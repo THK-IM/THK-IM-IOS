@@ -20,6 +20,16 @@ class IMRevokeMsgCell: BaseMsgCell {
         view.font = UIFont.systemFont(ofSize: 12)
         view.textColor = UIColor.init(hex: "aaaaaa")
         view.textAlignment = .center
+        if self.cellPosition() == IMMsgPosType.Left.rawValue {
+            view.textColor = UIColor.black
+            view.textAlignment = .left
+        } else if self.cellPosition() == IMMsgPosType.Right.rawValue {
+            view.textColor = UIColor.white
+            view.textAlignment = .left
+        } else {
+            view.textColor = UIColor.white
+            view.textAlignment = .center
+        }
         return view
     }()
     

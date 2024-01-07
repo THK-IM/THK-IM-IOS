@@ -7,8 +7,11 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 open class BaseTableCell : UITableViewCell {
+    
+    let disposeBag = DisposeBag()
     
     open func appear() {
         

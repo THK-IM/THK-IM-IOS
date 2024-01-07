@@ -58,7 +58,7 @@ public class DefaultIMApi: IMApi {
             })
     }
     
-    public func querySession(_ uId: Int64, _ sessionId: Int64) -> Observable<Session> {
+    public func queryUserSession(_ uId: Int64, _ sessionId: Int64) -> Observable<Session> {
         return sessionApi.rx
             .request(.querySession(uId, sessionId))
             .asObservable()
@@ -69,10 +69,14 @@ public class DefaultIMApi: IMApi {
             })
     }
     
-    public func createSession(_ uId: Int64, _ sessionType: Int, _ entityId: Int64, _ members: Set<Int64>?) -> Observable<Session> {
-        let req = CreateSessionVo(uId: uId, type: sessionType, entityId: entityId, name: "", remark: "", members: members)
+    
+    
+    /**
+     * 获取与用户的session
+     */
+    public func queryUserSession(_ uId: Int64, _ entityId: Int64, _ type: Int) -> Observable<Session> {
         return sessionApi.rx
-            .request(.createSession(req))
+            .request(.querySessionByEntityId(uId, entityId, type))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(SessionVo.self))
             .flatMap({ (vo) -> Observable<Session> in
@@ -81,14 +85,14 @@ public class DefaultIMApi: IMApi {
             })
     }
     
-    public func deleteSession(_ uId: Int64, session: Session)-> Observable<Void> {
+    public func deleteUserSession(_ uId: Int64, session: Session)-> Observable<Void> {
         return sessionApi.rx
             .request(.deleteSession(uId, session.id))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }
 
-    public func updateSession(_ uId: Int64, session: Session)-> Observable<Void> {
+    public func updateUserSession(_ uId: Int64, session: Session)-> Observable<Void> {
         let req = UpdateSessionVo(uId: uId, sId: session.id, top: session.topTimestamp, status: session.status, parentId: session.parentId)
         return sessionApi.rx
             .request(.updateSession(req))

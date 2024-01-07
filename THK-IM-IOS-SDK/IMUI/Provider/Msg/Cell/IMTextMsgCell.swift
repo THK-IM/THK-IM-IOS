@@ -21,7 +21,7 @@ class IMTextMsgCell: BaseMsgCell {
             view.textColor = UIColor.black
             view.textAlignment = .left
         } else if self.cellPosition() == IMMsgPosType.Right.rawValue {
-            view.textColor = UIColor.black
+            view.textColor = UIColor.white
             view.textAlignment = .left
         } else {
             view.textColor = UIColor.white
