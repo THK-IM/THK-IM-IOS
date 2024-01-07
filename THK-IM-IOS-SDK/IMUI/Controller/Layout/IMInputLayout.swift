@@ -45,7 +45,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
     
     lazy private var speakButton: UIButton = {
         let voiceButton = UIButton()
-        let image = UIImage(named: "chat_bar_voice")
+        let image = UIImage(named: "ic_msg_voice")
         if image != nil {
             voiceButton.setImage(image!, for: .normal)
             voiceButton.contentHorizontalAlignment = .fill
@@ -78,7 +78,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
     
     lazy private var emojiButton: UIButton = {
         let emojiButton = UIButton()
-        let image = UIImage(named: "chat_bar_emoji")
+        let image = UIImage(named: "ic_msg_emoji")
         if image != nil {
             emojiButton.setImage(image!, for: .normal)
             emojiButton.contentHorizontalAlignment = .fill
@@ -91,7 +91,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
     
     lazy private var moreButton: UIButton = {
         let moreButton = UIButton()
-        let image = UIImage(named: "chat_input_tool")
+        let image = UIImage(named: "ic_msg_more")
         if image != nil {
             moreButton.setImage(image!, for: .normal)
             moreButton.contentHorizontalAlignment = .fill
@@ -234,12 +234,12 @@ class IMInputLayout: UIView, UITextViewDelegate {
         }
         self.isEmojiImageShow = !self.isEmojiPanelShow
         if self.isEmojiImageShow {
-            let image = UIImage(named: "chat_bar_emoji")
+            let image = UIImage(named: "ic_msg_emoji")
             if image != nil {
                 self.emojiButton.setImage(image!, for: .normal)
             }
         } else {
-            let image = UIImage(named: "chat_input_input")
+            let image = UIImage(named: "ic_msg_keyboard")
             if image != nil {
                 self.emojiButton.setImage(image!, for: .normal)
             }
@@ -254,7 +254,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
         if self.isSpeakImageShow {
             self.speakView.isHidden = false
             self.textView.isHidden = true
-            let image = UIImage(named: "chat_input_input")
+            let image = UIImage(named: "ic_msg_keyboard")
             if image != nil {
                 self.speakButton.setImage(image!, for: .normal)
             }
@@ -263,7 +263,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
         } else {
             self.speakView.isHidden = true
             self.textView.isHidden = false
-            let image = UIImage(named: "chat_bar_voice")
+            let image = UIImage(named: "ic_msg_voice")
             if image != nil {
                 self.speakButton.setImage(image!, for: .normal)
             }

@@ -15,7 +15,7 @@ open class IMCameraFunctionProvider: IMBaseFunctionCellProvider {
     }
     
     public func icon() -> UIImage? {
-        return UIImage.init(named: "chat_bar_voice")
+        return UIImage.init(named: "ic_msg_camera")
     }
     
     public func click(sender: IMMsgSender?) {

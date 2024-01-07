@@ -18,7 +18,7 @@ open class IMUnicodeEmojiPanelProvider: IMBasePanelViewProvider {
     
     
     open func icon(selected: Bool) -> UIImage {
-        return UIImage(named: "chat_bar_emoji")!
+        return UIImage(named: "ic_msg_emoji")!
     }
     
 }
