@@ -1005,6 +1005,7 @@
 		A0D68B012A888678004D11A5 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				A0FCA8D52B484A8B00FC6E47 /* Base */,
 				A018CDFD2B008CA800896B87 /* Popup */,
 				A0D68B032A888678004D11A5 /* Layout */,
 				A0D68B092A888678004D11A5 /* Component */,
@@ -1287,7 +1288,6 @@
 			isa = PBXGroup;
 			children = (
 				A0FCA9412B4A7E5D00FC6E47 /* Component */,
-				A0FCA8D52B484A8B00FC6E47 /* Base */,
 				A0FCA8F02B49178300FC6E47 /* Main */,
 				A0FCA8EF2B49176D00FC6E47 /* Welcome */,
 			);

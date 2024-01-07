@@ -438,6 +438,10 @@ open class DefaultMessageModule : MessageModule {
     }
     
     public func processSessionByMessage(_ msg: Message) {
+        // id为0的session不展现给用户
+        if (msg.sessionId == 0) {
+            return 
+        }
         self.getSession(msg.sessionId)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(

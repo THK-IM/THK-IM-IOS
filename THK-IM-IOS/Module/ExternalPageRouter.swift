@@ -21,5 +21,10 @@ class ExternalPageRouter: IMPageRouter {
         
     }
     
+    func openGroupPage(controller: UIViewController, group: Group) {
+        
+    }
+    
+    
     
 }

@@ -27,7 +27,7 @@ class MiddleCellWrapper : CellWrapper {
     override func attach(_ contentView: UIView) {
         contentView.addSubview(_messageStack)
         _messageStack.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(0)
+            make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview().offset(50)
             make.right.equalToSuperview().offset(-50)
             make.bottom.equalToSuperview().offset(-10).priority(.low)

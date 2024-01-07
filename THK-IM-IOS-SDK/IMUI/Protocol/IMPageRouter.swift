@@ -13,4 +13,6 @@ public protocol IMPageRouter {
     func openSession(controller: UIViewController, session: Session)
     
     func openUserPage(controller: UIViewController, user: User)
+    
+    func openGroupPage(controller: UIViewController, group: Group)
 }

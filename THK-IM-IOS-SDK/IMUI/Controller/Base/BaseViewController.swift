@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-open class BaseViewController: UIViewController {
+open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let disposeBag = DisposeBag()
     
@@ -28,6 +28,15 @@ open class BaseViewController: UIViewController {
             actions.append(#selector(searchTapped))
         }
         setRightItems(images: images, actions: actions)
+        self.navigationItem.hidesBackButton = true
+        let backImage = UIImage(named: "ic_titlebar_back")?.scaledToSize(CGSize(width: 24, height: 24))
+        let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
+        self.navigationItem.leftBarButtonItem = backItem
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+    
+    @objc open func backAction() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     open func showLoading(text: String) {
@@ -78,6 +87,11 @@ open class BaseViewController: UIViewController {
     
     @objc func searchTapped() {
         onMenuClick(menu: "search")
+    }
+    
+    
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.navigationController?.children.count ?? 0 > 1
     }
     
 }

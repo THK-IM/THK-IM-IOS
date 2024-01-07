@@ -15,8 +15,7 @@ import RxGesture
 import ImageIO
 import CoreServices
 
-class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
-    
+class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
     
     var session: Session? = nil
     private var containerView = UIView()
@@ -26,7 +25,6 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     private var bottomPanelLayout = IMBottomPanelLayout()
     private var msgSelectedLayout = IMMessageSelectedLayout()
     private var keyboardShow = false
-    private var disposeBag = DisposeBag()
     
     deinit {
         DDLogDebug("IMMessageViewController, de init")
@@ -35,11 +33,50 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.init(hex: "e2e2e2")
+        self.showSessionTitle()
+        self.view.backgroundColor = UIColor.init(hex: "f3f3f3")
         self.setupView()
         self.registerMsgEvent()
         self.registerKeyboardEvent()
         self.messageLayout.loadMessages()
+    }
+    
+    private func showSessionTitle() {
+        guard let session = self.session else {
+            return
+        }
+        self.setTitle(title: session.name)
+    }
+    
+    override func hasAddMenu() -> Bool {
+        return true
+    }
+    
+    override func menuImages(menu: String) -> UIImage? {
+        return UIImage(named: "ic_titlebar_more")?.scaledToSize(CGSize.init(width: 24, height: 24))
+    }
+    
+    override func onMenuClick(menu: String) {
+        guard let session = self.session else {
+            return
+        }
+        if (session.type == SessionType.Single.rawValue) {
+            IMCoreManager.shared.userModule.queryUser(id: session.entityId)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { user in
+                    IMUIManager.shared.pageRouter?.openUserPage(controller: self, user: user)
+                }).disposed(by: self.disposeBag)
+        } else if (session.type == SessionType.Group.rawValue ||
+                   session.type == SessionType.SuperGroup.rawValue
+        ) {
+            IMCoreManager.shared.groupModule.findById(id: session.entityId)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { group in
+                    if let g = group  {
+                        IMUIManager.shared.pageRouter?.openGroupPage(controller: self, group: g)
+                    }
+                }).disposed(by: self.disposeBag)
+        }
     }
     
     private func setupView() {
@@ -66,7 +103,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         
         // 输入框等布局
         self.inputLayout.sender = self
-        self.inputLayout.backgroundColor = UIColor.init(hex: "eaeaea")
+        self.inputLayout.backgroundColor = UIColor.init(hex: "f3f3f3")
         self.containerView.addSubview(self.inputLayout)
         self.inputLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -82,7 +119,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         self.containerView.addSubview(self.msgSelectedLayout)
         self.msgSelectedLayout.sender = self
         self.msgSelectedLayout.alpha = 1
-        self.msgSelectedLayout.backgroundColor = UIColor.init(hex: "e2e2e2")
+        self.msgSelectedLayout.backgroundColor = UIColor.init(hex: "f3f3f3")
         self.msgSelectedLayout.isHidden = true
         self.msgSelectedLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -96,7 +133,7 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         
         // 消息视图，在输入框之上，铺满alwaysShowView
         self.containerView.addSubview(self.messageLayout)
-        self.messageLayout.backgroundColor = UIColor.init(hex: "e2e2e2")
+        self.messageLayout.backgroundColor = UIColor.init(hex: "eeeeee")
         self.messageLayout.session = self.session
         self.messageLayout.sender = self
         self.messageLayout.previewer = self
@@ -409,15 +446,6 @@ class IMMessageViewController : UIViewController, IMMsgSender, IMMsgPreviewer {
         let frame = CGRect(x: (Int(screenWidth)-popupWidth)/2, y: y, width: popupWidth, height: popupHeight)
         let popupView = IMMessageOperatorPopupView(frame: frame)
         popupView.show(rowCount, operators, self, message)
-    }
-    
-    
-    func showLoading(text: String) {
-        
-    }
-    
-    func dismissLoading() {
-        
     }
     
     func showMessage(text: String, success: Bool) {
