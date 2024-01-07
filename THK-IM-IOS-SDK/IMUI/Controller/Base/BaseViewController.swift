@@ -14,6 +14,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     let disposeBag = DisposeBag()
     
     override open func viewDidLoad() {
+        self.navigationItem.hidesBackButton = true
         if let title = title() {
             setTitle(title: title)
         }
@@ -28,11 +29,12 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             actions.append(#selector(searchTapped))
         }
         setRightItems(images: images, actions: actions)
-        self.navigationItem.hidesBackButton = true
-        let backImage = UIImage(named: "ic_titlebar_back")?.scaledToSize(CGSize(width: 24, height: 24))
-        let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backItem
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        if (self.canBack()) {
+            let backImage = UIImage(named: "ic_titlebar_back")?.scaledToSize(CGSize(width: 24, height: 24))
+            let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
+            self.navigationItem.leftBarButtonItem = backItem
+            self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        }
     }
     
     @objc open func backAction() {
@@ -91,6 +93,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.canBack()
+    }
+    
+    private func canBack() -> Bool {
         return self.navigationController?.children.count ?? 0 > 1
     }
     
