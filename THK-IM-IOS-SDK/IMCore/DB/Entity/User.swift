@@ -13,11 +13,11 @@ public final class User: TableCodable {
     // 显示id
     public var displayId: String
     // 用户名称
-    public var name: String
+    public var nickname: String
     // 用户头像
-    public var avatar: String
+    public var avatar: String?
     // 用户性别
-    public var sex: Int = SexType.Unknown.rawValue
+    public var sex: Int? = SexType.Unknown.rawValue
     // 用户状态
     public var status: Int = 0
     // 自定义扩展数据 推荐使用json结构存储
@@ -34,7 +34,7 @@ public final class User: TableCodable {
         }
         case id = "id"
         case displayId = "display_id"
-        case name = "name"
+        case nickname = "nickname"
         case avatar = "avatar"
         case sex="sex"
         case status="status"
@@ -45,12 +45,24 @@ public final class User: TableCodable {
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    public init(id: Int64, displayId: String, name: String, avatar: String, sex: Int, status: Int,
+    public init(id: Int64) {
+        self.id = id
+        self.displayId = ""
+        self.nickname = ""
+        self.avatar = nil
+        self.sex = nil
+        self.status = 0
+        self.extData = nil
+        self.cTime = 0
+        self.mTime = 0
+    }
+    
+    public init(id: Int64, displayId: String, nickname: String, avatar: String?, sex: Int?, status: Int,
                 extData: String? = nil, cTime: Int64, mTime: Int64)
     {
         self.id = id
         self.displayId = displayId
-        self.name = name
+        self.nickname = nickname
         self.avatar = avatar
         self.sex = sex
         self.status = status

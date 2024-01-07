@@ -53,7 +53,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
         } else {
             return IMCoreManager.shared.getUserModule().queryUser(id: msg.fromUId)
                 .flatMap { info in
-                    return Observable.just(info.name)
+                    return Observable.just(info.nickname)
                 }
         }
     }

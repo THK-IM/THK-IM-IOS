@@ -32,4 +32,11 @@ class ContactVo: Codable {
         case updateTime = "update_time"
     }
     
+    func toContact() -> Contact {
+        return Contact(
+            id: id, sessionId: sessionId, noteName: noteName, relation: relation,
+            extData: nil, cTime: createTime, mTime: updateTime
+        )
+    }
+    
 }

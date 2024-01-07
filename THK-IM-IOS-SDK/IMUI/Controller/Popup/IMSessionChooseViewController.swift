@@ -83,7 +83,7 @@ class IMSessionChooseViewController: IMSessionViewController {
             var content = ""
             var i = 0
             for m in messages {
-                let userName = userMap[m.fromUId]?.name ?? "XX"
+                let userName = userMap[m.fromUId]?.nickname ?? "XX"
                 let subContent = IMCoreManager.shared.getMessageModule().getMsgProcessor(m.type).getSessionDesc(msg: m)
                 content = "\(content)\(userName):\(subContent)"
                 i += 1
@@ -97,7 +97,7 @@ class IMSessionChooseViewController: IMSessionViewController {
         }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
             let selfId = IMCoreManager.shared.uId
             return IMCoreManager.shared.getUserModule().queryUser(id: selfId).flatMap({ (user) ->  Observable<IMRecordMsgBody> in
-                recordBody.title = user.name
+                recordBody.title = user.nickname
                 return Observable.just(recordBody)
             })
         }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in

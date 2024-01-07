@@ -133,10 +133,8 @@ open class DefaultMessageModule : MessageModule {
                 if (messageArray.last != nil) {
                     let severTime = messageArray.last!.cTime
                     let success = self.setOfflineMsgSyncTime(severTime)
-                    if (success) {
-                        if (messageArray.count >= count) {
-                            self.syncOfflineMessages()
-                        }
+                    if (success && messageArray.count >= count) {
+                        self.syncOfflineMessages()
                     }
                 }
                 
@@ -148,7 +146,7 @@ open class DefaultMessageModule : MessageModule {
         let lastTime = self.getSessionLastSyncTime()
         let count = getSessionCountPerRequest()
         let uId = IMCoreManager.shared.uId
-        IMCoreManager.shared.api.queryUserLatestSessions(uId, count, 0, nil)
+        IMCoreManager.shared.api.queryUserLatestSessions(uId, count, lastTime, nil)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { sessions in
                 var needDelGroupIds = Set<Int64>()
@@ -201,11 +199,10 @@ open class DefaultMessageModule : MessageModule {
                 
                 
                 if (!sessions.isEmpty) {
-                    _ = self.setSessionLastSyncTime(sessions.last!.mTime)
-                }
-                
-                if (sessions.count >= count) {
-                    self.syncLatestSessionsFromServer()
+                    let success = self.setSessionLastSyncTime(sessions.last!.mTime)
+                    if (success && sessions.count >= count) {
+                        self.syncLatestSessionsFromServer()
+                    }
                 }
                 
             })

@@ -27,4 +27,12 @@ class UserVo: Codable {
         case qrcode = "qrcode"
         case birthday = "birthday"
     }
+    
+    func toUser() -> User {
+        let now = IMCoreManager.shared.severTime
+        return User(
+            id: id, displayId: displayId, nickname: nickname ?? "", avatar: avatar, sex: sex, status: 0, 
+            cTime: now, mTime: now
+        )
+    }
 }

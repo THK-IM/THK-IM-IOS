@@ -12,11 +12,7 @@ import RxSwift
 open class DefaultGroupModule: GroupModule {
     
     public func queryServerGroupById(id: Int64) -> RxSwift.Observable<Group?> {
-        let group = Group(
-            id: 0, displayId: "group-\(id)", name: "group-\(id)", sessionId: 0, ownerId: 0, avatar: "",
-            announce: "", qrcode: "", enterFlag:0, memberCount: 0, extData: nil, cTime: 0, mTime: 0
-        )
-        return Observable.just(group)
+        return Observable.just(Group(id: id))
     }
     
     public func findById(id: Int64) -> RxSwift.Observable<Group?> {

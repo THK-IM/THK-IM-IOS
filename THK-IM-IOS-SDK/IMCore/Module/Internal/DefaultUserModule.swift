@@ -12,12 +12,7 @@ open class DefaultUserModule : UserModule {
     
     public func queryServerUser(id: Int64) -> RxSwift.Observable<User> {
         return Observable.create({observer -> Disposable in
-            let now = Date().timeMilliStamp
-            let user = User(
-                id: id, displayId: "", name: "user-\(id)", avatar: "https://picsum.photos/300/300",
-                sex: 0, status: 1, cTime: now, mTime: now
-            )
-            observer.onNext(user)
+            observer.onNext(User(id: id))
             observer.onCompleted()
             return Disposables.create()
         })
@@ -27,7 +22,7 @@ open class DefaultUserModule : UserModule {
         return Observable.create({ observer -> Disposable in
             let user = IMCoreManager.shared.database.userDao().findById(id)
             if (user == nil) {
-                observer.onNext(User(id: id, displayId: "", name: "", avatar: "", sex: 0, status: 0, cTime: 0, mTime: 0))
+                observer.onNext(User(id: id))
             } else {
                 observer.onNext(user!)
             }

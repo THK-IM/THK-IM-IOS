@@ -253,6 +253,9 @@
 		A0FCA9342B498AB200FC6E47 /* TransferGroupVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9332B498AB200FC6E47 /* TransferGroupVo.swift */; };
 		A0FCA9362B498AC700FC6E47 /* UpdateGroupVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9352B498AC700FC6E47 /* UpdateGroupVo.swift */; };
 		A0FCA9392B498D2000FC6E47 /* GroupApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA9382B498D2000FC6E47 /* GroupApi.swift */; };
+		A0FCA93C2B4A71A400FC6E47 /* IMUserModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA93B2B4A71A400FC6E47 /* IMUserModule.swift */; };
+		A0FCA93E2B4A738700FC6E47 /* IMContactModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA93D2B4A738700FC6E47 /* IMContactModule.swift */; };
+		A0FCA9402B4A782E00FC6E47 /* IMGroupModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA93F2B4A782E00FC6E47 /* IMGroupModule.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -506,6 +509,9 @@
 		A0FCA9332B498AB200FC6E47 /* TransferGroupVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferGroupVo.swift; sourceTree = "<group>"; };
 		A0FCA9352B498AC700FC6E47 /* UpdateGroupVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateGroupVo.swift; sourceTree = "<group>"; };
 		A0FCA9382B498D2000FC6E47 /* GroupApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupApi.swift; sourceTree = "<group>"; };
+		A0FCA93B2B4A71A400FC6E47 /* IMUserModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUserModule.swift; sourceTree = "<group>"; };
+		A0FCA93D2B4A738700FC6E47 /* IMContactModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMContactModule.swift; sourceTree = "<group>"; };
+		A0FCA93F2B4A782E00FC6E47 /* IMGroupModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMGroupModule.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -752,6 +758,7 @@
 		A0D68A952A88838A004D11A5 /* THK-IM-IOS */ = {
 			isa = PBXGroup;
 			children = (
+				A0FCA93A2B4A718900FC6E47 /* Module */,
 				A0FCA8D82B48E63600FC6E47 /* Data */,
 				A0FCA8D42B484A7A00FC6E47 /* UI */,
 				A0C431F92A909D2500A84D4A /* View */,
@@ -1384,6 +1391,16 @@
 			path = Vo;
 			sourceTree = "<group>";
 		};
+		A0FCA93A2B4A718900FC6E47 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				A0FCA93B2B4A71A400FC6E47 /* IMUserModule.swift */,
+				A0FCA93D2B4A738700FC6E47 /* IMContactModule.swift */,
+				A0FCA93F2B4A782E00FC6E47 /* IMGroupModule.swift */,
+			);
+			path = Module;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1532,6 +1549,7 @@
 				A018CE062B00A46200896B87 /* IMMsgCopyOperator.swift in Sources */,
 				A0D68BD12A888679004D11A5 /* PreviewVideoCellView.swift in Sources */,
 				A0D68B812A888679004D11A5 /* CodeMessageError.swift in Sources */,
+				A0FCA93C2B4A71A400FC6E47 /* IMUserModule.swift in Sources */,
 				A0D68BCB2A888679004D11A5 /* IMUIManager.swift in Sources */,
 				A0D68B792A888679004D11A5 /* DeleteMsgVo.swift in Sources */,
 				A0FCA9322B498A9600FC6E47 /* JoinGroupVo.swift in Sources */,
@@ -1554,6 +1572,7 @@
 				A0D68B802A888679004D11A5 /* IMSessionApi.swift in Sources */,
 				A0FCA92C2B498A5B00FC6E47 /* CreateGroupVo.swift in Sources */,
 				A0FCA9342B498AB200FC6E47 /* TransferGroupVo.swift in Sources */,
+				A0FCA93E2B4A738700FC6E47 /* IMContactModule.swift in Sources */,
 				A0E8ED4A2AEDEE42004163BD /* Previewer.swift in Sources */,
 				A0D68BB72A888679004D11A5 /* IMMessageLayout.swift in Sources */,
 				A0D51DCA2B11BBDE00E21E75 /* IMSessionChooseViewController.swift in Sources */,
@@ -1730,6 +1749,7 @@
 				A0D68BCD2A888679004D11A5 /* IMMediaPreviewController.swift in Sources */,
 				A018CDFC2B00856B00896B87 /* IMAVCacheProtocol.swift in Sources */,
 				A0D68B9A2A888679004D11A5 /* UIImageView+Cache.swift in Sources */,
+				A0FCA9402B4A782E00FC6E47 /* IMGroupModule.swift in Sources */,
 				A0D68BDB2A888679004D11A5 /* IMVideoCachePlayerView.swift in Sources */,
 				A0D68BA42A888679004D11A5 /* IMAudioMsgCell.swift in Sources */,
 				A0EA42E92A94920300F64A90 /* DefaultMessageDao.swift in Sources */,

@@ -81,6 +81,29 @@ public final class Session: TableCodable {
         case mTime = "m_time"
     }
     
+    public init(id: Int64) {
+        self.id = id
+        self.parentId = 0
+        self.type = 0
+        self.entityId = 0
+        self.name = ""
+        self.noteName = nil
+        self.remark = ""
+        self.mute = 0
+        self.role = 0
+        self.status = 0
+        self.unreadCount = 0
+        self.draft = nil
+        self.lastMsg = nil
+        self.topTimestamp = 0
+        self.extData = nil
+        self.memberSyncTime = 0
+        self.memberCount = 0
+        self.deleted = 0
+        self.cTime = 0
+        self.mTime = 0
+    }
+    
     
     public init(
         id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, noteName: String?, remark: String, mute: Int,
@@ -110,11 +133,7 @@ public final class Session: TableCodable {
     }
     
     public static func emptySession() -> Session {
-        return Session(
-            id: 0, parentId: 0, type: 0, entityId: 0, name: "", noteName: nil, remark: "", mute: 0,
-            role: 0, status: 0, unreadCount: 0, topTimestamp: 0, memberSyncTime: 0, memberCount: 0,
-            deleted: 0, cTime: 0, mTime: 0
-        )
+        return Session(id: 0)
     }
     
 }
