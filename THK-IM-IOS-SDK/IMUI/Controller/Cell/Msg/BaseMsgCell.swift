@@ -110,7 +110,22 @@ open class BaseMsgCell : BaseTableCell {
             self.cellWrapper.avatarView()?.isHidden = true
         }
         if (self.hasBubble() && fromUId != nil) {
-            // TODO
+            let position = cellPosition()
+            var image: UIImage? = nil
+            if (position == IMMsgPosType.Left.rawValue) {
+                image = Bubble().drawRectWithRoundedCorner(
+                    radius: 10, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffffffff"),
+                    borderColor: UIColor.init(hex: "ffffffff"), width: 80, height: 40, pos: 3)
+            } else if (position == IMMsgPosType.Right.rawValue) {
+                image = Bubble().drawRectWithRoundedCorner(
+                    radius: 10, borderWidth: 0, backgroundColor: UIColor.init(hex: "ff35c3fd"),
+                    borderColor: UIColor.init(hex: "ff35c3fd"), width: 80, height: 40, pos: 4)
+            } else {
+                image = Bubble().drawRectWithRoundedCorner(
+                    radius: 10, borderWidth: 0, backgroundColor: UIColor.init(hex: "80000000"),
+                    borderColor: UIColor.init(hex: "80000000"), width: 80, height: 40)
+            }
+            updateUserBubble(image: image)
         } else {
             updateUserBubble(image: nil)
         }

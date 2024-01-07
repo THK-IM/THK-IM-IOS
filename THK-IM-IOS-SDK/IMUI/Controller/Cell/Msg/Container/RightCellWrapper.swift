@@ -76,11 +76,14 @@ class RightCellWrapper: CellWrapper {
             make.right.equalToSuperview().offset(-10)
             make.size.equalTo(42)
         }
-        
+        var top = 10
+        if self.type == SessionType.Group.rawValue || self.type == SessionType.SuperGroup.rawValue {
+            top = 0
+        }
         contentView.addSubview(_messageStack)
         _messageStack.snp.makeConstraints { make in
             make.right.equalTo(_avatarView.snp.left).offset(-4)
-            make.top.equalToSuperview().offset(0)
+            make.top.equalTo(_avatarView).offset(top)
             make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 100)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }

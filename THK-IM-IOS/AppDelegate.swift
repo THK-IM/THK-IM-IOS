@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func initIM(token: String, uId: Int64) {
         let debug = true
-        let apiEndpoint = "http://api.thkim.com"
+        let apiEndpoint = "http://msg-api.thkim.com"
         let wsEndpoint = "ws://ws.thkim.com/ws"
         IMCoreManager.shared.initApplication(UIApplication.shared, uId, debug)
         IMCoreManager.shared.userModule = IMUserModule()

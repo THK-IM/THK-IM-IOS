@@ -58,7 +58,7 @@ open class DefaultSessionDao : SessionDao {
     public func findByParentId(_ parentId: Int64, _ count: Int, _ mTime: Int64) throws -> Array<Session>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
-            where: Session.Properties.parentId == parentId && Session.Properties.mTime < mTime,
+            where: Session.Properties.parentId == parentId && Session.Properties.id != parentId && Session.Properties.mTime < mTime,
             orderBy: [Session.Properties.topTimestamp.order(Order.descending), Session.Properties.mTime.order(Order.descending)],
             limit: count
         )

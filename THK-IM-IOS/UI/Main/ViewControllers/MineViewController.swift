@@ -112,7 +112,7 @@ class MineViewController: BaseViewController {
         self.view.addSubview(self.aboutView)
         
         self.settingView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(300)
+            make.top.equalToSuperview().offset(240)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.height.equalTo(60)

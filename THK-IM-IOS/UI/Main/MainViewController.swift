@@ -42,11 +42,6 @@ class MainViewController: UITabBarController {
         self.viewControllers?[1].tabBarItem = itemContact
         self.viewControllers?[2].tabBarItem = itemGroup
         self.viewControllers?[3].tabBarItem = itemMine
-        
-//        let titleView = UILabel(frame: CGRect(x: 0, y: 0, width: 80, height: 20))
-//        titleView.text = "Message"
-//        titleView.backgroundColor = UIColor.red
-//        self.navigationItem.titleView = titleView
     }
     
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {

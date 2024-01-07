@@ -278,6 +278,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     
     open func openSession(_ session: Session) {
         let messageController = IMMessageViewController()
+        messageController.hidesBottomBarWhenPushed = true
         messageController.session = session
         self.navigationController?.pushViewController(messageController, animated: true)
     }

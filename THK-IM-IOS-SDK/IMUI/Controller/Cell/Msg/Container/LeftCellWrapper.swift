@@ -25,7 +25,7 @@ class LeftCellWrapper: CellWrapper {
         v.distribution = .equalSpacing
         v.spacing = 4
         
-        if self.type == SessionType.Group.rawValue {
+        if self.type == SessionType.Group.rawValue || self.type == SessionType.SuperGroup.rawValue {
             _nickView = UILabel()
             v.addArrangedSubview(_nickView!)
         }
@@ -46,9 +46,13 @@ class LeftCellWrapper: CellWrapper {
             make.size.equalTo(42)
         }
         contentView.addSubview(_messageStack)
+        var top = 10
+        if self.type == SessionType.Group.rawValue || self.type == SessionType.SuperGroup.rawValue {
+            top = 0
+        }
         _messageStack.snp.makeConstraints { make in
             make.left.equalTo(_avatarView.snp.right).offset(4)
-            make.top.equalTo(_avatarView)
+            make.top.equalTo(_avatarView).offset(top)
             make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 100)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
@@ -65,18 +69,6 @@ class LeftCellWrapper: CellWrapper {
     override func nickView() -> UILabel? {
         return self._nickView
     }
-    //
-    //    func statusView() -> UIView? {
-    //        return nil
-    //    }
-    //
-    //    func resendButton() -> UIButton? {
-    //        return nil
-    //    }
-    //
-    //    func readStatusView() -> UIView? {
-    //        return nil
-    //    }
     
     
 }
