@@ -29,7 +29,7 @@ public protocol MessageModule : BaseModule {
     /**
      * 同步最近session
      */
-    func syncLatestSessionsFromServer(_ lastSyncTime: Int, _ count: Int)
+    func syncLatestSessionsFromServer()
     
     /**
      * 先查本地数据库后查服务端

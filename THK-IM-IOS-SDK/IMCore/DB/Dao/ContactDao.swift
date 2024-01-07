@@ -10,10 +10,10 @@ import Foundation
 
 public protocol ContactDao {
     
-    func insertOrReplace(_ contacts: Contact...) throws
+    func insertOrReplace(_ contacts: [Contact]) throws
     
-    func insertOrIgnore(_ contacts: Contact...) throws
+    func insertOrIgnore(_ contacts: [Contact]) throws
     
-    func findByIds(_ ids: Set<Int64>) -> [Contact]?
+    func findAll() -> Array<Contact>
     
 }

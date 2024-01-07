@@ -23,6 +23,16 @@ open class DefaultMessageModule : MessageModule {
     private let ackLock = NSLock()
     private let snowFlakeMachine: Int64 = 1 // 雪花算法机器编号 IOS:1 Android: 2
     
+    
+    
+    open func getOfflineMsgCountPerRequest() -> Int {
+        return 200
+    }
+    
+    open func getSessionCountPerRequest() -> Int {
+        return 200
+    }
+    
     private func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
         let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
         let saveTime = IMCoreManager.shared.severTime
@@ -32,6 +42,20 @@ open class DefaultMessageModule : MessageModule {
     
     private func getOfflineMsgLastSyncTime() -> Int64 {
         let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
+        let value = UserDefaults.standard.object(forKey: key)
+        let time = value == nil ? 0 : (value as! Int64 )
+        return time
+    }
+    
+    private func setSessionLastSyncTime(_ time: Int64) -> Bool {
+        let key = "/\(IMCoreManager.shared.uId)/session_sync_time"
+        let saveTime = IMCoreManager.shared.severTime
+        UserDefaults.standard.setValue(saveTime, forKey: key)
+        return UserDefaults.standard.synchronize()
+    }
+    
+    private func getSessionLastSyncTime() -> Int64 {
+        let key = "/\(IMCoreManager.shared.uId)/session_sync_time"
         let value = UserDefaults.standard.object(forKey: key)
         let time = value == nil ? 0 : (value as! Int64 )
         return time
@@ -48,7 +72,7 @@ open class DefaultMessageModule : MessageModule {
     
     public func syncOfflineMessages() {
         let lastTime = self.getOfflineMsgLastSyncTime()
-        let count = 200
+        let count = getOfflineMsgCountPerRequest()
         let uId = IMCoreManager.shared.uId
         IMCoreManager.shared.api.getLatestMessages(uId, lastTime, count)
             .compose(RxTransformer.shared.io2Io())
@@ -120,8 +144,72 @@ open class DefaultMessageModule : MessageModule {
             .disposed(by: disposeBag)
     }
     
-    public func syncLatestSessionsFromServer(_ lastSyncTime: Int, _ count: Int) {
-        // TODO
+    public func syncLatestSessionsFromServer() {
+        let lastTime = self.getSessionLastSyncTime()
+        let count = getSessionCountPerRequest()
+        let uId = IMCoreManager.shared.uId
+        IMCoreManager.shared.api.queryUserLatestSessions(uId, count, 0, nil)
+            .compose(RxTransformer.shared.io2Io())
+            .subscribe(onNext: { sessions in
+                var needDelGroupIds = Set<Int64>()
+                var needDelSIds = Set<Int64>()
+                var needDelSessions = [Session]()
+                var needUpdateSessions = [Session]()
+                
+                for s in sessions {
+                    if (s.deleted == 1) {
+                        needDelSIds.insert(s.id)
+                        needDelSessions.append(s)
+                        if (s.type == SessionType.Group.rawValue ||
+                            s.type == SessionType.SuperGroup.rawValue) {
+                            needDelGroupIds.insert(s.entityId)
+                        }
+                    } else {
+                        needUpdateSessions.append(s)
+                    }
+                }
+                
+                if (!needDelSessions.isEmpty) {
+                    try? IMCoreManager.shared.database.sessionDao().delete(needDelSessions)
+                    try? IMCoreManager.shared.database.messageDao().deleteBySessionIds(needDelSIds)
+                }
+                if (!needDelGroupIds.isEmpty) {
+                    try? IMCoreManager.shared.database.groupDao().deleteByIds(needDelGroupIds)
+                }
+                if (!needUpdateSessions.isEmpty) {
+                    for new in needUpdateSessions {
+                        let dbSession = try? IMCoreManager.shared.database.sessionDao().findById(new.id)
+                        if dbSession != nil {
+                            dbSession!.parentId = new.parentId
+                            dbSession!.entityId = new.entityId
+                            dbSession!.name = new.name
+                            dbSession!.parentId = new.parentId
+                            dbSession!.noteName = new.noteName
+                            dbSession!.type = new.type
+                            dbSession!.remark = new.remark
+                            dbSession!.role = new.role
+                            dbSession!.status = new.status
+                            dbSession!.mute = new.mute
+                            dbSession!.extData = new.extData
+                            dbSession!.topTimestamp = new.topTimestamp
+                            try? IMCoreManager.shared.database.sessionDao().update([dbSession!])
+                        } else {
+                            try? IMCoreManager.shared.database.sessionDao().insertOrUpdate([new])
+                        }
+                    }
+                }
+                
+                
+                if (!sessions.isEmpty) {
+                    _ = self.setSessionLastSyncTime(sessions.last!.mTime)
+                }
+                
+                if (sessions.count >= count) {
+                    self.syncLatestSessionsFromServer()
+                }
+                
+            })
+            .disposed(by: disposeBag)
     }
     
     
@@ -356,13 +444,12 @@ open class DefaultMessageModule : MessageModule {
                             return
                         }
                         let unReadCount = try IMCoreManager.shared.database.messageDao().getUnReadCount(msg.sessionId)
-                        DDLogInfo("processSessionByMessage msg: \(msg.content) session: \(s.lastMsg), \(s.mTime), \(msg.mTime), \(s.unreadCount), \(unReadCount)")
                         if (s.mTime < msg.mTime || s.unreadCount != unReadCount) {
                             let processor = self?.getMsgProcessor(msg.type)
                             s.lastMsg = processor?.getSessionDesc(msg: msg)
                             s.unreadCount = unReadCount
                             s.mTime = msg.cTime
-                            try IMCoreManager.shared.database.sessionDao().insertOrUpdate(s)
+                            try IMCoreManager.shared.database.sessionDao().insertOrUpdate([s])
                             SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
                             
                             sf.notifyNewMessage(s, msg)
@@ -411,7 +498,7 @@ open class DefaultMessageModule : MessageModule {
         return Observable.create({observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.messageDao().deleteBySessionId(session.id)
-                try IMCoreManager.shared.database.sessionDao().delete(session)
+                try IMCoreManager.shared.database.sessionDao().delete([session])
             } catch {
                 observer.onError(error)
             }
@@ -428,7 +515,7 @@ open class DefaultMessageModule : MessageModule {
     private func updateLocalSession(_ session: Session) -> Observable<Void> {
         return Observable.create({observer -> Disposable in
             do {
-                try IMCoreManager.shared.database.sessionDao().update(session)
+                try IMCoreManager.shared.database.sessionDao().update([session])
                 
             } catch {
                 observer.onError(error)

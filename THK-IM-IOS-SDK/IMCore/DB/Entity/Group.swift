@@ -46,4 +46,21 @@ public final class Group: TableCodable {
     }
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
+    
+    init(id: Int64, displayId: String, name: String, sessionId: Int64, ownerId: Int64, avatar: String, announce: String, 
+         qrcode: String, enterFlag: Int, memberCount: Int, extData: String? = nil, cTime: Int64, mTime: Int64) {
+        self.id = id
+        self.displayId = displayId
+        self.name = name
+        self.sessionId = sessionId
+        self.ownerId = ownerId
+        self.avatar = avatar
+        self.announce = announce
+        self.qrcode = qrcode
+        self.enterFlag = enterFlag
+        self.memberCount = memberCount
+        self.extData = extData
+        self.cTime = cTime
+        self.mTime = mTime
+    }
 }

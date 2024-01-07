@@ -79,7 +79,7 @@ class IMSessionChooseViewController: IMSessionViewController {
         for m in messages {
             uIds.insert(m.fromUId)
         }
-        return IMCoreManager.shared.getUserModule().getUserInfo(ids: uIds).flatMap({ (userMap) -> Observable<IMRecordMsgBody> in
+        return IMCoreManager.shared.getUserModule().queryUsers(ids: uIds).flatMap({ (userMap) -> Observable<IMRecordMsgBody> in
             var content = ""
             var i = 0
             for m in messages {
@@ -96,7 +96,7 @@ class IMSessionChooseViewController: IMSessionViewController {
             return Observable.just(recordBody)
         }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
             let selfId = IMCoreManager.shared.uId
-            return IMCoreManager.shared.getUserModule().getUserInfo(id: selfId).flatMap({ (user) ->  Observable<IMRecordMsgBody> in
+            return IMCoreManager.shared.getUserModule().queryUser(id: selfId).flatMap({ (user) ->  Observable<IMRecordMsgBody> in
                 recordBody.title = user.name
                 return Observable.just(recordBody)
             })

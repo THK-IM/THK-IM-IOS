@@ -98,7 +98,7 @@ open class BaseMsgCell : BaseTableCell {
         if (self.showAvatar() && fromUId != nil) {
             self.cellWrapper.avatarView()?.isHidden = false
             IMCoreManager.shared.getUserModule()
-                .getUserInfo(id: fromUId!)
+                .queryUser(id: fromUId!)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] user in
                     guard let sf = self else {
@@ -110,15 +110,7 @@ open class BaseMsgCell : BaseTableCell {
             self.cellWrapper.avatarView()?.isHidden = true
         }
         if (self.hasBubble() && fromUId != nil) {
-            IMCoreManager.shared.getUserModule()
-                .getUserChatBubble(id: fromUId!)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] image in
-                    guard let sf = self else {
-                        return
-                    }
-                    sf.updateUserBubble(image: image)
-                }).disposed(by: self.disposeBag)
+            // TODO
         } else {
             updateUserBubble(image: nil)
         }

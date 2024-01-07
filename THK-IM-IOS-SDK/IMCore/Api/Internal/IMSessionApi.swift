@@ -13,7 +13,7 @@ enum IMSessionApi {
     /// 创建会话
     case createSession(_ req: CreateSessionVo)
     /// 查询最近会话列表
-    case queryLatestSession(_ uId: Int64, _ offset :Int, _ count: Int, _ mTime: Int64)
+    case queryLatestSession(_ uId: Int64, _ offset :Int, _ count: Int, _ mTime: Int64, _ types: Set<Int>?)
     /// 查询单个会话
     case querySession(_ uId: Int64, _ sessionId: Int64)
     /// 删除session
@@ -63,8 +63,8 @@ extension IMSessionApi: TargetType {
         switch self {
         case let .createSession(vo):
             return .requestJSONEncodable(vo)
-        case let .queryLatestSession(uId, offset, count, mTime):
-            let urlParameters = ["u_id": uId, "offset": offset, "size": count, "m_Time": mTime] as [String : Any]
+        case let .queryLatestSession(uId, offset, count, mTime, types):
+            let urlParameters = ["u_id": uId, "offset": offset, "size": count, "m_Time": mTime, "types": types] as [String : Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         case .querySession:
             return .requestPlain

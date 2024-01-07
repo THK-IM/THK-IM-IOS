@@ -13,4 +13,6 @@ public protocol CommonModule: BaseModule {
     
     func getConnId() -> String
     
+    func beKickOff()
+    
 }

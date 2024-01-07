@@ -11,6 +11,7 @@ import RxSwift
 
 public class DefaultIMApi: IMApi {
     
+    
     private let endpoint: String
     private var token: String
     private let apiInterceptor: APITokenInterceptor
@@ -41,9 +42,10 @@ public class DefaultIMApi: IMApi {
         self.apiInterceptor.updateToken(token: token)
     }
     
-    public func getLatestModifiedSessions(_ uId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
+    
+    public func queryUserLatestSessions(_ uId: Int64, _ count: Int, _ mTime: Int64, _ types: Set<Int>?) -> RxSwift.Observable<Array<Session>> {
         return sessionApi.rx
-            .request(.queryLatestSession(uId, 0, count, mTime))
+            .request(.queryLatestSession(uId, 0, count, mTime, types))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(ListVo<SessionVo>.self))
             .flatMap({ (sessionListVo) -> Observable<Array<Session>> in

@@ -13,23 +13,23 @@ public protocol SessionDao {
     /**
      * 批量插入session
      */
-    func insertOrUpdate(_ sessions: Session...) throws
+    func insertOrUpdate(_ sessions: [Session]) throws
     
     /**
      * 批量插入session
      */
-    func insertOrIgnore(_ sessions: Session...) throws
+    func insertOrIgnore(_ sessions: [Session]) throws
     
     
     /**
      * 批量删除session
      */
-    func delete(_ sessions: Session...) throws
+    func delete(_ sessions: [Session]) throws
     
     /**
      * 批量更新session
      */
-    func update(_ sessions: Session...) throws
+    func update(_ sessions: [Session]) throws
     
     /**
      * 通过sessionId查询session

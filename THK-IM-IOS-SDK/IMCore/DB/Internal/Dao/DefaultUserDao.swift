@@ -19,11 +19,11 @@ open class DefaultUserDao : UserDao {
         self.tableName = tableName
     }
     
-    public func insertOrReplace(_ users: User...) throws {
+    public func insertOrReplace(_ users: [User]) throws {
         try self.database?.insertOrReplace(users, intoTable: self.tableName)
     }
     
-    public func insertOrIgnore(_ users: User...) throws {
+    public func insertOrIgnore(_ users: [User]) throws {
         try self.database?.insertOrIgnore(users, intoTable: self.tableName)
     }
     
@@ -35,7 +35,7 @@ open class DefaultUserDao : UserDao {
     }
     
     
-    public func findById(_ id: Int64) throws -> User? {
+    public func findById(_ id: Int64) -> User? {
         return try? self.database?.getObject(fromTable: self.tableName, where: User.Properties.id == id)
     }
     

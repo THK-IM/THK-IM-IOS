@@ -44,6 +44,11 @@ public protocol MessageDao {
      */
     func deleteBySessionId(_ sessionId: Int64) throws
     
+    /**
+     * 删除session下的所有消息
+     */
+    func deleteBySessionIds(_ sessionIds: Set<Int64>) throws
+    
     
     /**
      * 批量更新消息

@@ -19,15 +19,15 @@ open class DefaultSessionMemberDao: SessionMemberDao {
         self.tableName = tableName
     }
     
-    public func insertOrReplace(_ members: SessionMember...) throws {
+    public func insertOrReplace(_ members: [SessionMember]) throws {
         try self.database?.insertOrReplace(members, intoTable: self.tableName)
     }
     
-    public func insertOrIgnore(_ members: SessionMember...) throws {
+    public func insertOrIgnore(_ members: [SessionMember]) throws {
         try self.database?.insertOrIgnore(members, intoTable: self.tableName)
     }
     
-    public func delete(_ members: SessionMember...) throws {
+    public func delete(_ members: [SessionMember]) throws {
         var sessionId: Int64 = 0
         var memberIds = [Int64]()
         for member in members {

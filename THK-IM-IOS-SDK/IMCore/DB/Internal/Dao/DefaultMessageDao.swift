@@ -199,6 +199,18 @@ open class DefaultMessageDao : MessageDao {
         )
     }
     
+    
+    public func deleteBySessionIds(_ sessionIds: Set<Int64>) throws {
+        var sIds = [Int64]()
+        for sessionId in sessionIds {
+            sIds.append(sessionId)
+        }
+        try self.database?.delete(
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId.in(sIds)
+        )
+    }
+    
     public func findBySidAfterCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,

@@ -58,7 +58,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                         if (session!.unreadCount != count || session!.mTime < msg.mTime) {
                             session!.unreadCount = count
                             session!.mTime = msg.mTime
-                            try IMCoreManager.shared.database.sessionDao().update(session!)
+                            try IMCoreManager.shared.database.sessionDao().update([session!])
                             SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
                         }
                     }
@@ -105,7 +105,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     if (session!.unreadCount != count || session!.mTime < msg.mTime) {
                         session!.unreadCount = count
                         session!.mTime = msg.mTime
-                        try IMCoreManager.shared.database.sessionDao().update(session!)
+                        try IMCoreManager.shared.database.sessionDao().update([session!])
                         SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
                     }
                 }

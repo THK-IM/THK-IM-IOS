@@ -20,11 +20,11 @@ open class DefaultGroupDao: GroupDao {
         self.tableName = tableName
     }
     
-    public func insertOrReplace(_ groups: Group...) throws {
+    public func insertOrReplace(_ groups: [Group]) throws {
         try self.database?.insertOrReplace(groups, intoTable: self.tableName)
     }
     
-    public func insertOrIgnore(_ groups: Group...) throws {
+    public func insertOrIgnore(_ groups: [Group]) throws {
         try self.database?.insertOrIgnore(groups, intoTable: self.tableName)
     }
     
@@ -39,11 +39,12 @@ open class DefaultGroupDao: GroupDao {
         )
     }
     
-    public func findAll() -> [Group]? {
-        return try? self.database?.getObjects(
+    public func findAll() -> Array<Group> {
+        let groups: Array<Group>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             orderBy: [Group.Properties.cTime.order(Order.descending)]
         )
+        return groups ?? Array<Group>()
     }
     
     public func findById(_ id: Int64) -> Group? {

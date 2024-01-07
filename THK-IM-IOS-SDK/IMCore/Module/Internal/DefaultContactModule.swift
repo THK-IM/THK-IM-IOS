@@ -7,16 +7,26 @@
 //
 
 import Foundation
+import RxSwift
 
 
 open class DefaultContactModule: ContactModule {
     
-    public func onNewContactor() {
+    public func syncContacts() {
         
     }
     
-    public func onSignalReceived(_ subType: Int, _ body: String) {
+    public func queryAllContacts() -> RxSwift.Observable<Array<Contact>> {
+        return Observable.create({ observer -> Disposable in
+            let contacts = IMCoreManager.shared.database.contactDao().findAll()
+            observer.onNext(contacts)
+            observer.onCompleted()
+            return Disposables.create()
+        })
     }
     
+    public func onSignalReceived(_ type: Int, _ body: String) {
+        
+    }
     
 }

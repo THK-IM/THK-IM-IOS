@@ -64,7 +64,7 @@ class MainTextViewController: UIViewController, PerformanceMonitorDelegate {
             .subscribe(onNext: { data in
                 print(data)
                 do {
-                    try IMCoreManager.shared.database.sessionDao().insertOrUpdate(data)
+                    try IMCoreManager.shared.database.sessionDao().insertOrUpdate([data])
                 } catch {
                     print(error)
                 }

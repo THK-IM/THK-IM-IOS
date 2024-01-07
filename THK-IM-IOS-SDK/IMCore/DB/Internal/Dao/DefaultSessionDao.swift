@@ -20,7 +20,7 @@ open class DefaultSessionDao : SessionDao {
         self.tableName = tableName
     }
     
-    public func update(_ sessions: Session...) throws {
+    public func update(_ sessions: [Session]) throws {
         for session in sessions {
             try self.database?.update(
                 table: self.tableName,
@@ -31,15 +31,15 @@ open class DefaultSessionDao : SessionDao {
         }
     }
     
-    public func insertOrUpdate(_ sessions: Session...) throws {
+    public func insertOrUpdate(_ sessions: [Session]) throws {
         try self.database?.insertOrReplace(sessions, intoTable: self.tableName)
     }
     
-    public func insertOrIgnore(_ sessions: Session...) throws {
+    public func insertOrIgnore(_ sessions: [Session]) throws {
         try self.database?.insertOrIgnore(sessions, intoTable: self.tableName)
     }
     
-    public func delete(_ sessions: Session...) throws {
+    public func delete(_ sessions: [Session]) throws {
         var ids = Array<Int64>()
         for session in sessions {
             ids.append(session.id)

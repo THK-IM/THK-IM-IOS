@@ -10,13 +10,13 @@ import Foundation
 
 public protocol GroupDao {
     
-    func insertOrReplace(_ groups: Group...) throws
+    func insertOrReplace(_ groups: [Group]) throws
     
-    func insertOrIgnore(_ groups: Group...) throws
+    func insertOrIgnore(_ groups: [Group]) throws
     
     func deleteByIds(_ ids: Set<Int64>) throws
     
-    func findAll() -> [Group]?
+    func findAll() -> Array<Group>
     
     func findById(_ id: Int64) -> Group?
     

@@ -8,6 +8,7 @@
 import Foundation
 
 open class DefaultCommonModule : CommonModule {
+    
     private let client = "client"
     private let server = "server"
     private var timeMap = [String: Int64]()
@@ -47,5 +48,9 @@ open class DefaultCommonModule : CommonModule {
         } else if type == SignalType.SignalConnId.rawValue {
             connId = body
         } 
+    }
+    
+    public func beKickOff() {
+        
     }
 }

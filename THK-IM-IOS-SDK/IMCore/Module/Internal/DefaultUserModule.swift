@@ -9,68 +9,8 @@ import Foundation
 import RxSwift
 
 open class DefaultUserModule : UserModule {
-
-    lazy var bubble: Bubble = {
-        return Bubble()
-    }()
     
-    lazy var systemBubbleImage = {
-        let image = self.bubble.drawRectWithRoundedCorner(
-            radius: 6.0, borderWidth: 0.0,
-            backgroundColor: UIColor.init(hex: "333333").withAlphaComponent(0.2),
-            borderColor: UIColor.init(hex: "333333"), width: 20, height: 20, pos: 0)
-        return image
-    }()
-    
-    lazy var selfBubbleImage = {
-        let image = self.bubble.drawRectWithRoundedCorner(
-            radius: 12.0, borderWidth: 1.0,
-            backgroundColor: UIColor.init(hex: "dddddd").withAlphaComponent(0.5),
-            borderColor: UIColor.init(hex: "cccccc"), width: 40, height: 40, pos: 1)
-        return image
-    }()
-    
-    lazy var userDefaultImage = {
-        let image = self.bubble.drawRectWithRoundedCorner(
-            radius: 12.0, borderWidth: 1.0,
-            backgroundColor: UIColor.init(hex: "dddddd").withAlphaComponent(0.5),
-            borderColor: UIColor.init(hex: "cccccc"), width: 40, height: 40, pos: 2)
-        return image
-    }()
-    
-    public func onUserInfoUpdate(user: User) {
-        
-    }
-    
-    public func getUserChatBubble(id: Int64) -> Observable<UIImage> {
-        return Observable.create({[weak self] observer -> Disposable in
-            if id == 0 {
-                if self?.systemBubbleImage == nil {
-                    observer.onError(CocoaError.error(CocoaError.featureUnsupported))
-                } else {
-                    observer.onNext((self?.systemBubbleImage)!)
-                    observer.onCompleted()
-                }
-            } else if id == IMCoreManager.shared.uId {
-                if self?.selfBubbleImage == nil {
-                    observer.onError(CocoaError.error(CocoaError.featureUnsupported))
-                } else {
-                    observer.onNext((self?.selfBubbleImage)!)
-                    observer.onCompleted()
-                }
-            } else {
-                if self?.userDefaultImage == nil {
-                    observer.onError(CocoaError.error(CocoaError.featureUnsupported))
-                } else {
-                    observer.onNext((self?.userDefaultImage)!)
-                    observer.onCompleted()
-                }
-            }
-            return Disposables.create()
-        })
-    }
-    
-    public func getUserInfo(id: Int64) -> Observable<User> {
+    public func queryServerUser(id: Int64) -> RxSwift.Observable<User> {
         return Observable.create({observer -> Disposable in
             let now = Date().timeMilliStamp
             let user = User(
@@ -83,17 +23,36 @@ open class DefaultUserModule : UserModule {
         })
     }
     
+    public func queryUser(id: Int64) -> RxSwift.Observable<User> {
+        return Observable.create({ observer -> Disposable in
+            let user = IMCoreManager.shared.database.userDao().findById(id)
+            if (user == nil) {
+                observer.onNext(User(id: id, displayId: "", name: "", avatar: "", sex: 0, status: 0, cTime: 0, mTime: 0))
+            } else {
+                observer.onNext(user!)
+            }
+            observer.onCompleted()
+            return Disposables.create()
+        }).flatMap({ (user) -> Observable<User> in
+            if (user.cTime == 0) {
+                return self.queryServerUser(id: id).flatMap({(user) -> Observable<User> in
+                    try? IMCoreManager.shared.database.userDao().insertOrReplace([user])
+                    return Observable.just(user)
+                })
+            } else {
+                return Observable.just(user)
+            }
+        })
+    }
     
-    public func getUserInfo(ids: Set<Int64>) -> RxSwift.Observable<Dictionary<Int64, User>> {
-        return Observable.create({observer -> Disposable in
-            let now = Date().timeMilliStamp
+    public func queryUsers(ids: Set<Int64>) -> RxSwift.Observable<Dictionary<Int64, User>> {
+        return Observable.create({ observer -> Disposable in
+            let users = IMCoreManager.shared.database.userDao().findByIds(ids)
             var userMap = Dictionary<Int64, User>()
-            for id in ids {
-                let user = User(
-                    id: id, displayId: "", name: "user-\(id)", avatar: "https://picsum.photos/300/300",
-                    sex: 0, status: 1, cTime: now, mTime: now
-                )
-                userMap[user.id] = user
+            if users != nil {
+                for user in users! {
+                    userMap[user.id] = user
+                }
             }
             observer.onNext(userMap)
             observer.onCompleted()
@@ -101,6 +60,9 @@ open class DefaultUserModule : UserModule {
         })
     }
     
+    public func onUserInfoUpdate(user: User) {
+        try? IMCoreManager.shared.database.userDao().insertOrReplace([user])
+    }
     
     public func onSignalReceived(_ type: Int, _ body: String) {
         

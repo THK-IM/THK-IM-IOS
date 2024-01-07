@@ -51,7 +51,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
         if msg.fromUId == IMCoreManager.shared.uId {
             return Observable.just("你")
         } else {
-            return IMCoreManager.shared.getUserModule().getUserInfo(id: msg.fromUId)
+            return IMCoreManager.shared.getUserModule().queryUser(id: msg.fromUId)
                 .flatMap { info in
                     return Observable.just(info.name)
                 }

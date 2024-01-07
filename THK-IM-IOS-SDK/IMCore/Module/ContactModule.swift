@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import RxSwift
 
 public protocol ContactModule : BaseModule {
     
-    func onNewContactor()
+    func syncContacts()
+    
+    func queryAllContacts() -> Observable<Array<Contact>>
     
 }
