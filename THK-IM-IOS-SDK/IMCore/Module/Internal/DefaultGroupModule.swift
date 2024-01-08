@@ -37,4 +37,8 @@ open class DefaultGroupModule: GroupModule {
         
     }
     
+    public func reset() {
+    }
+    
+    
 }

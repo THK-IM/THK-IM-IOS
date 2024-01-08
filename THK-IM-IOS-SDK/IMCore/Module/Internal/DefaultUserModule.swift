@@ -10,6 +10,11 @@ import RxSwift
 
 open class DefaultUserModule : UserModule {
     
+    public func reset() {
+        
+    }
+    
+    
     public func queryServerUser(id: Int64) -> RxSwift.Observable<User> {
         return Observable.create({observer -> Disposable in
             observer.onNext(User(id: id))

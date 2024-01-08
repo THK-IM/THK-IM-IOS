@@ -29,4 +29,8 @@ open class DefaultContactModule: ContactModule {
         
     }
     
+    
+    public func reset() {
+    }
+    
 }

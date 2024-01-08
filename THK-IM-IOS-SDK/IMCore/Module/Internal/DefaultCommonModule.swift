@@ -41,16 +41,20 @@ open class DefaultCommonModule : CommonModule {
     
     public func onSignalReceived(_ type: Int, _ body: String) {
         if type == SignalType.SignalHeatBeat.rawValue {
-            IMCoreManager.shared.getMessageModule().ackMessagesToServer()
+            
         } else if type == SignalType.SignalSyncTime.rawValue {
             let time = Int64(body)
             self.setSeverTime(time)
         } else if type == SignalType.SignalConnId.rawValue {
-            connId = body
+            self.connId = body
         } 
     }
     
     public func beKickOff() {
         
     }
+    
+    public func reset() {
+    }
+    
 }

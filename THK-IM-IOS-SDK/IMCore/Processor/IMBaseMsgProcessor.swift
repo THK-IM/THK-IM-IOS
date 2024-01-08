@@ -276,14 +276,6 @@ open class IMBaseMsgProcessor {
     }
     
     /**
-     * 消息是否在界面上显示，撤回/已读/已接受等状态消息不显示
-     */
-    open func isShow(msg: Message)-> Bool {
-        // type小于0是操作类型消息
-        return msg.type > 0
-    }
-    
-    /**
      * 消息是否需要二次处理，用于拉取同步消息时，不需要二次处理的消息批量入库，需要二次处理的消息单独处理
      */
     open func needReprocess(msg: Message)-> Bool {

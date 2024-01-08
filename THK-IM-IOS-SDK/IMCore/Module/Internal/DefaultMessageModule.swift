@@ -13,16 +13,42 @@ import AVFoundation
 
 open class DefaultMessageModule : MessageModule {
     
+    
     private var processorDic = [Int: IMBaseMsgProcessor]()
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private var lastTimestamp : Int64 = 0
     private var lastSequence : Int = 0
     private let epoch: Int64 = 1288834974657
-    private var needAckDic = [Int64: Set<Int64>]()
-    private let idLock = NSLock()
-    private let ackLock = NSLock()
     private let snowFlakeMachine: Int64 = 1 // 雪花算法机器编号 IOS:1 Android: 2
     
+    private let idLock = NSLock()
+    private let ackLock = NSLock()
+    private let ackMessagePublishSubject = PublishSubject<Int>()
+    private var needAckDic = [Int64: Set<Int64>]()
+    
+    init() {
+        self.initAckMessagePublishSubject()
+    }
+    
+    private func initAckMessagePublishSubject() {
+        let scheduler = RxSwift.ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
+        ackMessagePublishSubject.debounce(self.ackInterval(), scheduler: scheduler)
+            .subscribe(onNext: { [weak self] _ in
+                self?.ackMessagesToServer()
+            }).disposed(by: self.disposeBag)
+    }
+    
+    public func reset() {
+        self.disposeBag = DisposeBag()
+        for (_, v) in processorDic {
+            v.reset()
+        }
+        initAckMessagePublishSubject()
+    }
+    
+    open func ackInterval() -> RxTimeInterval {
+        return RxTimeInterval.seconds(5)
+    }
     
     
     open func getOfflineMsgCountPerRequest() -> Int {
@@ -351,6 +377,7 @@ open class DefaultMessageModule : MessageModule {
             }
         }
         ackLock.unlock()
+        self.ackMessagePublishSubject.onNext(0)
     }
     
     private func ackMessageSuccess(_ sessionId: Int64, _ msgIds: Set<Int64>) {

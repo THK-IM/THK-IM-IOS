@@ -9,5 +9,7 @@ import Foundation
 
 public protocol BaseModule : AnyObject {
     
+    func reset()
+    
     func onSignalReceived(_ type: Int, _ body: String)
 }

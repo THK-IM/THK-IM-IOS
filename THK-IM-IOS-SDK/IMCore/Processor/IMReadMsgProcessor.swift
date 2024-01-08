@@ -19,6 +19,10 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     
     override init() {
         super.init()
+        self.initReadMessagePublishSubject()
+    }
+    
+    private func initReadMessagePublishSubject() {
         let scheduler = RxSwift.ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
         publishSubject.debounce(self.sendInterval(), scheduler: scheduler)
             .subscribe(onNext: { [weak self] _ in
@@ -185,6 +189,11 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     
     override public func needReprocess(msg: Message) -> Bool {
         return true
+    }
+    
+    override public func reset() {
+        self.reset()
+        self.initReadMessagePublishSubject()
     }
     
 }
