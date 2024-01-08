@@ -109,9 +109,7 @@ open class IMCoreManager: SignalListener {
         self._database = DefaultIMDatabase(app, uId, debug)
         self._storageModule = DefaultStorageModule(uId)
         
-        let readMsgProcessor = IMReadMsgProcessor()
-        readMsgProcessor.start()
-        getMessageModule().registerMsgProcessor(readMsgProcessor)
+        getMessageModule().registerMsgProcessor(IMReadMsgProcessor())
     }
     
     public func connect() {

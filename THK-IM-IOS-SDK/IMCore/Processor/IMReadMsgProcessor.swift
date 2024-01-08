@@ -17,7 +17,8 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     private var lastSendReadMessageTime: Int64 = 0
     private let publishSubject = PublishSubject<Int>()
     
-    func start() {
+    override init() {
+        super.init()
         let scheduler = RxSwift.ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
         publishSubject.debounce(self.sendInterval(), scheduler: scheduler)
             .subscribe(onNext: { [weak self] _ in
