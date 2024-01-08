@@ -14,19 +14,18 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     
     private var needReadDic = [Int64: Set<Int64>]()
     private let readLock = NSLock()
+    private var lastSendReadMessageTime: Int64 = 0
+    private let publishSubject = PublishSubject<Int>()
+    private let scheduler: SchedulerType
     
     override init() {
         super.init()
-        Observable<Int>.interval(.seconds(2), scheduler: RxSwift.MainScheduler())
-            .asObservable()
-            .compose(RxTransformer.shared.io2Io())
-            .subscribe(onNext: { [weak self] _ in
-                DDLogInfo("readMessagesToServer")
-                self?.sendReadMessagesToServer()
-            })
-            .disposed(by: self.disposeBag)
+        self.scheduler = RxSwift.ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
     }
     
+    open func sendInterval() -> RxTimeInterval {
+        return RxTimeInterval.seconds(2)
+    }
     
     override public func messageType() -> Int {
         return MsgType.READ.rawValue
@@ -84,7 +83,6 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
             DDLogError("ReadMsgProcessor received err: \(error)")
         }
         
-        
     }
     
     override public func send(_ msg: Message, _ resend: Bool = false, _ sendResult: IMSendMsgResult? = nil) {
@@ -133,6 +131,10 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
             self.needReadDic[msg.sessionId]!.insert(msg.referMsgId!)
         }
         readLock.unlock()
+        publishSubject.debounce(self.sendInterval(), scheduler: self.scheduler)
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendReadMessagesToServer()
+            }).disposed(by: self.disposeBag)
     }
     
     private func readMessageSuccess(_ sessionId: Int64, _ msgIds: Set<Int64>) {
