@@ -16,11 +16,13 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     private let readLock = NSLock()
     private var lastSendReadMessageTime: Int64 = 0
     private let publishSubject = PublishSubject<Int>()
-    private let scheduler: SchedulerType
     
-    override init() {
-        super.init()
-        self.scheduler = RxSwift.ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
+    func start() {
+        let scheduler = RxSwift.ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global())
+        publishSubject.debounce(self.sendInterval(), scheduler: scheduler)
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendReadMessagesToServer()
+            }).disposed(by: self.disposeBag)
     }
     
     open func sendInterval() -> RxTimeInterval {
@@ -131,10 +133,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
             self.needReadDic[msg.sessionId]!.insert(msg.referMsgId!)
         }
         readLock.unlock()
-        publishSubject.debounce(self.sendInterval(), scheduler: self.scheduler)
-            .subscribe(onNext: { [weak self] _ in
-                self?.sendReadMessagesToServer()
-            }).disposed(by: self.disposeBag)
+        publishSubject.onNext(0)
     }
     
     private func readMessageSuccess(_ sessionId: Int64, _ msgIds: Set<Int64>) {
