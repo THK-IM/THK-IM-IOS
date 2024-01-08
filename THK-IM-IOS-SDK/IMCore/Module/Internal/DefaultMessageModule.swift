@@ -282,18 +282,9 @@ open class DefaultMessageModule : MessageModule {
     
     public func queryLocalMessages(_ sessionId: Int64, _ cTime: Int64, _ count: Int) -> Observable<Array<Message>> {
         return Observable.create({observer -> Disposable in
-            do {
-                let messages = try IMCoreManager.shared.database.messageDao().findBySidAfterCTime(sessionId, cTime, count)
-                if (messages != nil) {
-                    observer.onNext(messages!)
-                } else {
-                    observer.onNext(Array())
-                }
-                observer.onCompleted()
-            } catch {
-                observer.onError(error)
-                DDLogError("\(error)")
-            }
+            let messages = IMCoreManager.shared.database.messageDao().findBySidAfterCTime(sessionId, cTime, count)
+            observer.onNext(messages)
+            observer.onCompleted()
             return Disposables.create()
         })
     }

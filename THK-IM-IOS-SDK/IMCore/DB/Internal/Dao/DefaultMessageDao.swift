@@ -19,49 +19,6 @@ open class DefaultMessageDao : MessageDao {
         self.tableName = tableName
     }
     
-    public func findSessionMessageCount(_ sessionId: Int64) throws -> Int64 {
-        return try self.database!.getValue(
-            on: Message.Properties.msgId.count(),
-            fromTable: self.tableName,
-            where: Message.Properties.sessionId == sessionId
-        ).int64Value
-    }
-    
-    
-    public func findByMsgId(_ msgId: Int64, _ sessionId: Int64) throws -> Message? {
-        return try self.database?.getObject(
-            on: Message.Properties.all,
-            fromTable: self.tableName,
-            where: Message.Properties.msgId == msgId && Message.Properties.sessionId == sessionId
-        )
-    }
-    
-    public func findById(_ id: Int64, _ fromUId: Int64, _ sessionId: Int64) throws -> Message? {
-        return try self.database?.getObject(
-            on: Message.Properties.all,
-            fromTable: self.tableName,
-            where: Message.Properties.id == id &&
-                Message.Properties.fromUId == fromUId &&
-                Message.Properties.sessionId == sessionId
-        )
-    }
-    
-    public func findOlderMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
-        let msg = try self.findByMsgId(msgId, sessionId)
-        guard let time = msg?.cTime else {
-            return []
-        }
-        return try self.findBySidAndTypesBeforeCTime(sessionId, msgId, types, time, count) ?? []
-    }
-    
-    public func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
-        let msg = try self.findByMsgId(msgId, sessionId)
-        guard let time = msg?.cTime else {
-            return []
-        }
-        return try self.queryBySidAndTypesAfterCTime(sessionId, msgId, types, time, count) ?? []
-    }
-    
     public func insertOrReplace(_ messages: [Message]) throws {
         try self.database?.insertOrReplace(messages, intoTable: self.tableName)
     }
@@ -211,18 +168,62 @@ open class DefaultMessageDao : MessageDao {
         )
     }
     
-    public func findBySidAfterCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
-        return try self.database?.getObjects(
+    public func findSessionMessageCount(_ sessionId: Int64) throws -> Int64 {
+        return try self.database!.getValue(
+            on: Message.Properties.msgId.count(),
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId
+        ).int64Value
+    }
+    
+    
+    public func findByMsgId(_ msgId: Int64, _ sessionId: Int64) throws -> Message? {
+        return try self.database?.getObject(
+            on: Message.Properties.all,
+            fromTable: self.tableName,
+            where: Message.Properties.msgId == msgId && Message.Properties.sessionId == sessionId
+        )
+    }
+    
+    public func findById(_ id: Int64, _ fromUId: Int64, _ sessionId: Int64) throws -> Message? {
+        return try self.database?.getObject(
+            on: Message.Properties.all,
+            fromTable: self.tableName,
+            where: Message.Properties.id == id &&
+                Message.Properties.fromUId == fromUId &&
+                Message.Properties.sessionId == sessionId
+        )
+    }
+    
+    public func findOlderMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
+        let msg = try self.findByMsgId(msgId, sessionId)
+        guard let time = msg?.cTime else {
+            return []
+        }
+        return self.findBySidAndTypesBeforeCTime(sessionId, msgId, types, time, count)
+    }
+    
+    public func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message] {
+        let msg = try self.findByMsgId(msgId, sessionId)
+        guard let time = msg?.cTime else {
+            return []
+        }
+        return self.queryBySidAndTypesAfterCTime(sessionId, msgId, types, time, count)
+    }
+    
+    public func findBySidAfterCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) -> Array<Message> {
+        let message: Array<Message>? = try?self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId && Message.Properties.cTime < cTime && Message.Properties.type > 0,
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             limit: count
         )
+        return message ?? Array<Message>()
     }
     
     // 查询ctime之前的消息
-    public func findBySidAndTypesBeforeCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
-        return try self.database?.getObjects(
+    public func findBySidAndTypesBeforeCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) -> Array<Message> {
+        let message: Array<Message>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
                     Message.Properties.msgId != msgId &&
@@ -231,11 +232,12 @@ open class DefaultMessageDao : MessageDao {
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             limit: count
         )
+        return message ?? Array<Message>()
     }
     
     // 查询ctime之后的消息
-    public func queryBySidAndTypesAfterCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>? {
-        return try self.database?.getObjects(
+    public func queryBySidAndTypesAfterCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) -> Array<Message> {
+        let message: Array<Message>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
                     Message.Properties.msgId != msgId &&
@@ -244,6 +246,7 @@ open class DefaultMessageDao : MessageDao {
             orderBy: [Message.Properties.cTime.order(Order.ascending)],
             limit: count
         )
+        return message ?? Array<Message>()
     }
     
     public func findLastMessageBySessionId(_ sessionId: Int64) throws -> Message? {
@@ -255,6 +258,52 @@ open class DefaultMessageDao : MessageDao {
             offset: 0
         )
     }
+    
+    
+    public func search(_ sessionId: Int64, _ type: Int, _ keyword: String, _ count: Int, _ offset: Int) -> Array<Message> {
+        let message: Array<Message>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId && Message.Properties.type == type && Message.Properties.content.like(keyword),
+            orderBy: [Message.Properties.cTime.order(Order.descending)],
+            limit: count,
+            offset: offset
+        )
+        return message ?? Array<Message>()
+    }
+    
+    public func search(_ sessionId: Int64, _ keyword: String, _ count: Int, _ offset: Int) -> Array<Message> {
+        let message: Array<Message>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId && Message.Properties.content.like(keyword),
+            orderBy: [Message.Properties.cTime.order(Order.descending)],
+            limit: count,
+            offset: offset
+        )
+        return message ?? Array<Message>()
+    }
+    
+    public func search(_ type: Int, _ keyword: String, _ count: Int, _ offset: Int) -> Array<Message> {
+        let message: Array<Message>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.type == type && Message.Properties.content.like(keyword),
+            orderBy: [Message.Properties.cTime.order(Order.descending)],
+            limit: count,
+            offset: offset
+        )
+        return message ?? Array<Message>()
+    }
+    
+    public func search(_ keyword: String, _ count: Int, _ offset: Int) -> Array<Message> {
+        let message: Array<Message>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.content.like(keyword),
+            orderBy: [Message.Properties.cTime.order(Order.descending)],
+            limit: count,
+            offset: offset
+        )
+        return message ?? Array<Message>()
+    }
+    
     
 }
 

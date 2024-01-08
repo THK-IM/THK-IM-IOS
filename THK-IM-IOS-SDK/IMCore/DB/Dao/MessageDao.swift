@@ -109,21 +109,33 @@ public protocol MessageDao {
     /**
      * 查询session下某时间之后的消息
      */
-    func findBySidAfterCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) throws -> Array<Message>?
+    func findBySidAfterCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) -> Array<Message>
     
     /**
      * 查询session下某时间之前的消息
      */
-    func findBySidAndTypesBeforeCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>?
+    func findBySidAndTypesBeforeCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) -> Array<Message>
     
     /**
      * 查询ctime之后的消息
      */
-    func queryBySidAndTypesAfterCTime(_ sessionId: Int64,  _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) throws -> Array<Message>?
+    func queryBySidAndTypesAfterCTime(_ sessionId: Int64,  _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) -> Array<Message>
     
     /**
      * 查询session的最后一条消息
      */
     func findLastMessageBySessionId(_ sessionId: Int64) throws -> Message?
+    
+    
+    func search(_ sessionId: Int64, _ type: Int, _ keyword: String, _ count: Int, _ offset: Int) -> Array<Message>
+    
+    
+    func search(_ sessionId: Int64, _ keyword: String, _ count: Int, _ offset: Int) -> Array<Message>
+    
+    
+    func search(_ type: Int, _ keyword: String, _ count: Int, _ offset: Int) -> Array<Message>
+    
+    
+    func search(_ keyword: String, _ count: Int, _ offset: Int) -> Array<Message>
     
 }
