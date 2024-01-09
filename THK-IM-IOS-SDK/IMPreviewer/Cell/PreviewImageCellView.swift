@@ -64,7 +64,7 @@ public class PreviewImageCellView : PreviewCellView {
     }
     
     private func startDownload(_ message: Message) {
-        _ = IMCoreManager.shared.getMessageModule().getMsgProcessor(message.type)
+        _ = IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
                 .downloadMsgContent(message, resourceType: IMMsgResourceType.Source.rawValue)
     }
     

@@ -96,7 +96,7 @@ open class BaseMsgCell : BaseTableCell {
         let fromUId = self.message?.fromUId
         if (self.showAvatar() && fromUId != nil) {
             self.cellWrapper.avatarView()?.isHidden = false
-            IMCoreManager.shared.getUserModule()
+            IMCoreManager.shared.userModule
                 .queryUser(id: fromUId!)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] user in

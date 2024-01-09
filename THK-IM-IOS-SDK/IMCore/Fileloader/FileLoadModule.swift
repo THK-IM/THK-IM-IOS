@@ -50,4 +50,7 @@ public protocol FileLoadModule: AnyObject {
     func cancelUploadListener(path: String, listener: FileLoadListener)
     
     
+    func reset()
+    
+    
 }

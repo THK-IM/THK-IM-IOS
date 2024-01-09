@@ -145,7 +145,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             latestMsgTime = self.messages[0].cTime
         }
         if (self.session != nil) {
-            IMCoreManager.shared.getMessageModule()
+            IMCoreManager.shared.messageModule
                 .queryLocalMessages((self.session?.id)!, latestMsgTime, self.loadCount)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] value in
@@ -193,7 +193,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     private func newTimelineMessage(_ cTime: Int64) -> Message {
-        let id = IMCoreManager.shared.getMessageModule().generateNewMsgId()
+        let id = IMCoreManager.shared.messageModule.generateNewMsgId()
         let message = Message(
             id: id, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0, type: 0, content: "", data: "",
             sendStatus: 0, operateStatus: 0, referMsgId: nil, extData: nil, atUsers: nil, cTime: 0, mTime: 0

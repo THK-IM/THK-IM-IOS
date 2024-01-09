@@ -67,14 +67,19 @@ public protocol MessageDao {
     func updateOperationStatus(_ sessionId: Int64, _ msgIds: [Int64], _ operateStatus: Int) throws
     
     /**
+     * 更新消息发送状态
+     */
+    func updateSendStatus(_ sessionId: Int64, _ id: Int64, _ fromUserId: Int64, _ status: Int) throws
+    
+    /**
      * 重置消息发送状态为失败
      */
     func resetSendStatusFailed() throws
     
     /**
-     * 更新消息发送状态
+     * 查找发送中的消息
      */
-    func updateSendStatus(_ sessionId: Int64, _ id: Int64, _ fromUserId: Int64, _ status: Int) throws
+    func findSendingMessages(successStatus: Int) -> Array<Message>
     
     /**
      * 获取session下的未读数

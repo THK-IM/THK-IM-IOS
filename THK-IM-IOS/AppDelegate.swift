@@ -8,6 +8,7 @@
 import UIKit
 import CocoaLumberjack
 import GDPerformanceView_Swift
+import RxSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         DataRepository.shared.initApplication(app: UIApplication.shared)
+        self.initIMConfig()
         return true
     }
     
@@ -31,25 +33,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
     
-    func initIM(token: String, uId: Int64) {
+    private func initIMConfig() {
         let debug = true
-        let apiEndpoint = "http://msg-api.thkim.com"
-        let wsEndpoint = "ws://ws.thkim.com/ws"
-        IMCoreManager.shared.initApplication(UIApplication.shared, uId, debug)
+        IMCoreManager.shared.initApplication(debug)
         IMCoreManager.shared.userModule = IMUserModule()
         IMCoreManager.shared.contactModule = IMContactModule()
         IMCoreManager.shared.groupModule = IMGroupModule()
-        
-        IMCoreManager.shared.api = DefaultIMApi(token: token, endpoint: apiEndpoint)
-        IMCoreManager.shared.signalModule = DefaultSignalModule(UIApplication.shared, wsEndpoint, token)
-        IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule(token, apiEndpoint)
-        
-        IMUIManager.shared.initConfig()
-        IMUIManager.shared.contentProvider = Provider(token: token)
-        IMUIManager.shared.contentPreviewer = Previewer(token: token, endpoint: apiEndpoint)
         IMUIManager.shared.pageRouter = ExternalPageRouter()
-        IMCoreManager.shared.connect()
-        
+    }
+    
+    func initIM(token: String, uId: Int64) -> Observable<Bool> {
+        return Observable.just(true)
+            .flatMap({ it in
+                let apiEndpoint = "http://msg-api.thkim.com"
+                let wsEndpoint = "ws://ws.thkim.com/ws"
+                
+                IMCoreManager.shared.api = DefaultIMApi(token: token, endpoint: apiEndpoint)
+                IMCoreManager.shared.signalModule = DefaultSignalModule(token, wsEndpoint)
+                IMCoreManager.shared.fileLoadModule = DefaultFileLoadModule(token, apiEndpoint)
+                
+                IMUIManager.shared.initConfig()
+                IMUIManager.shared.contentProvider = Provider(token: token)
+                IMUIManager.shared.contentPreviewer = Previewer(token: token, endpoint: apiEndpoint)
+                IMCoreManager.shared.initUser(uId)
+                return Observable.just(it)
+            })
+    }
+    
+    func showDown() -> Observable<Bool> {
+        return Observable.just(true).flatMap({ it in
+            IMCoreManager.shared.shutDown()
+            return Observable.just(it)
+        })
     }
     
     

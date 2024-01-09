@@ -147,9 +147,12 @@ class WelcomeViewController: BaseViewController {
         DataRepository.shared.updateToken(token: token)
         let delegate = UIApplication.shared.delegate as? AppDelegate
         delegate?.initIM(token: token, uId: uId)
-        let mainVc = MainViewController()
-        let window = AppUtils.getWindow()
-        window?.rootViewController = mainVc
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { success in
+                let mainVc = MainViewController()
+                let window = AppUtils.getWindow()
+                window?.rootViewController = mainVc
+            }).disposed(by: self.disposeBag)
     }
     
 }

@@ -12,6 +12,7 @@ import RxSwift
 open class IMCoreManager: SignalListener {
     
     public static let shared = IMCoreManager()
+    private var debug = false
     private var disposeBag = DisposeBag()
     private var _fileLoadModule: FileLoadModule?
     public var fileLoadModule: FileLoadModule {
@@ -64,18 +65,11 @@ open class IMCoreManager: SignalListener {
         }
     }
     
-    
-    
-    private var _uId: Int64? = nil
-    public var uId: Int64 {
-        get {
-            return self._uId!
-        }
-    }
+    public var uId: Int64 = 0
     
     public var severTime : Int64 {
         get {
-            return self.getCommonModule().getSeverTime()
+            return commonModule.getSeverTime()
         }
     }
     
@@ -103,50 +97,41 @@ open class IMCoreManager: SignalListener {
         DDLog.add(fileLogger)
     }
     
-    public func initApplication(_ app : UIApplication, _ uId :Int64, _ debug: Bool) {
+    public func initApplication(_ debug: Bool = true) {
+        self.debug = debug
         self.initIMLog()
-        self._uId = uId
-        self._database = DefaultIMDatabase(app, uId, debug)
-        self._storageModule = DefaultStorageModule(uId)
-        
-        getMessageModule().registerMsgProcessor(IMReadMsgProcessor())
+        messageModule.registerMsgProcessor(IMReadMsgProcessor())
     }
     
-    public func connect() {
+    public func initUser(_ uId :Int64) {
+        if (uId < 0) {
+            return
+        }
+        if (self.uId == uId) {
+            return
+        }
+        
+        if (self.uId != 0) {
+            self.shutDown()
+        }
+        
+        self.uId = uId
+        self._database = DefaultIMDatabase(uId, debug)
         self.database.open()
+        self._storageModule = DefaultStorageModule(uId)
+        self.connect()
+    }
+    
+    private func connect() {
         self._signalModule?.setSignalListener(self)
         self._signalModule?.connect()
     }
     
-    public func getCommonModule() -> CommonModule {
-        return self.commonModule
-    }
-    
-    public func getUserModule() -> UserModule {
-        return self.userModule
-    }
-    
-    public func getContactModule() -> ContactModule {
-        return self.contactModule
-    }
-    
-    public func getGroupModule() -> GroupModule {
-        return self.groupModule
-    }
-    
-    public func getMessageModule() -> MessageModule {
-        return self.messageModule
-    }
-    
-    public func getCustomModule() -> CustomModule {
-        return self.customModule
-    }
-    
     public func onSignalStatusChange(_ status: SignalStatus) {
         if (status == SignalStatus.Connected) {
-            getMessageModule().syncOfflineMessages()
-            getContactModule().syncContacts()
-            getMessageModule().syncLatestSessionsFromServer()
+            messageModule.syncLatestSessionsFromServer()
+            messageModule.syncOfflineMessages()
+            contactModule.syncContacts()
         }
         SwiftEventBus.post(IMEvent.OnlineStatusUpdate.rawValue, sender: status)
     }
@@ -165,6 +150,14 @@ open class IMCoreManager: SignalListener {
         } else {
             customModule.onSignalReceived(type, body)
         }
+    }
+    
+    public func shutDown() {
+        fileLoadModule.reset()
+        messageModule.reset()
+        signalModule.disconnect("showdown")
+        _database?.close()
+        self.uId = 0
     }
     
 }

@@ -39,6 +39,7 @@ open class DefaultMessageModule : MessageModule {
     }
     
     public func reset() {
+        clearAckCache()
         self.disposeBag = DisposeBag()
         for (_, v) in processorDic {
             v.reset()
@@ -396,6 +397,12 @@ open class DefaultMessageModule : MessageModule {
             }
             needAckDic[sessionId] = messageIds
         }
+        ackLock.unlock()
+    }
+    
+    private func clearAckCache() {
+        ackLock.lock()
+        needAckDic.removeAll()
         ackLock.unlock()
     }
     

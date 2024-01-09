@@ -182,4 +182,22 @@ public class DefaultFileLoadModule: FileLoadModule {
         }
     }
     
+    
+    public func reset() {
+        lock.lock()
+        for (k, _) in downloadTaskMap {
+            var taskTuple = downloadTaskMap[k]
+            taskTuple?.0.cancel()
+            taskTuple?.1.removeAll()
+        }
+        downloadTaskMap.removeAll()
+        
+        for (k, _) in uploadTaskMap {
+            var taskTuple = uploadTaskMap[k]
+            taskTuple?.0.cancel()
+            taskTuple?.1.removeAll()
+        }
+        uploadTaskMap.removeAll()
+        lock.unlock()
+    }
 }

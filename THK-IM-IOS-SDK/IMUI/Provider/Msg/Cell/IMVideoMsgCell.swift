@@ -81,7 +81,7 @@ open class IMVideoMsgCell: BaseMsgCell {
                     self.durationLabel.text = DateUtils.secondToDuration(seconds: body.duration!)
                 }
                 if (body.thumbnailUrl != nil) {
-                    _ = IMCoreManager.shared.getMessageModule().getMsgProcessor(msg.type)
+                    _ = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
                         .downloadMsgContent(msg, resourceType: IMMsgResourceType.Thumbnail.rawValue)
                 }
             } catch {

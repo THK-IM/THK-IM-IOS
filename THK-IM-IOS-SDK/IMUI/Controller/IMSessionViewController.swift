@@ -48,7 +48,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         } else {
             latestSessionTime = self.sessions[self.sessions.count-1].mTime
         }
-        IMCoreManager.shared.getMessageModule()
+        IMCoreManager.shared.messageModule
             .queryLocalSessions(self.parentId, 20, latestSessionTime)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self ]value in
@@ -220,7 +220,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             if (session.topTimestamp > 0) {
                 session.topTimestamp = 0
             } else {
-                session.topTimestamp = IMCoreManager.shared.getCommonModule().getSeverTime()
+                session.topTimestamp = IMCoreManager.shared.commonModule.getSeverTime()
             }
             sf.updateSession(session)
             completionHandler(true)
@@ -255,7 +255,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     
     
     func updateSession(_ session: Session) {
-        IMCoreManager.shared.getMessageModule()
+        IMCoreManager.shared.messageModule
             .updateSession(session, true)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onError: { error in
@@ -266,7 +266,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     }
     
     func deleteSession(_ session: Session) {
-        IMCoreManager.shared.getMessageModule()
+        IMCoreManager.shared.messageModule
             .deleteSession(session, true)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onError: { error in

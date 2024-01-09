@@ -29,14 +29,14 @@ open class IMUIManager: NSObject {
     private override init() {
         super.init()
         
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMUnSupportMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMTextMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMImageMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMAudioMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMVideoMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMReeditMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMRevokeMsgProcessor())
-        IMCoreManager.shared.getMessageModule().registerMsgProcessor(IMRecordMsgProcessor())
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMUnSupportMsgProcessor())
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMTextMsgProcessor())
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMImageMsgProcessor())
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMAudioMsgProcessor())
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMVideoMsgProcessor())
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMReeditMsgProcessor())
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMRevokeMsgProcessor())
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMRecordMsgProcessor())
         
         self.registerMsgCellProviders(IMUnSupportMsgCellProvide())
         self.registerMsgCellProviders(IMTimeLineMsgCellProvider())

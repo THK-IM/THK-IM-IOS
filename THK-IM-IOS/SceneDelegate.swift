@@ -8,18 +8,33 @@
 import UIKit
 import CocoaLumberjack
 import GDPerformanceView_Swift
+import RxSwift
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    
+    private let disposeBag = DisposeBag()
     var window: UIWindow?
     private var backgroundTaskId: UIBackgroundTaskIdentifier = .invalid
+    
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
-        let vc = WelcomeViewController()
-        window?.rootViewController = vc
-        window?.backgroundColor = .white
+        let token = DataRepository.shared.getUserToken()
+        let uId = DataRepository.shared.getUserId()
+        if (token != nil && uId != nil) {
+            let delegate = UIApplication.shared.delegate as? AppDelegate
+            delegate?.initIM(token: token!, uId: uId!)
+                .subscribe(onNext: { [weak self] success in
+                    let mainVc = MainViewController()
+                    self?.window?.rootViewController = mainVc
+                }).disposed(by: self.disposeBag)
+        } else {
+            let vc = WelcomeViewController()
+            window?.rootViewController = vc
+        }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

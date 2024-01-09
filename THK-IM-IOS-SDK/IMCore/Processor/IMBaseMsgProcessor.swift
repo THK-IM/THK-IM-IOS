@@ -35,7 +35,7 @@ open class IMBaseMsgProcessor {
                 }
                 try self.insertOrUpdateDb(msg)
                 if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
-                    IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
+                    IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                 }
             } else {
                 // 数据库存在，更新本地数据库数据
@@ -52,7 +52,7 @@ open class IMBaseMsgProcessor {
                     try insertOrUpdateDb(msg)
                 }
                 if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
-                    IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
+                    IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                 }
             }
         } catch let error {
@@ -107,8 +107,8 @@ open class IMBaseMsgProcessor {
             }
         }
         
-        let clientId = IMCoreManager.shared.getMessageModule().generateNewMsgId()
-        let now = IMCoreManager.shared.getCommonModule().getSeverTime()
+        let clientId = IMCoreManager.shared.messageModule.generateNewMsgId()
+        let now = IMCoreManager.shared.commonModule.getSeverTime()
         let operateStatus = MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
         // tips：msgId初始值给-clientId,发送成功后更新为服务端返回的msgId
         let msg = Message(
@@ -222,12 +222,12 @@ open class IMBaseMsgProcessor {
         let oldMsgClientId = msg.id
         let oldFromUserId = msg.fromUId
         let forwardMessage = msg.clone()
-        forwardMessage.id = IMCoreManager.shared.getMessageModule().generateNewMsgId()
+        forwardMessage.id = IMCoreManager.shared.messageModule.generateNewMsgId()
         forwardMessage.fromUId = IMCoreManager.shared.uId
         forwardMessage.sessionId = sId
         forwardMessage.operateStatus = MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
         forwardMessage.sendStatus = MsgSendStatus.Init.rawValue
-        forwardMessage.cTime = IMCoreManager.shared.getCommonModule().getSeverTime()
+        forwardMessage.cTime = IMCoreManager.shared.commonModule.getSeverTime()
         forwardMessage.mTime = forwardMessage.cTime
         
         IMCoreManager.shared.api
@@ -253,7 +253,7 @@ open class IMBaseMsgProcessor {
             if msg.sendStatus == MsgSendStatus.Uploading.rawValue
                 || msg.sendStatus == MsgSendStatus.Success.rawValue
                 || msg.sendStatus == MsgSendStatus.Failed.rawValue {
-                IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
+                IMCoreManager.shared.messageModule.processSessionByMessage(msg)
             }
         }
     }
@@ -270,7 +270,7 @@ open class IMBaseMsgProcessor {
             if msg.sendStatus == MsgSendStatus.Uploading.rawValue
                 || msg.sendStatus == MsgSendStatus.Success.rawValue
                 || msg.sendStatus == MsgSendStatus.Failed.rawValue {
-                IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
+                IMCoreManager.shared.messageModule.processSessionByMessage(msg)
             }
         }
     }

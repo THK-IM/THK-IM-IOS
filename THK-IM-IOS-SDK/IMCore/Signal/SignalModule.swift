@@ -9,8 +9,6 @@ import Foundation
 
 public protocol SignalModule : AnyObject {
     
-    func updateToken(_ token: String)
-    
     func connect()
     
     func sendSignal(_ signal: String)

@@ -168,6 +168,18 @@ open class DefaultMessageDao : MessageDao {
         )
     }
     
+    /**
+     * 查找发送中的消息
+     */
+    public func findSendingMessages(successStatus: Int) -> Array<Message> {
+        let message: Array<Message>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.sendStatus < successStatus,
+            orderBy: [Message.Properties.cTime.order(Order.ascending)]
+        )
+        return message ?? Array<Message>()
+    }
+    
     public func findSessionMessageCount(_ sessionId: Int64) throws -> Int64 {
         return try self.database!.getValue(
             on: Message.Properties.msgId.count(),

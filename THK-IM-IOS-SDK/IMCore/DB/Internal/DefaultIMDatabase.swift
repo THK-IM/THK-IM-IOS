@@ -13,8 +13,6 @@ import CocoaLumberjack
 
 class DefaultIMDatabase: IMDatabase {
     
-    
-    private weak var app: UIApplication?
     private let database: Database
     private let messageDaoImp: MessageDao
     private let sessionDaoImp: SessionDao
@@ -23,9 +21,7 @@ class DefaultIMDatabase: IMDatabase {
     private let groupDaoImp: GroupDao
     private let sessionMemberDaoImp: SessionMemberDao
     
-    public init(_ app: UIApplication, _ uId: Int64, _ debug: Bool) {
-        self.app = app
-        
+    public init(_ uId: Int64, _ debug: Bool) {
         let env = debug ? "debug" : "release"
         let documentPath = NSHomeDirectory() + "/Documents/im"
         let filePath = String(format: "%@/%d-%@.db", arguments: [documentPath, uId, env])
@@ -52,11 +48,24 @@ class DefaultIMDatabase: IMDatabase {
     
     
     public func open() {
-        try? self.messageDao().resetSendStatusFailed()
+        let sendingMessage = messageDaoImp.findSendingMessages(successStatus: MsgSendStatus.Success.rawValue)
+        if !sendingMessage.isEmpty {
+            do {
+                try messageDaoImp.resetSendStatusFailed()
+                for m in sendingMessage {
+                    m.sendStatus = MsgSendStatus.Failed.rawValue
+                    IMCoreManager.shared.messageModule.processSessionByMessage(m)
+                }
+            } catch {
+                DDLogError("resetSendStatusFailed: \(error)")
+            }
+        }
     }
     
     public func close() {
-        self.database.close()
+        if (self.database.isOpened) {
+            self.database.close()
+        }
     }
     
     public func messageDao() -> MessageDao {

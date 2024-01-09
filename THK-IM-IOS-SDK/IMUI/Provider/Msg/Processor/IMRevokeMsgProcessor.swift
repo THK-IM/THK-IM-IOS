@@ -42,7 +42,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
             }).disposed(by: self.disposeBag)
         
         if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
-            IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
+            IMCoreManager.shared.messageModule.ackMessageToCache(msg)
         }
         
     }
@@ -51,7 +51,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
         if msg.fromUId == IMCoreManager.shared.uId {
             return Observable.just("你")
         } else {
-            return IMCoreManager.shared.getUserModule().queryUser(id: msg.fromUId)
+            return IMCoreManager.shared.userModule.queryUser(id: msg.fromUId)
                 .flatMap { info in
                     return Observable.just(info.nickname)
                 }
@@ -81,7 +81,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
             if (existed) {
                 try IMCoreManager.shared.database.messageDao().insertOrIgnore([msg])
                 SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
-                IMCoreManager.shared.getMessageModule().processSessionByMessage(msg)
+                IMCoreManager.shared.messageModule.processSessionByMessage(msg)
             }
             return Observable.just(msg)
         }

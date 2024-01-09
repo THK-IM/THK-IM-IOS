@@ -82,7 +82,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     // 已读消息入库，并ack
                     try insertOrUpdateDb(referMsg!, false, false)
                     if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
-                        IMCoreManager.shared.getMessageModule().ackMessageToCache(msg)
+                        IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                     }
                 }
             }
@@ -187,12 +187,19 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
         readLock.unlock()
     }
     
+    private func clearReadMessagesCache() {
+        readLock.lock()
+        self.needReadDic.removeAll()
+        readLock.unlock()
+    }
+    
     override public func needReprocess(msg: Message) -> Bool {
         return true
     }
     
     override public func reset() {
-        self.reset()
+        super.reset()
+        self.clearReadMessagesCache()
         self.initReadMessagePublishSubject()
     }
     

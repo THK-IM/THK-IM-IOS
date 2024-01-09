@@ -42,7 +42,7 @@ class IMSessionChooseViewController: IMSessionViewController {
         }
         if (forwardType == 0) { // 单条转发
             for m in messages {
-                IMCoreManager.shared.getMessageModule().getMsgProcessor(m.type)
+                IMCoreManager.shared.messageModule.getMsgProcessor(m.type)
                     .forwardMessage(m, session.id)
             }
             self.pop()
@@ -57,7 +57,7 @@ class IMSessionChooseViewController: IMSessionViewController {
                         m.rUsers = nil
                         m.data = nil
                     }
-                    IMCoreManager.shared.getMessageModule().sendMessage(session.id, MsgType.Record.rawValue, newBody, nil, nil, nil, nil)
+                    IMCoreManager.shared.messageModule.sendMessage(session.id, MsgType.Record.rawValue, newBody, nil, nil, nil, nil)
                 }, onCompleted: { [weak self] in
                     self?.pop()
                 }).disposed(by: self.disposeBag)
@@ -79,12 +79,12 @@ class IMSessionChooseViewController: IMSessionViewController {
         for m in messages {
             uIds.insert(m.fromUId)
         }
-        return IMCoreManager.shared.getUserModule().queryUsers(ids: uIds).flatMap({ (userMap) -> Observable<IMRecordMsgBody> in
+        return IMCoreManager.shared.userModule.queryUsers(ids: uIds).flatMap({ (userMap) -> Observable<IMRecordMsgBody> in
             var content = ""
             var i = 0
             for m in messages {
                 let userName = userMap[m.fromUId]?.nickname ?? "XX"
-                let subContent = IMCoreManager.shared.getMessageModule().getMsgProcessor(m.type).getSessionDesc(msg: m)
+                let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).getSessionDesc(msg: m)
                 content = "\(content)\(userName):\(subContent)"
                 i += 1
                 if (i <= messages.count - 1) {
@@ -96,7 +96,7 @@ class IMSessionChooseViewController: IMSessionViewController {
             return Observable.just(recordBody)
         }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
             let selfId = IMCoreManager.shared.uId
-            return IMCoreManager.shared.getUserModule().queryUser(id: selfId).flatMap({ (user) ->  Observable<IMRecordMsgBody> in
+            return IMCoreManager.shared.userModule.queryUser(id: selfId).flatMap({ (user) ->  Observable<IMRecordMsgBody> in
                 recordBody.title = user.nickname
                 return Observable.just(recordBody)
             })

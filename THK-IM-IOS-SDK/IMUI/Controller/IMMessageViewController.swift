@@ -328,7 +328,7 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
     }
     
     func resendMessage(_ msg: Message) {
-        IMCoreManager.shared.getMessageModule().getMsgProcessor(msg.type).resend(msg)
+        IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).resend(msg)
     }
     
     func getSession() -> Session? {
@@ -340,7 +340,7 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
         guard let sessionId = self.session?.id else {
             return
         }
-        IMCoreManager.shared.getMessageModule().sendMessage(sessionId, type, body, data, nil, nil, { _, _ in
+        IMCoreManager.shared.messageModule.sendMessage(sessionId, type, body, data, nil, nil, { _, _ in
         })
     }
     
@@ -410,7 +410,7 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
     func deleteSelectedMessages() {
         let messages = self.messageLayout.getSelectMessages()
         if (messages.count > 0 && session != nil) {
-            IMCoreManager.shared.getMessageModule()
+            IMCoreManager.shared.messageModule
                 .deleteMessages(session!.id, Array(messages), true)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onError: { error in
@@ -422,7 +422,7 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
     }
     
     func readMessage(_ message: Message) {
-        IMCoreManager.shared.getMessageModule()
+        IMCoreManager.shared.messageModule
             .sendMessage(message.sessionId, MsgType.READ.rawValue, nil, nil, nil, message.msgId, nil)
     }
     

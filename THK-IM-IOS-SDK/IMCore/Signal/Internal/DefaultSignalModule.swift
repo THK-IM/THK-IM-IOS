@@ -17,7 +17,6 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     private let reachabilityManager = NetworkReachabilityManager.init()
     private var status = SignalStatus.Init
     private var webSocketUrl = ""
-    private weak var app: UIApplication?
     private var webSocketClient: WebSocket?
     private let connectTimeout = 5.0
     private let reconnectInterval: Float = 3.0
@@ -28,16 +27,9 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     private var timeoutTask: GCDTask?
     private var reconnectTask: GCDTask?
     
-    public init(_ app: UIApplication, _ webSocketUrl: String, _ token: String) {
-        self.app = app
+    public init( _ token: String, _ webSocketUrl: String) {
         self.webSocketUrl = webSocketUrl
         self.token = token
-    }
-    
-    public func updateToken(_ token: String) {
-        self.token = token
-        self.disconnect("update token")
-        self.connect()
     }
     
     public func connect() {
@@ -132,8 +124,8 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
         lock.lock()
         self.webSocketClient?.forceDisconnect()
         self.signalListener = nil
+        self.status = SignalStatus.DisConnected
         lock.unlock()
-        self.onStateChange(SignalStatus.DisConnected)
     }
     
     public func getSignalStatus() -> SignalStatus {

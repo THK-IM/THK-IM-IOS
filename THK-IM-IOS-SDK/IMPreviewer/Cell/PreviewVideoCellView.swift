@@ -84,7 +84,7 @@ public class PreviewVideoCellView : PreviewCellView {
             let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(coverPath!)
             self.videoPlayView.initCover(realPath)
         } else if (coverUrl != nil) {
-            _ = IMCoreManager.shared.getMessageModule().getMsgProcessor(message.type)
+            _ = IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
                 .downloadMsgContent(message, resourceType: IMMsgResourceType.Thumbnail.rawValue)
         }
         if (sourcePath != nil) {
@@ -171,7 +171,7 @@ public class PreviewVideoCellView : PreviewCellView {
                         data!.duration = body.duration
                         let d = try JSONEncoder().encode(data)
                         message.data = String(data: d, encoding: .utf8)!
-                        try IMCoreManager.shared.getMessageModule().getMsgProcessor(message.type)
+                        try IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
                             .insertOrUpdateDb(message, true, false)
                     }
                 }
