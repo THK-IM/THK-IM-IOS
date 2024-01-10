@@ -1,5 +1,5 @@
 //
-//  MineViewController.swift
+//  MineTabViewController.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/1/6.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MineViewController: BaseViewController {
+class MineTabViewController: BaseViewController {
     
     private let headerView = UIView()
     private let avatarView = UIImageView()

@@ -1,5 +1,5 @@
 //
-//  SessionViewController.swift
+//  SessionTabViewController.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/1/6.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SessionViewController: IMSessionViewController {
+class SessionTabViewController: IMSessionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()

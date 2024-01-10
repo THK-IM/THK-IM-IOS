@@ -1,5 +1,5 @@
 //
-//  ContactViewController.swift
+//  ContactTabViewController.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/1/6.
@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-class ContactViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
+class ContactTabViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let contactTableView = UITableView()
     private let contactIdentifier = "table_cell_contact"
@@ -27,6 +27,10 @@ class ContactViewController: BaseViewController, UITableViewDelegate, UITableVie
     
     override func hasSearchMenu() -> Bool {
         return true
+    }
+    
+    override func onMenuClick(menu: String) {
+        SearchViewController.openSearchController(self, 1)
     }
     
     func setupUI() {

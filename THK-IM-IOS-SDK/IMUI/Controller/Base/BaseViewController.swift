@@ -14,27 +14,38 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     let disposeBag = DisposeBag()
     
     override open func viewDidLoad() {
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         self.navigationItem.hidesBackButton = true
-        if let title = title() {
-            setTitle(title: title)
+        if (hasTitlebar()) {
+            if let title = title() {
+                setTitle(title: title)
+            }
+            var images = [UIImage?]()
+            var actions = [Selector?]()
+            if hasAddMenu() {
+                images.append(menuImages(menu: "add"))
+                actions.append(#selector(addTapped))
+            }
+            if hasSearchMenu() {
+                images.append(menuImages(menu: "search"))
+                actions.append(#selector(searchTapped))
+            }
+            setRightItems(images: images, actions: actions)
+            if (self.canBack()) {
+                let backImage = UIImage(named: "ic_titlebar_back")?.scaledToSize(CGSize(width: 24, height: 24))
+                let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
+                self.navigationItem.leftBarButtonItem = backItem
+            }
         }
-        var images = [UIImage?]()
-        var actions = [Selector?]()
-        if hasAddMenu() {
-            images.append(menuImages(menu: "add"))
-            actions.append(#selector(addTapped))
-        }
-        if hasSearchMenu() {
-            images.append(menuImages(menu: "search"))
-            actions.append(#selector(searchTapped))
-        }
-        setRightItems(images: images, actions: actions)
-        if (self.canBack()) {
-            let backImage = UIImage(named: "ic_titlebar_back")?.scaledToSize(CGSize(width: 24, height: 24))
-            let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
-            self.navigationItem.leftBarButtonItem = backItem
-            self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        }
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = !hasTitlebar()
+    }
+    
+    open func hasTitlebar() -> Bool {
+        return true
     }
     
     @objc open func backAction() {
@@ -99,5 +110,6 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     private func canBack() -> Bool {
         return self.navigationController?.children.count ?? 0 > 1
     }
+    
     
 }

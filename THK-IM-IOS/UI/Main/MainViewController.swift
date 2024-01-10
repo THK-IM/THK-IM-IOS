@@ -16,10 +16,10 @@ class MainViewController: UITabBarController {
         self.view.backgroundColor = UIColor.init(hex: "dddddd")
         
         self.viewControllers = [
-            UINavigationController(rootViewController: SessionViewController()),
-            UINavigationController(rootViewController: ContactViewController()),
-            UINavigationController(rootViewController: GroupViewController()),
-            UINavigationController(rootViewController: MineViewController())
+            UINavigationController(rootViewController: SessionTabViewController()),
+            UINavigationController(rootViewController: ContactTabViewController()),
+            UINavigationController(rootViewController: GroupTabViewController()),
+            UINavigationController(rootViewController: MineTabViewController())
         ]
         
         self.tabBar.backgroundColor = UIColor.init(hex: "dddddd")
