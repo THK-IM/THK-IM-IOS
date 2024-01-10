@@ -67,7 +67,7 @@ open class Bubble {
         if output == nil {
             return nil
         }
-        let resize = output!.resizableImage(withCapInsets: insets, resizingMode: UIImage.ResizingMode.stretch)
+        let resize = output!.resizableImage(withCapInsets: insets, resizingMode: .stretch)
         return resize
     }
 }

@@ -478,7 +478,13 @@ open class DefaultMessageModule : MessageModule {
                         let unReadCount = try IMCoreManager.shared.database.messageDao().getUnReadCount(msg.sessionId)
                         if (s.mTime < msg.mTime || s.unreadCount != unReadCount) {
                             let processor = self?.getMsgProcessor(msg.type)
-                            s.lastMsg = processor?.getSessionDesc(msg: msg)
+                            var statusText = ""
+                            if (msg.sendStatus == MsgSendStatus.Sending.rawValue || msg.sendStatus == MsgSendStatus.Init.rawValue) {
+                                statusText = "[⬆️]"
+                            } else if (msg.sendStatus == MsgSendStatus.Failed.rawValue) {
+                                statusText = "[❗]"
+                            }
+                            s.lastMsg = statusText + (processor?.getSessionDesc(msg: msg) ?? "")
                             s.unreadCount = unReadCount
                             s.mTime = msg.cTime
                             try IMCoreManager.shared.database.sessionDao().insertOrUpdate([s])
