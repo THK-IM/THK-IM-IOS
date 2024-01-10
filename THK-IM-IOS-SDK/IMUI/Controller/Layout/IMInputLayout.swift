@@ -300,7 +300,6 @@ class IMInputLayout: UIView, UITextViewDelegate {
             self.textInputHeight = size.height
             self.resetLayout()
         }
-        
     }
     
     private func resetLayout(_ showLatestMsg: Bool = true) {

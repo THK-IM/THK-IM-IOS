@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchViewController: BaseViewController {
+class SearchViewController: BaseViewController, UITextFieldDelegate {
     
     static func openSearchController(_ uiViewController: UIViewController, _ searchType: Int) {
         let searchViewController = SearchViewController()
@@ -18,8 +18,21 @@ class SearchViewController: BaseViewController {
     }
     
     var searchType = 0 // 1 搜索用户 2 搜索群
-    private let textInputView = UITextField()
     private let cancelButton = UIButton()
+    lazy private var textInputView: UITextField = {
+        let textView = UITextField()
+        textView.textColor = UIColor.init(hex: "333333")
+        textView.delegate = self
+        textView.font = UIFont.systemFont(ofSize: 16.0)
+        textView.returnKeyType = .search
+        textView.keyboardType = .default
+        textView.backgroundColor = UIColor.white
+        textView.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 20))
+        textView.leftViewMode = .always
+        textView.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 20))
+        textView.rightViewMode = .always
+        return textView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,9 +50,6 @@ class SearchViewController: BaseViewController {
             make.right.equalToSuperview().offset(-60)
             make.height.equalTo(40)
         }
-        self.textInputView.textColor = UIColor.init(hex: "333333")
-        self.textInputView.font = UIFont.systemFont(ofSize: 18)
-        self.textInputView.backgroundColor = UIColor.white
         
         self.view.addSubview(self.cancelButton)
         self.cancelButton.snp.makeConstraints {make in
@@ -51,6 +61,8 @@ class SearchViewController: BaseViewController {
         self.cancelButton.setTitle("取消", for: .normal)
         self.cancelButton.setTitleColor(UIColor.init(hex: "666666"), for: .normal)
         self.cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
+        
+        self.textInputView.becomeFirstResponder()
     }
     
     override func hasTitlebar() -> Bool {
@@ -60,4 +72,18 @@ class SearchViewController: BaseViewController {
     @objc func cancelTapped() {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        guard let keywords = textField.text else {
+            return false
+        }
+        self.searchByKeywords(text: keywords)
+        return true
+    }
+    
+    private func searchByKeywords(text: String) {
+        print("searchByKeywords \(text)")
+    }
+    
+        
 }
