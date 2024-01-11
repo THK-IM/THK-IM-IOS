@@ -20,6 +20,12 @@ public protocol IMApi: AnyObject {
      */
     func getEndpoint() -> String
     
+    
+    /**
+     * 根据修改时间查询session成员
+     */
+    func queryLatestSessionMembers(_ sessionId: Int64, _ mTime: Int64, _ role: Int?, _ count: Int) -> Observable<Array<SessionMember>>
+    
     /**
      * 获取修改时间为mTime之后的session列表
      */

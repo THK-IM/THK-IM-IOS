@@ -22,4 +22,12 @@ class UserBasicInfoVo: Codable {
         case avatar = "avatar"
         case sex = "sex"
     }
+    
+    func toUser() -> User {
+        let now = IMCoreManager.shared.commonModule.getSeverTime()
+        return User(
+            id: id, displayId: displayId, nickname: nickname ?? "",
+            avatar: avatar, sex: sex, status: 0, cTime: now, mTime: now
+        )
+    }
 }

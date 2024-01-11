@@ -47,6 +47,9 @@
 		A03082E12AF7BFEC001B8373 /* UpdateSessionVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082E02AF7BFEC001B8373 /* UpdateSessionVo.swift */; };
 		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A050072F2B08BC9700526713 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072E2B08BC9700526713 /* AppUtils.swift */; };
+		A0B2457D2B50240400D48BE8 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B2457C2B50240400D48BE8 /* GroupViewController.swift */; };
+		A0B2457F2B502C0700D48BE8 /* IMSessionApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B2457E2B502C0700D48BE8 /* IMSessionApi.swift */; };
+		A0B245812B502DDB00D48BE8 /* SessionMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */; };
 		A0C431DD2A909C1700A84D4A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0C431DC2A909C1600A84D4A /* Images.xcassets */; };
 		A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* LiveManager.swift */; };
 		A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DF2A909C3100A84D4A /* LiveController.swift */; };
@@ -96,7 +99,7 @@
 		A0D68B7D2A888679004D11A5 /* SessionVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AB92A888678004D11A5 /* SessionVo.swift */; };
 		A0D68B7E2A888679004D11A5 /* AckMsgVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABA2A888678004D11A5 /* AckMsgVo.swift */; };
 		A0D68B7F2A888679004D11A5 /* ListVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABB2A888678004D11A5 /* ListVo.swift */; };
-		A0D68B802A888679004D11A5 /* IMSessionApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABC2A888678004D11A5 /* IMSessionApi.swift */; };
+		A0D68B802A888679004D11A5 /* IMUserSessionApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABC2A888678004D11A5 /* IMUserSessionApi.swift */; };
 		A0D68B812A888679004D11A5 /* CodeMessageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABE2A888678004D11A5 /* CodeMessageError.swift */; };
 		A0D68B822A888679004D11A5 /* IMMessageApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68ABF2A888678004D11A5 /* IMMessageApi.swift */; };
 		A0D68B8E2A888679004D11A5 /* IMDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AD02A888678004D11A5 /* IMDatabase.swift */; };
@@ -198,7 +201,7 @@
 		A0D68C072A888679004D11A5 /* SignalModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B6F2A888679004D11A5 /* SignalModule.swift */; };
 		A0D68C092A888679004D11A5 /* SignalListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B712A888679004D11A5 /* SignalListener.swift */; };
 		A0E7501B2B4ED2840038F783 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E7501A2B4ED2840038F783 /* SearchViewController.swift */; };
-		A0E7501E2B4EDDE90038F783 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E7501D2B4EDDE90038F783 /* UserViewController.swift */; };
+		A0E7501E2B4EDDE90038F783 /* ContactUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E7501D2B4EDDE90038F783 /* ContactUserViewController.swift */; };
 		A0E8ED482AEDED23004163BD /* IMPreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E8ED472AEDED23004163BD /* IMPreviewer.swift */; };
 		A0E8ED4A2AEDEE42004163BD /* Previewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E8ED492AEDEE42004163BD /* Previewer.swift */; };
 		A0E8ED4C2AEDF23B004163BD /* PreviewCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E8ED4B2AEDF23B004163BD /* PreviewCellView.swift */; };
@@ -307,6 +310,9 @@
 		A03082E02AF7BFEC001B8373 /* UpdateSessionVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSessionVo.swift; sourceTree = "<group>"; };
 		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A050072E2B08BC9700526713 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
+		A0B2457C2B50240400D48BE8 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
+		A0B2457E2B502C0700D48BE8 /* IMSessionApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSessionApi.swift; sourceTree = "<group>"; };
+		A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMemberVo.swift; sourceTree = "<group>"; };
 		A0C431DC2A909C1600A84D4A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A0C431DE2A909C3000A84D4A /* LiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveManager.swift; path = API/LiveManager.swift; sourceTree = "<group>"; };
 		A0C431DF2A909C3100A84D4A /* LiveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveController.swift; sourceTree = "<group>"; };
@@ -358,7 +364,7 @@
 		A0D68AB92A888678004D11A5 /* SessionVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionVo.swift; sourceTree = "<group>"; };
 		A0D68ABA2A888678004D11A5 /* AckMsgVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AckMsgVo.swift; sourceTree = "<group>"; };
 		A0D68ABB2A888678004D11A5 /* ListVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListVo.swift; sourceTree = "<group>"; };
-		A0D68ABC2A888678004D11A5 /* IMSessionApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSessionApi.swift; sourceTree = "<group>"; };
+		A0D68ABC2A888678004D11A5 /* IMUserSessionApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUserSessionApi.swift; sourceTree = "<group>"; };
 		A0D68ABE2A888678004D11A5 /* CodeMessageError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeMessageError.swift; sourceTree = "<group>"; };
 		A0D68ABF2A888678004D11A5 /* IMMessageApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMessageApi.swift; sourceTree = "<group>"; };
 		A0D68AD02A888678004D11A5 /* IMDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMDatabase.swift; sourceTree = "<group>"; };
@@ -460,7 +466,7 @@
 		A0D68B6F2A888679004D11A5 /* SignalModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalModule.swift; sourceTree = "<group>"; };
 		A0D68B712A888679004D11A5 /* SignalListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalListener.swift; sourceTree = "<group>"; };
 		A0E7501A2B4ED2840038F783 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
-		A0E7501D2B4EDDE90038F783 /* UserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
+		A0E7501D2B4EDDE90038F783 /* ContactUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactUserViewController.swift; sourceTree = "<group>"; };
 		A0E8ED472AEDED23004163BD /* IMPreviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPreviewer.swift; sourceTree = "<group>"; };
 		A0E8ED492AEDEE42004163BD /* Previewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewer.swift; sourceTree = "<group>"; };
 		A0E8ED4B2AEDF23B004163BD /* PreviewCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCellView.swift; sourceTree = "<group>"; };
@@ -671,6 +677,14 @@
 			path = Base;
 			sourceTree = "<group>";
 		};
+		A0B2457B2B5023ED00D48BE8 /* Group */ = {
+			isa = PBXGroup;
+			children = (
+				A0B2457C2B50240400D48BE8 /* GroupViewController.swift */,
+			);
+			path = Group;
+			sourceTree = "<group>";
+		};
 		A0C431DB2A909C1600A84D4A /* Resource */ = {
 			isa = PBXGroup;
 			children = (
@@ -842,6 +856,7 @@
 				A03082E02AF7BFEC001B8373 /* UpdateSessionVo.swift */,
 				A0D51DC52B09EFF800E21E75 /* RevokeMsgVo.swift */,
 				A0D51DC72B11ABC600E21E75 /* ForwardMessageVo.swift */,
+				A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */,
 			);
 			path = Vo;
 			sourceTree = "<group>";
@@ -1251,12 +1266,12 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
-		A0E7501C2B4EDDCB0038F783 /* User */ = {
+		A0E7501C2B4EDDCB0038F783 /* Contact */ = {
 			isa = PBXGroup;
 			children = (
-				A0E7501D2B4EDDE90038F783 /* UserViewController.swift */,
+				A0E7501D2B4EDDE90038F783 /* ContactUserViewController.swift */,
 			);
-			path = User;
+			path = Contact;
 			sourceTree = "<group>";
 		};
 		A0E8ED442AEDE9F6004163BD /* IMPreviewer */ = {
@@ -1297,7 +1312,8 @@
 			children = (
 				A0D68AB42A888678004D11A5 /* Vo */,
 				A0D68ABF2A888678004D11A5 /* IMMessageApi.swift */,
-				A0D68ABC2A888678004D11A5 /* IMSessionApi.swift */,
+				A0B2457E2B502C0700D48BE8 /* IMSessionApi.swift */,
+				A0D68ABC2A888678004D11A5 /* IMUserSessionApi.swift */,
 				A0EA42FA2A94CCE200F64A90 /* DefaultIMApi.swift */,
 				A0FCA8EB2B48F60500FC6E47 /* APITokenInterceptor.swift */,
 			);
@@ -1307,7 +1323,8 @@
 		A0FCA8D42B484A7A00FC6E47 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				A0E7501C2B4EDDCB0038F783 /* User */,
+				A0B2457B2B5023ED00D48BE8 /* Group */,
+				A0E7501C2B4EDDCB0038F783 /* Contact */,
 				A0E750192B4ED2650038F783 /* Search */,
 				A0FCA9412B4A7E5D00FC6E47 /* Component */,
 				A0FCA8F02B49178300FC6E47 /* Main */,
@@ -1619,10 +1636,11 @@
 				A0D68BA92A888679004D11A5 /* IMUnSupportMsgCellProvider.swift in Sources */,
 				A0D68BD42A888679004D11A5 /* VideoController.swift in Sources */,
 				A03082CD2AF66AF1001B8373 /* IMReadMsgProcessor.swift in Sources */,
-				A0D68B802A888679004D11A5 /* IMSessionApi.swift in Sources */,
+				A0D68B802A888679004D11A5 /* IMUserSessionApi.swift in Sources */,
 				A0FCA92C2B498A5B00FC6E47 /* CreateGroupVo.swift in Sources */,
 				A0FCA9342B498AB200FC6E47 /* TransferGroupVo.swift in Sources */,
 				A0FCA93E2B4A738700FC6E47 /* IMContactModule.swift in Sources */,
+				A0B245812B502DDB00D48BE8 /* SessionMemberVo.swift in Sources */,
 				A0E8ED4A2AEDEE42004163BD /* Previewer.swift in Sources */,
 				A0D68BB72A888679004D11A5 /* IMMessageLayout.swift in Sources */,
 				A0D51DCA2B11BBDE00E21E75 /* IMSessionChooseViewController.swift in Sources */,
@@ -1674,6 +1692,7 @@
 				A0D68BE32A888679004D11A5 /* DefaultMessageModule.swift in Sources */,
 				A0D68B982A888679004D11A5 /* UserDao.swift in Sources */,
 				A0D68C042A888679004D11A5 /* StorageModule.swift in Sources */,
+				A0B2457D2B50240400D48BE8 /* GroupViewController.swift in Sources */,
 				A0D68BAB2A888679004D11A5 /* IMImageMsgCellProvider.swift in Sources */,
 				A0C431F82A909CCE00A84D4A /* JoinRoomBean.swift in Sources */,
 				A025290F2AC6D7DB001561A0 /* UploadParams.swift in Sources */,
@@ -1778,7 +1797,7 @@
 				A0D68C062A888679004D11A5 /* Signal.swift in Sources */,
 				A0C431E82A909CB200A84D4A /* Defines.swift in Sources */,
 				A0D51DC62B09EFF800E21E75 /* RevokeMsgVo.swift in Sources */,
-				A0E7501E2B4EDDE90038F783 /* UserViewController.swift in Sources */,
+				A0E7501E2B4EDDE90038F783 /* ContactUserViewController.swift in Sources */,
 				A0C431FC2A909D2500A84D4A /* UIRtcMsgCell.swift in Sources */,
 				A0D68BE92A888679004D11A5 /* BaseModule.swift in Sources */,
 				A0D68BE42A888679004D11A5 /* DefaultUserModule.swift in Sources */,
@@ -1806,6 +1825,7 @@
 				A0D68B9A2A888679004D11A5 /* UIImageView+Cache.swift in Sources */,
 				A0FCA9402B4A782E00FC6E47 /* IMGroupModule.swift in Sources */,
 				A0D68BDB2A888679004D11A5 /* IMVideoCachePlayerView.swift in Sources */,
+				A0B2457F2B502C0700D48BE8 /* IMSessionApi.swift in Sources */,
 				A0D68BA42A888679004D11A5 /* IMAudioMsgCell.swift in Sources */,
 				A0EA42E92A94920300F64A90 /* DefaultMessageDao.swift in Sources */,
 				A0D68BA72A888679004D11A5 /* IMTextMsgCell.swift in Sources */,

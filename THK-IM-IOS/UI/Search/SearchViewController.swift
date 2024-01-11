@@ -10,7 +10,7 @@ import UIKit
 
 class SearchViewController: BaseViewController, UITextFieldDelegate {
     
-    static func openSearchController(_ uiViewController: UIViewController, _ searchType: Int) {
+    static func open(_ uiViewController: UIViewController, _ searchType: Int) {
         let searchViewController = SearchViewController()
         searchViewController.searchType = searchType
         searchViewController.hidesBottomBarWhenPushed = true
@@ -82,8 +82,40 @@ class SearchViewController: BaseViewController, UITextFieldDelegate {
     }
     
     private func searchByKeywords(text: String) {
-        print("searchByKeywords \(text)")
+        if (searchType == 1) {
+            self.searchUser(id: text)
+        } else {
+            self.searchGroup(id: text)
+        }
     }
     
+    
+    private func searchUser(id: String) {
+        DataRepository.shared.userApi.rx.request(.searchUserByDisplayId(id))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Bean(UserBasicInfoVo.self))
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] userBasicInfoVo in
+                guard let sf = self else {
+                    return
+                }
+                let user = userBasicInfoVo.toUser()
+                ContactUserViewController.open(sf, user)
+            }).disposed(by: self.disposeBag)
+    }
+    
+    private func searchGroup(id: String) {
+        DataRepository.shared.groupApi.rx.request(.searchGroup(id))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Bean(GroupVo.self))
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] groupVo in
+                guard let sf = self else {
+                    return
+                }
+                let group = groupVo.toGroup()
+                GroupViewController.open(sf, group)
+            }).disposed(by: self.disposeBag)
+    }
         
 }

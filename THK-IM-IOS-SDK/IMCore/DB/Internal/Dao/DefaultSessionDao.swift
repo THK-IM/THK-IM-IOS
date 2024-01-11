@@ -20,17 +20,6 @@ open class DefaultSessionDao : SessionDao {
         self.tableName = tableName
     }
     
-    public func update(_ sessions: [Session]) throws {
-        for session in sessions {
-            try self.database?.update(
-                table: self.tableName,
-                on: Session.Properties.all,
-                with: session,
-                where: Session.Properties.id == session.id
-            )
-        }
-    }
-    
     public func insertOrUpdate(_ sessions: [Session]) throws {
         try self.database?.insertOrReplace(sessions, intoTable: self.tableName)
     }
@@ -46,6 +35,38 @@ open class DefaultSessionDao : SessionDao {
         }
         try self.database?.delete(fromTable: self.tableName, where: Session.Properties.id.in(ids))
     }
+    
+    public func update(_ sessions: [Session]) throws {
+        for session in sessions {
+            try self.database?.update(
+                table: self.tableName,
+                on: Session.Properties.all,
+                with: session,
+                where: Session.Properties.id == session.id
+            )
+        }
+    }
+    
+    public func updateMemberSyncTime(_ sessionId: Int64, _ mTime: Int64) throws {
+        try self.database?.update(
+            table: self.tableName,
+            on: Session.Properties.memberSyncTime,
+            with: mTime,
+            where: Message.Properties.sessionId == sessionId
+        )
+    }
+    
+    public func findMemberSyncTimeById(_ sessionId: Int64) -> Int64 {
+        guard let res = try? self.database?.getValue(
+            on: Session.Properties.memberSyncTime,
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId
+        ).int64Value else {
+            return 0
+        }
+        return Int64(res)
+    }
+    
     
     public func findById(_ sId: Int64) throws -> Session? {
         return try self.database?.getObject(fromTable: self.tableName, where: Session.Properties.id == sId)

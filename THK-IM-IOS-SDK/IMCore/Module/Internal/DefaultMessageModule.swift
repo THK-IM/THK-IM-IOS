@@ -525,13 +525,6 @@ open class DefaultMessageModule : MessageModule {
     }
     
     
-    public func cancelAllTasks()   {
-        for v in self.processorDic {
-            v.value.reset()
-        }
-    }
-    
-    
     private func deleteLocalSession(_ session: Session) -> Observable<Void> {
         return Observable.create({observer -> Disposable in
             do {
@@ -551,10 +544,9 @@ open class DefaultMessageModule : MessageModule {
     }
     
     private func updateLocalSession(_ session: Session) -> Observable<Void> {
-        return Observable.create({observer -> Disposable in
+        return Observable.create({ observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.sessionDao().update([session])
-                
             } catch {
                 observer.onError(error)
             }
@@ -567,5 +559,63 @@ open class DefaultMessageModule : MessageModule {
     private func updateServerSession(_ session: Session) -> Observable<Void> {
         return IMCoreManager.shared.api.updateUserSession(IMCoreManager.shared.uId, session: session)
     }
+    
+    
+    public func querySessionMembers(_ sessionId: Int64) -> RxSwift.Observable<Array<SessionMember>> {
+        return Observable.create({ observer -> Disposable in
+            let members = IMCoreManager.shared.database.sessionMemberDao().findBySessionId(sessionId)
+            observer.onNext(members)
+            observer.onCompleted()
+            return Disposables.create()
+        }).flatMap({ members -> Observable<Array<SessionMember>> in
+            if (members.count == 0) {
+                return self.queryLastSessionMember(sessionId, 100)
+            } else {
+                return Observable.just(members)
+            }
+        })
+    }
+    
+    private func queryLastSessionMember(_ sessionId: Int64, _ count: Int) -> Observable<Array<SessionMember>> {
+        return Observable.just(sessionId).flatMap({ sessionId -> Observable<Int64> in
+            let mTime = IMCoreManager.shared.database.sessionDao().findMemberSyncTimeById(sessionId)
+            return Observable.just(mTime)
+        }).flatMap({ mTime -> Observable<Array<SessionMember>> in
+            return IMCoreManager.shared.api.queryLatestSessionMembers(sessionId, mTime, nil, count)
+                .flatMap({ members -> Observable<Array<SessionMember>> in
+                    var inserts = Array<SessionMember>()
+                    var deletes = Array<SessionMember>()
+                    for m in members {
+                        if (m.deleted == 0) {
+                            inserts.append(m)
+                        } else {
+                            deletes.append(m)
+                        }
+                    }
+                    let sessionMemberDao = IMCoreManager.shared.database.sessionMemberDao()
+                    try sessionMemberDao.delete(deletes)
+                    try sessionMemberDao.insertOrReplace(inserts)
+                    if (!members.isEmpty) {
+                        let lastMTime = members.last!.mTime
+                        try IMCoreManager.shared.database.sessionDao().updateMemberSyncTime(sessionId, lastMTime)
+                    }
+                    if (members.count >= count) {
+                        return self.querySessionMembers(sessionId)
+                    } else {
+                        let sessionMembers = sessionMemberDao.findBySessionId(sessionId)
+                        return Observable.just(sessionMembers)
+                    }
+                })
+        })
+    }
+    
+    public func syncSessionMembers(_ sessionId: Int64) {
+        self.queryLastSessionMember(sessionId, 100)
+            .compose(RxTransformer.shared.io2Io())
+            .subscribe(onNext: { _ in
+                
+            }).disposed(by: self.disposeBag)
+    }
+    
     
 }

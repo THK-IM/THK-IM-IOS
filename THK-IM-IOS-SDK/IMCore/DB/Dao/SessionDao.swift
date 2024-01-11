@@ -32,6 +32,17 @@ public protocol SessionDao {
     func update(_ sessions: [Session]) throws
     
     /**
+     * 更新session同步时间
+     */
+    func updateMemberSyncTime(_ sessionId: Int64, _ mTime: Int64) throws
+    
+    
+    /**
+     * 查询session同步时间
+     */
+    func findMemberSyncTimeById(_ sessionId: Int64) -> Int64
+    
+    /**
      * 通过sessionId查询session
      */
     func findById(_ sessionId: Int64) throws -> Session?

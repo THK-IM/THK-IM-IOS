@@ -16,6 +16,6 @@ public protocol SessionMemberDao {
     
     func delete(_ members: [SessionMember]) throws
     
-    func findBySessionId(_ sessionId: Int64) -> [SessionMember]?
+    func findBySessionId(_ sessionId: Int64) -> Array<SessionMember>
     
 }

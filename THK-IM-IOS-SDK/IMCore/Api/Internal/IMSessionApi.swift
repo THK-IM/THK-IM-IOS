@@ -2,7 +2,8 @@
 //  IMSessionApi.swift
 //  THK-IM-IOS
 //
-//  Created by vizoss on 2023/5/28.
+//  Created by vizoss on 2024/1/11.
+//  Copyright © 2024 THK. All rights reserved.
 //
 
 import Foundation
@@ -10,16 +11,8 @@ import Foundation
 import Moya
 
 enum IMSessionApi {
-    /// 查询最近会话列表
-    case queryLatestSession(_ uId: Int64, _ offset :Int, _ count: Int, _ mTime: Int64, _ types: Set<Int>?)
-    /// 查询单个会话
-    case querySession(_ uId: Int64, _ sessionId: Int64)
-    /// 查询单个会话
-    case querySessionByEntityId(_ uId: Int64, _ entityId: Int64, _ type: Int)
-    /// 删除session
-    case deleteSession(_ uId: Int64, _ sessionId: Int64)
-    /// 更新session
-    case updateSession(_ req: UpdateSessionVo)
+    /// 根据最近修改时间查询session成员列表
+    case queryLatestSessionMembers(_ id: Int64, _ mTime: Int64, _ role: Int?, _ count: Int)
 }
 
 
@@ -31,48 +24,26 @@ extension IMSessionApi: TargetType {
     
     var path: String {
         switch self {
-        case .queryLatestSession:
-            return "/session/latest"
-        case let .querySession(uId, sessionId):
-            return "/user_session/\(uId)/\(sessionId)"
-        case .querySessionByEntityId:
-            return "/user_session"
-        case let .deleteSession(uId, sessionId):
-            return "/user_session/\(uId)/\(sessionId)"
-        case .updateSession:
-            return "/user_session"
+        case let .queryLatestSessionMembers(id, _, _, _):
+            return "/session/\(id)/user/latest"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .queryLatestSession:
+        case .queryLatestSessionMembers(_, _, _, _):
             return .get
-        case .querySession:
-            return .get
-        case .querySessionByEntityId:
-            return .get
-        case .deleteSession:
-            return .delete
-        case .updateSession:
-            return .put
         }
     }
     
     var task: Moya.Task {
         switch self {
-        case let .queryLatestSession(uId, offset, count, mTime, types):
-            let urlParameters = ["u_id": uId, "offset": offset, "size": count, "m_Time": mTime, "types": types ?? ""] as [String : Any]
+        case let .queryLatestSessionMembers(_, mTime, role, count):
+            var urlParameters = ["m_time": mTime, "count": count, "m_Time": mTime] as [String : Any]
+            if (role != nil) {
+                urlParameters["role"] = role!
+            }
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
-        case .querySession:
-            return .requestPlain
-        case let .querySessionByEntityId(uId, entityId, type):
-            let urlParameters = ["u_id": uId, "entity_id": entityId, "type": type] as [String : Any]
-            return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
-        case .deleteSession:
-            return .requestPlain
-        case let .updateSession(req):
-            return .requestJSONEncodable(req)
         }
     }
     
@@ -84,3 +55,4 @@ extension IMSessionApi: TargetType {
         return nil
     }
 }
+

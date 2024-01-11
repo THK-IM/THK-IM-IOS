@@ -28,10 +28,10 @@ public final class SessionMember: TableCodable {
         }
         case sessionId = "session_id"
         case userId = "user_id"
-        case role = "avatar"
-        case status = "announce"
-        case mute = "qrcode"
-        case noteName = "enter_flag"
+        case role = "role"
+        case status = "status"
+        case mute = "mute"
+        case noteName = "note_name"
         case extData = "ext_data"
         case deleted = "deleted"
         case cTime = "c_time"
@@ -39,5 +39,18 @@ public final class SessionMember: TableCodable {
     }
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
+    
+    public init(sessionId: Int64, userId: Int64, role: Int, status: Int, mute: Int, noteName: String? = nil, extData: String? = nil, deleted: Int, cTime: Int64, mTime: Int64) {
+        self.sessionId = sessionId
+        self.userId = userId
+        self.role = role
+        self.status = status
+        self.mute = mute
+        self.noteName = noteName
+        self.extData = extData
+        self.deleted = deleted
+        self.cTime = cTime
+        self.mTime = mTime
+    }
 }
 

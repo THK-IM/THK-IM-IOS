@@ -30,7 +30,7 @@ class ContactTabViewController: BaseViewController, UITableViewDelegate, UITable
     }
     
     override func onMenuClick(menu: String) {
-        SearchViewController.openSearchController(self, 1)
+        SearchViewController.open(self, 1)
     }
     
     func setupUI() {

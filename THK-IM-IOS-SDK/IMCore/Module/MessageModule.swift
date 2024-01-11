@@ -113,8 +113,14 @@ public protocol MessageModule : BaseModule {
     
     
     /**
-     * 取消所有执行中的任务
+     * 查询session下成员列表
      */
-    func cancelAllTasks()
+    func querySessionMembers(_ sessionId: Int64) -> Observable<Array<SessionMember>>
+    
+    
+    /**
+     * 同步session成员列表
+     */
+    func syncSessionMembers(_ sessionId: Int64)
     
 }

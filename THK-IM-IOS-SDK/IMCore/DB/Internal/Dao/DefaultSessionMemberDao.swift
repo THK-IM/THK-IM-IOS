@@ -40,11 +40,12 @@ open class DefaultSessionMemberDao: SessionMemberDao {
         )
     }
     
-    public func findBySessionId(_ sessionId: Int64) -> [SessionMember]? {
-        return try? self.database?.getObjects(
+    public func findBySessionId(_ sessionId: Int64) -> Array<SessionMember> {
+        let members: Array<SessionMember>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             where: SessionMember.Properties.sessionId == sessionId
-        )
+        ) 
+        return members ?? Array<SessionMember>()
     }
     
     

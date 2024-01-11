@@ -11,12 +11,12 @@ import RxSwift
 
 public class DefaultIMApi: IMApi {
     
-    
     private let endpoint: String
     private var token: String
     private let apiInterceptor: APITokenInterceptor
     private let messageApi:MoyaProvider<IMMessageApi>
     private let sessionApi:MoyaProvider<IMSessionApi>
+    private let userSessionApi:MoyaProvider<IMUserSessionApi>
     
     
     public init(token: String, endpoint: String) {
@@ -24,8 +24,9 @@ public class DefaultIMApi: IMApi {
         self.token = token
         self.apiInterceptor = APITokenInterceptor(token: token)
         self.apiInterceptor.addValidEndpoint(endpoint: endpoint)
-        self.sessionApi = MoyaProvider<IMSessionApi>(plugins: [self.apiInterceptor])
         self.messageApi = MoyaProvider<IMMessageApi>(plugins: [self.apiInterceptor])
+        self.sessionApi = MoyaProvider<IMSessionApi>(plugins: [self.apiInterceptor])
+        self.userSessionApi = MoyaProvider<IMUserSessionApi>(plugins: [self.apiInterceptor])
     }
     
     public func getEndpoint() -> String {
@@ -43,8 +44,24 @@ public class DefaultIMApi: IMApi {
     }
     
     
+    public func queryLatestSessionMembers(_ sessionId: Int64, _ mTime: Int64, _ role: Int?, _ count: Int) -> RxSwift.Observable<Array<SessionMember>> {
+        return sessionApi.rx.request(.queryLatestSessionMembers(sessionId, mTime, role, count))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Bean(ListVo<SessionMemberVo>.self))
+            .flatMap({ listVo -> Observable<Array<SessionMember>> in
+                var members = Array<SessionMember>()
+                for vo in listVo.data {
+                    members.append(vo.toSessionMember())
+                }
+                return Observable.just(members)
+            })
+        
+    }
+    
+    
+    
     public func queryUserLatestSessions(_ uId: Int64, _ count: Int, _ mTime: Int64, _ types: Set<Int>?) -> RxSwift.Observable<Array<Session>> {
-        return sessionApi.rx
+        return userSessionApi.rx
             .request(.queryLatestSession(uId, 0, count, mTime, types))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(ListVo<SessionVo>.self))
@@ -59,7 +76,7 @@ public class DefaultIMApi: IMApi {
     }
     
     public func queryUserSession(_ uId: Int64, _ sessionId: Int64) -> Observable<Session> {
-        return sessionApi.rx
+        return userSessionApi.rx
             .request(.querySession(uId, sessionId))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(SessionVo.self))
@@ -75,7 +92,7 @@ public class DefaultIMApi: IMApi {
      * 获取与用户的session
      */
     public func queryUserSession(_ uId: Int64, _ entityId: Int64, _ type: Int) -> Observable<Session> {
-        return sessionApi.rx
+        return userSessionApi.rx
             .request(.querySessionByEntityId(uId, entityId, type))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(SessionVo.self))
@@ -86,7 +103,7 @@ public class DefaultIMApi: IMApi {
     }
     
     public func deleteUserSession(_ uId: Int64, session: Session)-> Observable<Void> {
-        return sessionApi.rx
+        return userSessionApi.rx
             .request(.deleteSession(uId, session.id))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
@@ -94,7 +111,7 @@ public class DefaultIMApi: IMApi {
 
     public func updateUserSession(_ uId: Int64, session: Session)-> Observable<Void> {
         let req = UpdateSessionVo(uId: uId, sId: session.id, top: session.topTimestamp, status: session.status, parentId: session.parentId)
-        return sessionApi.rx
+        return userSessionApi.rx
             .request(.updateSession(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
