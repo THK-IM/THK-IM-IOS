@@ -8,10 +8,11 @@
 import Foundation
 
 import Moya
+import Alamofire
 
 enum IMUserSessionApi {
     /// 查询最近会话列表
-    case queryLatestSession(_ uId: Int64, _ offset :Int, _ count: Int, _ mTime: Int64, _ types: Set<Int>?)
+    case queryLatestSession(_ uId: Int64, _ offset :Int, _ count: Int, _ mTime: Int64)
     /// 查询单个会话
     case querySession(_ uId: Int64, _ sessionId: Int64)
     /// 查询单个会话
@@ -32,7 +33,7 @@ extension IMUserSessionApi: TargetType {
     var path: String {
         switch self {
         case .queryLatestSession:
-            return "/use_session/latest"
+            return "/user_session/latest"
         case let .querySession(uId, sessionId):
             return "/user_session/\(uId)/\(sessionId)"
         case .querySessionByEntityId:
@@ -61,11 +62,8 @@ extension IMUserSessionApi: TargetType {
     
     var task: Moya.Task {
         switch self {
-        case let .queryLatestSession(uId, offset, count, mTime, types):
-            var urlParameters = ["u_id": uId, "offset": offset, "count": count, "m_Time": mTime] as [String : Any]
-            if (types != nil) {
-                urlParameters["types"] = types!
-            }
+        case let .queryLatestSession(uId, offset, count, mTime):
+            let urlParameters = ["u_id": uId, "offset": offset, "count": count, "m_time": mTime] as [String : Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         case .querySession:
             return .requestPlain

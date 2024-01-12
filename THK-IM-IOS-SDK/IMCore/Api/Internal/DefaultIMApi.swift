@@ -60,9 +60,9 @@ public class DefaultIMApi: IMApi {
     
     
     
-    public func queryUserLatestSessions(_ uId: Int64, _ count: Int, _ mTime: Int64, _ types: Set<Int>?) -> RxSwift.Observable<Array<Session>> {
+    public func queryUserLatestSessions(_ uId: Int64, _ count: Int, _ mTime: Int64) -> RxSwift.Observable<Array<Session>> {
         return userSessionApi.rx
-            .request(.queryLatestSession(uId, 0, count, mTime, types))
+            .request(.queryLatestSession(uId, 0, count, mTime))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(ListVo<SessionVo>.self))
             .flatMap({ (sessionListVo) -> Observable<Array<Session>> in

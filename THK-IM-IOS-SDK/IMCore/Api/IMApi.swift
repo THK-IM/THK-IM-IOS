@@ -29,7 +29,7 @@ public protocol IMApi: AnyObject {
     /**
      * 获取修改时间为mTime之后的session列表
      */
-    func queryUserLatestSessions(_ uId: Int64, _ count: Int, _ mTime: Int64, _ types: Set<Int>?) -> Observable<Array<Session>>
+    func queryUserLatestSessions(_ uId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>>
     
     /**
      * 获取与用户的session

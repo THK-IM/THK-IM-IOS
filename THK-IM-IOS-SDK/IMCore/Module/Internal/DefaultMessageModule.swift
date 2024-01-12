@@ -76,8 +76,7 @@ open class DefaultMessageModule : MessageModule {
     
     private func setSessionLastSyncTime(_ time: Int64) -> Bool {
         let key = "/\(IMCoreManager.shared.uId)/session_sync_time"
-        let saveTime = IMCoreManager.shared.severTime
-        UserDefaults.standard.setValue(saveTime, forKey: key)
+        UserDefaults.standard.setValue(time, forKey: key)
         return UserDefaults.standard.synchronize()
     }
     
@@ -173,7 +172,7 @@ open class DefaultMessageModule : MessageModule {
         let lastTime = self.getSessionLastSyncTime()
         let count = getSessionCountPerRequest()
         let uId = IMCoreManager.shared.uId
-        IMCoreManager.shared.api.queryUserLatestSessions(uId, count, lastTime, nil)
+        IMCoreManager.shared.api.queryUserLatestSessions(uId, count, lastTime)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { sessions in
                 var needDelGroupIds = Set<Int64>()
