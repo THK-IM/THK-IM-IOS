@@ -175,8 +175,8 @@ open class DefaultMessageModule : MessageModule {
         IMCoreManager.shared.api.queryUserLatestSessions(uId, count, lastTime)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { sessions in
-                var needDelGroupIds = Set<Int64>()
                 var needDelSIds = Set<Int64>()
+                var needDelGroupIds = Set<Int64>()
                 var needDelSessions = [Session]()
                 var needUpdateSessions = [Session]()
                 

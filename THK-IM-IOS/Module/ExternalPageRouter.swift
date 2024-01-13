@@ -18,11 +18,11 @@ class ExternalPageRouter: IMPageRouter {
     }
     
     func openUserPage(controller: UIViewController, user: User) {
-        
+        ContactUserViewController.open(controller, user)
     }
     
     func openGroupPage(controller: UIViewController, group: Group) {
-        
+        GroupViewController.open(controller, group, 1)
     }
     
     

@@ -65,8 +65,8 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         self.groupAvatarImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.right.equalToSuperview().offset(-10)
-            make.height.equalTo(60)
-            make.width.equalTo(60)
+            make.height.equalTo(48)
+            make.width.equalTo(48)
         }
         return view
     }()
@@ -185,7 +185,11 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
     }
     
     override func hasAddMenu() -> Bool {
-        return true
+        if (mode == 0) {
+            return true
+        } else {
+            return false
+        }
     }
     
     override func hasSearchMenu() -> Bool {
@@ -263,6 +267,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         if (mode == 0) {
             self.groupNameTextView.becomeFirstResponder()
         } else {
+            self.groupNameView.text = group?.name ?? ""
         }
     }
     
@@ -271,11 +276,16 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
             self.groupAvatarLayout.isHidden = true
         } else {
             self.groupAvatarLayout.isHidden = false
+            self.groupAvatarImageView.ca_setImageUrlWithCorner(url: group?.avatar ?? "", radius: 10)
         }
     }
     
     private func setupAnnounceLayout() {
-        
+        if (mode == 0) {
+            
+        } else {
+            self.groupAnnounceTextView.text = group?.announce ?? ""
+        }
     }
     
     private func setupMembersLayout() {
@@ -289,6 +299,16 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
                     ContactViewController.openChooseContact(sf, delegate: sf)
                 }).disposed(by: self.disposeBag)
             self.groupMemberLayout.addGestureRecognizer(tapGesture)
+        } else {
+            guard let sessionId = group?.sessionId else {
+                return
+            }
+            IMCoreManager.shared.messageModule.querySessionMembers(sessionId)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { [weak self] sessionMembers in
+                    self?.members = sessionMembers
+                    self?.groupMembersView.reloadData()
+                }).disposed(by: self.disposeBag)
         }
     }
     
@@ -309,17 +329,6 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         let member = self.members[indexPath.row]
         cell.setMemberId(id: member.userId)
         return cell
-    }
-    
-    private func loadMembers() {
-        if let sessionId = group?.sessionId {
-            IMCoreManager.shared.messageModule.querySessionMembers(sessionId)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] sessionMembers in
-                    self?.members = sessionMembers
-                    self?.groupMembersView.reloadData()
-                }).disposed(by: self.disposeBag)
-        }
     }
     
     private func createGroup() {

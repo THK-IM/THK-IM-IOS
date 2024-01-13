@@ -39,8 +39,8 @@ class ContactTableCell: UITableViewCell {
         self.chooseView.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-10)
             make.centerY.equalToSuperview()
-            make.width.equalTo(30)
-            make.height.equalTo(30)
+            make.width.equalTo(24)
+            make.height.equalTo(24)
         }
         self.chooseView.image = UIImage(named: "ic_choose")
         self.relationView.snp.makeConstraints { make in

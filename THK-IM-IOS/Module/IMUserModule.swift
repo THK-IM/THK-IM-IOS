@@ -12,6 +12,7 @@ import RxSwift
 class IMUserModule: DefaultUserModule {
     
     override func queryServerUser(id: Int64) -> Observable<User> {
+        print("queryServerUser \(id)")
         return DataRepository.shared.userApi.rx.request(.queryUser(id))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(UserVo.self))

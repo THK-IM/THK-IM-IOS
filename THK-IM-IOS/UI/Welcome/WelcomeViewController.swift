@@ -12,6 +12,8 @@ import CocoaLumberjack
 class WelcomeViewController: BaseViewController {
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = UIColor.white
         let logoView = UIImageView()
         self.view.addSubview(logoView)
         logoView.image = UIImage(named: "AppLogo")
@@ -30,6 +32,8 @@ class WelcomeViewController: BaseViewController {
                 self.loginByToken(token: token)
             }
         } else {
+//            let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOjE3MDQ4NjkzMDIsImlkIjoiZDh6MGZ5Mmg3Y2d4IiwiaXNzdWVyIjoidXNlcl9zZXJ2ZXIifQ.jMPGAtEVysVOfcRk69b1NXGwJzyAYWAOrQkEkPyI5ao"
+//            self.loginByToken(token: token)
             self.showLoginUI()
         }
     }
@@ -122,13 +126,14 @@ class WelcomeViewController: BaseViewController {
     
     
     func loginByToken(token: String) {
+        DataRepository.shared.updateToken(token: token)
         let tokenLoginReq = TokenLoginReq(token: token)
         DataRepository.shared.userApi.rx.request(.loginByToken(tokenLoginReq))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(LoginVo.self))
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] loginVo in
-                self?.saveUserInfo(token: loginVo.token, user: loginVo.user)
+                self?.saveUserInfo(token: loginVo.token ?? token, user: loginVo.user)
             }, onError: { error in
                 if (error is CodeMessageError) {
                     DDLogError("loginByToken \(error) 2313131")

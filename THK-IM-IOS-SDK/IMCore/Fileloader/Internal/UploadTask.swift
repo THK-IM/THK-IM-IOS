@@ -32,7 +32,9 @@ class UploadTask: LoadTask {
             return
         }
         var headers = HTTPHeaders()
-        headers.add(name: "Token", value: fileLoadModule.token)
+        headers.add(name: APITokenInterceptor.tokenKey, value: fileLoadModule.token)
+        headers.add(name: APITokenInterceptor.clientVersionKey, value: AppUtils.getVersion())
+        headers.add(name: APITokenInterceptor.platformKey, value: "IOS")
         let url = "\(fileLoadModule.endpoint)/session/object/upload_params?\(self.param)"
         self.getParamsRequest = AF.request(url, headers: headers).responseData(queue: DispatchQueue.global())
         { [weak self] response in

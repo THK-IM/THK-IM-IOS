@@ -9,7 +9,7 @@
 import Foundation
 
 class LoginVo: Codable {
-    var token: String
+    var token: String?
     var user: UserVo
     
     enum CodingKeys: String, CodingKey {

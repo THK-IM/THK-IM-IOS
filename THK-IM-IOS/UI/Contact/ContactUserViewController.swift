@@ -15,7 +15,7 @@ class ContactUserViewController: BaseViewController {
         let contractUserController = ContactUserViewController()
         contractUserController.user = user
         contractUserController.hidesBottomBarWhenPushed = true
-        uiViewController.navigationController?.pushViewController(contractUserController, animated: false)
+        uiViewController.navigationController?.pushViewController(contractUserController, animated: true)
     }
     
     private let headerView = UIView()

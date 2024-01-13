@@ -23,7 +23,7 @@ public final class SessionMemberVo: Codable {
         case sId = "s_id"
         case uId = "u_id"
         case role = "role"
-        case status = "announce"
+        case status = "status"
         case mute = "mute"
         case noteName = "note_name"
         case deleted = "deleted"

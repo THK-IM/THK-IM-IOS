@@ -52,7 +52,7 @@ open class DefaultSessionDao : SessionDao {
             table: self.tableName,
             on: Session.Properties.memberSyncTime,
             with: mTime,
-            where: Message.Properties.sessionId == sessionId
+            where: Session.Properties.id == sessionId
         )
     }
     
@@ -60,7 +60,7 @@ open class DefaultSessionDao : SessionDao {
         guard let res = try? self.database?.getValue(
             on: Session.Properties.memberSyncTime,
             fromTable: self.tableName,
-            where: Message.Properties.sessionId == sessionId
+            where: Session.Properties.id == sessionId
         ).int64Value else {
             return 0
         }

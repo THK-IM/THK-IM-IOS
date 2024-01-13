@@ -46,6 +46,13 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
             return
         }
         self.setTitle(title: session.name)
+        if (session.type == SessionType.Single.rawValue) {
+            IMCoreManager.shared.userModule.queryUser(id: session.entityId)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { [weak self] user in
+                    self?.setTitle(title: user.nickname)
+                }).disposed(by: self.disposeBag)
+        }
     }
     
     override func hasAddMenu() -> Bool {

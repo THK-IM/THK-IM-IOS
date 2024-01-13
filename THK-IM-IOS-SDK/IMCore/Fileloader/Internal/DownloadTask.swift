@@ -61,6 +61,8 @@ class DownloadTask: LoadTask {
                 if location.hasPrefix(fileLoadModule.endpoint) {
                     if request.headers[APITokenInterceptor.tokenKey] == nil || request.headers[APITokenInterceptor.tokenKey] == "" {
                         newRequest.addValue(fileLoadModule.token, forHTTPHeaderField: APITokenInterceptor.tokenKey)
+                        newRequest.addValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.clientVersionKey)
+                        newRequest.addValue("IOS", forHTTPHeaderField: APITokenInterceptor.platformKey)
                     }
                 } else {
                     newRequest.setValue(nil, forHTTPHeaderField: APITokenInterceptor.tokenKey)
@@ -74,7 +76,9 @@ class DownloadTask: LoadTask {
         var realUrl = self.key
         if (!self.key.hasSuffix("http")) {
             realUrl = "\(fileLoadModule.endpoint)/session/object/download_url?\(downLoadParam)"            
-            headers.add(name: "Token", value: fileLoadModule.token)
+            headers.add(name: APITokenInterceptor.tokenKey, value: fileLoadModule.token)
+            headers.add(name: APITokenInterceptor.clientVersionKey, value: AppUtils.getVersion())
+            headers.add(name: APITokenInterceptor.platformKey, value: "IOS")
         }
         self.request = AF.download(
             realUrl, headers: headers,
