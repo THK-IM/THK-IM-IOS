@@ -34,7 +34,6 @@ class RightCellWrapper: CellWrapper {
             }
         }
         v.addArrangedSubview(_containerView)
-        
         _containerView.snp.makeConstraints { make in
             make.height.greaterThanOrEqualTo(40)
             make.width.greaterThanOrEqualTo(20)

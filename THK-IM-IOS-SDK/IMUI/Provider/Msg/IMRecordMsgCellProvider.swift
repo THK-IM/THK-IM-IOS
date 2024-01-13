@@ -28,12 +28,12 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    open override func viewSize(_ message: Message) -> CGSize {
+    open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
         guard let content = message.content else {
-            return super.viewSize(message)
+            return super.viewSize(message, session)
         }
         guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
-            return super.viewSize(message)
+            return super.viewSize(message, session)
         }
         let maxWidth = UIScreen.main.bounds.width - 112
         let height = self.heightWithString(recordBody.content, UIFont.boldSystemFont(ofSize: 12), maxWidth)

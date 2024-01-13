@@ -30,4 +30,8 @@ open class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
         return false
     }
     
+    open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
+        return CGSize(width: 100.0, height: 40.0)
+    }
+    
 }

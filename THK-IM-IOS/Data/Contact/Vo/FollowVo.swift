@@ -18,4 +18,9 @@ class FollowVo: Codable {
         case uId = "u_id"
         case contactId = "contact_id"
     }
+    
+    init(uId: Int64, contactId: Int64) {
+        self.uId = uId
+        self.contactId = contactId
+    }
 }

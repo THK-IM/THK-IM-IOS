@@ -27,9 +27,9 @@ open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    open override func viewSize(_ message: Message) -> CGSize {
+    open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
         let maxWidth = UIScreen.main.bounds.width - 100
-        return CGSize(width: maxWidth, height: 40)
+        return CGSize(width: maxWidth, height: 60)
     }
     
 }

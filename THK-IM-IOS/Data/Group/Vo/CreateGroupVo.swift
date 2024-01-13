@@ -22,4 +22,13 @@ class CreateGroupVo: Codable {
         case groupAnnounce = "group_announce"
         case groupType = "group_type"
     }
+    
+    init(uId: Int64, members: Set<Int64>, groupName: String, groupAnnounce: String, groupType: Int) {
+        self.uId = uId
+        self.members = members
+        self.groupName = groupName
+        self.groupAnnounce = groupAnnounce
+        self.groupType = groupType
+    }
+    
 }

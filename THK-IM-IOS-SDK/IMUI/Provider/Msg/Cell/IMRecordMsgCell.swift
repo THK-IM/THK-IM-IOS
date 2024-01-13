@@ -74,7 +74,7 @@ class IMRecordMsgCell: BaseMsgCell {
         guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
             return
         }
-        let size = IMUIManager.shared.getMsgCellProvider(msg.type).viewSize(msg)
+        let size = IMUIManager.shared.getMsgCellProvider(msg.type).viewSize(msg, session)
         self.recordView.removeConstraints(self.recordView.constraints)
         self.recordView.snp.makeConstraints { make in
             make.height.equalTo(size.height)

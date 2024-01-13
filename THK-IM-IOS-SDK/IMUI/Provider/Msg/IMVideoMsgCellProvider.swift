@@ -28,7 +28,8 @@ open class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    open override func viewSize(_ message: Message) -> CGSize {
+    open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
+        let baseSize = super.viewSize(message, session)
         var width = 100.0
         var height = 100.0
         do {
@@ -53,16 +54,16 @@ open class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
             if (width >= height) {
                 let calWidth = max(80, min(200, width))
                 let calHeight = max(80, calWidth * height / width)
-                return CGSize(width: calWidth, height: calHeight)
+                return CGSize(width: calWidth, height: calHeight + baseSize.height)
             } else if (height > width) {
                 let calHeight = max(80, min(200, height))
                 let calWidth = max(80, calHeight * width / height)
-                return CGSize(width: calWidth, height: calHeight)
+                return CGSize(width: calWidth, height: calHeight + baseSize.height)
             }
         } catch {
             DDLogError("\(error)")
         }
-        return super.viewSize(message)
+        return baseSize
     }
     
 }

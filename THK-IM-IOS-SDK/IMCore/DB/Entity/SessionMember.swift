@@ -52,5 +52,18 @@ public final class SessionMember: TableCodable {
         self.cTime = cTime
         self.mTime = mTime
     }
+    
+    public init(userId: Int64) {
+        self.sessionId = 0
+        self.userId = userId
+        self.role = 0
+        self.status = 0
+        self.mute = 0
+        self.noteName = ""
+        self.extData = ""
+        self.deleted = 0
+        self.cTime = 0
+        self.mTime = 0
+    }
 }
 

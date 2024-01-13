@@ -27,14 +27,14 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    open override func viewSize(_ message: Message) -> CGSize {
-        let baseSize = super.viewSize(message)
+    open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
+        let baseSize = super.viewSize(message, session)
         guard let content = message.content else {
             return baseSize
         }
         let maxWidth = UIScreen.main.bounds.width - 112
         let height = self.heightWithString(content, UIFont.boldSystemFont(ofSize: 16), maxWidth)
-        return CGSize(width: baseSize.width, height: height + 16)
+        return CGSize(width: baseSize.width, height: height + 16 + baseSize.height)
     }
     
 }

@@ -38,7 +38,7 @@ open class IMVideoMsgCell: BaseMsgCell {
             return
         }
         self.view.isHidden = true
-        let size = IMUIManager.shared.getMsgCellProvider(msg.type).viewSize(msg)
+        let size = IMUIManager.shared.getMsgCellProvider(msg.type).viewSize(msg, session)
         self.view.removeConstraints(self.view.constraints)
         self.view.snp.makeConstraints { make in
             make.width.equalTo(size.width)

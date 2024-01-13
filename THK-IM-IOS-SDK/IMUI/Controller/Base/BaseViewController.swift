@@ -60,7 +60,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         
     }
     
-    open func showToast() {
+    open func showToast(_ toast: String) {
         
     }
     

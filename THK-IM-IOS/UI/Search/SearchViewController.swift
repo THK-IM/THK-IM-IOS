@@ -50,7 +50,7 @@ class SearchViewController: BaseViewController, UITextFieldDelegate {
             make.right.equalToSuperview().offset(-60)
             make.height.equalTo(40)
         }
-        
+        self.textInputView.text = "d86s4l3scyn5"
         self.view.addSubview(self.cancelButton)
         self.cancelButton.snp.makeConstraints {make in
             make.top.equalToSuperview().offset(statusHeight)

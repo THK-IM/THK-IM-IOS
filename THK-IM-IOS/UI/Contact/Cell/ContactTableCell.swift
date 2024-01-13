@@ -16,14 +16,17 @@ class ContactTableCell: UITableViewCell {
     private let avatarView = UIImageView()
     private let nicknameView = UILabel()
     private let relationView = UILabel()
+    private let chooseView = UIImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
         self.setupUI()
     }
     
     private func setupUI() {
         self.contentView.addSubview(self.avatarView)
+        self.contentView.addSubview(self.chooseView)
         self.contentView.addSubview(self.nicknameView)
         self.contentView.addSubview(self.relationView)
         
@@ -33,8 +36,15 @@ class ContactTableCell: UITableViewCell {
             make.width.equalTo(42)
             make.height.equalTo(42)
         }
-        self.relationView.snp.makeConstraints { make in
+        self.chooseView.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(30)
+            make.height.equalTo(30)
+        }
+        self.chooseView.image = UIImage(named: "ic_choose")
+        self.relationView.snp.makeConstraints { make in
+            make.right.equalTo(self.chooseView.snp.right).offset(-10)
             make.centerY.equalToSuperview()
             make.width.greaterThanOrEqualTo(100)
             make.height.equalTo(30)
@@ -52,7 +62,8 @@ class ContactTableCell: UITableViewCell {
         self.nicknameView.font = UIFont.systemFont(ofSize: 16)
     }
     
-    func setData(contact: Contact) {
+    func setData(contact: Contact, _ chooseOn: Bool = false) {
+        self.chooseView.isHidden = !chooseOn
         let uId = contact.id
         IMCoreManager.shared.userModule.queryUser(id: uId)
             .subscribe(onNext: { [weak self] user in
@@ -63,7 +74,7 @@ class ContactTableCell: UITableViewCell {
     }
     
     private func showAvatar(user: User, contact: Contact) {
-        self.avatarView.ca_setImageUrlWithCorner(url: user.avatar ?? "", radius: 8)
+        self.avatarView.ca_setImageUrlWithCorner(url: user.avatar ?? "", radius: 10)
         if (contact.noteName == nil) {
             self.showNickname(nickname: user.nickname)
         }

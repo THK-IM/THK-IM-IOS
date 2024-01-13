@@ -70,9 +70,10 @@ open class BaseSessionCell : BaseTableCell {
         contentView.addSubview(self.silenceView)
         
         avatarView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview().offset(10)
-            make.size.equalTo(42)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(42)
+            make.height.equalTo(42)
         }
         nickView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)

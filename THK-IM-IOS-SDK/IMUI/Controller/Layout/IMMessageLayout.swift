@@ -96,8 +96,8 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let msg = self.messages[indexPath.row]
         let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
-        let size = provider.viewSize(msg)
-        return size.height + 20
+        let size = provider.viewSize(msg, self.session)
+        return size.height
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
