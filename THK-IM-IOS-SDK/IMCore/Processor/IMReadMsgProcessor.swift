@@ -78,9 +78,10 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     referMsg!.mTime = msg.cTime
                     try insertOrUpdateDb(referMsg!, true, false)
                     // 状态操作消息对用户不可见，默认状态即位本身已读
+                    msg.sendStatus = MsgSendStatus.Success.rawValue
                     msg.operateStatus = MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
                     // 已读消息入库，并ack
-                    try insertOrUpdateDb(referMsg!, false, false)
+                    try insertOrUpdateDb(msg, false, false)
                     if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                         IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                     }

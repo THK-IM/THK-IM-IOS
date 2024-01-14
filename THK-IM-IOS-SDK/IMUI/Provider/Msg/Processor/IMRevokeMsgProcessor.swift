@@ -77,6 +77,8 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
                 }
             }
             let revokeData = try JSONEncoder().encode(data)
+            msg.operateStatus = MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+            msg.sendStatus = MsgSendStatus.Success.rawValue
             msg.data = String(data: revokeData, encoding: .utf8)
             if (existed) {
                 try IMCoreManager.shared.database.messageDao().insertOrIgnore([msg])

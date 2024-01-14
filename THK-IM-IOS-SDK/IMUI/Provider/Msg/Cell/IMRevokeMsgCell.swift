@@ -56,14 +56,14 @@ class IMRevokeMsgCell: BaseMsgCell {
         view.addSubview(reeditView)
         
         self.reeditView.snp.makeConstraints { make in
-            make.right.equalToSuperview()
+            make.right.equalToSuperview().offset(-10)
             make.width.equalTo(80)
             make.centerY.equalToSuperview()
             make.height.equalToSuperview()
         }
         self.textView.snp.makeConstraints { make in
-            make.right.equalTo(self.reeditView.snp.left)
-            make.left.equalToSuperview()
+            make.right.equalTo(self.reeditView.snp.left).offset(-10)
+            make.left.equalToSuperview().offset(10)
             make.centerY.equalToSuperview()
             make.height.equalToSuperview()
         }
@@ -124,5 +124,9 @@ class IMRevokeMsgCell: BaseMsgCell {
                 DDLogError("\(error)")
             }
         }
+    }
+    
+    override func hasBubble() -> Bool {
+        return true
     }
 }
