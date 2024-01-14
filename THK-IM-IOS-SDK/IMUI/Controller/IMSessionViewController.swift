@@ -27,6 +27,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.sessionTableView.separatorStyle = .none
         self.sessionTableView.rowHeight = UITableView.automaticDimension
         self.sessionTableView.estimatedRowHeight = 100
         self.sessionTableView.dataSource = self

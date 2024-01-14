@@ -11,6 +11,7 @@ import UIKit
 
 public protocol IMMsgCellOperator: AnyObject {
     func onMsgCellClick(message: Message, position:Int, view: UIView)
+    func onMsgSenderClick(message: Message, position: Int, view: UIView)
     func onMsgCellLongClick(message: Message, position:Int, view: UIView)
     func onMsgResendClick(message: Message)
     func isSelectMode() ->Bool

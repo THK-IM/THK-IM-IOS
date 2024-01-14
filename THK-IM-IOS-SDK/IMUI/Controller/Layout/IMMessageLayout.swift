@@ -97,7 +97,13 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         let msg = self.messages[indexPath.row]
         let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
         let size = provider.viewSize(msg, self.session)
-        return size.height
+        var addHeight: CGFloat = 20.0
+        if (msg.fromUId != IMCoreManager.shared.uId) {
+            if session?.type == SessionType.Group.rawValue || session?.type == SessionType.SuperGroup.rawValue {
+                addHeight = 30.0
+            }
+        }
+        return size.height + addHeight
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -377,6 +383,18 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         self.previewer?.previewMessage(message, position, view)
     }
     
+    func onMsgSenderClick(message: Message, position: Int, view: UIView) {
+        IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] user in
+                guard let vc = self?.getViewController() else {
+                    return 
+                }
+                IMUIManager.shared.pageRouter?.openUserPage(controller: vc, user: user)
+            }).disposed(by: self.disposeBag)
+    }
+    
+    
     func onMsgCellLongClick(message: Message, position: Int, view: UIView) {
         self.sender?.popupMessageOperatorPanel(view, message)
     }
@@ -440,5 +458,16 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     
     func getSelectMessages() -> Set<Message> {
         return self.selectedMessages
+    }
+    
+    private func getViewController() -> UIViewController? {
+        for view in sequence(first: self.superview, next: { $0?.superview }) {
+            if let responder = view?.next {
+                if responder.isKind(of: UIViewController.self){
+                    return responder as? UIViewController
+                }
+            }
+        }
+        return nil
     }
 }

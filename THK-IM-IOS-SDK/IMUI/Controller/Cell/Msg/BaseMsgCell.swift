@@ -44,9 +44,6 @@ open class BaseMsgCell : BaseTableCell {
                 return touches.view == msgView
             }
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
-//                if (gestureRecognizer.cancelsTouchesInView) {
-//                    return true
-//                }
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         })
@@ -81,6 +78,24 @@ open class BaseMsgCell : BaseTableCell {
                     self?.delegate?.onMsgResendClick(message: msg)
                 }).disposed(by: self.disposeBag)
         }
+        let avatarView = self.cellWrapper.avatarView()
+        avatarView?.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return touches.view == self.cellWrapper.avatarView()
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+            self?.delegate?.onMsgSenderClick(
+                message: (self?.message)!,
+                position: self?.position ?? 0,
+                view: (self?.cellWrapper.avatarView())!
+            )
+        })
+        .disposed(by: disposeBag)
     }
     
     func initMsgView() {
@@ -188,7 +203,7 @@ open class BaseMsgCell : BaseTableCell {
         if (session?.type == SessionType.Single.rawValue ||
             session?.type == SessionType.Group.rawValue
         ) {
-            self.readMessage()
+            self.onMessageShow()
         }
     }
     
@@ -220,7 +235,7 @@ open class BaseMsgCell : BaseTableCell {
         return IMMsgPosType.Mid.rawValue
     }
     
-    private func readMessage() {
+    open func onMessageShow() {
         if (message == nil) {
             return
         }

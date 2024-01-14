@@ -44,6 +44,7 @@ class GroupTabViewController: BaseViewController, UITableViewDelegate, UITableVi
         let navigationItemHeight = self.navigationController?.navigationBar.frame.height ?? 0
         let top = statusBarHeight + navigationItemHeight
         self.view.addSubview(groupTableView)
+        self.groupTableView.separatorStyle = .none
         self.groupTableView.backgroundColor = UIColor.white
         self.groupTableView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(top)

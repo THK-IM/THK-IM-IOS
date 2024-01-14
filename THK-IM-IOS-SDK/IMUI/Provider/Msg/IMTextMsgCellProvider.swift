@@ -34,7 +34,7 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         }
         let maxWidth = UIScreen.main.bounds.width - 112
         let height = self.heightWithString(content, UIFont.boldSystemFont(ofSize: 16), maxWidth)
-        return CGSize(width: baseSize.width, height: height + 16 + baseSize.height)
+        return CGSize(width: baseSize.width, height: height + 16)
     }
     
 }

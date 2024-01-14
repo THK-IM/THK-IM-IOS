@@ -27,13 +27,21 @@ class LeftCellWrapper: CellWrapper {
         
         if self.type == SessionType.Group.rawValue || self.type == SessionType.SuperGroup.rawValue {
             _nickView = UILabel()
+            _nickView?.snp.makeConstraints { make in
+                make.height.lessThanOrEqualTo(12)
+                make.width.greaterThanOrEqualTo(100)
+            }
+            _nickView?.textColor = UIColor.init(hex: "666666")
+            _nickView?.font = UIFont.systemFont(ofSize: 12)
             v.addArrangedSubview(_nickView!)
         }
+        
         v.addArrangedSubview(_containerView)
         _containerView.snp.makeConstraints { make in
             make.height.greaterThanOrEqualTo(40)
             make.width.greaterThanOrEqualTo(20)
         }
+        
         return v
     }()
     
@@ -45,13 +53,13 @@ class LeftCellWrapper: CellWrapper {
             make.size.equalTo(42)
         }
         contentView.addSubview(_messageStack)
-        var top = 10
-        if self.type == SessionType.Group.rawValue || self.type == SessionType.SuperGroup.rawValue {
+        var top = 16
+        if _nickView != nil {
             top = 0
         }
         _messageStack.snp.makeConstraints { make in
             make.left.equalTo(_avatarView.snp.right).offset(4)
-            make.top.equalTo(_avatarView).offset(top)
+            make.top.equalToSuperview().offset(top)
             make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 100)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }

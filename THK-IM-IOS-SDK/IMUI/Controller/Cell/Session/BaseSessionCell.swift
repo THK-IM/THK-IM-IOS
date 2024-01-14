@@ -61,7 +61,7 @@ open class BaseSessionCell : BaseTableCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         DDLogDebug("BaseSessionCell init")
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        selectionStyle = .none
         contentView.addSubview(self.avatarView)
         contentView.addSubview(self.nickView)
         contentView.addSubview(self.msgView)

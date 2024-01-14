@@ -55,11 +55,7 @@ open class IMBaseMessageCellProvider {
     }
     
     open func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        var height = 20.0
-        if session?.type == SessionType.Group.rawValue || session?.type == SessionType.SuperGroup.rawValue {
-            height = 40.0
-        }
-        return CGSize(width: 100.0, height: height)
+        return CGSize(width: 100.0, height: 20.0)
     }
     
     open func cellHeightForSessionType(_ sessionType: Int) -> CGFloat {

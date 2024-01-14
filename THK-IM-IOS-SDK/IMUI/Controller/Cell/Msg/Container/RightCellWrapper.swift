@@ -26,13 +26,6 @@ class RightCellWrapper: CellWrapper {
         v.distribution = .equalSpacing
         v.spacing = 4
         
-        if self.type == SessionType.Group.rawValue {
-            _nickView = UILabel()
-            v.addArrangedSubview(_nickView!)
-            _nickView!.snp.makeConstraints { make in
-                make.right.equalToSuperview().offset(0)
-            }
-        }
         v.addArrangedSubview(_containerView)
         _containerView.snp.makeConstraints { make in
             make.height.greaterThanOrEqualTo(40)
@@ -76,8 +69,8 @@ class RightCellWrapper: CellWrapper {
             make.right.equalToSuperview().offset(-10)
             make.size.equalTo(42)
         }
-        var top = 10
-        if self.type == SessionType.Group.rawValue || self.type == SessionType.SuperGroup.rawValue {
+        var top = 16
+        if _nickView != nil {
             top = 0
         }
         contentView.addSubview(_messageStack)

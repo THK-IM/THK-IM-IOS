@@ -12,6 +12,7 @@ import RxSwift
 class SessionMemberCell: UICollectionViewCell {
     
     private let avatarView = UIImageView()
+    private let nicknameView = UILabel()
     private let disposeBag = DisposeBag()
     
     override init(frame: CGRect) {
@@ -27,10 +28,20 @@ class SessionMemberCell: UICollectionViewCell {
         self.contentView.addSubview(avatarView)
         self.avatarView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(6)
-            make.left.equalToSuperview().offset(6)
-            make.right.equalToSuperview().offset(-6)
-            make.bottom.equalToSuperview().offset(-6)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(48)
+            make.width.equalTo(48)
         }
+        self.contentView.addSubview(nicknameView)
+        self.nicknameView.snp.makeConstraints { make in
+            make.top.equalTo(self.avatarView.snp.bottom).offset(6)
+            make.centerX.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(20)
+        }
+        self.nicknameView.textAlignment = .center
+        self.nicknameView.textColor = UIColor.init(hex: "333333")
+        self.nicknameView.font = UIFont.systemFont(ofSize: 14)
     }
     
     func setMemberId(id: Int64) {
@@ -38,6 +49,7 @@ class SessionMemberCell: UICollectionViewCell {
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] user in
                 self?.avatarView.ca_setImageUrlWithCorner(url: user.avatar ?? "", radius: 10)
+                self?.nicknameView.text = user.nickname
             }).disposed(by: self.disposeBag)
     }
 }

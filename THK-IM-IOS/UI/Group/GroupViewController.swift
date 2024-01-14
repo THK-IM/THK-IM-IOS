@@ -251,8 +251,8 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         self.view.addSubview(self.groupMembersView)
         self.groupMembersView.snp.makeConstraints { make in
             make.top.equalTo(self.groupMemberLayout.snp.bottom)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview().offset(-10)
             make.bottom.equalToSuperview()
         }
         
@@ -267,7 +267,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         if (mode == 0) {
             self.groupNameTextView.becomeFirstResponder()
         } else {
-            self.groupNameView.text = group?.name ?? ""
+            self.groupNameTextView.text = group?.name ?? ""
         }
     }
     
@@ -316,8 +316,8 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         return members.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let boundSize: CGFloat = UIScreen.main.bounds.width / 5
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {        
+        let boundSize: CGFloat = UIScreen.main.bounds.width / 5 - 4
         return CGSize(width: boundSize, height: boundSize)
     }
     
@@ -368,8 +368,14 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
                 try IMCoreManager.shared.database.groupDao().insertOrReplace([group])
                 return Observable.just(group)
             })
-            .subscribe(onNext: { group in
-                
+            .flatMap({ group -> Observable<Session> in
+                return IMCoreManager.shared.messageModule.getSession(group.sessionId)
+            })
+            .subscribe(onNext: { [weak self] session in
+                guard let sf = self else {
+                    return
+                }
+                IMUIManager.shared.pageRouter?.openSession(controller: sf, session: session)
             }).disposed(by: self.disposeBag)
         
     }

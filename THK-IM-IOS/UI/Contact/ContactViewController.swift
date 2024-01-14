@@ -65,6 +65,7 @@ class ContactViewController: BaseViewController, UITableViewDelegate, UITableVie
         let navigationItemHeight = self.navigationController?.navigationBar.frame.height ?? 0
         let top = statusBarHeight + navigationItemHeight
         self.view.addSubview(contactTableView)
+        self.contactTableView.separatorStyle = .none
         self.contactTableView.backgroundColor = UIColor.white
         self.contactTableView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(top)
