@@ -62,8 +62,7 @@ open class DefaultMessageModule : MessageModule {
     
     private func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
         let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
-        let saveTime = IMCoreManager.shared.severTime
-        UserDefaults.standard.setValue(saveTime, forKey: key)
+        UserDefaults.standard.setValue(time, forKey: key)
         return UserDefaults.standard.synchronize()
     }
     
