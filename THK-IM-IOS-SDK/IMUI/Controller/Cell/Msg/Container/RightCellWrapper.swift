@@ -25,7 +25,16 @@ class RightCellWrapper: CellWrapper {
         v.alignment = .trailing
         v.distribution = .equalSpacing
         v.spacing = 4
-        
+        if self.type != SessionType.Single.rawValue {
+            _nickView = UILabel()
+            _nickView?.snp.makeConstraints { make in
+                make.height.lessThanOrEqualTo(12)
+                make.width.greaterThanOrEqualTo(20)
+            }
+            _nickView?.textColor = UIColor.init(hex: "666666")
+            _nickView?.font = UIFont.systemFont(ofSize: 12)
+            v.addArrangedSubview(_nickView!)
+        }
         v.addArrangedSubview(_containerView)
         _containerView.snp.makeConstraints { make in
             make.height.greaterThanOrEqualTo(40)
@@ -69,14 +78,14 @@ class RightCellWrapper: CellWrapper {
             make.right.equalToSuperview().offset(-10)
             make.size.equalTo(42)
         }
+        contentView.addSubview(_messageStack)
         var top = 16
         if _nickView != nil {
             top = 0
         }
-        contentView.addSubview(_messageStack)
         _messageStack.snp.makeConstraints { make in
             make.right.equalTo(_avatarView.snp.left).offset(-4)
-            make.top.equalTo(_avatarView).offset(top)
+            make.top.equalToSuperview().offset(top)
             make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 100)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }

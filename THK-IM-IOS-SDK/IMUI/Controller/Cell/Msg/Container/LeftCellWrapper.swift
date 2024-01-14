@@ -25,11 +25,11 @@ class LeftCellWrapper: CellWrapper {
         v.distribution = .equalSpacing
         v.spacing = 4
         
-        if self.type == SessionType.Group.rawValue || self.type == SessionType.SuperGroup.rawValue {
+        if self.type != SessionType.Single.rawValue {
             _nickView = UILabel()
             _nickView?.snp.makeConstraints { make in
                 make.height.lessThanOrEqualTo(12)
-                make.width.greaterThanOrEqualTo(100)
+                make.width.greaterThanOrEqualTo(20)
             }
             _nickView?.textColor = UIColor.init(hex: "666666")
             _nickView?.font = UIFont.systemFont(ofSize: 12)

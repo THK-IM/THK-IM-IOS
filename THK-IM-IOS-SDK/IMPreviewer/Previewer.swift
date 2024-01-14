@@ -51,7 +51,9 @@ public class Previewer : IMPreviewer {
                 .subscribe(onNext: { messages in
                     let recordVc = IMRecordMessageViewController()
                     recordVc.originSession = originSession
-                    recordVc.recordMessages = messages
+                    recordVc.recordMessages = messages.sorted(by: { m1, m2 in
+                        return m1.cTime < m2.cTime
+                    })
                     recordVc.recordTitle = recordMessage.title
                     recordVc.session = Session(
                         id: 0, parentId: 0, type: SessionType.MsgRecord.rawValue, entityId: 0, name: "", noteName: nil,

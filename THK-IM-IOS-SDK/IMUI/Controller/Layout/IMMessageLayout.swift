@@ -98,10 +98,8 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
         let size = provider.viewSize(msg, self.session)
         var addHeight: CGFloat = 20.0
-        if (msg.fromUId != IMCoreManager.shared.uId) {
-            if session?.type == SessionType.Group.rawValue || session?.type == SessionType.SuperGroup.rawValue {
-                addHeight = 30.0
-            }
+        if session?.type != SessionType.Single.rawValue {
+            addHeight = 30.0
         }
         return size.height + addHeight
     }
