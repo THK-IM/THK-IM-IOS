@@ -5,15 +5,19 @@ PODS:
   - CocoaLumberjack/Swift (3.8.2):
     - CocoaLumberjack/Core
   - GDPerformanceView-Swift (2.1.1)
+  - JDStatusBarNotification (2.1.2):
+    - JDStatusBarNotification/ObjC (= 2.1.2)
+    - JDStatusBarNotification/Swift (= 2.1.2)
+  - JDStatusBarNotification/ObjC (2.1.2)
+  - JDStatusBarNotification/Swift (2.1.2):
+    - JDStatusBarNotification/ObjC
   - Kingfisher (7.10.0)
   - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
   - Moya/RxSwift (15.0.0):
     - Moya/Core
     - RxSwift (~> 6.0)
-  - NVActivityIndicatorView (5.1.1):
-    - NVActivityIndicatorView/Base (= 5.1.1)
-  - NVActivityIndicatorView/Base (5.1.1)
+  - ProgressHUD (14.1.0)
   - RxCocoa (6.5.0):
     - RxRelay (= 6.5.0)
     - RxSwift (= 6.5.0)
@@ -43,9 +47,10 @@ DEPENDENCIES:
   - BadgeSwift (= 8.0)
   - CocoaLumberjack/Swift (= 3.8.2)
   - GDPerformanceView-Swift (= 2.1.1)
+  - JDStatusBarNotification
   - Kingfisher (= 7.10.0)
   - Moya/RxSwift (= 15.0)
-  - NVActivityIndicatorView
+  - ProgressHUD
   - RxCocoa (= 6.5.0)
   - RxGesture (= 4.0.4)
   - RxSwift (= 6.5.0)
@@ -63,9 +68,10 @@ SPEC REPOS:
     - BadgeSwift
     - CocoaLumberjack
     - GDPerformanceView-Swift
+    - JDStatusBarNotification
     - Kingfisher
     - Moya
-    - NVActivityIndicatorView
+    - ProgressHUD
     - RxCocoa
     - RxGesture
     - RxRelay
@@ -84,9 +90,10 @@ SPEC CHECKSUMS:
   BadgeSwift: a81547ffde1f462bb5fc02e3fa3fdcbc1b888354
   CocoaLumberjack: f8d89a516e7710fdb2e9b8f1560b16ec6040eef0
   GDPerformanceView-Swift: 22d964fe40b19e3d914dba2586237d064de8fd77
+  JDStatusBarNotification: 36d0b50d9eca298f908017879e1027eb8c72a227
   Kingfisher: a18f05d3b6d37d8650ee4a3e61d57a28fc6207f6
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
-  NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
+  ProgressHUD: c4a55f108815c46a6bf082407d2f806840b7a869
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
@@ -100,6 +107,6 @@ SPEC CHECKSUMS:
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
   ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
 
-PODFILE CHECKSUM: efd5136d97727537c53a8ffdbb31b2c8eb983c49
+PODFILE CHECKSUM: 9624d26bc4dad19ea36a25889a91cc16f6e14916
 
 COCOAPODS: 1.14.2

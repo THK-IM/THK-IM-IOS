@@ -8,6 +8,8 @@
 
 import UIKit
 import RxSwift
+import JDStatusBarNotification
+import ProgressHUD
 
 open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
@@ -48,20 +50,27 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         return true
     }
     
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.dismissLoading()
+        NotificationPresenter.shared.dismiss()
+    }
+    
     @objc open func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
     
     open func showLoading(text: String) {
-        
+        ProgressHUD.animate(nil, .horizontalBarScaling, interaction: true)
     }
     
     open func dismissLoading() {
-        
+        ProgressHUD.dismiss()
     }
     
     open func showToast(_ toast: String) {
-        
+        NotificationPresenter.shared.present(toast)
+        NotificationPresenter.shared.dismiss(after: 1)
     }
     
     open func title() -> String? {
@@ -102,6 +111,11 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         onMenuClick(menu: "search")
     }
     
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        dismissLoading()
+        return true
+    }
     
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return self.canBack()

@@ -32,14 +32,14 @@ public class DefaultFileLoadModule: FileLoadModule {
                     try FileManager.default.removeItem(atPath: cacheDirPath)
                     try FileManager.default.createDirectory(atPath: cacheDirPath, withIntermediateDirectories: true)
                 } catch {
-                    DDLogError("\(error)")
+                    DDLogError("DefaultFileLoadModule init \(error)")
                 }
             }
         } else {
             do {
                 try FileManager.default.createDirectory(atPath: cacheDirPath, withIntermediateDirectories: true)
             } catch {
-                DDLogError("\(error)")
+                DDLogError("DefaultFileLoadModule init \(error)")
             }
         }
         
@@ -51,7 +51,7 @@ public class DefaultFileLoadModule: FileLoadModule {
             let timeZone = NSTimeZone.system
             let interval: TimeInterval = TimeInterval(timeZone.secondsFromGMT())
             for f in subFiles {
-                let attributes = try FileManager.default.attributesOfFileSystem(forPath: f)
+                let attributes = try FileManager.default.attributesOfFileSystem(forPath: "\(cacheDirPath)/\(f)")
                 let modificationDate = attributes[FileAttributeKey.modificationDate]
                 if (modificationDate != nil) {
                     let localModDate = (modificationDate as! NSDate).addingTimeInterval(interval)
@@ -61,7 +61,7 @@ public class DefaultFileLoadModule: FileLoadModule {
                 }
             }
         } catch {
-            DDLogError("\(error)")
+            DDLogError("DefaultFileLoadModule init \(error)")
         }
         
     }

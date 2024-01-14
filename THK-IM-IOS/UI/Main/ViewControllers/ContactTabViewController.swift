@@ -10,4 +10,8 @@ import UIKit
 import RxSwift
 
 class ContactTabViewController: ContactViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
 }

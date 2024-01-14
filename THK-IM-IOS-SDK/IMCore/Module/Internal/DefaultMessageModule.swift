@@ -368,7 +368,7 @@ open class DefaultMessageModule : MessageModule {
     
     public func ackMessageToCache(_ msg: Message) {
         ackLock.lock()
-        if msg.sessionId > 0 && msg.msgId > 0 {
+        if msg.msgId > 0 {
             if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                 if self.needAckDic[msg.sessionId] == nil {
                     self.needAckDic[msg.sessionId] = Set()

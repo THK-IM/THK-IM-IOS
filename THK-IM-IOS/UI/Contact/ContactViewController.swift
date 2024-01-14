@@ -79,6 +79,7 @@ class ContactViewController: BaseViewController, UITableViewDelegate, UITableVie
     
     func initContacts() {
         IMCoreManager.shared.contactModule.queryAllContacts()
+            .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] contacts in
                 self?.contacts.append(contentsOf: contacts)
                 self?.contactTableView.reloadData()
