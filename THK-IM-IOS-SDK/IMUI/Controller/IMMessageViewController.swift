@@ -343,11 +343,11 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
     }
     
     
-    func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable?) {
+    func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable? = nil, _ atUser: String? = nil, _ referMsgId: Int64? = nil) {
         guard let sessionId = self.session?.id else {
             return
         }
-        IMCoreManager.shared.messageModule.sendMessage(sessionId, type, body, data, nil, nil, { _, _ in
+        IMCoreManager.shared.messageModule.sendMessage(sessionId, type, body, data, atUser, referMsgId, { _, _ in
         })
     }
     

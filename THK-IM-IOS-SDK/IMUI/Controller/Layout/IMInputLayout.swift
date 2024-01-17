@@ -398,7 +398,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
     func sendInputContent() {
         let textMessage = self.textView.text
         if (textMessage != nil && textMessage!.length > 0) {
-            self.sender?.sendMessage(MsgType.TEXT.rawValue, textMessage!, nil)
+            self.sender?.sendMessage(MsgType.TEXT.rawValue, textMessage!, nil, nil, nil)
             self.textView.text = nil
         }
         self.textInputHeight = IMInputLayout.minTextInputHeight

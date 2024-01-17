@@ -24,9 +24,9 @@ class DefaultIMDatabase: IMDatabase {
     public init(_ uId: Int64, _ debug: Bool) {
         let env = debug ? "debug" : "release"
         let documentPath = NSHomeDirectory() + "/Documents/im"
-        let filePath = String(format: "%@/%d-%@.db", arguments: [documentPath, uId, env])
+        let filePath = "\(documentPath)/im_\(uId)-\(env).db"
+        DDLogInfo("DefaultIMDatabase filePath\(filePath)")
         self.database = Database(at: filePath)
-    
         do {
             try self.database.create(table: TableName.User.rawValue, of: User.self)
             try self.database.create(table: TableName.Contact.rawValue, of: Contact.self)
