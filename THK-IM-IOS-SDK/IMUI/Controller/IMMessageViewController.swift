@@ -274,8 +274,8 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         return self.inputLayout.sendInputContent()
     }
     
-    func addInputContent(text: String, user: User?, sessionMember: SessionMember?) {
-        self.inputLayout.addInputText(text, user: user, sessionMember: sessionMember)
+    func addInputContent(text: String) {
+        self.inputLayout.addInputText(text)
     }
     
     func deleteInputContent(count: Int) {
@@ -488,7 +488,13 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
     }
     
     func onSessionMemberAt(sessionMember: SessionMember, user: User) {
-        self.inputLayout.addAtSessionMember(sessionMember: sessionMember, user: user)
+        self.inputLayout.addAtSessionMember(user: user, sessionMember: sessionMember)
+    }
+    
+    
+    ///  添加at会话
+    func addAtUser(user: User, sessionMember: SessionMember?) {
+        self.inputLayout.addAtSessionMember(user: user, sessionMember: sessionMember)
     }
     
     

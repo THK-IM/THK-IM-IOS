@@ -398,12 +398,12 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         }
         if (session.type != SessionType.Group.rawValue &&
             session.type != SessionType.SuperGroup.rawValue) {
-            return 
+            return
         }
         IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] user in
-                self?.sender?.addInputContent(text: "@\(user.nickname) ", user: user, sessionMember: nil)
+                self?.sender?.addAtUser(user: user, sessionMember: nil)
             }).disposed(by: self.disposeBag)
     }
     
@@ -422,7 +422,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     
     func setEditText(text: String) {
         _ = self.sender?.openKeyboard()
-        self.sender?.addInputContent(text: text, user: nil, sessionMember: nil)
+        self.sender?.addInputContent(text: text)
     }
     
     

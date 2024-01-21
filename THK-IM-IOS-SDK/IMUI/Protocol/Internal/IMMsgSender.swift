@@ -23,7 +23,7 @@ public protocol IMMsgSender : AnyObject {
     func sendInputContent()
     
     /// 输入框添加内容
-    func addInputContent(text: String, user: User?, sessionMember: SessionMember?)
+    func addInputContent(text: String)
     
     /// 删除输入框内容
     func deleteInputContent(count: Int)
@@ -84,4 +84,7 @@ public protocol IMMsgSender : AnyObject {
     
     ///  打开at会话成员控制器
     func openAtViewController()
+    
+    ///  添加at会话
+    func addAtUser(user: User, sessionMember: SessionMember?)
 }

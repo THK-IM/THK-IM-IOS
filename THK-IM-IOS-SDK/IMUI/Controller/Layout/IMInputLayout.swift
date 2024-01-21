@@ -360,13 +360,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         self.resetLayout()
     }
     
-    func addInputText(_ text: String, user: User?, sessionMember: SessionMember?) {
-        if (user != nil) {
-            self.atMap["\(user!.id)"] = user!.nickname
-        }
-        if (sessionMember != nil && sessionMember!.noteName != nil && !sessionMember!.noteName!.isEmpty) {
-            self.atMap["\(sessionMember!.userId)"] = sessionMember!.noteName!
-        }
+    func addInputText(_ text: String) {
         self.textView.scrollRangeToVisible(NSRange.init(location: self.textView.text.count, length: 1))
         self.textView.layoutManager.allowsNonContiguousLayout = false
         var content = self.textView.text
@@ -486,12 +480,12 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         })
     }
     
-    func addAtSessionMember(sessionMember: SessionMember, user: User) {
+    func addAtSessionMember(user: User, sessionMember: SessionMember?) {
         self.atMap["\(user.id)"] = user.nickname
-        if (sessionMember.noteName != nil && !sessionMember.noteName!.isEmpty) {
-            self.atMap["\(sessionMember.userId)"] = sessionMember.noteName!
+        if (sessionMember != nil && sessionMember!.noteName != nil && !sessionMember!.noteName!.isEmpty) {
+            self.atMap["\(sessionMember!.userId)"] = sessionMember!.noteName!
         }
-        DDLogInfo("addAtSessionMember \(sessionMember) \(user)")
+        DDLogInfo("addAtSessionMember \(sessionMember ?? "nil") \(user)")
         guard let content = self.textView.text else {
             return
         }
@@ -510,7 +504,19 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
                 )
                 self.renderAtMsg(self.textView.text)
             }
+            return
         }
+        
+        var lastRange = self.textView.selectedRange
+        lastRange.location -= 1
+        lastRange.length = 1
+        let lastInput = u16Content.substring(with: lastRange)
+        let offset = u16Content.substring(to: lastRange.location+lastRange.length).count
+        self.textView.text.insert(
+            contentsOf: "@\(user.nickname) ",
+            at: content.index(content.startIndex, offsetBy: offset)
+        )
+        self.renderAtMsg(self.textView.text)
     }
     
     private func renderAtMsg(_ data: String) {
