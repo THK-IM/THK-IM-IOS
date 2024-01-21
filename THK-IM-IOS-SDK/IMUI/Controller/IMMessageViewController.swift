@@ -474,6 +474,11 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         guard let session = self.session else {
             return
         }
+        if (session.type != SessionType.Group.rawValue &&
+            session.type != SessionType.SuperGroup.rawValue
+        ) {
+            return
+        }
         let atSessionMemberController = IMAtSessionMemberController()
         atSessionMemberController.delegate = self
         atSessionMemberController.session = session

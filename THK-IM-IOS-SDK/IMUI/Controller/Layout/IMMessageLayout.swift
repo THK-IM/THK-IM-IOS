@@ -393,6 +393,13 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func onMsgSenderLongClick(message: Message, position: Int, view: UIView) {
+        guard let session = self.session else {
+            return
+        }
+        if (session.type != SessionType.Group.rawValue &&
+            session.type != SessionType.SuperGroup.rawValue) {
+            return 
+        }
         IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] user in
