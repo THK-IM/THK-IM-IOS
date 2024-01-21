@@ -15,7 +15,7 @@ import RxGesture
 import ImageIO
 import CoreServices
 
-class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
+class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, IMSessionMemberAtDelegate {
     
     var session: Session? = nil
     private var containerView = UIView()
@@ -274,8 +274,8 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
         return self.inputLayout.sendInputContent()
     }
     
-    func addInputContent(text: String) {
-        self.inputLayout.addInputText(text)
+    func addInputContent(text: String, user: User?, sessionMember: SessionMember?) {
+        self.inputLayout.addInputText(text, user: user, sessionMember: sessionMember)
     }
     
     func deleteInputContent(count: Int) {
@@ -469,6 +469,23 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer {
             IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: Array(messages))
         }
     }
+    
+    func openAtViewController() {
+        guard let session = self.session else {
+            return
+        }
+        let atSessionMemberController = IMAtSessionMemberController()
+        atSessionMemberController.delegate = self
+        atSessionMemberController.session = session
+        atSessionMemberController.modalPresentationStyle = .custom
+        atSessionMemberController.transitioningDelegate = atSessionMemberController
+        self.present(atSessionMemberController, animated: true)
+    }
+    
+    func onSessionMemberAt(sessionMember: SessionMember, user: User) {
+        self.inputLayout.addAtSessionMember(sessionMember: sessionMember, user: user)
+    }
+    
     
     private func sendVideo(_ data: Data, ext: String) throws {
         let fileName = "\(String().random(8)).\(ext)"

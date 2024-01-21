@@ -59,7 +59,7 @@ public protocol MessageDao {
     /**
      * 更新消息内容
      */
-    func updateContent(_ sessionId: Int64, _ id: Int64, _ fromUId: Int64, _ content: String) throws
+    func updateMsgData(_ sessionId: Int64, _ id: Int64, _ fromUId: Int64, _ data: String) throws
     
     /**
      * 更新消息操作状态

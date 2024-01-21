@@ -285,11 +285,21 @@ open class IMBaseMsgProcessor {
     /**
      * 该消息在session上的描述
      */
-    open func getSessionDesc(msg: Message) -> String {
-        if (msg.content != nil) {
-            return msg.content!
+    open func sessionDesc(msg: Message) -> String {
+        var desc = ""
+        guard let atUsers = msg.atUsers else {
+            return desc
         }
-        return ""
+        let uIds = atUsers.split(separator: "#")
+        for id in uIds {
+            if (id == "\(IMCoreManager.shared.uId)")  {
+                if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue) == 0 {
+                    desc += "[有人@我]"
+                }
+                break
+            }
+        }
+        return desc
     }
     
     open func reset() {

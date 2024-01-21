@@ -482,7 +482,7 @@ open class DefaultMessageModule : MessageModule {
                             } else if (msg.sendStatus == MsgSendStatus.Failed.rawValue) {
                                 statusText = "[❗]"
                             }
-                            s.lastMsg = statusText + (processor?.getSessionDesc(msg: msg) ?? "")
+                            s.lastMsg = statusText + (processor?.sessionDesc(msg: msg) ?? "")
                             s.unreadCount = unReadCount
                             s.mTime = msg.cTime
                             try IMCoreManager.shared.database.sessionDao().insertOrUpdate([s])

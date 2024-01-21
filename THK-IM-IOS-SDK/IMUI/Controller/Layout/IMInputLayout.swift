@@ -13,7 +13,8 @@ import YbridOpus
 import AVFoundation
 import CoreAudio
 
-class IMInputLayout: UIView, UITextViewDelegate {
+class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
+    
     weak var sender: IMMsgSender? = nil {
         didSet {
             self.speakView.sender = sender
@@ -42,6 +43,8 @@ class IMInputLayout: UIView, UITextViewDelegate {
     
     private var disposeBag = DisposeBag()
     private var isKeyboardShow = false
+    private var atMap = [String: String]()
+    private var atRanges = [NSRange]()
     
     lazy private var speakButton: UIButton = {
         let voiceButton = UIButton()
@@ -56,10 +59,11 @@ class IMInputLayout: UIView, UITextViewDelegate {
         return voiceButton
     }()
     
-    lazy private var textView: UITextView = {
-        let textView = UITextView()
+    lazy private var textView: IMTextView = {
+        let textView = IMTextView()
         textView.delegate = self
         textView.isScrollEnabled = true
+        textView.textColor = UIColor.init(hex: "#333333")
         textView.font = UIFont.systemFont(ofSize: 16.0)
         textView.returnKeyType = .send
         textView.keyboardType = .default
@@ -180,6 +184,7 @@ class IMInputLayout: UIView, UITextViewDelegate {
     }
     
     private func setupEvent() {
+        self.textView.backwardDelegate = self
         self.speakButton.rx.tap
             .subscribe(onNext: {[weak self]  event in
                 guard let sf = self else {
@@ -271,11 +276,12 @@ class IMInputLayout: UIView, UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        // 判断是否是发送按钮被点击（根据换行符判断）
         if text == "\n" {
             self.sendInputContent()
-            // 返回 false 以阻止输入换行符
             return false
+        } else if (text == "@") {
+            self.showAtSessionMemberPopup()
+            return true
         }
         return true
     }
@@ -354,17 +360,21 @@ class IMInputLayout: UIView, UITextViewDelegate {
         self.resetLayout()
     }
     
-    func addInputText(_ text: String) {
+    func addInputText(_ text: String, user: User?, sessionMember: SessionMember?) {
+        if (user != nil) {
+            self.atMap["\(user!.id)"] = user!.nickname
+        }
+        if (sessionMember != nil && sessionMember!.noteName != nil && !sessionMember!.noteName!.isEmpty) {
+            self.atMap["\(sessionMember!.userId)"] = sessionMember!.noteName!
+        }
         self.textView.scrollRangeToVisible(NSRange.init(location: self.textView.text.count, length: 1))
         self.textView.layoutManager.allowsNonContiguousLayout = false
-        let content = self.textView.text
+        var content = self.textView.text
         if content == nil {
-            self.textView.text = text
+            self.renderAtMsg(text)
         } else {
-            let range = self.textView.selectedRange
-            let perStrIndex = content!.utf16.index(content!.utf16.startIndex, offsetBy: range.location)
-            self.textView.text?.insert(contentsOf: text, at: perStrIndex)
-            self.textView.selectedRange = NSRange(location: range.location+text.utf16.count, length: range.length)
+            content!.append(contentsOf: text)
+            self.renderAtMsg(content!)
         }
         self.textViewDidChange(self.textView)
         self.textView.scrollRectToVisible(
@@ -381,10 +391,29 @@ class IMInputLayout: UIView, UITextViewDelegate {
             return
         }
         if text.count < count {
-            return 
+            return
         }
-        let endIndex = text.index(text.endIndex, offsetBy: -1)
-        self.textView.text.remove(at: endIndex)
+        var deleted = false
+        var data = NSMutableString(string: self.textView.text)
+        var selectedRange = self.textView.selectedRange
+        selectedRange.location -= count+1
+        selectedRange.length += count
+        if (selectedRange.location < 0) {
+            selectedRange.location = 0
+        }
+        for atRange in self.atRanges {
+            if (atRange.contains(selectedRange.location) || atRange.contains(selectedRange.location+selectedRange.length)) {
+                data.replaceCharacters(in: atRange, with: "")
+                deleted = true
+            }
+        }
+        
+        if (!deleted) {        
+            let endIndex = text.index(text.endIndex, offsetBy: -1)
+            self.textView.text.remove(at: endIndex)
+            data = NSMutableString(string: self.textView.text)
+        }
+        renderAtMsg(String(data))
         self.textViewDidChange(self.textView)
         self.textView.scrollRectToVisible(
             CGRect(x: 0,
@@ -396,11 +425,42 @@ class IMInputLayout: UIView, UITextViewDelegate {
     }
     
     func sendInputContent() {
-        let textMessage = self.textView.text
-        if (textMessage != nil && textMessage!.length > 0) {
-            self.sender?.sendMessage(MsgType.TEXT.rawValue, textMessage!, nil, nil, nil)
-            self.textView.text = nil
+        guard let textMessage = self.textView.text else {
+            return
         }
+        if (textMessage.length == 0) {
+            return
+        }
+        let msgContent = NSMutableString(string: textMessage)
+        guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
+            return
+        }
+        let allRange = NSRange(textMessage.startIndex..<textMessage.endIndex, in: textMessage)
+        var atUIds = ""
+        regex.matches(in: textMessage, options: [], range: allRange).forEach { [weak self] matchResult in
+            guard let sf = self else {
+                return
+            }
+            if let nickRange = Range.init(matchResult.range, in: textMessage) {
+                let nickName = String(textMessage[nickRange])
+                for (k, v) in sf.atMap {
+                    if (v == nickName) {
+                        if (!atUIds.isEmpty) {
+                            atUIds += "#"
+                        }
+                        atUIds += "\(k)"
+                        msgContent.replaceCharacters(in: matchResult.range, with: k)
+                    }
+                }
+            }
+        }
+        var atUsers: String? = nil
+        if (!atUIds.isEmpty) {
+            atUsers = atUIds
+        }
+        self.sender?.sendMessage(MsgType.TEXT.rawValue, String(msgContent), textMessage, atUsers, nil)
+        self.atRanges.removeAll()
+        self.renderAtMsg("")
         self.textInputHeight = IMInputLayout.minTextInputHeight
         self.resetLayout(false)
     }
@@ -418,4 +478,86 @@ class IMInputLayout: UIView, UITextViewDelegate {
         return self.inputLayoutHeight
     }
     
+    private func showAtSessionMemberPopup() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: { [weak self] in
+            self?.sender?.openAtViewController()
+        })
+    }
+    
+    func addAtSessionMember(sessionMember: SessionMember, user: User) {
+        self.atMap["\(user.id)"] = user.nickname
+        if (sessionMember.noteName != nil && !sessionMember.noteName!.isEmpty) {
+            self.atMap["\(sessionMember.userId)"] = sessionMember.noteName!
+        }
+        DDLogInfo("addAtSessionMember \(sessionMember) \(user)")
+        guard let content = self.textView.text else {
+            return
+        }
+        let selectionStart = self.textView.selectedRange.location
+        let u16Content = NSString(string: content)
+        if (selectionStart > 0 && (content.length > selectionStart-1)) {
+            var lastRange = self.textView.selectedRange
+            lastRange.location -= 1
+            lastRange.length = 1
+            let lastInput = u16Content.substring(with: lastRange)
+            let offset = u16Content.substring(to: lastRange.location+lastRange.length).count
+            if (lastInput == "@") {
+                self.textView.text.insert(
+                    contentsOf: "\(user.nickname) ",
+                    at: content.index(content.startIndex, offsetBy: offset)
+                )
+                self.renderAtMsg(self.textView.text)
+            }
+        }
+    }
+    
+    private func renderAtMsg(_ data: String) {
+        guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
+            return
+        }
+        let allRange = NSRange(data.startIndex..<data.endIndex, in: data)
+        let attributedStr = NSMutableAttributedString(string: data)
+        atRanges.removeAll()
+        regex.matches(in: data, options: [], range: allRange).forEach { matchResult in
+            var range = matchResult.range
+            range.length += 1
+            range.location -= 1
+            atRanges.append(range)
+        }
+        
+        attributedStr.addAttribute(
+            .foregroundColor,
+            value: UIColor.init(hex: "#333333"),
+            range: allRange
+        )
+        attributedStr.addAttribute(
+            .font,
+            value: UIFont.systemFont(ofSize: 16.0),
+            range: allRange
+        )
+        if (atRanges.count > 0) {
+            for atRange in atRanges {
+                attributedStr.addAttribute(
+                    .foregroundColor,
+                    value: UIColor.init(hex: "#1390f4"),
+                    range: atRange
+                )
+                attributedStr.addAttribute(
+                    .font,
+                    value: UIFont.systemFont(ofSize: 16.0),
+                    range: atRange
+                )
+            }
+        }
+        self.textView.textColor = UIColor.init(hex: "#333333")
+        self.textView.text = data
+        self.textView.attributedText = attributedStr
+    }
+    
+    
+    func onDeleted() -> Bool {
+        self.deleteInputContent(1)
+        return true
+    }
+        
 }

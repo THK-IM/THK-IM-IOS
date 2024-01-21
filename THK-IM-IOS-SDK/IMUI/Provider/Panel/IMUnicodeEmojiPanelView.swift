@@ -135,7 +135,7 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
     
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.sender?.addInputContent(text: self.emojis[indexPath.row])
+        self.sender?.addInputContent(text: self.emojis[indexPath.row], user: nil, sessionMember: nil)
     }
     
     

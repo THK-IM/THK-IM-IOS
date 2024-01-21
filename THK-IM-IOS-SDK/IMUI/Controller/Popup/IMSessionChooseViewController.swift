@@ -84,7 +84,7 @@ class IMSessionChooseViewController: IMSessionViewController {
             var i = 0
             for m in messages {
                 let userName = userMap[m.fromUId]?.nickname ?? "XX"
-                let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).getSessionDesc(msg: m)
+                let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).sessionDesc(msg: m)
                 content = "\(content)\(userName):\(subContent)"
                 i += 1
                 if (i <= messages.count - 1) {

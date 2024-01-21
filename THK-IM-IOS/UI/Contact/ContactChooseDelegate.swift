@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ContactChooseDelegate: AnyObject {
+public protocol ContactChooseDelegate: AnyObject {
     
     func onContactChoose(ids: Set<Int64>)
     

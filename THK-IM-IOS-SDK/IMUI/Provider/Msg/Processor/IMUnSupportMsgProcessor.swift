@@ -13,7 +13,7 @@ open class IMUnSupportMsgProcessor : IMBaseMsgProcessor {
         return MsgType.UnSupport.rawValue
     }
     
-    open override func getSessionDesc(msg: Message) -> String {
-        return "not support message type"
+    open override func sessionDesc(msg: Message) -> String {
+        return super.sessionDesc(msg: msg) + "[未知消息]"
     }
 }

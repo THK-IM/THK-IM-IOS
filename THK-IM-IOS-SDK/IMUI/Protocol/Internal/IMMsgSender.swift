@@ -23,7 +23,7 @@ public protocol IMMsgSender : AnyObject {
     func sendInputContent()
     
     /// 输入框添加内容
-    func addInputContent(text: String)
+    func addInputContent(text: String, user: User?, sessionMember: SessionMember?)
     
     /// 删除输入框内容
     func deleteInputContent(count: Int)
@@ -81,4 +81,7 @@ public protocol IMMsgSender : AnyObject {
 
     /// 转发选定的消息 forwardType 0单条转发, 1合并转发
     func forwardSelectedMessages(forwardType: Int)
+    
+    ///  打开at会话成员控制器
+    func openAtViewController()
 }

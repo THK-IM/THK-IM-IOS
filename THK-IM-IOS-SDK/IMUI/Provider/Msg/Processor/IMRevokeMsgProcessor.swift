@@ -93,7 +93,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
         return true
     }
     
-    override public func getSessionDesc(msg: Message) -> String {
+    override public func sessionDesc(msg: Message) -> String {
         if (msg.data != nil) {
             do {
                 let revokeData = try JSONDecoder().decode(IMRevokeMsgData.self, from: msg.data!.data(using: .utf8) ?? Data())

@@ -96,6 +96,16 @@ open class BaseMsgCell : BaseTableCell {
             )
         })
         .disposed(by: disposeBag)
+        avatarView?.rx.longPressGesture()
+            .when(.began)
+            .subscribe(onNext: { [weak self]  _ in
+                self?.delegate?.onMsgSenderLongClick(
+                    message: (self?.message)!,
+                    position: self?.position ?? 0,
+                    view: (self?.msgView())!
+                )
+            })
+            .disposed(by: disposeBag)
     }
     
     func initMsgView() {
@@ -132,8 +142,8 @@ open class BaseMsgCell : BaseTableCell {
                     borderColor: UIColor.init(hex: "ffffffff"), width: 40, height: 40, pos: 1)
             } else if (position == IMMsgPosType.Right.rawValue) {
                 image = Bubble().drawRectWithRoundedCorner(
-                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ff35c3fd"),
-                    borderColor: UIColor.init(hex: "ff35c3fd"), width: 40, height: 40, pos: 2)
+                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffd1e3fe"),
+                    borderColor: UIColor.init(hex: "ffd1e3fe"), width: 40, height: 40, pos: 2)
             } else {
                 image = Bubble().drawRectWithRoundedCorner(
                     radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "20000000"),

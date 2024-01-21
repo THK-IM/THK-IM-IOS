@@ -16,8 +16,8 @@ open class IMVideoMsgProcessor : IMBaseMsgProcessor {
         return MsgType.VIDEO.rawValue
     }
     
-    open override func getSessionDesc(msg: Message) -> String {
-        return "[video]"
+    open override func sessionDesc(msg: Message) -> String {
+        return super.sessionDesc(msg: msg) + "[视频]"
     }
     
     open override func reprocessingObservable(_ message: Message) -> Observable<Message>? {

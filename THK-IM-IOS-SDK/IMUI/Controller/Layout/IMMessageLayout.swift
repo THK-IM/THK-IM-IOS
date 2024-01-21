@@ -392,6 +392,14 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             }).disposed(by: self.disposeBag)
     }
     
+    func onMsgSenderLongClick(message: Message, position: Int, view: UIView) {
+        IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] user in
+                self?.sender?.addInputContent(text: "@\(user.nickname) ", user: user, sessionMember: nil)
+            }).disposed(by: self.disposeBag)
+    }
+    
     
     func onMsgCellLongClick(message: Message, position: Int, view: UIView) {
         self.sender?.popupMessageOperatorPanel(view, message)
@@ -407,7 +415,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     
     func setEditText(text: String) {
         _ = self.sender?.openKeyboard()
-        self.sender?.addInputContent(text: text)
+        self.sender?.addInputContent(text: text, user: nil, sessionMember: nil)
     }
     
     

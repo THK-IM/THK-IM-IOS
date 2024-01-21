@@ -38,10 +38,10 @@ open class DefaultMessageDao : MessageDao {
         }
     }
 
-    public func updateContent(_ sessionId: Int64, _ id: Int64, _ fromUId: Int64, _ content: String) throws {
+    public func updateMsgData(_ sessionId: Int64, _ id: Int64, _ fromUId: Int64, _ data: String) throws {
         let update = StatementUpdate().update(table:self.tableName)
-            .set(Message.Properties.operateStatus)
-            .to(content)
+            .set(Message.Properties.data)
+            .to(data)
             .where(
                 Message.Properties.sessionId == sessionId
                    && Message.Properties.id == id
