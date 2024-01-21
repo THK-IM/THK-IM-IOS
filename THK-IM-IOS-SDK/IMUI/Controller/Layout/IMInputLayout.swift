@@ -449,7 +449,9 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
                             atUIds += "#"
                         }
                         atUIds += "\(k)"
-                        msgContent.replaceCharacters(in: matchResult.range, with: k)
+                        let dataString = String(msgContent)
+                        let dataRange = NSRange(dataString.startIndex..<dataString.endIndex, in: dataString)
+                        msgContent.replaceOccurrences(of:v, with: k, options: .caseInsensitive, range: dataRange)
                     }
                 }
             }
