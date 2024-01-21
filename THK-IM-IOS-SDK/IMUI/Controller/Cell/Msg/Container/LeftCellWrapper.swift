@@ -22,7 +22,7 @@ class LeftCellWrapper: CellWrapper {
         let v = UIStackView()
         v.axis = .vertical
         v.alignment = .leading
-        v.distribution = .equalSpacing
+        v.distribution = .fill
         v.spacing = 4
         
         if self.type != SessionType.Single.rawValue {

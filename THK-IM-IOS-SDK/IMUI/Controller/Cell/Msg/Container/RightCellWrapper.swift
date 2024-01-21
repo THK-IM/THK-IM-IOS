@@ -23,7 +23,7 @@ class RightCellWrapper: CellWrapper {
         let v = UIStackView()
         v.axis = .vertical
         v.alignment = .trailing
-        v.distribution = .equalSpacing
+        v.distribution = .fill
         v.spacing = 4
         if self.type != SessionType.Single.rawValue {
             _nickView = UILabel()
