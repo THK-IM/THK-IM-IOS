@@ -489,34 +489,25 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         guard let content = self.textView.text else {
             return
         }
-        let selectionStart = self.textView.selectedRange.location
         let u16Content = NSString(string: content)
-        if (selectionStart > 0 && (content.length > selectionStart-1)) {
-            var lastRange = self.textView.selectedRange
-            lastRange.location -= 1
-            lastRange.length = 1
-            let lastInput = u16Content.substring(with: lastRange)
-            let offset = u16Content.substring(to: lastRange.location+lastRange.length).count
-            if (lastInput == "@") {
-                self.textView.text.insert(
-                    contentsOf: "\(user.nickname) ",
-                    at: content.index(content.startIndex, offsetBy: offset)
-                )
-                self.renderAtMsg(self.textView.text)
-            }
-            return
-        }
-        
         var lastRange = self.textView.selectedRange
         lastRange.location -= 1
         lastRange.length = 1
         let lastInput = u16Content.substring(with: lastRange)
         let offset = u16Content.substring(to: lastRange.location+lastRange.length).count
-        self.textView.text.insert(
-            contentsOf: "@\(user.nickname) ",
-            at: content.index(content.startIndex, offsetBy: offset)
-        )
-        self.renderAtMsg(self.textView.text)
+        if (lastInput == "@") {
+            self.textView.text.insert(
+                contentsOf: "\(user.nickname) ",
+                at: content.index(content.startIndex, offsetBy: offset)
+            )
+            self.renderAtMsg(self.textView.text)
+        } else {
+            self.textView.text.insert(
+                contentsOf: "@\(user.nickname) ",
+                at: content.index(content.startIndex, offsetBy: offset)
+            )
+            self.renderAtMsg(self.textView.text)
+        }
     }
     
     private func renderAtMsg(_ data: String) {
