@@ -13,7 +13,7 @@ import CocoaLumberjack
 
 class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate {
     
-    let uId: String
+    let uId: Int64
     let roomId: String
     let role: Role
     let disposeBag = DisposeBag()
@@ -25,7 +25,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     private var audioMuted: Bool = false
     private var videoMuted: Bool = false
     
-    init(uId: String, roomId: String, role: Role) {
+    init(uId: Int64, roomId: String, role: Role) {
         self.uId = uId
         self.roomId = roomId
         self.role = role
@@ -181,7 +181,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
                 let audioEnable = room.mode == Mode.Audio || room.mode == Mode.Video
                 let videoEnable = room.mode == Mode.Video
                 let participant = RemoteParticipant(
-                    uId: newStream.uid,
+                    uId: newStream.uId,
                     roomId: newStream.roomId,
                     role: role,
                     subStreamKey: newStream.streamKey,
@@ -203,7 +203,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
                 let dataChannelMsg = try JSONDecoder().decode(
                         DataChannelMsg.self, from: notify.message.data(using: .utf8) ?? Data())
                 DispatchQueue.main.async {
-                    room.receivedDcMsg(dataChannelMsg.uid, dataChannelMsg.text)
+                    room.receivedDcMsg(dataChannelMsg.uId, dataChannelMsg.text)
                 }
                 break
             default:

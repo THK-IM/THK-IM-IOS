@@ -10,16 +10,16 @@ import Moya
 
 enum StreamApi {
     /// 请求推流
-    case requestPublish(_ bean: PublishReqBean)
+    case requestPublish(_ bean: PublishStreamReqVo)
     /// 请求拉流
-    case requestPlay(_ bean: PlayReqBean)
+    case requestPlay(_ bean: PlayStreamRequestVo)
 }
 
 
 extension StreamApi: TargetType {
     
     var baseURL: URL {
-        return URL.init(string: "\(LiveManager.shared.endpoint())/stream")!
+        return URL.init(string: "\(LiveManager.shared.liveApi.getEndpoint())/stream")!
     }
     
     var path: String {

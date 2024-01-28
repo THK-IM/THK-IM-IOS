@@ -1,5 +1,5 @@
 //
-//  PlayBean.swift
+//  PlayStreamVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/8/2.
@@ -7,27 +7,27 @@
 
 import Foundation
 
-class PlayReqBean: Codable {
-    let uid: String
+class PlayStreamRequestVo: Codable {
+    let uId: Int64
     let roomId: String
     let offerSdp: String
     let streamKey: String
     enum CodingKeys: String, CodingKey {
-        case uid = "uid"
+        case uId = "u_id"
         case roomId = "room_id"
         case offerSdp = "offer_sdp"
         case streamKey = "stream_key"
     }
     
-    init(uid: String, roomId: String, offerSdp: String, streamKey: String) {
-        self.uid = uid
+    init(uId: Int64, roomId: String, offerSdp: String, streamKey: String) {
+        self.uId = uId
         self.roomId = roomId
         self.offerSdp = offerSdp
         self.streamKey = streamKey
     }
 }
 
-class PlayResBean: Codable {
+class PlayStreamResponseVo: Codable {
     let answerSdp: String
     let streamKey: String
     

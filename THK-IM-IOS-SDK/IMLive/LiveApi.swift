@@ -10,12 +10,14 @@ import RxSwift
 
 protocol LiveApi {
     
-    func createRoom(_ req: CreateRoomReqBean) -> Observable<CreateRoomResBean>
+    func getEndpoint() -> String
     
-    func joinRoom(_ req: JoinRoomReqBean) -> Observable<JoinRoomResBean>
+    func createRoom(_ req: CreateRoomReqVo) -> Observable<CreateRoomResVo>
     
-    func publishStream(_ req: PublishReqBean) -> Observable<PublishResBean>
+    func joinRoom(_ req: JoinRoomReqVo) -> Observable<JoinRoomResVo>
     
-    func playStream(_ req: PlayReqBean) -> Observable<PlayResBean>
+    func publishStream(_ req: PublishStreamReqVo) -> Observable<PublishStreamRespVo>
+    
+    func playStream(_ req: PlayStreamRequestVo) -> Observable<PlayStreamResponseVo>
     
 }

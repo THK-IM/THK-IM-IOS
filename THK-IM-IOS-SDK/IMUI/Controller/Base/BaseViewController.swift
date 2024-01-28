@@ -16,8 +16,6 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     let disposeBag = DisposeBag()
     
     override open func viewDidLoad() {
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        self.navigationItem.hidesBackButton = true
         if (hasTitlebar()) {
             if let title = title() {
                 setTitle(title: title)
@@ -42,8 +40,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     open override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         self.navigationController?.navigationBar.isHidden = !hasTitlebar()
+        super.viewWillAppear(animated)
     }
     
     open func hasTitlebar() -> Bool {

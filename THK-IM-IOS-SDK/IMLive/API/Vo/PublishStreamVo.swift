@@ -1,5 +1,5 @@
 //
-//  PublishBean.swift
+//  PublishStreamVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/8/2.
@@ -7,24 +7,24 @@
 
 import Foundation
 
-class PublishReqBean: Codable {
-    let uid: String
+class PublishStreamReqVo: Codable {
+    let uId: Int64
     let roomId: String
     let offerSdp: String
     enum CodingKeys: String, CodingKey {
-        case uid = "uid"
+        case uId = "u_id"
         case roomId = "room_id"
         case offerSdp = "offer_sdp"
     }
     
-    init(uid: String, roomId: String, offerSdp: String) {
-        self.uid = uid
+    init(uId: Int64, roomId: String, offerSdp: String) {
+        self.uId = uId
         self.roomId = roomId
         self.offerSdp = offerSdp
     }
 }
 
-class PublishResBean: Codable {
+class PublishStreamRespVo: Codable {
     let answerSdp: String
     let streamKey: String
     

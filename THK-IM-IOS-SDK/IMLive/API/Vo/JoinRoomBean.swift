@@ -7,33 +7,33 @@
 
 import Foundation
 
-class JoinRoomReqBean: Codable {
+class JoinRoomReqVo: Codable {
     
     let roomId: String
-    let uid: String
+    let uId: Int64
     let role: Int
     let token: String
     
-    init(roomId: String, uid: String, role: Int, token: String) {
+    init(roomId: String, uId: Int64, role: Int, token: String) {
         self.roomId = roomId
-        self.uid = uid
+        self.uId = uId
         self.role = role
         self.token = token
     }
     
     enum CodingKeys: String, CodingKey {
         case roomId = "room_id"
-        case uid = "uid"
+        case uId = "u_id"
         case role = "role"
         case token = "token"
     }
 }
 
-class JoinRoomResBean: Codable {
+class JoinRoomResVo: Codable {
     
     let id: String
     let mode: Int
-    let ownerId: String
+    let ownerId: Int64
     let createTime: Int64
     let members: Array<Member>?
     

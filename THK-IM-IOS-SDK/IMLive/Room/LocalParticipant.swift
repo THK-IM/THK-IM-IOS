@@ -18,7 +18,7 @@ class LocalParticipant: BaseParticipant {
     private var videoCapturer: RTCCameraVideoCapturer?
     private var currentDevice: AVCaptureDevice?
     
-    init(uId: String, roomId: String, role: Role, audioEnable: Bool = true, videoEnable: Bool = true) {
+    init(uId: Int64, roomId: String, role: Role, audioEnable: Bool = true, videoEnable: Bool = true) {
         self.audioEnable = audioEnable
         self.videoEnable = videoEnable
         super.init(uId: uId, roomId: roomId, role: role)
@@ -102,10 +102,10 @@ class LocalParticipant: BaseParticipant {
         }
         
         LiveManager.shared.liveApi
-            .publishStream(PublishReqBean(uid: self.uId, roomId: self.roomId, offerSdp: offerBase64))
+            .publishStream(PublishStreamReqVo(uId: self.uId, roomId: self.roomId, offerSdp: offerBase64))
             .compose(RxTransformer.shared.io2Main())
-            .subscribe(onNext: { [weak self] bean in
-                let data = Data(base64Encoded: bean.answerSdp) ?? Data()
+            .subscribe(onNext: { [weak self] resp in
+                let data = Data(base64Encoded: resp.answerSdp) ?? Data()
                 let answer = String(data: data, encoding: .utf8) ?? ""
                 let remoteSdp = RTCSessionDescription(type: .answer, sdp: answer)
                 self?.setRemoteSessionDescription(remoteSdp)
@@ -119,7 +119,7 @@ class LocalParticipant: BaseParticipant {
         guard let channel = innerDataChannel else {
             return false
         }
-        let msg = DataChannelMsg(uid: self.uId, text: text)
+        let msg = DataChannelMsg(uId: self.uId, text: text)
         do {
             let b = try JSONEncoder().encode(msg)
             let buffer = RTCDataBuffer(data: b, isBinary: false)

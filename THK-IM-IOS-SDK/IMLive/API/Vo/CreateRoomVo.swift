@@ -1,5 +1,5 @@
 //
-//  CreateRoomBean.swift
+//  CreateRoomVo.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/8/2.
@@ -7,27 +7,27 @@
 
 import Foundation
 
-class CreateRoomReqBean: Codable {
+class CreateRoomReqVo: Codable {
     
-    let id: String
+    let uId: Int64
     let mode: Int
     
-    init(id: String, mode: Int) {
-        self.id = id
+    init(uId: Int64, mode: Int) {
+        self.uId = uId
         self.mode = mode
     }
     
     enum CodingKeys: String, CodingKey {
-        case id = "id"
+        case uId = "u_id"
         case mode = "mode"
     }
 }
 
-class CreateRoomResBean: Codable {
+class CreateRoomResVo: Codable {
     
     let id: String
     let mode: Int
-    let ownerId: String
+    let ownerId: Int64
     let token: String
     let createTime: Int64
     let members: Array<Member>

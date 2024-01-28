@@ -11,16 +11,16 @@ import Moya
 
 enum RoomApi {
     ///  创建房间
-    case createRoom(_ bean: CreateRoomReqBean)
+    case createRoom(_ bean: CreateRoomReqVo)
     ///  加入房间
-    case joinRoom(_ bean: JoinRoomReqBean)
+    case joinRoom(_ bean: JoinRoomReqVo)
 }
 
 
 extension RoomApi: TargetType {
     
     var baseURL: URL {
-        return URL.init(string: "\(LiveManager.shared.endpoint())/room")!
+        return URL.init(string: "\(LiveManager.shared.liveApi.getEndpoint())/room")!
     }
     
     var path: String {

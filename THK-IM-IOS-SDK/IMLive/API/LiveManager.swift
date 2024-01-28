@@ -14,20 +14,20 @@ class LiveManager {
     
     static let shared = LiveManager()
     
-    private var _liveApi: LiveApi
+    private var _liveApi: LiveApi? = nil
     var liveApi: LiveApi {
         set {
             self._liveApi = newValue
         }
         get {
-            return self._liveApi
+            return self._liveApi!
         }
     }
     
     private var room: Room?
-    let factory:RTCPeerConnectionFactory
+    private var uId: Int64 = 0
+    private let factory:RTCPeerConnectionFactory
     private init() {
-        self._liveApi = DefaultLiveApi()
         RTCPeerConnectionFactory.initialize()
         let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
         let videoDecoderFactory = RTCDefaultVideoDecoderFactory()
@@ -48,10 +48,19 @@ class LiveManager {
         }
     }
     
+    func setUId(uId: Int64) {
+        self.uId = uId
+    }
+    
+    func setLiveApi(api: LiveApi) {
+        self._liveApi = api
+    }
+    
     func createRoom(mode: Mode) -> Observable<Room> {
         room?.destroy()
         let uId = selfId()
-        return self.liveApi.createRoom(CreateRoomReqBean(id: uId, mode: mode.rawValue))
+        return self.liveApi
+            .createRoom(CreateRoomReqVo(uId: uId, mode: mode.rawValue))
             .flatMap{ resBean -> Observable<Room> in
                 let room = Room(id: resBean.id, uId: uId, mode: mode, role: Role.Broadcaster, members: resBean.members)
                 self.room = room
@@ -63,7 +72,7 @@ class LiveManager {
         room?.destroy()
         let uId = selfId()
         return self.liveApi
-            .joinRoom(JoinRoomReqBean(roomId: roomId, uid: uId, role: role.rawValue, token: token))
+            .joinRoom(JoinRoomReqVo(roomId: roomId, uId: uId, role: role.rawValue, token: token))
             .flatMap{ [weak self ] resBean -> Observable<Room> in
                 guard let sf = self else {
                     return Observable.error(CocoaError.init(CocoaError.executableRuntimeMismatch))
@@ -77,7 +86,7 @@ class LiveManager {
                 var members = [Member]()
                 if resBean.members != nil {
                     for member in resBean.members! {
-                        if (member.uid != sf.selfId()) {
+                        if (member.uId != sf.selfId()) {
                             members.append(member)
                         }
                     }
@@ -89,12 +98,8 @@ class LiveManager {
             }
     }
     
-    func endpoint() -> String {
-        return "http://192.168.1.3:18100"
-    }
-    
-    func selfId() -> String {
-        return "4"
+    func selfId() -> Int64 {
+        return self.uId
     }
     
     func getRoom() -> Room? {

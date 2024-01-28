@@ -13,14 +13,14 @@ import CocoaLumberjack
 
 class Room: NSObject {
     private let id: String
-    private let uId: String
+    private let uId: Int64
     let mode: Mode
     
     private var observers = [RoomObserver]()
     private var localParticipant: LocalParticipant? = nil
     private var remoteParticipants = [RemoteParticipant]()
      
-    init(id: String, uId: String, mode: Mode, role: Role, members: Array<Member>) {
+    init(id: String, uId: Int64, mode: Mode, role: Role, members: Array<Member>) {
         self.id = id
         self.uId = uId
         self.mode = mode
@@ -43,7 +43,7 @@ class Room: NSObject {
             let audioEnable = mode == Mode.Audio || mode == Mode.Video
             let videoEnable = mode == Mode.Video
             let p = RemoteParticipant(
-                uId: m.uid, roomId: id, role: role, subStreamKey: m.streamKey,
+                uId: m.uId, roomId: id, role: role, subStreamKey: m.streamKey,
                 audioEnable: audioEnable, videoEnable: videoEnable
             )
             self.remoteParticipants.append(p)
@@ -183,9 +183,9 @@ class Room: NSObject {
     }
 
 
-    func receivedDcMsg(_ uid: String, _ text: String) {
+    func receivedDcMsg(_ uId: Int64, _ text: String) {
         observers.forEach { ob in
-            ob.delegate?.onTextMsgReceived(uId: uid, text: text)
+            ob.delegate?.onTextMsgReceived(uId: uId, text: text)
         }
     }
     

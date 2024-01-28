@@ -15,7 +15,7 @@ class RemoteParticipant: BaseParticipant {
     private let subStreamKey: String
     private var streamKey: String? = nil
     
-    init(uId: String, roomId: String, role: Role, subStreamKey: String, audioEnable: Bool, videoEnable: Bool) {
+    init(uId: Int64, roomId: String, role: Role, subStreamKey: String, audioEnable: Bool, videoEnable: Bool) {
         self.subStreamKey = subStreamKey
         self.audioEnable = audioEnable
         self.videoEnable = videoEnable
@@ -49,7 +49,7 @@ class RemoteParticipant: BaseParticipant {
         }
         
         LiveManager.shared.liveApi
-            .playStream(PlayReqBean(uid: self.uId, roomId: self.roomId, offerSdp: offerBase64, streamKey: self.subStreamKey))
+            .playStream(PlayStreamRequestVo(uId: self.uId, roomId: self.roomId, offerSdp: offerBase64, streamKey: self.subStreamKey))
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] bean in
                 let data = Data(base64Encoded: bean.answerSdp) ?? Data()

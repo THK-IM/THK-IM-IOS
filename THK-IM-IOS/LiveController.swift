@@ -336,7 +336,7 @@ class LiveController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.participantsLayout.contentSize = CGSize(width: self.participantsLayout.frame.width, height: CGFloat(i) * 240.0)
     }
     
-    func onTextMsgReceived(uId: String, text: String) {
+    func onTextMsgReceived(uId: Int64, text: String) {
         let content = "user-\(uId): \(text)"
         let count = self.messages.count
         self.messages.append(content)

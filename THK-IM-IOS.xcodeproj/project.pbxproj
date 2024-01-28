@@ -54,15 +54,15 @@
 		A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* LiveManager.swift */; };
 		A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DF2A909C3100A84D4A /* LiveController.swift */; };
 		A0C431E72A909CB200A84D4A /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E22A909CB100A84D4A /* Room.swift */; };
-		A0C431E82A909CB200A84D4A /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E32A909CB100A84D4A /* Defines.swift */; };
+		A0C431E82A909CB200A84D4A /* LiveDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E32A909CB100A84D4A /* LiveDefines.swift */; };
 		A0C431E92A909CB200A84D4A /* LocalParticipant.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E42A909CB100A84D4A /* LocalParticipant.swift */; };
 		A0C431EA2A909CB200A84D4A /* BaseParticipant.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E52A909CB200A84D4A /* BaseParticipant.swift */; };
 		A0C431EB2A909CB200A84D4A /* RemoteParticipant.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E62A909CB200A84D4A /* RemoteParticipant.swift */; };
 		A0C431F32A909CCE00A84D4A /* StreamApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431EC2A909CCD00A84D4A /* StreamApi.swift */; };
 		A0C431F42A909CCE00A84D4A /* RoomApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431ED2A909CCD00A84D4A /* RoomApi.swift */; };
-		A0C431F52A909CCE00A84D4A /* PublishBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431EF2A909CCE00A84D4A /* PublishBean.swift */; };
-		A0C431F62A909CCE00A84D4A /* CreateRoomBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F02A909CCE00A84D4A /* CreateRoomBean.swift */; };
-		A0C431F72A909CCE00A84D4A /* PlayBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F12A909CCE00A84D4A /* PlayBean.swift */; };
+		A0C431F52A909CCE00A84D4A /* PublishStreamVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431EF2A909CCE00A84D4A /* PublishStreamVo.swift */; };
+		A0C431F62A909CCE00A84D4A /* CreateRoomVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F02A909CCE00A84D4A /* CreateRoomVo.swift */; };
+		A0C431F72A909CCE00A84D4A /* PlayStreamVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F12A909CCE00A84D4A /* PlayStreamVo.swift */; };
 		A0C431F82A909CCE00A84D4A /* JoinRoomBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */; };
 		A0C431FC2A909D2500A84D4A /* UIRtcMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431FA2A909D2500A84D4A /* UIRtcMsgCell.swift */; };
 		A0C431FD2A909D2500A84D4A /* ParticipantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431FB2A909D2500A84D4A /* ParticipantView.swift */; };
@@ -328,15 +328,15 @@
 		A0C431DE2A909C3000A84D4A /* LiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveManager.swift; path = API/LiveManager.swift; sourceTree = "<group>"; };
 		A0C431DF2A909C3100A84D4A /* LiveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveController.swift; sourceTree = "<group>"; };
 		A0C431E22A909CB100A84D4A /* Room.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
-		A0C431E32A909CB100A84D4A /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
+		A0C431E32A909CB100A84D4A /* LiveDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveDefines.swift; sourceTree = "<group>"; };
 		A0C431E42A909CB100A84D4A /* LocalParticipant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalParticipant.swift; sourceTree = "<group>"; };
 		A0C431E52A909CB200A84D4A /* BaseParticipant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseParticipant.swift; sourceTree = "<group>"; };
 		A0C431E62A909CB200A84D4A /* RemoteParticipant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteParticipant.swift; sourceTree = "<group>"; };
 		A0C431EC2A909CCD00A84D4A /* StreamApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamApi.swift; sourceTree = "<group>"; };
 		A0C431ED2A909CCD00A84D4A /* RoomApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomApi.swift; sourceTree = "<group>"; };
-		A0C431EF2A909CCE00A84D4A /* PublishBean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishBean.swift; sourceTree = "<group>"; };
-		A0C431F02A909CCE00A84D4A /* CreateRoomBean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateRoomBean.swift; sourceTree = "<group>"; };
-		A0C431F12A909CCE00A84D4A /* PlayBean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayBean.swift; sourceTree = "<group>"; };
+		A0C431EF2A909CCE00A84D4A /* PublishStreamVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishStreamVo.swift; sourceTree = "<group>"; };
+		A0C431F02A909CCE00A84D4A /* CreateRoomVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateRoomVo.swift; sourceTree = "<group>"; };
+		A0C431F12A909CCE00A84D4A /* PlayStreamVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayStreamVo.swift; sourceTree = "<group>"; };
 		A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinRoomBean.swift; sourceTree = "<group>"; };
 		A0C431FA2A909D2500A84D4A /* UIRtcMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIRtcMsgCell.swift; sourceTree = "<group>"; };
 		A0C431FB2A909D2500A84D4A /* ParticipantView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantView.swift; sourceTree = "<group>"; };
@@ -721,15 +721,15 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
-		A0C431EE2A909CCE00A84D4A /* Bean */ = {
+		A0C431EE2A909CCE00A84D4A /* Vo */ = {
 			isa = PBXGroup;
 			children = (
-				A0C431EF2A909CCE00A84D4A /* PublishBean.swift */,
-				A0C431F02A909CCE00A84D4A /* CreateRoomBean.swift */,
-				A0C431F12A909CCE00A84D4A /* PlayBean.swift */,
+				A0C431EF2A909CCE00A84D4A /* PublishStreamVo.swift */,
+				A0C431F02A909CCE00A84D4A /* CreateRoomVo.swift */,
+				A0C431F12A909CCE00A84D4A /* PlayStreamVo.swift */,
 				A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */,
 			);
-			path = Bean;
+			path = Vo;
 			sourceTree = "<group>";
 		};
 		A0C431F92A909D2500A84D4A /* View */ = {
@@ -896,6 +896,7 @@
 				A0D68AC12A888678004D11A5 /* Room */,
 				A0C431DB2A909C1600A84D4A /* Resource */,
 				A0C431DE2A909C3000A84D4A /* LiveManager.swift */,
+				A0C431E32A909CB100A84D4A /* LiveDefines.swift */,
 				A02578C52AA4269B00A66CEF /* LiveApi.swift */,
 			);
 			path = IMLive;
@@ -905,7 +906,6 @@
 			isa = PBXGroup;
 			children = (
 				A0C431E52A909CB200A84D4A /* BaseParticipant.swift */,
-				A0C431E32A909CB100A84D4A /* Defines.swift */,
 				A0C431E42A909CB100A84D4A /* LocalParticipant.swift */,
 				A0C431E62A909CB200A84D4A /* RemoteParticipant.swift */,
 				A0C431E22A909CB100A84D4A /* Room.swift */,
@@ -916,7 +916,7 @@
 		A0D68AC72A888678004D11A5 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				A0C431EE2A909CCE00A84D4A /* Bean */,
+				A0C431EE2A909CCE00A84D4A /* Vo */,
 				A0C431EC2A909CCD00A84D4A /* StreamApi.swift */,
 				A0C431ED2A909CCD00A84D4A /* RoomApi.swift */,
 				A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */,
@@ -1714,7 +1714,7 @@
 				A02529202ADAE496001561A0 /* Double+DP.swift in Sources */,
 				A0D68BF92A888679004D11A5 /* FileLoadListener.swift in Sources */,
 				A0D68BEA2A888679004D11A5 /* IMVideoMsgProcessor.swift in Sources */,
-				A0C431F52A909CCE00A84D4A /* PublishBean.swift in Sources */,
+				A0C431F52A909CCE00A84D4A /* PublishStreamVo.swift in Sources */,
 				A0FCA8DA2B48E66000FC6E47 /* DataRepository.swift in Sources */,
 				A0EF35522B5BFA7700940F54 /* IMAtSessionMemberController.swift in Sources */,
 				A0D68BE72A888679004D11A5 /* MessageModule.swift in Sources */,
@@ -1794,7 +1794,7 @@
 				A0D68BF22A888679004D11A5 /* IMUnSupportMsgProcessor.swift in Sources */,
 				A0D68C012A888679004D11A5 /* WeakReference.swift in Sources */,
 				A0FCA91C2B49844200FC6E47 /* ApplyFriendVo.swift in Sources */,
-				A0C431F62A909CCE00A84D4A /* CreateRoomBean.swift in Sources */,
+				A0C431F62A909CCE00A84D4A /* CreateRoomVo.swift in Sources */,
 				A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */,
 				A0E8ED4C2AEDF23B004163BD /* PreviewCellView.swift in Sources */,
 				A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */,
@@ -1829,7 +1829,7 @@
 				A0D68BB02A888679004D11A5 /* IMPhotoFunctionProvider.swift in Sources */,
 				A0EA42F42A94B49100F64A90 /* ContactModule.swift in Sources */,
 				A0D68BE22A888679004D11A5 /* UserModule.swift in Sources */,
-				A0C431F72A909CCE00A84D4A /* PlayBean.swift in Sources */,
+				A0C431F72A909CCE00A84D4A /* PlayStreamVo.swift in Sources */,
 				A0D68B922A888679004D11A5 /* Message.swift in Sources */,
 				A0FCA9222B4984F800FC6E47 /* ContactSessionCreateVo.swift in Sources */,
 				A0D68BF12A888679004D11A5 /* IMBaseMsgProcessor.swift in Sources */,
@@ -1862,7 +1862,7 @@
 				A03082D62AF67E45001B8373 /* SingleSessionCell.swift in Sources */,
 				A0D68B932A888679004D11A5 /* User.swift in Sources */,
 				A0D68C062A888679004D11A5 /* Signal.swift in Sources */,
-				A0C431E82A909CB200A84D4A /* Defines.swift in Sources */,
+				A0C431E82A909CB200A84D4A /* LiveDefines.swift in Sources */,
 				A0D51DC62B09EFF800E21E75 /* RevokeMsgVo.swift in Sources */,
 				A0E7501E2B4EDDE90038F783 /* ContactUserViewController.swift in Sources */,
 				A0C431FC2A909D2500A84D4A /* UIRtcMsgCell.swift in Sources */,
