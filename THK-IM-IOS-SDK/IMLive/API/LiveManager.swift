@@ -26,7 +26,7 @@ class LiveManager {
     
     private var room: Room?
     private var uId: Int64 = 0
-    private let factory:RTCPeerConnectionFactory
+    let factory:RTCPeerConnectionFactory
     private init() {
         RTCPeerConnectionFactory.initialize()
         let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
