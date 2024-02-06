@@ -36,8 +36,11 @@ class IMSessionMemberCell: UITableViewCell {
             make.height.equalTo(42)
         }
         
-        self.nicknameView.snp.makeConstraints { make in
-            make.left.equalTo(self.avatarView.snp.right).offset(10)
+        self.nicknameView.snp.makeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
+            }
+            make.left.equalTo(sf.avatarView.snp.right).offset(10)
             make.right.equalToSuperview().offset(-10)
             make.centerY.equalToSuperview()
             make.height.equalTo(30)

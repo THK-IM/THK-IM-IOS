@@ -95,18 +95,24 @@ class IMRecordMsgCell: BaseMsgCell {
             make.height.equalTo(16)
         }
         
-        self.lineView.snp.makeConstraints { make in
-            make.bottom.equalTo(self.descView.snp.top)
+        self.lineView.snp.makeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
+            }
+            make.bottom.equalTo(sf.descView.snp.top)
             make.left.equalToSuperview().offset(4)
             make.right.equalToSuperview().offset(-4)
             make.height.equalTo(1)
         }
         
-        self.recordContentView.snp.makeConstraints { make in
-            make.top.equalTo(self.recordTitleView.snp.bottom)
+        self.recordContentView.snp.makeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
+            }
+            make.top.equalTo(sf.recordTitleView.snp.bottom)
             make.left.equalToSuperview().offset(4)
             make.right.equalToSuperview().offset(-4)
-            make.bottom.equalTo(self.lineView.snp.top)
+            make.bottom.equalTo(sf.lineView.snp.top)
         }
         
         self.recordTitleView.text = recordBody.title

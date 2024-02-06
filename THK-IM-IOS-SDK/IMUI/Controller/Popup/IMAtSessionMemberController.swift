@@ -42,8 +42,11 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
         self.view.addSubview(memberTableView)
         self.memberTableView.separatorStyle = .none
         self.memberTableView.backgroundColor = UIColor.white
-        self.memberTableView.snp.makeConstraints { make in
-            make.top.equalTo(self.titleView.snp.bottom)
+        self.memberTableView.snp.makeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
+            }
+            make.top.equalTo(sf.titleView.snp.bottom)
             make.bottom.equalToSuperview()
             make.left.equalToSuperview()
             make.right.equalToSuperview()

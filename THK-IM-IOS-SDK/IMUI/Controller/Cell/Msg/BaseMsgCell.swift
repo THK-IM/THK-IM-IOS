@@ -39,9 +39,9 @@ open class BaseMsgCell : BaseTableCell {
     func setupEvent() {
         let msgView = self.msgView()
         // 点击事件
-        msgView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+        msgView.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
             delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
-                return touches.view == msgView
+                return touches.view == self?.msgView()
             }
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
                 return otherGestureRecognizer is UILongPressGestureRecognizer
@@ -79,9 +79,9 @@ open class BaseMsgCell : BaseTableCell {
                 }).disposed(by: self.disposeBag)
         }
         let avatarView = self.cellWrapper.avatarView()
-        avatarView?.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+        avatarView?.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
             delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
-                return touches.view == self.cellWrapper.avatarView()
+                return touches.view == self?.cellWrapper.avatarView()
             }
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
                 return otherGestureRecognizer is UILongPressGestureRecognizer

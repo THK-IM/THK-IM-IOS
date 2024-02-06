@@ -75,19 +75,28 @@ open class BaseSessionCell : BaseTableCell {
             make.width.equalTo(42)
             make.height.equalTo(42)
         }
-        nickView.snp.makeConstraints { make in
+        nickView.snp.makeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
+            }
             make.top.equalToSuperview().offset(10)
-            make.left.equalTo(avatarView.snp.right).offset(5)
-            make.right.equalTo(lastTimeView.snp.left).offset(-5)
+            make.left.equalTo(sf.avatarView.snp.right).offset(5)
+            make.right.equalTo(sf.lastTimeView.snp.left).offset(-5)
         }
-        msgView.snp.makeConstraints { make in
-            make.top.equalTo(self.nickView.snp.bottom).offset(10)
-            make.left.equalTo(avatarView.snp.right).offset(5)
-            make.right.equalTo(lastTimeView.snp.left).offset(-5)
+        msgView.snp.makeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
+            }
+            make.top.equalTo(sf.nickView.snp.bottom).offset(10)
+            make.left.equalTo(sf.avatarView.snp.right).offset(5)
+            make.right.equalTo(sf.lastTimeView.snp.left).offset(-5)
         }
-        lastTimeView.snp.makeConstraints { make in
+        lastTimeView.snp.makeConstraints {  [weak self] make in
+            guard let sf = self else {
+                return
+            }
             make.top.equalToSuperview().offset(10)
-            make.right.equalTo(contentView.snp.right).offset(-10)
+            make.right.equalTo(sf.contentView.snp.right).offset(-10)
             make.width.lessThanOrEqualTo(120)
         }
         unreadCountView.snp.makeConstraints { make in
