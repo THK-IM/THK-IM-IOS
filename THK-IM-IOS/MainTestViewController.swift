@@ -13,7 +13,7 @@ import CocoaLumberjack
 import GDPerformanceView_Swift
 
 
-class MainTextViewController: UIViewController, PerformanceMonitorDelegate {
+class MainTestViewController: UIViewController, PerformanceMonitorDelegate {
     
     func performanceMonitor(didReport performanceReport: PerformanceReport) {
     }

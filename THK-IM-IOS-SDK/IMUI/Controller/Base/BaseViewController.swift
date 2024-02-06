@@ -31,7 +31,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
                 actions.append(#selector(searchTapped))
             }
             setRightItems(images: images, actions: actions)
-            if (self.canBack()) {
+            if (self.swipeBack()) {
                 let backImage = UIImage(named: "ic_titlebar_back")?.scaledToSize(CGSize(width: 24, height: 24))
                 let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
                 self.navigationItem.leftBarButtonItem = backItem
@@ -118,10 +118,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return self.canBack()
+        return self.swipeBack()
     }
     
-    private func canBack() -> Bool {
+    open func swipeBack() -> Bool {
         return self.navigationController?.children.count ?? 0 > 1
     }
     
