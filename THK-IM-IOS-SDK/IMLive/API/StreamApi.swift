@@ -12,14 +12,14 @@ enum StreamApi {
     /// 请求推流
     case requestPublish(_ bean: PublishStreamReqVo)
     /// 请求拉流
-    case requestPlay(_ bean: PlayStreamRequestVo)
+    case requestPlay(_ bean: PlayStreamReqVo)
 }
 
 
 extension StreamApi: TargetType {
     
     var baseURL: URL {
-        return URL.init(string: "\(LiveManager.shared.liveApi.getEndpoint())/stream")!
+        return URL.init(string: "\(IMLiveManager.shared.liveApi.getEndpoint())/stream")!
     }
     
     var path: String {

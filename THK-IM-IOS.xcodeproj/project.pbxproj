@@ -47,17 +47,19 @@
 		A03082E12AF7BFEC001B8373 /* UpdateSessionVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082E02AF7BFEC001B8373 /* UpdateSessionVo.swift */; };
 		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A050072F2B08BC9700526713 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072E2B08BC9700526713 /* AppUtils.swift */; };
-		A0978E5B2B71CE9A0047E6A2 /* LiveCallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallController.swift */; };
+		A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */; };
 		A0978E5D2B71CF7B0047E6A2 /* BeCallingLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5C2B71CF7B0047E6A2 /* BeCallingLayout.swift */; };
 		A0978E5F2B71CFDA0047E6A2 /* CallingLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5E2B71CFDA0047E6A2 /* CallingLayout.swift */; };
 		A0978E612B71CFF50047E6A2 /* RequestCallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E602B71CFF50047E6A2 /* RequestCallLayout.swift */; };
 		A0978E632B71D2AB0047E6A2 /* LiveCallProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E622B71D2AB0047E6A2 /* LiveCallProtocol.swift */; };
 		A0978E662B723CAB0047E6A2 /* CallingInfoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E652B723CAB0047E6A2 /* CallingInfoLayout.swift */; };
+		A0978E682B7321F70047E6A2 /* LiveCallStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E672B7321F70047E6A2 /* LiveCallStatus.swift */; };
+		A0978E6A2B73D1C70047E6A2 /* IMCustomModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E692B73D1C70047E6A2 /* IMCustomModule.swift */; };
 		A0B2457D2B50240400D48BE8 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B2457C2B50240400D48BE8 /* GroupViewController.swift */; };
 		A0B2457F2B502C0700D48BE8 /* IMSessionApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B2457E2B502C0700D48BE8 /* IMSessionApi.swift */; };
 		A0B245812B502DDB00D48BE8 /* SessionMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */; };
 		A0C431DD2A909C1700A84D4A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0C431DC2A909C1600A84D4A /* Images.xcassets */; };
-		A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* LiveManager.swift */; };
+		A0C431E02A909C3100A84D4A /* IMLiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* IMLiveManager.swift */; };
 		A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DF2A909C3100A84D4A /* LiveController.swift */; };
 		A0C431E72A909CB200A84D4A /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E22A909CB100A84D4A /* Room.swift */; };
 		A0C431E82A909CB200A84D4A /* LiveDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E32A909CB100A84D4A /* LiveDefines.swift */; };
@@ -69,7 +71,7 @@
 		A0C431F52A909CCE00A84D4A /* PublishStreamVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431EF2A909CCE00A84D4A /* PublishStreamVo.swift */; };
 		A0C431F62A909CCE00A84D4A /* CreateRoomVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F02A909CCE00A84D4A /* CreateRoomVo.swift */; };
 		A0C431F72A909CCE00A84D4A /* PlayStreamVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F12A909CCE00A84D4A /* PlayStreamVo.swift */; };
-		A0C431F82A909CCE00A84D4A /* JoinRoomBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */; };
+		A0C431F82A909CCE00A84D4A /* JoinRoomVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431F22A909CCE00A84D4A /* JoinRoomVo.swift */; };
 		A0C431FD2A909D2500A84D4A /* ParticipantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431FB2A909D2500A84D4A /* ParticipantView.swift */; };
 		A0CA4E622B4A87A40031DDDB /* NavigationItemLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA4E612B4A87A40031DDDB /* NavigationItemLayout.swift */; };
 		A0CA4E652B4A9BA10031DDDB /* ContactTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA4E642B4A9BA10031DDDB /* ContactTableCell.swift */; };
@@ -326,17 +328,19 @@
 		A03082E02AF7BFEC001B8373 /* UpdateSessionVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSessionVo.swift; sourceTree = "<group>"; };
 		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A050072E2B08BC9700526713 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
-		A0978E5A2B71CE9A0047E6A2 /* LiveCallController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallController.swift; sourceTree = "<group>"; };
+		A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallViewController.swift; sourceTree = "<group>"; };
 		A0978E5C2B71CF7B0047E6A2 /* BeCallingLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeCallingLayout.swift; sourceTree = "<group>"; };
 		A0978E5E2B71CFDA0047E6A2 /* CallingLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallingLayout.swift; sourceTree = "<group>"; };
 		A0978E602B71CFF50047E6A2 /* RequestCallLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestCallLayout.swift; sourceTree = "<group>"; };
 		A0978E622B71D2AB0047E6A2 /* LiveCallProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallProtocol.swift; sourceTree = "<group>"; };
 		A0978E652B723CAB0047E6A2 /* CallingInfoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallingInfoLayout.swift; sourceTree = "<group>"; };
+		A0978E672B7321F70047E6A2 /* LiveCallStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallStatus.swift; sourceTree = "<group>"; };
+		A0978E692B73D1C70047E6A2 /* IMCustomModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCustomModule.swift; sourceTree = "<group>"; };
 		A0B2457C2B50240400D48BE8 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
 		A0B2457E2B502C0700D48BE8 /* IMSessionApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSessionApi.swift; sourceTree = "<group>"; };
 		A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMemberVo.swift; sourceTree = "<group>"; };
 		A0C431DC2A909C1600A84D4A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		A0C431DE2A909C3000A84D4A /* LiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveManager.swift; path = API/LiveManager.swift; sourceTree = "<group>"; };
+		A0C431DE2A909C3000A84D4A /* IMLiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMLiveManager.swift; path = API/IMLiveManager.swift; sourceTree = "<group>"; };
 		A0C431DF2A909C3100A84D4A /* LiveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveController.swift; sourceTree = "<group>"; };
 		A0C431E22A909CB100A84D4A /* Room.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
 		A0C431E32A909CB100A84D4A /* LiveDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveDefines.swift; sourceTree = "<group>"; };
@@ -348,7 +352,7 @@
 		A0C431EF2A909CCE00A84D4A /* PublishStreamVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishStreamVo.swift; sourceTree = "<group>"; };
 		A0C431F02A909CCE00A84D4A /* CreateRoomVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateRoomVo.swift; sourceTree = "<group>"; };
 		A0C431F12A909CCE00A84D4A /* PlayStreamVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayStreamVo.swift; sourceTree = "<group>"; };
-		A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinRoomBean.swift; sourceTree = "<group>"; };
+		A0C431F22A909CCE00A84D4A /* JoinRoomVo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinRoomVo.swift; sourceTree = "<group>"; };
 		A0C431FB2A909D2500A84D4A /* ParticipantView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantView.swift; sourceTree = "<group>"; };
 		A0CA4E612B4A87A40031DDDB /* NavigationItemLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItemLayout.swift; sourceTree = "<group>"; };
 		A0CA4E642B4A9BA10031DDDB /* ContactTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableCell.swift; sourceTree = "<group>"; };
@@ -718,8 +722,9 @@
 			isa = PBXGroup;
 			children = (
 				A0978E592B71CE7B0047E6A2 /* Layout */,
-				A0978E5A2B71CE9A0047E6A2 /* LiveCallController.swift */,
+				A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */,
 				A0978E622B71D2AB0047E6A2 /* LiveCallProtocol.swift */,
+				A0978E672B7321F70047E6A2 /* LiveCallStatus.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -766,7 +771,7 @@
 				A0C431EF2A909CCE00A84D4A /* PublishStreamVo.swift */,
 				A0C431F02A909CCE00A84D4A /* CreateRoomVo.swift */,
 				A0C431F12A909CCE00A84D4A /* PlayStreamVo.swift */,
-				A0C431F22A909CCE00A84D4A /* JoinRoomBean.swift */,
+				A0C431F22A909CCE00A84D4A /* JoinRoomVo.swift */,
 			);
 			path = Vo;
 			sourceTree = "<group>";
@@ -925,7 +930,7 @@
 				A0D68AC72A888678004D11A5 /* API */,
 				A0D68AC12A888678004D11A5 /* Room */,
 				A0C431DB2A909C1600A84D4A /* Resource */,
-				A0C431DE2A909C3000A84D4A /* LiveManager.swift */,
+				A0C431DE2A909C3000A84D4A /* IMLiveManager.swift */,
 				A0C431E32A909CB100A84D4A /* LiveDefines.swift */,
 				A02578C52AA4269B00A66CEF /* LiveApi.swift */,
 			);
@@ -1544,6 +1549,7 @@
 				A0FCA93D2B4A738700FC6E47 /* IMContactModule.swift */,
 				A0FCA93F2B4A782E00FC6E47 /* IMGroupModule.swift */,
 				A0CA4E682B4AAB860031DDDB /* ExternalPageRouter.swift */,
+				A0978E692B73D1C70047E6A2 /* IMCustomModule.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -1693,6 +1699,7 @@
 				A0FCA9032B4952CD00FC6E47 /* Contact.swift in Sources */,
 				A0D68BD52A888679004D11A5 /* AVCacheManager.swift in Sources */,
 				A0C431EB2A909CB200A84D4A /* RemoteParticipant.swift in Sources */,
+				A0978E6A2B73D1C70047E6A2 /* IMCustomModule.swift in Sources */,
 				A0D68BC62A888679004D11A5 /* RightCellWrapper.swift in Sources */,
 				A0D68B782A888679004D11A5 /* OggOpusAudioRecorder.swift in Sources */,
 				A0D68BC42A888679004D11A5 /* CellWrapper.swift in Sources */,
@@ -1749,7 +1756,7 @@
 				A0FCA8DA2B48E66000FC6E47 /* DataRepository.swift in Sources */,
 				A0EF35522B5BFA7700940F54 /* IMAtSessionMemberController.swift in Sources */,
 				A0D68BE72A888679004D11A5 /* MessageModule.swift in Sources */,
-				A0C431E02A909C3100A84D4A /* LiveManager.swift in Sources */,
+				A0C431E02A909C3100A84D4A /* IMLiveManager.swift in Sources */,
 				A0FCA8D72B484AB300FC6E47 /* BaseViewController.swift in Sources */,
 				A0D68BB32A888679004D11A5 /* IMBaseFunctionCellProvider.swift in Sources */,
 				A0D68BAD2A888679004D11A5 /* IMUnicodeEmojiCell.swift in Sources */,
@@ -1781,12 +1788,13 @@
 				A0D68B9C2A888679004D11A5 /* String+Ext.swift in Sources */,
 				A018CE0E2B00A4BB00896B87 /* IMMsgMultiSelectOperator.swift in Sources */,
 				A0978E612B71CFF50047E6A2 /* RequestCallLayout.swift in Sources */,
+				A0978E682B7321F70047E6A2 /* LiveCallStatus.swift in Sources */,
 				A0D68BE32A888679004D11A5 /* DefaultMessageModule.swift in Sources */,
 				A0D68B982A888679004D11A5 /* UserDao.swift in Sources */,
 				A0D68C042A888679004D11A5 /* StorageModule.swift in Sources */,
 				A0B2457D2B50240400D48BE8 /* GroupViewController.swift in Sources */,
 				A0D68BAB2A888679004D11A5 /* IMImageMsgCellProvider.swift in Sources */,
-				A0C431F82A909CCE00A84D4A /* JoinRoomBean.swift in Sources */,
+				A0C431F82A909CCE00A84D4A /* JoinRoomVo.swift in Sources */,
 				A025290F2AC6D7DB001561A0 /* UploadParams.swift in Sources */,
 				A0EA42F52A94B49100F64A90 /* GroupModule.swift in Sources */,
 				A0D68BB92A888679004D11A5 /* IMBottomPanelLayout.swift in Sources */,
@@ -1809,7 +1817,7 @@
 				A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */,
 				A0E82F642B528AB0008DC681 /* GroupSessionCell.swift in Sources */,
 				A0EF35542B5BFFFB00940F54 /* IMSessionMemberAtDelegate.swift in Sources */,
-				A0978E5B2B71CE9A0047E6A2 /* LiveCallController.swift in Sources */,
+				A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */,
 				A0FCA90F2B496D3800FC6E47 /* DefaultContactDao.swift in Sources */,
 				A0C431EA2A909CB200A84D4A /* BaseParticipant.swift in Sources */,
 				A0D68BE52A888679004D11A5 /* DefaultCommonModule.swift in Sources */,

@@ -7,6 +7,12 @@
 
 import Foundation
 
+public enum NotifyType: String {
+    case NewStream = "NewStream",
+         RemoveStream = "RemoveStream",
+         DataChannelMsg = "DataChannelMsg"
+}
+
 public enum Role: Int {
     case Broadcaster = 1,
          Audience = 2
@@ -16,12 +22,6 @@ public enum Mode: Int {
     case Chat = 1,
         Audio = 2,
         Video = 3
-}
-
-public enum NotifyType: String {
-    case NewStream = "NewStream",
-         RemoveStream = "RemoveStream",
-         DataChannelMsg = "DataChannelMsg"
 }
 
 public class NotifyBean: Codable {
@@ -75,7 +75,7 @@ public class DataChannelMsg: Codable {
     }
 }
 
-public class Member: Codable {
+public class ParticipantVo: Codable {
     
     let uId: Int64
     let role: Int

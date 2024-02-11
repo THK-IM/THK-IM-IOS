@@ -16,8 +16,12 @@ protocol LiveApi {
     
     func joinRoom(_ req: JoinRoomReqVo) -> Observable<JoinRoomResVo>
     
-    func publishStream(_ req: PublishStreamReqVo) -> Observable<PublishStreamRespVo>
+    func refuseJoinRoom(_ req: RefuseJoinReqVo) -> Observable<Void>
     
-    func playStream(_ req: PlayStreamRequestVo) -> Observable<PlayStreamResponseVo>
+    func deleteRoom(_ req: DelRoomReqVo) -> Observable<Void>
+    
+    func publishStream(_ req: PublishStreamReqVo) -> Observable<PublishStreamResVo>
+    
+    func playStream(_ req: PlayStreamReqVo) -> Observable<PlayStreamResVo>
     
 }

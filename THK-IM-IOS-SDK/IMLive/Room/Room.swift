@@ -12,24 +12,29 @@ import CocoaLumberjack
 
 
 class Room: NSObject {
-    private let id: String
-    private let uId: Int64
+    let id: String
+    let uId: Int64
     let mode: Mode
-    
+    var members: Set<Int64>
+    let ownerId: Int64
+    let createTime: Int64
     private var observers = [RoomObserver]()
     private var localParticipant: LocalParticipant? = nil
     private var remoteParticipants = [RemoteParticipant]()
      
-    init(id: String, uId: Int64, mode: Mode, role: Role, members: Array<Member>) {
+    init(id: String, ownerId: Int64, uId: Int64, mode: Mode, members: Set<Int64>, role: Role, createTime: Int64, participants: Array<ParticipantVo>?) {
         self.id = id
+        self.ownerId = ownerId
         self.uId = uId
         self.mode = mode
+        self.members = members
+        self.createTime = createTime
         super.init()
-        self.initLocalParticipant(role: role)
-        self.initRemoteParticipants(members: members)
+        self.initLocalParticipant(role)
+        self.initRemoteParticipants(participants)
     }
     
-    private func initLocalParticipant(role: Role) {
+    private func initLocalParticipant(_ role: Role) {
         localParticipant = LocalParticipant(
             uId: self.uId, roomId: self.id, role: role,
             audioEnable: mode.rawValue >= Mode.Audio.rawValue,
@@ -37,13 +42,16 @@ class Room: NSObject {
         )
     }
     
-    private func initRemoteParticipants(members: Array<Member>) {
-        for m in members {
-            let role = m.role == Role.Broadcaster.rawValue ? Role.Broadcaster: Role.Audience
+    private func initRemoteParticipants(_ participants: Array<ParticipantVo>?) {
+        if participants == nil {
+            return
+        }
+        for p in participants! {
+            let role = p.role == Role.Broadcaster.rawValue ? Role.Broadcaster: Role.Audience
             let audioEnable = mode == Mode.Audio || mode == Mode.Video
             let videoEnable = mode == Mode.Video
             let p = RemoteParticipant(
-                uId: m.uId, roomId: id, role: role, subStreamKey: m.streamKey,
+                uId: p.uId, roomId: id, role: role, subStreamKey: p.streamKey,
                 audioEnable: audioEnable, videoEnable: videoEnable
             )
             self.remoteParticipants.append(p)
@@ -133,6 +141,15 @@ class Room: NSObject {
         return participants
     }
     
+    func getLocalParticipant() -> BaseParticipant? {
+        return localParticipant
+    }
+    
+    func getRemoteParticipants() -> [BaseParticipant] {
+        return remoteParticipants
+    }
+    
+    
     func setRole(role: Role) {
         if self.localParticipant != nil {
             if self.localParticipant!.role != role {
@@ -142,7 +159,7 @@ class Room: NSObject {
                 return
             }
         }
-        self.initLocalParticipant(role: role)
+        self.initLocalParticipant(role)
         participantJoin(p: self.localParticipant!)
     }
     

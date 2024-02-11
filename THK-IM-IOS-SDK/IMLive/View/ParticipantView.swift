@@ -11,7 +11,7 @@ import RxSwift
 
 class ParticipantView: UIView {
     
-    var p: BaseParticipant? = nil
+    var participant: BaseParticipant? = nil
     private var isFullScreen = true
     
     private let disposeBag = DisposeBag()
@@ -42,9 +42,9 @@ class ParticipantView: UIView {
     }
     
     func setParticipant(p: BaseParticipant) {
-        self.p = p
-        self.p?.attachViewRender(self.eAGLVideoView)
-        self.p?.initPeerConnection()
+        self.participant = p
+        self.participant?.attachViewRender(self.eAGLVideoView)
+        self.participant?.initPeerConnection()
     }
     
     func setFullScreen(_ fullScreen: Bool) {
@@ -101,6 +101,24 @@ class ParticipantView: UIView {
         
         self.transform.tx = translationX
         self.transform.ty = translationY
+    }
+    
+    func muteAudio(muted: Bool) {
+        participant?.setAudioMuted(muted)
+    }
+    
+    func muteVideo(muted: Bool) {
+        participant?.setVideoMuted(muted)
+    }
+    
+    func switchCamera() {
+        if let p = self.participant {
+            if p is LocalParticipant {
+                (p as! LocalParticipant).switchCamera()
+            } else {
+                
+            }
+        }
     }
     
     

@@ -11,16 +11,20 @@ import Moya
 
 enum RoomApi {
     ///  创建房间
-    case createRoom(_ bean: CreateRoomReqVo)
+    case createRoom(_ vo: CreateRoomReqVo)
     ///  加入房间
-    case joinRoom(_ bean: JoinRoomReqVo)
+    case joinRoom(_ vo: JoinRoomReqVo)
+    ///  拒绝加入房间
+    case refuseJoinRoom(_ vo: RefuseJoinReqVo)
+    ///  删除房间
+    case delRoom(_ vo: DelRoomReqVo)
 }
 
 
 extension RoomApi: TargetType {
     
     var baseURL: URL {
-        return URL.init(string: "\(LiveManager.shared.liveApi.getEndpoint())/room")!
+        return URL.init(string: "\(IMLiveManager.shared.liveApi.getEndpoint())/room")!
     }
     
     var path: String {
@@ -28,7 +32,11 @@ extension RoomApi: TargetType {
         case .createRoom:
             return ""
         case .joinRoom:
-            return "/join"
+            return "/member/join"
+        case .refuseJoinRoom:
+            return "/member/hangup"
+        case .delRoom:
+            return ""
         }
     }
     
@@ -38,15 +46,23 @@ extension RoomApi: TargetType {
             return .post
         case .joinRoom:
             return .post
+        case .refuseJoinRoom:
+            return .post
+        case .delRoom:
+            return .delete
         }
     }
     
     var task: Moya.Task {
         switch self {
-        case let .createRoom(bean):
-            return .requestJSONEncodable(bean)
-        case let .joinRoom(bean):
-            return .requestJSONEncodable(bean)
+        case let .createRoom(vo):
+            return .requestJSONEncodable(vo)
+        case let .joinRoom(vo):
+            return .requestJSONEncodable(vo)
+        case let .refuseJoinRoom(vo):
+            return .requestJSONEncodable(vo)
+        case let .delRoom(vo):
+            return .requestJSONEncodable(vo)
         }
     }
     

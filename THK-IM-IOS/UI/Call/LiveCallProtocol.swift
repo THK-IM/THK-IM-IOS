@@ -11,7 +11,7 @@ import Foundation
 protocol LiveCallProtocol: AnyObject {
     
     /**
-     *  return 0 错误 1 前置 2 后置
+     *  return 0 未知, 1 后置, 2 前置
      */
     func currentLocalCamera() -> Int
     

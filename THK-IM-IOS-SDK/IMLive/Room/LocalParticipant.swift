@@ -42,8 +42,8 @@ class LocalParticipant: BaseParticipant {
                 mandatoryConstraints: mandatoryConstraints,
                 optionalConstraints: nil
             )
-            let audioSource = LiveManager.shared.factory.audioSource(with: mediaConstraints)
-            let audioTrack = LiveManager.shared.factory.audioTrack(with: audioSource, trackId: "/Audio/\(self.roomId)/\(self.uId)")
+            let audioSource = IMLiveManager.shared.factory.audioSource(with: mediaConstraints)
+            let audioTrack = IMLiveManager.shared.factory.audioTrack(with: audioSource, trackId: "/Audio/\(self.roomId)/\(self.uId)")
             let transceiver = RTCRtpTransceiverInit()
             transceiver.direction = .sendOnly
             p.addTransceiver(with: audioTrack, init: transceiver)
@@ -56,7 +56,7 @@ class LocalParticipant: BaseParticipant {
                 return
             }
             
-            let videoSource = LiveManager.shared.factory.videoSource()
+            let videoSource = IMLiveManager.shared.factory.videoSource()
             self.videoCapturer = RTCCameraVideoCapturer()
             videoCapturer?.delegate = videoSource
             
@@ -74,15 +74,14 @@ class LocalParticipant: BaseParticipant {
 //                }
 //            }
             let fps = 10
-            let videoTrack = LiveManager.shared.factory.videoTrack(with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)")
-            
+            if format != nil {
+                videoCapturer?.startCapture(with: currentDevice!, format: format!, fps: Int(fps))
+            }
+            let videoTrack = IMLiveManager.shared.factory.videoTrack(with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)")
             let transceiver = RTCRtpTransceiverInit()
             transceiver.direction = .sendOnly
             p.addTransceiver(with: videoTrack, init: transceiver)
             self.addVideoTrack(track: videoTrack)
-            
-            videoCapturer?.startCapture(with: currentDevice!, format: format!, fps: Int(fps))
-            addVideoTrack(track: videoTrack)
         }
         
         let dcConfig = RTCDataChannelConfiguration()
@@ -101,7 +100,7 @@ class LocalParticipant: BaseParticipant {
             return
         }
         
-        LiveManager.shared.liveApi
+        IMLiveManager.shared.liveApi
             .publishStream(PublishStreamReqVo(uId: self.uId, roomId: self.roomId, offerSdp: offerBase64))
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] resp in
@@ -158,6 +157,13 @@ class LocalParticipant: BaseParticipant {
             }
         }
         return nil
+    }
+    
+    func currentCamera() -> Int {
+        guard let currentDevice = self.currentDevice else {
+            return 0
+        }
+        return currentDevice.position.rawValue
     }
     
     func switchCamera() {

@@ -36,7 +36,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
         // Unified plan is more superior than planB
         config.sdpSemantics = .unifiedPlan
         let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
-        let p = LiveManager.shared.factory.peerConnection(
+        let p = IMLiveManager.shared.factory.peerConnection(
             with: config,
             constraints: constraints,
             delegate: self
@@ -160,14 +160,14 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     }
     
     private func onNewBufferMessage(data: Data) {
-        guard let room = LiveManager.shared.getRoom() else {
+        guard let room = IMLiveManager.shared.getRoom() else {
             return
         }
         room.receiveDcData(data)
     }
     
     private func onNewMessage(data: Data) {
-        guard let room = LiveManager.shared.getRoom() else {
+        guard let room = IMLiveManager.shared.getRoom() else {
             return
         }
         do {

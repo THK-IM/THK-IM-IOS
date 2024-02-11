@@ -24,20 +24,19 @@ class CreateRoomReqVo: Codable {
 }
 
 class CreateRoomResVo: Codable {
-    
     let id: String
     let mode: Int
+    let members: Set<Int64>
     let ownerId: Int64
-    let token: String
     let createTime: Int64
-    let members: Array<Member>
+    let participants: Array<ParticipantVo>?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case mode = "mode"
         case ownerId = "owner_id"
-        case token = "token"
+        case members = "members"
         case createTime = "create_time"
-        case members = "participants"
+        case participants = "participants"
     }
 }

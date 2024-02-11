@@ -39,7 +39,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IMCoreManager.shared.userModule = IMUserModule()
         IMCoreManager.shared.contactModule = IMContactModule()
         IMCoreManager.shared.groupModule = IMGroupModule()
+        IMCoreManager.shared.customModule = IMCustomModule()
         IMUIManager.shared.pageRouter = ExternalPageRouter()
+        
     }
     
     func initIM(token: String, uId: Int64) -> Observable<Bool> {
@@ -56,6 +58,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 IMUIManager.shared.contentProvider = Provider(token: token)
                 IMUIManager.shared.contentPreviewer = Previewer(token: token, endpoint: apiEndpoint)
                 IMCoreManager.shared.initUser(uId)
+                
+                
+                let liveApiEndpoint = "http://rtc-api.thkim.com"
+                let liveApi = DefaultLiveApi(token: token, endpoint: liveApiEndpoint)
+                IMLiveManager.shared.setLiveApi(api:liveApi)
+                IMLiveManager.shared.setUId(uId: uId)
                 return Observable.just(it)
             })
     }

@@ -24,7 +24,7 @@ class PublishStreamReqVo: Codable {
     }
 }
 
-class PublishStreamRespVo: Codable {
+class PublishStreamResVo: Codable {
     let answerSdp: String
     let streamKey: String
     
