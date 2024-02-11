@@ -63,27 +63,25 @@ class IMCustomModule: DefaultCustomModule {
                         // TODO 拒绝
                     } else {
                         // TODO 弹出加入
-                        IMLiveManager.shared.joinRoom(roomId: signal.roomId, role: Role.Broadcaster)
-                            .compose(RxTransformer.shared.io2Main())
-                            .subscribe(onNext: { room in
-                                let window = AppUtils.getWindow()
-                                let vc = window?.rootViewController
-                                if vc != nil {
-                                    LiveCallViewController.presentLiveCallViewController(vc!, room)
-                                }
-                            }).disposed(by: self.disposeBag)
+                        if signal.ownerId != IMLiveManager.shared.selfId() {
+                            IMLiveManager.shared.joinRoom(roomId: signal.roomId, role: Role.Broadcaster)
+                                .compose(RxTransformer.shared.io2Main())
+                                .subscribe(onNext: { room in
+                                    let window = AppUtils.getWindow()
+                                    let vc = window?.rootViewController
+                                    if vc != nil {
+                                        LiveCallViewController.presentLiveCallViewController(vc!, room)
+                                    }
+                                }).disposed(by: self.disposeBag)
+                        }
                     }
                 } else if signal.msgType == LiveSignalType.HangupLiveCall.rawValue {
                     if room != nil {
-                        if room!.id == signal.roomId {
-                            
-                        }
+                        IMLiveManager.shared.onMemberHangup(roomId: signal.roomId, uId: signal.operatorId)
                     }
                 } else if signal.msgType == LiveSignalType.EndLiveCall.rawValue {
                     if room != nil {
-                        if room!.id == signal.roomId {
-                            
-                        }
+                        IMLiveManager.shared.onEndCall(roomId: signal.roomId)
                     }
                 }
             }

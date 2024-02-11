@@ -11,15 +11,18 @@ class CreateRoomReqVo: Codable {
     
     let uId: Int64
     let mode: Int
+    let members: Set<Int64>
     
-    init(uId: Int64, mode: Int) {
+    init(uId: Int64, mode: Int, members: Set<Int64>) {
         self.uId = uId
         self.mode = mode
+        self.members = members
     }
     
     enum CodingKeys: String, CodingKey {
         case uId = "u_id"
         case mode = "mode"
+        case members = "members"
     }
 }
 
@@ -38,5 +41,14 @@ class CreateRoomResVo: Codable {
         case members = "members"
         case createTime = "create_time"
         case participants = "participants"
+    }
+    
+    init(id: String, mode: Int, members: Set<Int64>, ownerId: Int64, createTime: Int64, participants: Array<ParticipantVo>?) {
+        self.id = id
+        self.mode = mode
+        self.members = members
+        self.ownerId = ownerId
+        self.createTime = createTime
+        self.participants = participants
     }
 }

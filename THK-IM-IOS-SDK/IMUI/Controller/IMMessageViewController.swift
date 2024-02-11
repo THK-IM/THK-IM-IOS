@@ -59,8 +59,16 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         return true
     }
     
+    override func hasSearchMenu() -> Bool {
+        return true
+    }
+    
     override func menuImages(menu: String) -> UIImage? {
-        return UIImage(named: "ic_titlebar_more")?.scaledToSize(CGSize.init(width: 24, height: 24))
+        if menu == "search" {
+            return UIImage(named: "ic_titlebar_call")?.scaledToSize(CGSize.init(width: 24, height: 24))
+        } else {
+            return UIImage(named: "ic_titlebar_more")?.scaledToSize(CGSize.init(width: 24, height: 24))
+        }
     }
     
     override func onMenuClick(menu: String) {
@@ -68,21 +76,28 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
             return
         }
         if (session.type == SessionType.Single.rawValue) {
-            IMCoreManager.shared.userModule.queryUser(id: session.entityId)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { user in
-                    IMUIManager.shared.pageRouter?.openUserPage(controller: self, user: user)
-                }).disposed(by: self.disposeBag)
+            if menu == "search" {
+                IMUIManager.shared.pageRouter?.openLiveCall(controller: self, session: session)
+            } else {
+                IMCoreManager.shared.userModule.queryUser(id: session.entityId)
+                    .compose(RxTransformer.shared.io2Main())
+                    .subscribe(onNext: { user in
+                        IMUIManager.shared.pageRouter?.openUserPage(controller: self, user: user)
+                    }).disposed(by: self.disposeBag)
+            }
         } else if (session.type == SessionType.Group.rawValue ||
                    session.type == SessionType.SuperGroup.rawValue
         ) {
-            IMCoreManager.shared.groupModule.findById(id: session.entityId)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { group in
-                    if let g = group  {
-                        IMUIManager.shared.pageRouter?.openGroupPage(controller: self, group: g)
-                    }
-                }).disposed(by: self.disposeBag)
+            if menu == "search" {
+            } else {
+                IMCoreManager.shared.groupModule.findById(id: session.entityId)
+                    .compose(RxTransformer.shared.io2Main())
+                    .subscribe(onNext: { group in
+                        if let g = group  {
+                            IMUIManager.shared.pageRouter?.openGroupPage(controller: self, group: g)
+                        }
+                    }).disposed(by: self.disposeBag)
+            }
         }
     }
     

@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import RxSwift
 
 class RequestCallLayout: UIView {
+    private let disposeBag = DisposeBag()
     
     private weak var liveProtocol: LiveCallProtocol? = nil
     
@@ -16,7 +18,7 @@ class RequestCallLayout: UIView {
         let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         v.image = Bubble().drawRectWithRoundedCorner(
             radius: 30, borderWidth: 1,
-            backgroundColor: UIColor.init(hex: "#40000000"), borderColor: UIColor.init(hex: "#40000000"),
+            backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
             width: 60, height: 60)
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
@@ -29,7 +31,7 @@ class RequestCallLayout: UIView {
         let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         v.image = Bubble().drawRectWithRoundedCorner(
             radius: 30, borderWidth: 1,
-            backgroundColor: UIColor.init(hex: "#40000000"), borderColor: UIColor.init(hex: "#40000000"),
+            backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
             width: 60, height: 60)
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
@@ -42,14 +44,8 @@ class RequestCallLayout: UIView {
     
     private let hungUpView: UIImageView = {
         let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        v.image = Bubble().drawRectWithRoundedCorner(
-            radius: 30, borderWidth: 1,
-            backgroundColor: UIColor.init(hex: "#40000000"), borderColor: UIColor.init(hex: "#40000000"),
-            width: 60, height: 60)
+        v.image = UIImage.init(named: "ic_call_hangup")
         v.contentMode = .scaleAspectFit
-        let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
-        contentView.setImage(UIImage.init(named: "ic_call_hangup"), for: .normal)
-        v.addSubview(contentView)
         return v
     }()
     
@@ -89,6 +85,56 @@ class RequestCallLayout: UIView {
             make.height.equalTo(60)
             make.centerX.equalToSuperview()
         }
+        
+        self.switchCameraView.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return touches.view == self?.switchCameraView
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+            if let liveProtocol = self?.liveProtocol {
+                liveProtocol.switchLocalCamera()
+            }
+        })
+        .disposed(by: disposeBag)
+        
+        self.openOrCloseCamera.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return touches.view == self?.openOrCloseCamera
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+            if let liveProtocol = self?.liveProtocol {
+                if liveProtocol.isCurrentCameraOpened() {
+                    liveProtocol.closeLocalCamera()
+                } else {
+                    liveProtocol.openLocalCamera()
+                }
+            }
+        })
+        .disposed(by: disposeBag)
+        
+        self.hungUpView.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return touches.view == self?.hungUpView
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+            self?.liveProtocol?.hangup()
+        })
+        .disposed(by: disposeBag)
     }
     
     func initCall(_ callProtocol: LiveCallProtocol) {

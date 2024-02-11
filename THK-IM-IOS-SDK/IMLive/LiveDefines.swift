@@ -99,6 +99,10 @@ public class ParticipantVo: Codable {
 
 protocol RoomDelegate: NSObject {
     
+    func onMemberHangup(uId: Int64)
+    
+    func onCallEnd()
+    
     func join(_ p: BaseParticipant)
     
     func leave(_ p: BaseParticipant)

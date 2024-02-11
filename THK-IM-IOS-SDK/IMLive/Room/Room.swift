@@ -123,6 +123,18 @@ class Room: NSObject {
             o.delegate?.join(p)
         }
     }
+    
+    func onCallEnd() {
+        for o in self.observers {
+            o.delegate?.onCallEnd()
+        }
+    }
+    
+    func onMemberHangup(uId: Int64) {
+        for o in self.observers {
+            o.delegate?.onMemberHangup(uId: uId)
+        }
+    }
 
     private func notifyLeave(_ p: BaseParticipant) {
         for o in self.observers {

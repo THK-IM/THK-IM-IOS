@@ -61,10 +61,10 @@ class IMLiveManager {
         self.room = room
     }
     
-    func createRoom(mode: Mode) -> Observable<Room> {
+    func createRoom(ids: Set<Int64>, mode: Mode) -> Observable<Room> {
         room?.destroy()
         let uId = selfId()
-        return self.liveApi.createRoom(CreateRoomReqVo(uId: uId, mode: mode.rawValue))
+        return self.liveApi.createRoom(CreateRoomReqVo(uId: uId, mode: mode.rawValue, members: ids))
             .flatMap{ resVo -> Observable<Room> in
                 let room = Room(
                     id: resVo.id, ownerId: resVo.ownerId, uId: uId, mode: mode, members: resVo.members,
@@ -111,15 +111,33 @@ class IMLiveManager {
         if let room = self.room  {
             if uId == room.ownerId {
                 self.liveApi.deleteRoom(DelRoomReqVo(roomId: room.id, uId: uId))
-                    .subscribe(onCompleted: { [weak self] in
+                    .subscribe(onError: { [weak self] _ in
+                        self?.destroyRoom()
+                    } , onCompleted: { [weak self] in
                         self?.destroyRoom()
                     }).disposed(by: self.disposeBag)
             } else {
                 self.liveApi.refuseJoinRoom(RefuseJoinReqVo(roomId: room.id, uId: uId))
-                    .subscribe(onCompleted: { [weak self] in
+                    .subscribe(onError: { [weak self] _ in
+                        self?.destroyRoom()
+                    } , onCompleted: { [weak self] in
                         self?.destroyRoom()
                     }).disposed(by: self.disposeBag)
             }
+        }
+    }
+    
+    func onMemberHangup(roomId: String, uId: Int64) {
+        if let room = self.room {
+            if room.id == roomId {
+                room.onMemberHangup(uId: uId)
+            }
+        }
+    }
+    
+    func onEndCall(roomId: String) {
+        if let room = self.room {
+            room.onCallEnd()
         }
     }
     

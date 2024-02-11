@@ -17,8 +17,8 @@ class BeCallingLayout: UIView {
     private let switchCameraView: UIImageView = {
         let v = UIImageView()
         v.image = Bubble().drawRectWithRoundedCorner(
-            radius: 30, borderWidth: 1,
-            backgroundColor: UIColor.init(hex: "#40000000"), borderColor: UIColor.init(hex: "#40000000"),
+            radius: 30, borderWidth: 0,
+            backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
             width: 60, height: 60)
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
@@ -30,8 +30,8 @@ class BeCallingLayout: UIView {
     private let openOrCloseCamera: UIImageView = {
         let v = UIImageView()
         v.image = Bubble().drawRectWithRoundedCorner(
-            radius: 30, borderWidth: 1,
-            backgroundColor: UIColor.init(hex: "#40000000"), borderColor: UIColor.init(hex: "#40000000"),
+            radius: 30, borderWidth: 0,
+            backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
             width: 60, height: 60)
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))

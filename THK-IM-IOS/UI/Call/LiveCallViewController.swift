@@ -48,13 +48,11 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
     
     private let participantLocalView: ParticipantView = {
         let view = ParticipantView()
-        view.isHidden = true
         return view
     }()
     
     private let participantRemoteView: ParticipantView = {
         let view = ParticipantView()
-        view.isHidden = true
         return view
     }()
     
@@ -115,27 +113,44 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
         }
         
         if let room = IMLiveManager.shared.getRoom() {
+            room.registerObserver(self)
             self.setupView(room)
         }
     }
     
     private func setupView(_ room: Room) {
+        self.showUserInfo()
+        var remoteParticipantCount = 0
         room.getAllParticipants().forEach({ p in
             join(p)
+            if (p is RemoteParticipant) {
+                remoteParticipantCount += 1
+            }
         })
-        let localParticipant = room.getLocalParticipant()
-        let remoteParticipants = room.getRemoteParticipants()
-        if remoteParticipants.count > 0 {
-            callStats = LiveCallStatus.Calling
-            self.showCallingView()
+        
+        if (remoteParticipantCount > 0) {
+            showCallingView()
         } else {
-            // 自己发起的
-            if room.ownerId == IMLiveManager.shared.selfId() {
-                callStats = LiveCallStatus.RequestCall
-                self.showRequestCallView()
+            if (room.ownerId == IMLiveManager.shared.selfId()) {
+                showRequestCallView()
             } else {
-                callStats = LiveCallStatus.BeCalling
-                self.showBeCallingView()
+                showBeCallingView()
+            }
+        }
+    }
+    
+    private func showUserInfo() {
+        guard let room = IMLiveManager.shared.getRoom() else {
+            return
+        }
+        for m in room.members {
+            if m != IMLiveManager.shared.selfId() {
+                IMCoreManager.shared.userModule.queryUser(id: m)
+                    .compose(RxTransformer.shared.io2Main())
+                    .subscribe(onNext: { [weak self] user in
+                        self?.callingInfoLayout.setUserInfo(user: user)
+                        self?.callingInfoLayout.isHidden = false
+                    }).disposed(by: self.disposeBag)
             }
         }
     }
@@ -182,6 +197,17 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
         self.exit()
     }
     
+    func onMemberHangup(uId: Int64) {
+        showToast("对方已挂断")
+        exit()
+    }
+    
+    func onCallEnd() {
+        showToast("对方已挂断")
+        exit()
+    }
+    
+    
     func onTextMsgReceived(uId: Int64, text: String) {
         
     }
@@ -191,6 +217,7 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
     }
     
     func exit() {
+        IMLiveManager.shared.destroyRoom()
         if self.navigationController == nil {
             self.dismiss(animated: true)
         } else {

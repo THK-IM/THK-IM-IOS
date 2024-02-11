@@ -15,4 +15,6 @@ public protocol IMPageRouter {
     func openUserPage(controller: UIViewController, user: User)
     
     func openGroupPage(controller: UIViewController, group: Group)
+    
+    func openLiveCall(controller: UIViewController, session: Session)
 }

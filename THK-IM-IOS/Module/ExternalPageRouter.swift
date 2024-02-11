@@ -7,8 +7,28 @@
 //
 
 import UIKit
+import RxSwift
 
 class ExternalPageRouter: IMPageRouter {
+    
+    private let disposeBag = DisposeBag()
+    
+    func openLiveCall(controller: UIViewController, session: Session) {
+        if session.type == SessionType.Single.rawValue {
+            weak var vc = controller
+            var ids = Set<Int64>()
+            ids.insert(IMLiveManager.shared.selfId())
+            ids.insert(session.entityId)
+            IMLiveManager.shared.createRoom(ids: ids, mode: Mode.Video)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { room in
+                    if vc != nil {
+                        LiveCallViewController.presentLiveCallViewController(vc!, room)
+                    }
+                }).disposed(by: self.disposeBag)
+        }
+    }
+    
     
     func openSession(controller: UIViewController, session: Session) {
         let messageController = IMMessageViewController()
