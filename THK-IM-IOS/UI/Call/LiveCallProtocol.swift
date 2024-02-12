@@ -10,50 +10,63 @@ import Foundation
 
 protocol LiveCallProtocol: AnyObject {
     
-    /**
-     *  return 0 未知, 1 后置, 2 前置
-     */
-    func currentLocalCamera() -> Int
     
     /**
-     * 本地摄像头是否开启 1 开启 0 关闭
+     * 扬声器是否打开
      */
-    func isCurrentCameraOpened()-> Bool
-    
+    func isSpeakerOn() -> Bool
+
+    /**
+     * 打开/关闭扬声器
+     */
+    func muteSpeaker(mute: Bool)
+
+    /**
+     * 获取本地摄像头: 0 未知, 1 后置, 2 前置
+     */
+    func currentLocalCamera()-> Int
+
     /**
      * 切换本地摄像头
      */
     func switchLocalCamera()
-    
+
     /**
      * 打开本地摄像头
      */
-    func openLocalCamera()
-    
+    func muteLocalVideo(mute: Bool)
+
+    func isLocalVideoMuted()-> Bool
+
     /**
-     * 关闭本地摄像头
+     * 打开/关闭本地音频
      */
-    func closeLocalCamera()
-    
+    func muteLocalAudio(mute: Bool)
+
     /**
-     * 打开远端视频
+     * 本地音频是否关闭
      */
-    func openRemoteVideo(user: User)
-    
+    func isLocalAudioMuted()-> Bool
+
     /**
-     * 关闭远端视频
+     * 打开/关闭远端音频
      */
-    func closeRemoteVideo(user: User)
-    
+    func muteRemoteAudio(uId: Int64, mute: Bool)
+
     /**
-     * 打开远端音频
+     * 远端音频是否关闭
      */
-    func openRemoteAudio(user: User)
-    
+    func isRemoteAudioMuted(uId: Int64)-> Bool
+
     /**
-     * 关闭远端音频
+     * 打开/关闭远端视频
      */
-    func closeRemoteAudio(user: User)
+    func muteRemoteVideo(uId: Int64, mute: Bool)
+
+    /**
+     * 远端视频是否关闭
+     */
+    func isRemoteVideoMuted(uId: Int64) -> Bool
     
     /**
      * 接听

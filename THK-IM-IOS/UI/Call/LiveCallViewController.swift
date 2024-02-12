@@ -196,6 +196,7 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
             self.participantRemoteView.startPeerConnection()
             self.participantRemoteView.setFullScreen(true)
             self.participantLocalView.setFullScreen(false)
+            self.view.bringSubviewToFront(self.participantLocalView)
         }
     }
     
@@ -245,85 +246,53 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
 }
 
 extension LiveCallViewController: LiveCallProtocol {
-    func currentLocalCamera() -> Int {
-        guard let room = IMLiveManager.shared.getRoom() else {
-            return 0
-        }
-        guard let localParticipant = room.getLocalParticipant() as? LocalParticipant else {
-            return 0
-        }
-        return localParticipant.currentCamera()
+    func isSpeakerOn() -> Bool {
+        return false
     }
     
-    func isCurrentCameraOpened() -> Bool {
-        guard let room = IMLiveManager.shared.getRoom() else {
-            return false
-        }
-        guard let localParticipant = room.getLocalParticipant() as? LocalParticipant else {
-            return false
-        }
-        return !localParticipant.getVideoMuted()
+    func muteSpeaker(mute: Bool) {
+    }
+    
+    func muteLocalVideo(mute: Bool) {
+        self.participantLocalView.muteVideo( mute)
+    }
+    
+    func isLocalVideoMuted() -> Bool {
+        return self.participantLocalView.isVideoMute()
+    }
+    
+    func muteLocalAudio(mute: Bool) {
+        self.participantLocalView.muteAudio(mute)
+    }
+    
+    func isLocalAudioMuted() -> Bool {
+        return self.participantLocalView.isAudioMute()
+    }
+    
+    func muteRemoteAudio(uId: Int64, mute: Bool) {
+        self.participantRemoteView.muteAudio(mute)
+    }
+    
+    func isRemoteAudioMuted(uId: Int64) -> Bool {
+        return self.participantRemoteView.isAudioMute()
+    }
+    
+    func muteRemoteVideo(uId: Int64, mute: Bool) {
+        self.participantRemoteView.muteVideo(mute)
+    }
+    
+    func isRemoteVideoMuted(uId: Int64) -> Bool {
+        self.participantRemoteView.isVideoMute()
+    }
+    
+    func currentLocalCamera() -> Int {
+        return self.participantLocalView.currentCamera()
     }
     
     func switchLocalCamera() {
         self.participantLocalView.switchCamera()
     }
     
-    func openLocalCamera() {
-        self.participantLocalView.muteVideo(muted: false)
-    }
-    
-    func closeLocalCamera() {
-        self.participantLocalView.muteVideo(muted: true)
-    }
-    
-    func openRemoteVideo(user: User) {
-        guard let room = IMLiveManager.shared.getRoom() else {
-            return
-        }
-        let remoteParticipants = room.getRemoteParticipants()
-        for p in remoteParticipants {
-            if p.uId == user.id {
-                p.setVideoMuted(false)
-            }
-        }
-    }
-    
-    func closeRemoteVideo(user: User) {
-        guard let room = IMLiveManager.shared.getRoom() else {
-            return
-        }
-        let remoteParticipants = room.getRemoteParticipants()
-        for p in remoteParticipants {
-            if p.uId == user.id {
-                p.setVideoMuted(true)
-            }
-        }
-    }
-    
-    func openRemoteAudio(user: User) {
-        guard let room = IMLiveManager.shared.getRoom() else {
-            return
-        }
-        let remoteParticipants = room.getRemoteParticipants()
-        for p in remoteParticipants {
-            if p.uId == user.id {
-                p.setAudioMuted(true)
-            }
-        }
-    }
-    
-    func closeRemoteAudio(user: User) {
-        guard let room = IMLiveManager.shared.getRoom() else {
-            return
-        }
-        let remoteParticipants = room.getRemoteParticipants()
-        for p in remoteParticipants {
-            if p.uId == user.id {
-                p.setAudioMuted(false)
-            }
-        }
-    }
     
     func accept() {
         guard let room = IMLiveManager.shared.getRoom() else {

@@ -67,14 +67,14 @@ class RequestCallLayout: UIView {
         let left = (UIScreen.main.bounds.width-160) / 2 - 60
         self.addSubview(self.switchCameraView)
         self.switchCameraView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-300)
+            make.bottom.equalToSuperview().offset(-200)
             make.left.equalToSuperview().offset(left)
             make.width.equalTo(60)
             make.height.equalTo(60)
         }
         self.addSubview(self.openOrCloseCamera)
         self.openOrCloseCamera.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-300)
+            make.bottom.equalToSuperview().offset(-200)
             make.right.equalToSuperview().offset(-(left))
             make.width.equalTo(60)
             make.height.equalTo(60)
@@ -82,7 +82,7 @@ class RequestCallLayout: UIView {
         
         self.addSubview(self.hungUpView)
         self.hungUpView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-180)
+            make.bottom.equalToSuperview().offset(-100)
             make.width.equalTo(60)
             make.height.equalTo(60)
             make.centerX.equalToSuperview()
@@ -115,10 +115,10 @@ class RequestCallLayout: UIView {
         .when(.ended)
         .subscribe(onNext: { [weak self]  _ in
             if let liveProtocol = self?.liveProtocol {
-                if liveProtocol.isCurrentCameraOpened() {
-                    liveProtocol.closeLocalCamera()
+                if liveProtocol.isLocalVideoMuted() {
+                    liveProtocol.muteLocalVideo(mute: false)
                 } else {
-                    liveProtocol.openLocalCamera()
+                    liveProtocol.muteLocalVideo(mute: true)
                 }
             }
         })

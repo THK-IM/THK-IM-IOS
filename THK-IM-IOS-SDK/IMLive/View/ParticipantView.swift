@@ -16,7 +16,7 @@ class ParticipantView: UIView {
     
     private let disposeBag = DisposeBag()
     
-    var defaultScaleX = 0.35
+    var defaultScaleX = 0.3
     var defaultScaleY = 0.3
     
     lazy var rtcVideoView: RTCMTLVideoView = {
@@ -106,23 +106,41 @@ class ParticipantView: UIView {
         self.transform.tx = translationX
         self.transform.ty = translationY
     }
-        
-    func muteAudio(muted: Bool) {
-        participant?.setAudioMuted(muted)
-    }
     
-    func muteVideo(muted: Bool) {
-        participant?.setVideoMuted(muted)
+    func currentCamera() -> Int {
+        if (participant != nil && participant! is LocalParticipant) {
+            return (participant! as! LocalParticipant).currentCamera()
+        }
+        return 0
     }
     
     func switchCamera() {
-        if let p = self.participant {
-            if p is LocalParticipant {
-                (p as! LocalParticipant).switchCamera()
-            } else {
-                
-            }
+        if participant == nil {
+            return
         }
+        (participant! as? LocalParticipant)?.switchCamera()
+    }
+    
+    func isAudioMute() -> Bool {
+        if participant == nil {
+            return false
+        }
+        return participant!.getAudioMuted()
+    }
+    
+    func muteAudio(_ mute: Bool) {
+        participant?.setAudioMuted(mute)
+    }
+    
+    func isVideoMute() -> Bool {
+        if participant == nil {
+            return false
+        }
+        return participant!.getVideoMuted()
+    }
+    
+    func muteVideo(_ mute: Bool) {
+        participant?.setVideoMuted(mute)
     }
     
     

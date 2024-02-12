@@ -83,14 +83,14 @@ class CallingLayout: UIView {
     private func setupUI() {
         self.addSubview(self.switchMicro)
         self.switchMicro.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-300)
+            make.bottom.equalToSuperview().offset(-200)
             make.left.equalToSuperview().offset((UIScreen.main.bounds.width) / 4 - 60)
             make.width.equalTo(60)
             make.height.equalTo(60)
         }
         self.addSubview(self.switchSpeaker)
         self.switchSpeaker.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-300)
+            make.bottom.equalToSuperview().offset(-200)
             make.left.equalToSuperview().offset(2 * (UIScreen.main.bounds.width) / 4 - 30)
             make.width.equalTo(60)
             make.height.equalTo(60)
@@ -98,7 +98,7 @@ class CallingLayout: UIView {
         
         self.addSubview(self.openOrCloseCamera)
         self.openOrCloseCamera.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-300)
+            make.bottom.equalToSuperview().offset(-200)
             make.left.equalToSuperview().offset(3 * (UIScreen.main.bounds.width) / 4)
             make.width.equalTo(60)
             make.height.equalTo(60)
@@ -106,7 +106,7 @@ class CallingLayout: UIView {
         
         self.addSubview(self.hungUpView)
         self.hungUpView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-180)
+            make.bottom.equalToSuperview().offset(-100)
             make.width.equalTo(60)
             make.height.equalTo(60)
             make.centerX.equalToSuperview()
@@ -159,10 +159,10 @@ class CallingLayout: UIView {
         .when(.ended)
         .subscribe(onNext: { [weak self]  _ in
             if let liveProtocol = self?.liveProtocol {
-                if liveProtocol.isCurrentCameraOpened() {
-                    liveProtocol.closeLocalCamera()
+                if liveProtocol.isLocalVideoMuted() {
+                    liveProtocol.muteLocalVideo(mute: false)
                 } else {
-                    liveProtocol.openLocalCamera()
+                    liveProtocol.muteLocalVideo(mute: true)
                 }
             }
         })

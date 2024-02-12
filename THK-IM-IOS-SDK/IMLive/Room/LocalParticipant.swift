@@ -51,7 +51,7 @@ class LocalParticipant: BaseParticipant {
         }
         
         if self.videoEnable && role == Role.Broadcaster {
-            currentDevice = self.getFrontCameraDevice()
+            currentDevice = self.getBackCameraDevice()
             if currentDevice == nil {
                 return
             }
@@ -64,7 +64,7 @@ class LocalParticipant: BaseParticipant {
             if format == nil {
                 return
             }
-            let fps = 10
+            let fps = 20
             if format != nil {
                 videoCapturer?.startCapture(with: currentDevice!, format: format!, fps: Int(fps))
             }
@@ -136,7 +136,7 @@ class LocalParticipant: BaseParticipant {
     
     private func getCameraDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let discovery = AVCaptureDevice.DiscoverySession.init(
-            deviceTypes: [.builtInWideAngleCamera],
+            deviceTypes: [.builtInDualCamera, .builtInTrueDepthCamera, .builtInTripleCamera],
             mediaType: .video,
             position: position
         )
@@ -171,7 +171,7 @@ class LocalParticipant: BaseParticipant {
         if format == nil {
             return
         }
-        let fps = 10
+        let fps = 20
         if format != nil {
             videoCapturer?.startCapture(with: self.currentDevice!, format: format!, fps: Int(fps))
         }
@@ -184,8 +184,9 @@ class LocalParticipant: BaseParticipant {
             if #available(iOS 16.0, *) {
                 for p in f.supportedMaxPhotoDimensions {
                     DDLogInfo("LocalParticipant, device format \(p.width), \(p.height)")
-                    if p.width == 1920 && p.height == 1440 {
+                    if p.width == 640 && p.height == 480 {
                         format = f
+                        break
                     }
                 }
             } else {
