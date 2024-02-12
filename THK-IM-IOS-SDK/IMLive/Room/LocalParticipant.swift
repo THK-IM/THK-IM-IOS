@@ -60,19 +60,10 @@ class LocalParticipant: BaseParticipant {
             self.videoCapturer = RTCCameraVideoCapturer()
             videoCapturer?.delegate = videoSource
             
-            let format = RTCCameraVideoCapturer.supportedFormats(for: currentDevice!).first
-//            let formats = RTCCameraVideoCapturer.supportedFormats(for: currentDevice!)
-//            for f in formats {
-//                if #available(iOS 16.0, *) {
-//                    let p = f.supportedMaxPhotoDimensions.first
-//                    if p?.width == 480 && p?.height == 360 {
-//                        format = f
-//                    }
-//                    DDLogInfo("LocalParticipant, device format \(f.minISO), \(f.maxISO), \(f.supportedMaxPhotoDimensions)")
-//                } else {
-//                    DDLogInfo("LocalParticipant, device format \(f.minISO), \(f.maxISO)")
-//                }
-//            }
+            let format = chooseFormat(currentDevice!)
+            if format == nil {
+                return
+            }
             let fps = 10
             if format != nil {
                 videoCapturer?.startCapture(with: currentDevice!, format: format!, fps: Int(fps))
@@ -178,11 +169,32 @@ class LocalParticipant: BaseParticipant {
         if self.currentDevice == nil {
             return
         }
-        let format = RTCCameraVideoCapturer.supportedFormats(for: self.currentDevice!).first
+        let format = chooseFormat(self.currentDevice!)
         if format == nil {
             return
         }
-        self.videoCapturer?.startCapture(with: self.currentDevice!, format: format!, fps: 10)
+        let fps = 10
+        if format != nil {
+            videoCapturer?.startCapture(with: self.currentDevice!, format: format!, fps: Int(fps))
+        }
+    }
+    
+    private func chooseFormat(_ device: AVCaptureDevice) -> AVCaptureDevice.Format? {
+        var format = RTCCameraVideoCapturer.supportedFormats(for: device).first
+        let formats = RTCCameraVideoCapturer.supportedFormats(for: device)
+        for f in formats {
+            if #available(iOS 16.0, *) {
+                for p in f.supportedMaxPhotoDimensions {
+                    DDLogInfo("LocalParticipant, device format \(p.width), \(p.height)")
+                    if p.width == 1920 && p.height == 1440 {
+                        format = f
+                    }
+                }
+            } else {
+                DDLogInfo("LocalParticipant, device format \(f.minISO), \(f.maxISO)")
+            }
+        }
+        return format
     }
     
     override func onDisconnected() {

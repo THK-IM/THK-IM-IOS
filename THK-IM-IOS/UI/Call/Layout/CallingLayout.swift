@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import RxSwift
 
 class CallingLayout: UIView {
+    private let disposeBag = DisposeBag()
     
     private weak var liveProtocol: LiveCallProtocol? = nil
     
@@ -16,13 +18,14 @@ class CallingLayout: UIView {
         let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         v.image = Bubble().drawRectWithRoundedCorner(
             radius: 30, borderWidth: 1,
-            backgroundColor: UIColor.init(hex: "#40000000"), borderColor: UIColor.init(hex: "#40000000"),
+            backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
             width: 60, height: 60)
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
         contentView.setImage(UIImage.init(named: "ic_micro_on"), for: .normal)
         contentView.setImage(UIImage.init(named: "ic_micro_off"), for: .selected)
         contentView.isSelected = true
+        contentView.isUserInteractionEnabled = false
         v.addSubview(contentView)
         return v
     }()
@@ -31,13 +34,14 @@ class CallingLayout: UIView {
         let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         v.image = Bubble().drawRectWithRoundedCorner(
             radius: 30, borderWidth: 1,
-            backgroundColor: UIColor.init(hex: "#40000000"), borderColor: UIColor.init(hex: "#40000000"),
+            backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
             width: 60, height: 60)
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
-        contentView.setImage(UIImage.init(named: "ic_speak_on"), for: .normal)
-        contentView.setImage(UIImage.init(named: "ic_speak_off"), for: .selected)
+        contentView.setImage(UIImage.init(named: "ic_speaker_on"), for: .normal)
+        contentView.setImage(UIImage.init(named: "ic_speaker_off"), for: .selected)
         contentView.isSelected = true
+        contentView.isUserInteractionEnabled = false
         v.addSubview(contentView)
         return v
     }()
@@ -46,27 +50,22 @@ class CallingLayout: UIView {
         let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         v.image = Bubble().drawRectWithRoundedCorner(
             radius: 30, borderWidth: 1,
-            backgroundColor: UIColor.init(hex: "#40000000"), borderColor: UIColor.init(hex: "#40000000"),
+            backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
             width: 60, height: 60)
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
         contentView.setImage(UIImage.init(named: "ic_open_camera"), for: .normal)
         contentView.setImage(UIImage.init(named: "ic_close_camera"), for: .selected)
         contentView.isSelected = true
+        contentView.isUserInteractionEnabled = false
         v.addSubview(contentView)
         return v
     }()
     
     private let hungUpView: UIImageView = {
         let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        v.image = Bubble().drawRectWithRoundedCorner(
-            radius: 30, borderWidth: 1,
-            backgroundColor: UIColor.init(hex: "#40000000"), borderColor: UIColor.init(hex: "#40000000"),
-            width: 60, height: 60)
+        v.image = UIImage.init(named: "ic_call_hangup")
         v.contentMode = .scaleAspectFit
-        let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
-        contentView.setImage(UIImage.init(named: "ic_call_hangup"), for: .normal)
-        v.addSubview(contentView)
         return v
     }()
     
@@ -84,34 +83,104 @@ class CallingLayout: UIView {
     private func setupUI() {
         self.addSubview(self.switchMicro)
         self.switchMicro.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.left.equalToSuperview().offset((UIScreen.main.bounds.width) / 3 - 30)
+            make.bottom.equalToSuperview().offset(-300)
+            make.left.equalToSuperview().offset((UIScreen.main.bounds.width) / 4 - 60)
             make.width.equalTo(60)
             make.height.equalTo(60)
         }
         self.addSubview(self.switchSpeaker)
         self.switchSpeaker.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.left.equalToSuperview().offset(2 * (UIScreen.main.bounds.width) / 3 - 30)
+            make.bottom.equalToSuperview().offset(-300)
+            make.left.equalToSuperview().offset(2 * (UIScreen.main.bounds.width) / 4 - 30)
             make.width.equalTo(60)
             make.height.equalTo(60)
         }
         
         self.addSubview(self.openOrCloseCamera)
         self.openOrCloseCamera.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.left.equalToSuperview().offset(UIScreen.main.bounds.width - 30)
+            make.bottom.equalToSuperview().offset(-300)
+            make.left.equalToSuperview().offset(3 * (UIScreen.main.bounds.width) / 4)
             make.width.equalTo(60)
             make.height.equalTo(60)
         }
         
         self.addSubview(self.hungUpView)
         self.hungUpView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(100)
+            make.bottom.equalToSuperview().offset(-180)
             make.width.equalTo(60)
             make.height.equalTo(60)
             make.centerX.equalToSuperview()
         }
+        
+        self.switchMicro.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return touches.view == self?.switchMicro
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+//            if let liveProtocol = self?.liveProtocol {
+//                liveProtocol.switchLocalCamera()
+//            }
+        })
+        .disposed(by: disposeBag)
+        
+        self.switchSpeaker.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return touches.view == self?.switchSpeaker
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+//            if let liveProtocol = self?.liveProtocol {
+//                if liveProtocol.isCurrentCameraOpened() {
+//                    liveProtocol.closeLocalCamera()
+//                } else {
+//                    liveProtocol.openLocalCamera()
+//                }
+//            }
+        })
+        .disposed(by: disposeBag)
+        
+        self.openOrCloseCamera.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return touches.view == self?.openOrCloseCamera
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+            if let liveProtocol = self?.liveProtocol {
+                if liveProtocol.isCurrentCameraOpened() {
+                    liveProtocol.closeLocalCamera()
+                } else {
+                    liveProtocol.openLocalCamera()
+                }
+            }
+        })
+        .disposed(by: disposeBag)
+        
+        self.hungUpView.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return touches.view == self?.hungUpView
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+            self?.liveProtocol?.hangup()
+        })
+        .disposed(by: disposeBag)
     }
     
     

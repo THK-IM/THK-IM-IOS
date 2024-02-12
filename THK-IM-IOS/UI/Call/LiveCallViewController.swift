@@ -53,6 +53,7 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
     
     private let participantRemoteView: ParticipantView = {
         let view = ParticipantView()
+        view.isHidden = true
         return view
     }()
     
@@ -122,7 +123,7 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
         self.showUserInfo()
         var remoteParticipantCount = 0
         room.getAllParticipants().forEach({ p in
-            join(p)
+            initParticipantView(p)
             if (p is RemoteParticipant) {
                 remoteParticipantCount += 1
             }
@@ -179,13 +180,26 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
         self.beCallLayout.initCall(self)
     }
     
-    
-    func join(_ p: BaseParticipant) {
+    private func initParticipantView(_ p: BaseParticipant) {
         if p is LocalParticipant {
             self.participantLocalView.setParticipant(p: p)
+            if let room = IMLiveManager.shared.getRoom() {
+                if room.ownerId == IMLiveManager.shared.selfId() {
+                    self.participantLocalView.startPeerConnection()
+                }
+            }
         } else {
+            self.participantRemoteView.isHidden = false
             self.participantRemoteView.setParticipant(p: p)
+            self.participantRemoteView.startPeerConnection()
+            self.participantRemoteView.setFullScreen(true)
+            self.participantLocalView.setFullScreen(false)
         }
+    }
+    
+    func join(_ p: BaseParticipant) {
+        self.initParticipantView(p)
+        self.showCallingView()
     }
     
     func leave(_ p: BaseParticipant) {
@@ -312,10 +326,10 @@ extension LiveCallViewController: LiveCallProtocol {
         guard let room = IMLiveManager.shared.getRoom() else {
             return
         }
-        guard let localParticipant = room.getLocalParticipant() else {
-            return
-        }
-        localParticipant.initPeerConnection()
+        room.getAllParticipants().forEach({ p in
+            p.startPeerConnection()
+        })
+        self.showCallingView()
     }
     
     func hangup() {

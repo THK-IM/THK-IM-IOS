@@ -19,9 +19,9 @@ class ParticipantView: UIView {
     var defaultScaleX = 0.35
     var defaultScaleY = 0.3
     
-    lazy var eAGLVideoView: RTCEAGLVideoView = {
-        let v = RTCEAGLVideoView()
-        v.contentMode = .scaleAspectFill
+    lazy var rtcVideoView: RTCMTLVideoView = {
+        let v = RTCMTLVideoView()
+        v.contentMode = .scaleToFill
         return v
     }()
     
@@ -35,16 +35,20 @@ class ParticipantView: UIView {
     }
     
     private func setupView() {
-        self.addSubview(self.eAGLVideoView)
-        self.eAGLVideoView.snp.makeConstraints { make in
+        self.addSubview(self.rtcVideoView)
+        self.rtcVideoView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
     
     func setParticipant(p: BaseParticipant) {
         self.participant = p
-        self.participant?.attachViewRender(self.eAGLVideoView)
+        self.participant?.attachViewRender(self.rtcVideoView)
         self.participant?.initPeerConnection()
+    }
+    
+    func startPeerConnection() {
+        self.participant?.startPeerConnection()
     }
     
     func setFullScreen(_ fullScreen: Bool) {
@@ -102,7 +106,7 @@ class ParticipantView: UIView {
         self.transform.tx = translationX
         self.transform.ty = translationY
     }
-    
+        
     func muteAudio(muted: Bool) {
         participant?.setAudioMuted(muted)
     }

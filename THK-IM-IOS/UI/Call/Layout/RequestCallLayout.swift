@@ -23,6 +23,7 @@ class RequestCallLayout: UIView {
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
         contentView.setImage(UIImage.init(named: "ic_switch_camera"), for: .normal)
+        contentView.isUserInteractionEnabled = false
         v.addSubview(contentView)
         return v
     }()
@@ -38,6 +39,7 @@ class RequestCallLayout: UIView {
         contentView.setImage(UIImage.init(named: "ic_open_camera"), for: .normal)
         contentView.setImage(UIImage.init(named: "ic_close_camera"), for: .selected)
         contentView.isSelected = true
+        contentView.isUserInteractionEnabled = false
         v.addSubview(contentView)
         return v
     }()
@@ -62,17 +64,17 @@ class RequestCallLayout: UIView {
     
     
     private func setupUI() {
-        let left = (UIScreen.main.bounds.width-100) / 2 - 60
+        let left = (UIScreen.main.bounds.width-160) / 2 - 60
         self.addSubview(self.switchCameraView)
         self.switchCameraView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-300)
             make.left.equalToSuperview().offset(left)
             make.width.equalTo(60)
             make.height.equalTo(60)
         }
         self.addSubview(self.openOrCloseCamera)
         self.openOrCloseCamera.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-300)
             make.right.equalToSuperview().offset(-(left))
             make.width.equalTo(60)
             make.height.equalTo(60)
@@ -80,7 +82,7 @@ class RequestCallLayout: UIView {
         
         self.addSubview(self.hungUpView)
         self.hungUpView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(100)
+            make.bottom.equalToSuperview().offset(-180)
             make.width.equalTo(60)
             make.height.equalTo(60)
             make.centerX.equalToSuperview()

@@ -69,17 +69,17 @@ class BeCallingLayout: UIView {
     }
     
     private func setupUI() {
-        let left = (UIScreen.main.bounds.width-100) / 2 - 60
+        let left = (UIScreen.main.bounds.width-160) / 2 - 60
         self.addSubview(self.switchCameraView)
         self.switchCameraView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-300)
             make.left.equalToSuperview().offset(left)
             make.width.equalTo(60)
             make.height.equalTo(60)
         }
         self.addSubview(self.openOrCloseCamera)
         self.openOrCloseCamera.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-300)
             make.right.equalToSuperview().offset(-(left))
             make.width.equalTo(60)
             make.height.equalTo(60)
@@ -87,15 +87,15 @@ class BeCallingLayout: UIView {
         
         self.addSubview(self.hungUpView)
         self.hungUpView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(160)
-            make.left.equalToSuperview().offset((UIScreen.main.bounds.width-160)/2 - 60)
+            make.bottom.equalToSuperview().offset(-180)
+            make.left.equalToSuperview().offset((UIScreen.main.bounds.width-200)/2 - 60)
             make.width.equalTo(60)
             make.height.equalTo(60)
         }
         self.addSubview(self.acceptView)
         self.acceptView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(160)
-            make.right.equalToSuperview().offset(-((UIScreen.main.bounds.width-160)/2 - 60))
+            make.bottom.equalToSuperview().offset(-180)
+            make.right.equalToSuperview().offset(-((UIScreen.main.bounds.width-200)/2 - 60))
             make.width.equalTo(60)
             make.height.equalTo(60)
         }

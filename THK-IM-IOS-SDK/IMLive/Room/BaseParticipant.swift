@@ -21,7 +21,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     private var audioTracks = [RTCAudioTrack]()
     private var videoTracks = [RTCVideoTrack]()
     private var dataChannels = [String: RTCDataChannel]()
-    private var rtcVideoView: RTCEAGLVideoView?
+    private var rtcVideoView: RTCMTLVideoView?
     private var audioMuted: Bool = false
     private var videoMuted: Bool = false
     
@@ -56,7 +56,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             mandatoryConstraints["OfferToReceiveAudio"] = "true"
             mandatoryConstraints["OfferToReceiveVideo"] = "true"
         }
-        mandatoryConstraints["googCpuOveruseDetection"] = "true"
+        mandatoryConstraints["googCpuOveruseDetection"] = "false"
         let mediaConstraints = RTCMediaConstraints(
             mandatoryConstraints: mandatoryConstraints,
             optionalConstraints: nil
@@ -102,7 +102,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
         }
     }
     
-    open func attachViewRender(_ rtcVideoView: RTCEAGLVideoView) {
+    open func attachViewRender(_ rtcVideoView: RTCMTLVideoView) {
         DDLogInfo("peerConnection attachViewRender \(self)")
         if self.rtcVideoView != nil {
             detachViewRender()
