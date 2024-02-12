@@ -172,7 +172,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
         }
         do {
             let notify = try JSONDecoder().decode(NotifyBean.self, from: data)
-            DDLogInfo("onNewMessage \(notify.type), \(notify.message)")
+            DDLogInfo("Participant: onNewMessage \(notify.type), \(notify.message)")
             switch notify.type {
             case NotifyType.NewStream.rawValue:
                 let newStream = try JSONDecoder().decode(
@@ -207,11 +207,11 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
                 }
                 break
             default:
-                DDLogError("onNewMessage unknown type \(notify.type)")
+                DDLogError("Participant: onNewMessage unknown type \(notify.type)")
                 break
             }
         } catch {
-            DDLogError("onNewMessage \(error)")
+            DDLogError("Participant: onNewMessage \(error)")
         }
     }
     
@@ -230,7 +230,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCPeerConnectionState) {
-        DDLogInfo("peerConnection didChange RTCPeerConnectionState: \(newState), \(RTCPeerConnectionState.connected) \(self)")
+        DDLogInfo("peerConnection didChange RTCPeerConnectionState: \(newState.rawValue), \(RTCPeerConnectionState.connected.rawValue) \(self)")
         switch newState {
         case RTCPeerConnectionState.new, RTCPeerConnectionState.connecting:
             break

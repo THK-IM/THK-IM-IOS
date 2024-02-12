@@ -80,8 +80,6 @@ class LocalParticipant: BaseParticipant {
         dcConfig.maxRetransmits = 3
         self.innerDataChannel = p.dataChannel(forLabel: "", configuration: dcConfig)
         self.innerDataChannel?.delegate = self
-        
-        self.startPeerConnection()
     }
     
     override func onLocalSdpSetSuccess(_ sdp: RTCSessionDescription) {

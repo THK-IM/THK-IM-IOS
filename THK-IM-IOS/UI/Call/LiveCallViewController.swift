@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CocoaLumberjack
 
 class LiveCallViewController: BaseViewController, RoomDelegate {
     
@@ -53,7 +54,6 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
     
     private let participantRemoteView: ParticipantView = {
         let view = ParticipantView()
-        view.isHidden = true
         return view
     }()
     
@@ -67,14 +67,16 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(self.participantLocalView)
-        self.participantLocalView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
         self.view.addSubview(self.participantRemoteView)
         self.participantRemoteView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
+        self.view.addSubview(self.participantLocalView)
+        self.participantLocalView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
         self.view.addSubview(self.callingInfoLayout)
         self.callingInfoLayout.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -198,6 +200,7 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
     }
     
     func join(_ p: BaseParticipant) {
+        DDLogInfo("BaseParticipant join \(p.uId)")
         self.initParticipantView(p)
         self.showCallingView()
     }
@@ -326,8 +329,11 @@ extension LiveCallViewController: LiveCallProtocol {
         guard let room = IMLiveManager.shared.getRoom() else {
             return
         }
+        self.participantLocalView.startPeerConnection()
         room.getAllParticipants().forEach({ p in
-            p.startPeerConnection()
+            if (p is RemoteParticipant) {
+                initParticipantView(p)
+            }
         })
         self.showCallingView()
     }

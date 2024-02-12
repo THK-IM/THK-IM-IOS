@@ -37,8 +37,6 @@ class RemoteParticipant: BaseParticipant {
             videoTransceiver.direction = .recvOnly
             p.addTransceiver(of: .video, init: videoTransceiver)
         }
-        
-        self.startPeerConnection()
     }
     
     override func onLocalSdpSetSuccess(_ sdp: RTCSessionDescription) {
@@ -48,8 +46,13 @@ class RemoteParticipant: BaseParticipant {
             return
         }
         
-        IMLiveManager.shared.liveApi
-            .playStream(PlayStreamReqVo(uId: self.uId, roomId: self.roomId, offerSdp: offerBase64, streamKey: self.subStreamKey))
+        let req = PlayStreamReqVo(
+            uId: IMLiveManager.shared.selfId(),
+            roomId: self.roomId,
+            offerSdp: offerBase64,
+            streamKey: self.subStreamKey
+        )
+        IMLiveManager.shared.liveApi.playStream(req)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] bean in
                 let data = Data(base64Encoded: bean.answerSdp) ?? Data()
