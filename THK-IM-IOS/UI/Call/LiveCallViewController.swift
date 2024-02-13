@@ -67,6 +67,7 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.black
         self.view.addSubview(self.participantRemoteView)
         self.participantRemoteView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -115,9 +116,58 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
             make.right.equalToSuperview()
         }
         
+        self.participantLocalView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return true
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                let res = otherGestureRecognizer is UILongPressGestureRecognizer
+                return res
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+            self?.fullLocalParticipantView()
+        })
+        .disposed(by: disposeBag)
+        
+        self.participantRemoteView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                return true
+            }
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+            self?.fullRemoveParticipantView()
+        })
+        .disposed(by: disposeBag)
+        
         if let room = IMLiveManager.shared.getRoom() {
             room.registerObserver(self)
             self.setupView(room)
+        }
+    }
+    
+    private func fullLocalParticipantView() {
+        if !self.participantLocalView.isFullScreen() {
+            self.participantLocalView.setFullScreen(true)
+            self.participantRemoteView.setFullScreen(false)
+            self.view.bringSubviewToFront(self.callingInfoLayout)
+            self.view.bringSubviewToFront(self.callingLayout)
+            self.view.bringSubviewToFront(self.participantRemoteView)
+        }
+    }
+    
+    private func fullRemoveParticipantView() {
+        if !self.participantRemoteView.isFullScreen() {
+            self.participantRemoteView.setFullScreen(true)
+            self.participantLocalView.setFullScreen(false)
+            self.view.bringSubviewToFront(self.callingInfoLayout)
+            self.view.bringSubviewToFront(self.callingLayout)
+            self.view.bringSubviewToFront(self.participantLocalView)
         }
     }
     
@@ -246,11 +296,12 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
 }
 
 extension LiveCallViewController: LiveCallProtocol {
-    func isSpeakerOn() -> Bool {
-        return false
+    func isSpeakerMuted() -> Bool {
+        return IMLiveManager.shared.isSpeakerMuted()
     }
     
     func muteSpeaker(mute: Bool) {
+        return IMLiveManager.shared.muteSpeaker(mute)
     }
     
     func muteLocalVideo(mute: Bool) {

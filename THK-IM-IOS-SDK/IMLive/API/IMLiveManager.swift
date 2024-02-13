@@ -9,6 +9,7 @@ import WebRTC
 import RxSwift
 import Moya
 import CocoaLumberjack
+import AVFoundation
 
 class IMLiveManager {
     
@@ -36,14 +37,30 @@ class IMLiveManager {
             encoderFactory: videoEncoderFactory,
             decoderFactory: videoDecoderFactory
         )
+        self.muteSpeaker(true, true)
+    }
+    
+    func isSpeakerMuted() -> Bool {
+        return RTCAudioSession.sharedInstance().category.isEqual(AVAudioSession.Category.playAndRecord)
+    }
+    
+    func muteSpeaker(_ muted: Bool, _ lockRTC: Bool = false) {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
-        audioSessionConfiguration.category = "AVAudioSessionCategoryPlayAndRecord"
-        audioSessionConfiguration.categoryOptions = [.defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP]
-        let webRTCSession = RTCAudioSession.sharedInstance()
+        if muted {
+            audioSessionConfiguration.categoryOptions = [.defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP]
+            audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
+        } else {
+            audioSessionConfiguration.categoryOptions = [.defaultToSpeaker]
+            audioSessionConfiguration.category = AVAudioSession.Category.playback.rawValue
+        }
         do {
-            webRTCSession.lockForConfiguration()
-            try webRTCSession.setConfiguration(audioSessionConfiguration, active: true)
-            webRTCSession.unlockForConfiguration()
+            if lockRTC {
+                RTCAudioSession.sharedInstance().lockForConfiguration()
+            }
+            try RTCAudioSession.sharedInstance().setConfiguration(audioSessionConfiguration, active: true)
+            if lockRTC {
+                RTCAudioSession.sharedInstance().unlockForConfiguration()
+            }
         } catch {
             DDLogError("setConfiguration \(error)")
         }

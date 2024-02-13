@@ -9,12 +9,12 @@
 import Foundation
 
 protocol LiveCallProtocol: AnyObject {
-    
+   
     
     /**
      * 扬声器是否打开
      */
-    func isSpeakerOn() -> Bool
+    func isSpeakerMuted() -> Bool
 
     /**
      * 打开/关闭扬声器

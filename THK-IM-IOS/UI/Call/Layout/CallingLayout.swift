@@ -14,51 +14,51 @@ class CallingLayout: UIView {
     
     private weak var liveProtocol: LiveCallProtocol? = nil
     
-    private let switchMicro: UIImageView = {
-        let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        v.image = Bubble().drawRectWithRoundedCorner(
+    private let switchMicro: UIButton = {
+        let v = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        v.setImage(UIImage.init(named: "ic_micro_off")?.scaledToSize(CGSize(width: 36, height: 36)), for: .normal)
+        v.setImage(UIImage.init(named: "ic_micro_on")?.scaledToSize(CGSize(width: 36, height: 36)), for: .selected)
+        v.isSelected = false
+        v.setBackgroundImage(Bubble().drawRectWithRoundedCorner(
             radius: 30, borderWidth: 1,
             backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
-            width: 60, height: 60)
-        v.contentMode = .scaleAspectFit
-        let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
-        contentView.setImage(UIImage.init(named: "ic_micro_on"), for: .normal)
-        contentView.setImage(UIImage.init(named: "ic_micro_off"), for: .selected)
-        contentView.isSelected = true
-        contentView.isUserInteractionEnabled = false
-        v.addSubview(contentView)
+            width: 60, height: 60), for: .normal)
+        v.setBackgroundImage(Bubble().drawRectWithRoundedCorner(
+            radius: 30, borderWidth: 1,
+            backgroundColor: UIColor.init(hex: "#ffffffff"), borderColor: UIColor.init(hex: "#ffffffff"),
+            width: 60, height: 60), for: .selected)
         return v
     }()
     
-    private let switchSpeaker: UIImageView = {
-        let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        v.image = Bubble().drawRectWithRoundedCorner(
+    private let switchSpeaker: UIButton = {
+        let v = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        v.setImage(UIImage.init(named: "ic_speaker_off")?.scaledToSize(CGSize(width: 36, height: 36)), for: .normal)
+        v.setImage(UIImage.init(named: "ic_speaker_on")?.scaledToSize(CGSize(width: 36, height: 36)), for: .selected)
+        v.isSelected = false
+        v.setBackgroundImage(Bubble().drawRectWithRoundedCorner(
             radius: 30, borderWidth: 1,
             backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
-            width: 60, height: 60)
-        v.contentMode = .scaleAspectFit
-        let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
-        contentView.setImage(UIImage.init(named: "ic_speaker_on"), for: .normal)
-        contentView.setImage(UIImage.init(named: "ic_speaker_off"), for: .selected)
-        contentView.isSelected = true
-        contentView.isUserInteractionEnabled = false
-        v.addSubview(contentView)
+            width: 60, height: 60), for: .normal)
+        v.setBackgroundImage(Bubble().drawRectWithRoundedCorner(
+            radius: 30, borderWidth: 1,
+            backgroundColor: UIColor.init(hex: "#ffffffff"), borderColor: UIColor.init(hex: "#ffffffff"),
+            width: 60, height: 60), for: .selected)
         return v
     }()
     
-    private let openOrCloseCamera: UIImageView = {
-        let v = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        v.image = Bubble().drawRectWithRoundedCorner(
+    private let openOrCloseCamera: UIButton = {
+        let v = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        v.setImage(UIImage.init(named: "ic_close_camera")?.scaledToSize(CGSize(width: 36, height: 36)), for: .normal)
+        v.setImage(UIImage.init(named: "ic_open_camera")?.scaledToSize(CGSize(width: 36, height: 36)), for: .selected)
+        v.isSelected = false
+        v.setBackgroundImage(Bubble().drawRectWithRoundedCorner(
             radius: 30, borderWidth: 1,
             backgroundColor: UIColor.init(hex: "#40ffffff"), borderColor: UIColor.init(hex: "#40ffffff"),
-            width: 60, height: 60)
-        v.contentMode = .scaleAspectFit
-        let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
-        contentView.setImage(UIImage.init(named: "ic_open_camera"), for: .normal)
-        contentView.setImage(UIImage.init(named: "ic_close_camera"), for: .selected)
-        contentView.isSelected = true
-        contentView.isUserInteractionEnabled = false
-        v.addSubview(contentView)
+            width: 60, height: 60), for: .normal)
+        v.setBackgroundImage(Bubble().drawRectWithRoundedCorner(
+            radius: 30, borderWidth: 1,
+            backgroundColor: UIColor.init(hex: "#ffffffff"), borderColor: UIColor.init(hex: "#ffffffff"),
+            width: 60, height: 60), for: .selected)
         return v
     }()
     
@@ -112,61 +112,42 @@ class CallingLayout: UIView {
             make.centerX.equalToSuperview()
         }
         
-        self.switchMicro.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
-            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
-                return touches.view == self?.switchMicro
-            }
-            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
-                return otherGestureRecognizer is UILongPressGestureRecognizer
-            }
-        })
-        .when(.ended)
-        .subscribe(onNext: { [weak self]  _ in
-//            if let liveProtocol = self?.liveProtocol {
-//                liveProtocol.switchLocalCamera()
-//            }
-        })
-        .disposed(by: disposeBag)
-        
-        self.switchSpeaker.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
-            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
-                return touches.view == self?.switchSpeaker
-            }
-            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
-                return otherGestureRecognizer is UILongPressGestureRecognizer
-            }
-        })
-        .when(.ended)
-        .subscribe(onNext: { [weak self]  _ in
-//            if let liveProtocol = self?.liveProtocol {
-//                if liveProtocol.isCurrentCameraOpened() {
-//                    liveProtocol.closeLocalCamera()
-//                } else {
-//                    liveProtocol.openLocalCamera()
-//                }
-//            }
-        })
-        .disposed(by: disposeBag)
-        
-        self.openOrCloseCamera.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
-            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
-                return touches.view == self?.openOrCloseCamera
-            }
-            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
-                return otherGestureRecognizer is UILongPressGestureRecognizer
-            }
-        })
-        .when(.ended)
-        .subscribe(onNext: { [weak self]  _ in
-            if let liveProtocol = self?.liveProtocol {
-                if liveProtocol.isLocalVideoMuted() {
-                    liveProtocol.muteLocalVideo(mute: false)
-                } else {
-                    liveProtocol.muteLocalVideo(mute: true)
+        self.switchSpeaker.rx.tap.asObservable()
+            .subscribe(onNext: { [weak self] in
+                guard let sf = self else {
+                    return
                 }
-            }
-        })
-        .disposed(by: disposeBag)
+                guard let liveProtocol = sf.liveProtocol else {
+                    return
+                }
+                sf.switchSpeaker.isSelected = !sf.switchSpeaker.isSelected
+                liveProtocol.muteSpeaker(mute: sf.switchSpeaker.isSelected)
+            }).disposed(by: self.disposeBag)
+        
+        
+        self.switchMicro.rx.tap.asObservable()
+            .subscribe(onNext: { [weak self] in
+                guard let sf = self else {
+                    return
+                }
+                guard let liveProtocol = sf.liveProtocol else {
+                    return
+                }
+                sf.switchMicro.isSelected = !sf.switchMicro.isSelected
+                liveProtocol.muteLocalAudio(mute: sf.switchMicro.isSelected)
+            }).disposed(by: self.disposeBag)
+        
+        self.openOrCloseCamera.rx.tap.asObservable()
+            .subscribe(onNext: { [weak self] in
+                guard let sf = self else {
+                    return
+                }
+                guard let liveProtocol = sf.liveProtocol else {
+                    return
+                }
+                sf.openOrCloseCamera.isSelected = !sf.openOrCloseCamera.isSelected
+                liveProtocol.muteLocalVideo(mute: sf.openOrCloseCamera.isSelected)
+            }).disposed(by: self.disposeBag)
         
         self.hungUpView.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
             delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
@@ -186,5 +167,8 @@ class CallingLayout: UIView {
     
     func initCall(_ callProtocol: LiveCallProtocol) {
         self.liveProtocol = callProtocol
+        self.switchSpeaker.isSelected = callProtocol.isSpeakerMuted()
+        self.switchMicro.isSelected = callProtocol.isLocalAudioMuted()
+        self.openOrCloseCamera.isSelected = callProtocol.isLocalVideoMuted()
     }
 }

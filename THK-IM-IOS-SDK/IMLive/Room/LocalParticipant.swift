@@ -17,6 +17,7 @@ class LocalParticipant: BaseParticipant {
     private var pushStreamKey: String? = nil
     private var videoCapturer: RTCCameraVideoCapturer?
     private var currentDevice: AVCaptureDevice?
+    private var fps = 60
     
     init(uId: Int64, roomId: String, role: Role, audioEnable: Bool = true, videoEnable: Bool = true) {
         self.audioEnable = audioEnable
@@ -58,15 +59,14 @@ class LocalParticipant: BaseParticipant {
             
             let videoSource = IMLiveManager.shared.factory.videoSource()
             self.videoCapturer = RTCCameraVideoCapturer()
-            videoCapturer?.delegate = videoSource
+            self.videoCapturer?.delegate = videoSource
             
             let format = chooseFormat(currentDevice!)
             if format == nil {
                 return
             }
-            let fps = 20
             if format != nil {
-                videoCapturer?.startCapture(with: currentDevice!, format: format!, fps: Int(fps))
+                self.videoCapturer?.startCapture(with: currentDevice!, format: format!, fps: Int(fps))
             }
             let videoTrack = IMLiveManager.shared.factory.videoTrack(with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)")
             let transceiver = RTCRtpTransceiverInit()
@@ -135,12 +135,8 @@ class LocalParticipant: BaseParticipant {
     }
     
     private func getCameraDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
-        let discovery = AVCaptureDevice.DiscoverySession.init(
-            deviceTypes: [.builtInDualCamera, .builtInTrueDepthCamera, .builtInTripleCamera],
-            mediaType: .video,
-            position: position
-        )
-        for device in discovery.devices {
+        let devices = RTCCameraVideoCapturer.captureDevices()
+        for device in devices {
             if device.position == position {
                 return device
             }
@@ -171,7 +167,6 @@ class LocalParticipant: BaseParticipant {
         if format == nil {
             return
         }
-        let fps = 20
         if format != nil {
             videoCapturer?.startCapture(with: self.currentDevice!, format: format!, fps: Int(fps))
         }
@@ -184,7 +179,7 @@ class LocalParticipant: BaseParticipant {
             if #available(iOS 16.0, *) {
                 for p in f.supportedMaxPhotoDimensions {
                     DDLogInfo("LocalParticipant, device format \(p.width), \(p.height)")
-                    if p.width == 640 && p.height == 480 {
+                    if p.width == 1280 && p.height == 720 {
                         format = f
                         break
                     }

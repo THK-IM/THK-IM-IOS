@@ -12,7 +12,7 @@ import RxSwift
 class ParticipantView: UIView {
     
     var participant: BaseParticipant? = nil
-    private var isFullScreen = true
+    private var fullScreen = true
     
     private let disposeBag = DisposeBag()
     
@@ -51,12 +51,16 @@ class ParticipantView: UIView {
         self.participant?.startPeerConnection()
     }
     
+    func isFullScreen() -> Bool {
+        return self.fullScreen
+    }
+    
     func setFullScreen(_ fullScreen: Bool) {
-        if self.isFullScreen == fullScreen {
+        if self.fullScreen == fullScreen {
             return
         }
-        self.isFullScreen = fullScreen
-        if self.isFullScreen {
+        self.fullScreen = fullScreen
+        if self.fullScreen {
             self.switchToFullScreen()
         } else {
             self.switchToDragView()
@@ -87,7 +91,7 @@ class ParticipantView: UIView {
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if isFullScreen {
+        if fullScreen {
             return
         }
         guard let touch = touches.first else {

@@ -30,7 +30,8 @@ target 'THK-IM-IOS' do
   pod 'YbridOgg', '0.8.0'
   pod 'GDPerformanceView-Swift', '= 2.1.1'
   pod 'BadgeSwift', '8.0'
-  pod 'WebRTC-SDK', '114.5735.04'
+  pod 'WebRTC-SDK', '114.5735.08'
+#  pod 'GoogleWebRTC'
   pod 'ProgressHUD'
   pod 'JDStatusBarNotification'
 
