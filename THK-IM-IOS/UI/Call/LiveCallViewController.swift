@@ -151,6 +151,16 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        UIApplication.shared.isIdleTimerDisabled = false
+    }
+    
     private func fullLocalParticipantView() {
         if !self.participantLocalView.isFullScreen() {
             self.participantLocalView.setFullScreen(true)

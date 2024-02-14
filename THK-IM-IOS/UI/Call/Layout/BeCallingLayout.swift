@@ -23,6 +23,7 @@ class BeCallingLayout: UIView {
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
         contentView.setImage(UIImage.init(named: "ic_switch_camera"), for: .normal)
+        contentView.isUserInteractionEnabled = false
         v.addSubview(contentView)
         return v
     }()
@@ -35,8 +36,9 @@ class BeCallingLayout: UIView {
             width: 60, height: 60)
         v.contentMode = .scaleAspectFit
         let contentView = UIButton(frame: CGRect(x: 12, y: 12, width: 36, height: 36))
-        contentView.setImage(UIImage.init(named: "ic_open_camera"), for: .normal)
-        contentView.setImage(UIImage.init(named: "ic_close_camera"), for: .selected)
+        contentView.setImage(UIImage.init(named: "ic_camera_on"), for: .normal)
+        contentView.setImage(UIImage.init(named: "ic_camera_off"), for: .selected)
+        contentView.isUserInteractionEnabled = false
         contentView.isSelected = true
         v.addSubview(contentView)
         return v
@@ -69,7 +71,7 @@ class BeCallingLayout: UIView {
     }
     
     private func setupUI() {
-        let left = (UIScreen.main.bounds.width-100) / 2 - 60
+        let left = (UIScreen.main.bounds.width-80) / 2 - 60
         self.addSubview(self.switchCameraView)
         self.switchCameraView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-200)
@@ -88,14 +90,14 @@ class BeCallingLayout: UIView {
         self.addSubview(self.hungUpView)
         self.hungUpView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-100)
-            make.left.equalToSuperview().offset((UIScreen.main.bounds.width-200)/2 - 60)
+            make.left.equalToSuperview().offset((UIScreen.main.bounds.width-160)/2 - 60)
             make.width.equalTo(60)
             make.height.equalTo(60)
         }
         self.addSubview(self.acceptView)
         self.acceptView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-100)
-            make.right.equalToSuperview().offset(-((UIScreen.main.bounds.width-200)/2 - 60))
+            make.right.equalToSuperview().offset(-((UIScreen.main.bounds.width-160)/2 - 60))
             make.width.equalTo(60)
             make.height.equalTo(60)
         }

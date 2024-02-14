@@ -37,30 +37,47 @@ class IMLiveManager {
             encoderFactory: videoEncoderFactory,
             decoderFactory: videoDecoderFactory
         )
-        self.muteSpeaker(true, true)
+        self.initAudioSession()
+    }
+    
+    func initAudioSession() {
+        let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()        
+        audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
+        audioSessionConfiguration.categoryOptions = [.defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP]
+        do {
+            RTCAudioSession.sharedInstance().lockForConfiguration()
+            try RTCAudioSession.sharedInstance().setConfiguration(audioSessionConfiguration, active: true)
+            RTCAudioSession.sharedInstance().unlockForConfiguration()
+        } catch {
+            DDLogError("setConfiguration \(error)")
+        }
     }
     
     func isSpeakerMuted() -> Bool {
-        return RTCAudioSession.sharedInstance().category.isEqual(AVAudioSession.Category.playAndRecord)
+        let audioSession = AVAudioSession.sharedInstance()
+        let currentRoute = audioSession.currentRoute
+        var isSpeakerOutput = false
+        for output in currentRoute.outputs {
+            DDLogInfo("muteSpeaker: \(output.portName), \(output.portType)")
+            if output.portType == AVAudioSession.Port.builtInSpeaker {
+                isSpeakerOutput = true
+                break
+            }
+        }
+        return !isSpeakerOutput
     }
     
-    func muteSpeaker(_ muted: Bool, _ lockRTC: Bool = false) {
+    func muteSpeaker(_ muted: Bool) {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         if muted {
-            audioSessionConfiguration.categoryOptions = [.defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP]
-            audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
+            audioSessionConfiguration.categoryOptions = [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP]
         } else {
-            audioSessionConfiguration.categoryOptions = [.defaultToSpeaker]
-            audioSessionConfiguration.category = AVAudioSession.Category.playback.rawValue
+            audioSessionConfiguration.categoryOptions = [.defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP]
         }
         do {
-            if lockRTC {
-                RTCAudioSession.sharedInstance().lockForConfiguration()
-            }
+            RTCAudioSession.sharedInstance().lockForConfiguration()
             try RTCAudioSession.sharedInstance().setConfiguration(audioSessionConfiguration, active: true)
-            if lockRTC {
-                RTCAudioSession.sharedInstance().unlockForConfiguration()
-            }
+            RTCAudioSession.sharedInstance().unlockForConfiguration()
         } catch {
             DDLogError("setConfiguration \(error)")
         }
