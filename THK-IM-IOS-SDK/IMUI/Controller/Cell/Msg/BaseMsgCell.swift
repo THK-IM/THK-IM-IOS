@@ -39,10 +39,7 @@ open class BaseMsgCell : BaseTableCell {
     func setupEvent() {
         let msgView = self.msgView()
         // 点击事件
-        msgView.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
-            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
-                return touches.view == self?.msgView()
-            }
+        msgView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
