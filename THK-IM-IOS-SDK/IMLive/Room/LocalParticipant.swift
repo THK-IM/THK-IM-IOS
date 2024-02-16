@@ -52,8 +52,8 @@ class LocalParticipant: BaseParticipant {
         }
         
         if self.videoEnable && role == Role.Broadcaster {
-            currentDevice = self.getBackCameraDevice()
-            if currentDevice == nil {
+            self.currentDevice = self.getFrontCameraDevice()
+            if self.currentDevice == nil {
                 return
             }
             
@@ -78,8 +78,9 @@ class LocalParticipant: BaseParticipant {
                 if sender.track?.kind == "video" {
                     let parameters = sender.parameters
                     for e in parameters.encodings {
-                        e.maxBitrateBps = (1024 * 8 * 1024) as NSNumber
-                        e.minBitrateBps = (1024 * 8 * 400) as NSNumber
+                        let minBitrate = 1024 * 8 * 384
+                        e.maxBitrateBps = (4 * minBitrate) as NSNumber
+                        e.minBitrateBps = (minBitrate) as NSNumber
                     }
                     sender.parameters = parameters
                 }
@@ -190,9 +191,8 @@ class LocalParticipant: BaseParticipant {
             if #available(iOS 16.0, *) {
                 for p in f.supportedMaxPhotoDimensions {
                     DDLogInfo("LocalParticipant, device format \(p.width), \(p.height), \(f.maxISO), \(f.minISO)")
-                    if p.width == 1440 && p.height == 1080 {
+                    if p.width == 1280 && p.height == 720 {
                         format = f
-                        fps = Int(f.maxISO)
                         break
                     }
                 }

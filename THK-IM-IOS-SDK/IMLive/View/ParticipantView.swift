@@ -39,7 +39,17 @@ class ParticipantView: UIView {
         self.rtcVideoView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        self.rtcVideoView.videoContentMode = .scaleAspectFill
     }
+    
+    func setMirror(_ enable: Bool) {
+        if enable {
+            self.rtcVideoView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
+        } else {
+            self.rtcVideoView.transform = CGAffineTransformMakeScale(1.0, 1.0)
+        }
+    }
+    
     
     func setParticipant(p: BaseParticipant) {
         self.participant = p
