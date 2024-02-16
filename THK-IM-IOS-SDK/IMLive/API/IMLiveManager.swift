@@ -41,7 +41,7 @@ class IMLiveManager {
     }
     
     func initAudioSession() {
-        let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()        
+        let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC() 
         audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
         audioSessionConfiguration.categoryOptions = [.defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP]
         do {

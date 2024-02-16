@@ -73,6 +73,17 @@ class LocalParticipant: BaseParticipant {
             transceiver.direction = .sendOnly
             p.addTransceiver(with: videoTrack, init: transceiver)
             self.addVideoTrack(track: videoTrack)
+            
+            p.senders.forEach({ sender in
+                if sender.track?.kind == "video" {
+                    let parameters = sender.parameters
+                    for e in parameters.encodings {
+                        e.maxBitrateBps = (1024 * 8 * 1024) as NSNumber
+                        e.minBitrateBps = (1024 * 8 * 400) as NSNumber
+                    }
+                    sender.parameters = parameters
+                }
+            })
         }
         
         let dcConfig = RTCDataChannelConfiguration()
@@ -178,14 +189,15 @@ class LocalParticipant: BaseParticipant {
         for f in formats {
             if #available(iOS 16.0, *) {
                 for p in f.supportedMaxPhotoDimensions {
-                    DDLogInfo("LocalParticipant, device format \(p.width), \(p.height)")
-                    if p.width == 1280 && p.height == 720 {
+                    DDLogInfo("LocalParticipant, device format \(p.width), \(p.height), \(f.maxISO), \(f.minISO)")
+                    if p.width == 1440 && p.height == 1080 {
                         format = f
+                        fps = Int(f.maxISO)
                         break
                     }
                 }
             } else {
-                DDLogInfo("LocalParticipant, device format \(f.minISO), \(f.maxISO)")
+                DDLogInfo("LocalParticipant, device format \(f.maxISO), \(f.minISO)")
             }
         }
         return format
