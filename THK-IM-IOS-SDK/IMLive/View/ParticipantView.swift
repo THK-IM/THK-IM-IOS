@@ -16,7 +16,7 @@ class ParticipantView: UIView {
     
     private let disposeBag = DisposeBag()
     
-    var defaultScaleX = 0.3
+    var defaultScaleX = 0.35
     var defaultScaleY = 0.3
     
     lazy var rtcVideoView: RTCMTLVideoView = {

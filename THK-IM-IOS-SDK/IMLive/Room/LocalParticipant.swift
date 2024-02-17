@@ -17,7 +17,7 @@ class LocalParticipant: BaseParticipant {
     private var pushStreamKey: String? = nil
     private var videoCapturer: RTCCameraVideoCapturer?
     private var currentDevice: AVCaptureDevice?
-    private var fps = 60
+    private var fps = 30
     
     init(uId: Int64, roomId: String, role: Role, audioEnable: Bool = true, videoEnable: Bool = true) {
         self.audioEnable = audioEnable
@@ -78,7 +78,7 @@ class LocalParticipant: BaseParticipant {
                 if sender.track?.kind == "video" {
                     let parameters = sender.parameters
                     for e in parameters.encodings {
-                        let minBitrate = 1024 * 8 * 384
+                        let minBitrate = 1024 * 1024
                         e.maxBitrateBps = (4 * minBitrate) as NSNumber
                         e.minBitrateBps = (minBitrate) as NSNumber
                     }
@@ -191,7 +191,7 @@ class LocalParticipant: BaseParticipant {
             if #available(iOS 16.0, *) {
                 for p in f.supportedMaxPhotoDimensions {
                     DDLogInfo("LocalParticipant, device format \(p.width), \(p.height), \(f.maxISO), \(f.minISO)")
-                    if p.width == 1280 && p.height == 720 {
+                    if p.width == 960 && p.height == 540 {
                         format = f
                         break
                     }

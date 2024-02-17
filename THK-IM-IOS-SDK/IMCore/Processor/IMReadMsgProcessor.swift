@@ -97,7 +97,6 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
         if (msg.referMsgId == nil || msg.referMsgId! < 0) {
             return
         }
-        DDLogInfo("ReadMsgProcessor send \(msg.content)")
         Observable.create({observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.messageDao()
