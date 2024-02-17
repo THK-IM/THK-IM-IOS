@@ -265,7 +265,9 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
     
     private func setupNameLayout() {
         if (mode == 0) {
-            self.groupNameTextView.becomeFirstResponder()
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: { [weak self] in
+                    self?.groupNameTextView.becomeFirstResponder()
+            })
         } else {
             self.groupNameTextView.text = group?.name ?? ""
         }
