@@ -23,6 +23,7 @@ open class IMBaseMsgProcessor {
      */
     open func received(_ msg: Message){
         do {
+            let session = try IMCoreManager.shared.database.sessionDao().findById(msg.sessionId)
             let dbMsg = try IMCoreManager.shared.database.messageDao().findById(msg.id, msg.fromUId, msg.sessionId)
             if (dbMsg == nil) {
                 // 数据库不存在
@@ -34,8 +35,10 @@ open class IMBaseMsgProcessor {
                         MsgOperateStatus.ServerRead.rawValue
                 }
                 try self.insertOrUpdateDb(msg)
-                if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
-                    IMCoreManager.shared.messageModule.ackMessageToCache(msg)
+                if (SessionType.Group.rawValue != session?.type) {
+                    if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
+                        IMCoreManager.shared.messageModule.ackMessageToCache(msg)
+                    }
                 }
             } else {
                 // 数据库存在，更新本地数据库数据
@@ -51,8 +54,10 @@ open class IMBaseMsgProcessor {
                     msg.sendStatus = MsgSendStatus.Success.rawValue
                     try insertOrUpdateDb(msg)
                 }
-                if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
-                    IMCoreManager.shared.messageModule.ackMessageToCache(msg)
+                if (SessionType.Group.rawValue != session?.type) {
+                    if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
+                        IMCoreManager.shared.messageModule.ackMessageToCache(msg)
+                    }
                 }
             }
         } catch let error {

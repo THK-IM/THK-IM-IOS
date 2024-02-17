@@ -55,11 +55,7 @@ public class Previewer : IMPreviewer {
                         return m1.cTime < m2.cTime
                     })
                     recordVc.recordTitle = recordMessage.title
-                    recordVc.session = Session(
-                        id: 0, parentId: 0, type: SessionType.MsgRecord.rawValue, entityId: 0, name: "", noteName: nil,
-                        remark: "", mute: 0, role: 0, status: 0, unreadCount: 0, topTimestamp: 0, memberSyncTime: 0,
-                        memberCount: 0, deleted: 0, cTime: 0, mTime: 0
-                    )
+                    recordVc.session = Session.emptyTypeSession(SessionType.MsgRecord.rawValue)
                     controller.navigationController?.pushViewController(recordVc, animated: true)
                 }).disposed(by: self.disposeBag)
         }

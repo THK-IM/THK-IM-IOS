@@ -47,13 +47,43 @@ open class DefaultSessionDao : SessionDao {
         }
     }
     
-    public func updateMemberSyncTime(_ sessionId: Int64, _ mTime: Int64) throws {
+    /**
+     * 更新session消息同步时间
+     */
+    public func updateMsgSyncTime(_ sessionId: Int64, _ time: Int64) throws {
+        try self.database?.update(
+            table: self.tableName,
+            on: Session.Properties.msgSyncTime,
+            with: time,
+            where: Session.Properties.id == sessionId
+        )
+    }
+    
+    /**
+     * 更新session成员同步时间
+     */
+    public func updateMemberSyncTime(_ sessionId: Int64, _ time: Int64) throws {
         try self.database?.update(
             table: self.tableName,
             on: Session.Properties.memberSyncTime,
-            with: mTime,
+            with: time,
             where: Session.Properties.id == sessionId
         )
+    }
+    
+    
+    /**
+     * 查询session消息同步时间
+     */
+    public func findMsgSyncTimeById(_ sessionId: Int64) -> Int64 {
+        guard let res = try? self.database?.getValue(
+            on: Session.Properties.msgSyncTime,
+            fromTable: self.tableName,
+            where: Session.Properties.id == sessionId
+        ).int64Value else {
+            return 0
+        }
+        return Int64(res)
     }
     
     public func findMemberSyncTimeById(_ sessionId: Int64) -> Int64 {
@@ -82,6 +112,14 @@ open class DefaultSessionDao : SessionDao {
             where: Session.Properties.parentId == parentId && Session.Properties.id != parentId && Session.Properties.mTime < mTime,
             orderBy: [Session.Properties.topTimestamp.order(Order.descending), Session.Properties.mTime.order(Order.descending)],
             limit: count
+        )
+    }
+    
+    public func findAll(_ type: Int) throws -> Array<Session>? {
+        return try self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Session.Properties.type == type,
+            orderBy: [Session.Properties.topTimestamp.order(Order.descending), Session.Properties.mTime.order(Order.descending)]
         )
     }
 }

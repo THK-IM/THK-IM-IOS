@@ -97,6 +97,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
         if (msg.referMsgId == nil || msg.referMsgId! < 0) {
             return
         }
+        DDLogInfo("ReadMsgProcessor send \(msg.content)")
         Observable.create({observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.messageDao()
@@ -131,6 +132,10 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     }
     
     private func readMessageToCache(_ msg: Message) {
+        let session = try? IMCoreManager.shared.database.sessionDao().findById(msg.sessionId)
+        if (SessionType.SuperGroup.rawValue == session?.type) {
+            return
+        }
         readLock.lock()
         if self.needReadDic[msg.sessionId] == nil {
             self.needReadDic[msg.sessionId] = Set()

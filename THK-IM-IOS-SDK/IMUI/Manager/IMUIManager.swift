@@ -49,6 +49,7 @@ open class IMUIManager: NSObject {
         
         self.registerSessionCellProvider(IMSingleSessionCellProvider())
         self.registerSessionCellProvider(IMGroupSessionCellProvider())
+        self.registerSessionCellProvider(IMSuperGroupSessionCellProvider())
         
         self.registerBottomFunctionProvider(IMPhotoFunctionProvider(), IMCameraFunctionProvider())
         self.registerPanelProvider(IMUnicodeEmojiPanelProvider(), IMUnicodeEmojiPanelProvider())

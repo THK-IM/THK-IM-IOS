@@ -210,4 +210,21 @@ public class DefaultIMApi: IMApi {
     }
     
     
+    public func querySessionMessages(sId: Int64, cTime: Int64, offset: Int, count: Int, asc: Int) -> RxSwift.Observable<Array<Message>> {
+        return sessionApi.rx
+            .request(.queryLatestSessionMessage(sId, cTime, offset, count, asc))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Bean(ListVo<MessageVo>.self))
+            .flatMap({ (messageListVo) -> Observable<Array<Message>> in
+                var array = [Message]()
+                for vo in messageListVo.data {
+                    let s = vo.toMessage()
+                    array.append(s)
+                }
+                return Observable.just(array)
+            })
+    }
+    
+    
+    
 }

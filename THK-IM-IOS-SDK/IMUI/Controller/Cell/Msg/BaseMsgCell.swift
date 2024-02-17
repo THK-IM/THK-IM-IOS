@@ -207,11 +207,7 @@ open class BaseMsgCell : BaseTableCell {
     
     open override func appear() {
         self.cellWrapper.appear()
-        if (session?.type == SessionType.Single.rawValue ||
-            session?.type == SessionType.Group.rawValue
-        ) {
-            self.onMessageShow()
-        }
+        self.onMessageShow()
     }
     
     open override func disappear() {
@@ -250,7 +246,8 @@ open class BaseMsgCell : BaseTableCell {
             return
         }
         if (message!.operateStatus & MsgOperateStatus.ClientRead.rawValue) > 0
-            && (message!.operateStatus & MsgOperateStatus.ServerRead.rawValue) > 0 {
+            && ((message!.operateStatus & MsgOperateStatus.ServerRead.rawValue) > 0 || session?.type == SessionType.SuperGroup.rawValue
+            ) {
             return
         }
         self.delegate?.readMessage(message!)

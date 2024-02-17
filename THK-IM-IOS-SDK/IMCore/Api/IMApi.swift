@@ -92,5 +92,10 @@ public protocol IMApi: AnyObject {
      */
     func getLatestMessages(_ uId: Int64, _ cTime: Int64, _ count: Int) -> Observable<Array<Message>>
     
+    /**
+     * 获取cTime之前的session消息
+     */
+    func querySessionMessages(sId: Int64, cTime: Int64, offset: Int, count: Int, asc: Int) -> Observable<Array<Message>>
+    
 }
 

@@ -31,14 +31,26 @@ public protocol SessionDao {
      */
     func update(_ sessions: [Session]) throws
     
+    
     /**
-     * 更新session同步时间
+     * 更新session消息同步时间
      */
-    func updateMemberSyncTime(_ sessionId: Int64, _ mTime: Int64) throws
+    func updateMsgSyncTime(_ sessionId: Int64, _ time: Int64) throws
+    
+    /**
+     * 更新session成员同步时间
+     */
+    func updateMemberSyncTime(_ sessionId: Int64, _ time: Int64) throws
     
     
     /**
-     * 查询session同步时间
+     * 查询session消息同步时间
+     */
+    func findMsgSyncTimeById(_ sessionId: Int64) -> Int64
+    
+    
+    /**
+     * 查询session成员同步时间
      */
     func findMemberSyncTimeById(_ sessionId: Int64) -> Int64
     
@@ -59,4 +71,8 @@ public protocol SessionDao {
      * @param mTime 修改时间
      */
     func findByParentId(_ parentId: Int64, _ count: Int, _ mTime: Int64) throws -> Array<Session>?
+    
+    
+    
+   func findAll(_ type: Int) throws -> Array<Session>?
 }

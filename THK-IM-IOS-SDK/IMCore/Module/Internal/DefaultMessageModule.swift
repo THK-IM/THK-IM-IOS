@@ -60,6 +60,10 @@ open class DefaultMessageModule : MessageModule {
         return 200
     }
     
+    open func getSessionMemberCountPerRequest() -> Int {
+        return 100
+    }
+    
     private func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
         let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
         UserDefaults.standard.setValue(time, forKey: key)
@@ -95,74 +99,81 @@ open class DefaultMessageModule : MessageModule {
         return (processor != nil) ? (processor!) : processorDic[0]!
     }
     
+    private func batchProcessMessages(_ messages: Array<Message>, _ ack: Bool = true) throws {
+        DDLogInfo("batchProcessMessages syncOfflineMessages: \(messages.count)")
+        var sessionMsgs = [Int64: [Message]]()
+        var unProcessMsgs = [Message]()
+        var needReprocessMsgs = [Message]()
+        for msg in messages {
+            DDLogInfo("batchProcessMessages syncOfflineMessages: \(msg.type) \(msg.content ?? "")")
+            if msg.fromUId == IMCoreManager.shared.uId {
+                msg.operateStatus = msg.operateStatus |
+                MsgOperateStatus.Ack.rawValue |
+                MsgOperateStatus.ClientRead.rawValue |
+                MsgOperateStatus.ServerRead.rawValue
+            }
+            msg.sendStatus = MsgSendStatus.Success.rawValue
+            if (self.getMsgProcessor(msg.type).needReprocess(msg: msg)) {
+                // 状态操作消息交给对应消息处理器自己处理
+                needReprocessMsgs.append(msg)
+            } else {
+                // 其他消息批量处理
+                if sessionMsgs[msg.sessionId] == nil {
+                    sessionMsgs[msg.sessionId] = [Message]()
+                }
+                sessionMsgs[msg.sessionId]?.append(msg)
+                unProcessMsgs.append(msg)
+            }
+        }
+        // 批量插入消息
+        if unProcessMsgs.count > 0 {
+            try IMCoreManager.shared.database.messageDao().insertOrIgnore(unProcessMsgs)
+            // 插入ack
+            if ack {
+                for msg in unProcessMsgs {
+                    if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
+                        self.ackMessageToCache(msg)
+                    }
+                }
+            }
+        }
+        
+        for needReprocessMsg in needReprocessMsgs {
+            self.getMsgProcessor(needReprocessMsg.type).received(needReprocessMsg)
+        }
+        
+        // 更新每个session的最后一条消息
+        for (sid, msgs) in sessionMsgs {
+            SwiftEventBus.post(IMEvent.BatchMsgNew.rawValue, sender: (sid, msgs))
+            let lastMsg = try IMCoreManager.shared.database.messageDao().findLastMessageBySessionId(sid)
+            if lastMsg != nil {
+                self.processSessionByMessage(lastMsg!)
+            }
+        }
+    }
+    
     public func syncOfflineMessages() {
         let lastTime = self.getOfflineMsgLastSyncTime()
         let count = getOfflineMsgCountPerRequest()
         let uId = IMCoreManager.shared.uId
         IMCoreManager.shared.api.getLatestMessages(uId, lastTime, count)
             .compose(RxTransformer.shared.io2Io())
-            .subscribe(onNext: { messageArray in
+            .subscribe(onNext: { [weak self] messageArray in
+                guard let sf = self else {
+                    return
+                }
                 do {
-                    DDLogInfo("processSessionByMessage syncOfflineMessages: \(messageArray.count)")
-                    var sessionMsgs = [Int64: [Message]]()
-                    var unProcessMsgs = [Message]()
-                    var needReprocessMsgs = [Message]()
-                    for msg in messageArray {
-                        DDLogInfo("processSessionByMessage syncOfflineMessages: \(msg.type) \(msg.content ?? "")")
-                        if msg.fromUId == IMCoreManager.shared.uId {
-                            msg.operateStatus = msg.operateStatus |
-                            MsgOperateStatus.Ack.rawValue |
-                            MsgOperateStatus.ClientRead.rawValue |
-                            MsgOperateStatus.ServerRead.rawValue
-                        }
-                        msg.sendStatus = MsgSendStatus.Success.rawValue
-                        if (self.getMsgProcessor(msg.type).needReprocess(msg: msg)) {
-                            // 状态操作消息交给对应消息处理器自己处理
-                            needReprocessMsgs.append(msg)
-                        } else {
-                            // 其他消息批量处理
-                            if sessionMsgs[msg.sessionId] == nil {
-                                sessionMsgs[msg.sessionId] = [Message]()
-                            }
-                            sessionMsgs[msg.sessionId]?.append(msg)
-                            unProcessMsgs.append(msg)
-                        }
-                    }
-                    // 批量插入消息
-                    if unProcessMsgs.count > 0 {
-                        try IMCoreManager.shared.database.messageDao().insertOrIgnore(unProcessMsgs)
-                        // 插入ack
-                        for msg in unProcessMsgs {
-                            if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
-                                self.ackMessageToCache(msg)
-                            }
-                        }
-                    }
-                    
-                    for needReprocessMsg in needReprocessMsgs {
-                        self.getMsgProcessor(needReprocessMsg.type).received(needReprocessMsg)
-                    }
-                    
-                    // 更新每个session的最后一条消息
-                    for (sid, msgs) in sessionMsgs {
-                        SwiftEventBus.post(IMEvent.BatchMsgNew.rawValue, sender: (sid, msgs))
-                        let lastMsg = try IMCoreManager.shared.database.messageDao().findLastMessageBySessionId(sid)
-                        if lastMsg != nil {
-                            self.processSessionByMessage(lastMsg!)
+                    try sf.batchProcessMessages(messageArray)
+                    if (messageArray.last != nil) {
+                        let severTime = messageArray.last!.cTime
+                        let success = sf.setOfflineMsgSyncTime(severTime)
+                        if (success && messageArray.count >= count) {
+                            sf.syncOfflineMessages()
                         }
                     }
                 } catch {
-                    DDLogError("\(error)")
+                    DDLogError("syncOfflineMessages: \(error)")
                 }
-                
-                if (messageArray.last != nil) {
-                    let severTime = messageArray.last!.cTime
-                    let success = self.setOfflineMsgSyncTime(severTime)
-                    if (success && messageArray.count >= count) {
-                        self.syncOfflineMessages()
-                    }
-                }
-                
             })
             .disposed(by: disposeBag)
     }
@@ -232,6 +243,54 @@ open class DefaultMessageModule : MessageModule {
                 
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func syncSessionMessage(_ session: Session) {
+        let count = getOfflineMsgCountPerRequest()
+        IMCoreManager.shared.api.querySessionMessages(
+            sId: session.id, cTime: session.msgSyncTime, offset: 0, count: count, asc: 1
+        ).compose(RxTransformer.shared.io2Io())
+            .subscribe(onNext: { [weak self] messages in
+                guard let sf = self else {
+                    return
+                }
+                do {
+                    try sf.batchProcessMessages(messages, false)
+                    if !messages.isEmpty {
+                        let lastTime = messages.last?.cTime
+                        if lastTime != nil {
+                            try IMCoreManager.shared.database.sessionDao().updateMsgSyncTime(session.id, lastTime!)
+                            if messages.count >= count {
+                                session.msgSyncTime = lastTime!
+                                sf.syncSessionMessage(session)
+                            }
+                        }
+                    }
+                } catch {
+                    DDLogError("syncSessionMessage \(error)")
+                }
+            }).disposed(by: self.disposeBag)
+    }
+    
+    /**
+     * 同步超级群消息
+     */
+    public func syncSuperGroupMessages() {
+        Observable.just("")
+            .flatMap({ (it) -> Observable<Array<Session>?> in
+                let sessions = try? IMCoreManager.shared.database.sessionDao().findAll(SessionType.SuperGroup.rawValue)
+                return Observable.just(sessions)
+            })
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] sessions in
+                if let sf = self {
+                    if sessions != nil {
+                        for session in sessions! {
+                            sf.syncSessionMessage(session)
+                        }
+                    }
+                }
+            }).disposed(by: self.disposeBag)
     }
     
     public func getSession(_ sessionId: Int64) -> Observable<Session> {
@@ -560,6 +619,7 @@ open class DefaultMessageModule : MessageModule {
     
     
     public func querySessionMembers(_ sessionId: Int64) -> RxSwift.Observable<Array<SessionMember>> {
+        let count = getSessionCountPerRequest()
         return Observable.create({ observer -> Disposable in
             let members = IMCoreManager.shared.database.sessionMemberDao().findBySessionId(sessionId)
             observer.onNext(members)
@@ -567,7 +627,7 @@ open class DefaultMessageModule : MessageModule {
             return Disposables.create()
         }).flatMap({ members -> Observable<Array<SessionMember>> in
             if (members.count == 0) {
-                return self.queryLastSessionMember(sessionId, 100)
+                return self.queryLastSessionMember(sessionId, count)
             } else {
                 return Observable.just(members)
             }

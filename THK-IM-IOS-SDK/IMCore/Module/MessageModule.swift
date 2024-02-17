@@ -30,6 +30,12 @@ public protocol MessageModule : BaseModule {
      * 同步最近session
      */
     func syncLatestSessionsFromServer()
+    
+    
+    /**
+     * 同步超级群消息
+     */
+    func syncSuperGroupMessages()
 
     
     /**

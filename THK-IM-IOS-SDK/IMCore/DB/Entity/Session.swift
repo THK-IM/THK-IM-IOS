@@ -39,6 +39,8 @@ public final class Session: TableCodable {
     public var topTimestamp: Int64 = 0
     // 自定义扩展数据 推荐使用json结构存储
     public var extData: String? = nil
+    // 消息同步时间
+    public var msgSyncTime: Int64 = 0
     // 成员同步时间
     public var memberSyncTime: Int64 = 0
     // 成员数
@@ -74,6 +76,7 @@ public final class Session: TableCodable {
         case lastMsg = "last_msg"
         case topTimestamp = "top_timestamp"
         case extData = "ext_data"
+        case msgSyncTime = "msg_sync_time"
         case memberSyncTime = "member_sync_time"
         case memberCount = "member_count"
         case deleted = "deleted"
@@ -97,6 +100,31 @@ public final class Session: TableCodable {
         self.lastMsg = nil
         self.topTimestamp = 0
         self.extData = nil
+        self.msgSyncTime = 0
+        self.memberSyncTime = 0
+        self.memberCount = 0
+        self.deleted = 0
+        self.cTime = 0
+        self.mTime = 0
+    }
+    
+    public init(id: Int64, type: Int) {
+        self.id = id
+        self.parentId = 0
+        self.type = type
+        self.entityId = 0
+        self.name = ""
+        self.noteName = nil
+        self.remark = ""
+        self.mute = 0
+        self.role = 0
+        self.status = 0
+        self.unreadCount = 0
+        self.draft = nil
+        self.lastMsg = nil
+        self.topTimestamp = 0
+        self.extData = nil
+        self.msgSyncTime = 0
         self.memberSyncTime = 0
         self.memberCount = 0
         self.deleted = 0
@@ -108,7 +136,7 @@ public final class Session: TableCodable {
     public init(
         id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, noteName: String?, remark: String, mute: Int,
         role: Int, status: Int, unreadCount: Int64, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64,
-        extData: String? = nil, memberSyncTime: Int64, memberCount: Int, deleted: Int, cTime: Int64, mTime: Int64)
+        extData: String? = nil, msgSyncTime: Int64, memberSyncTime: Int64, memberCount: Int, deleted: Int, cTime: Int64, mTime: Int64)
     {
         self.id = id
         self.parentId = parentId
@@ -125,6 +153,7 @@ public final class Session: TableCodable {
         self.lastMsg = lastMsg
         self.topTimestamp = topTimestamp
         self.extData = extData
+        self.msgSyncTime = msgSyncTime
         self.memberSyncTime = memberSyncTime
         self.memberCount = memberCount
         self.deleted = deleted
@@ -134,6 +163,10 @@ public final class Session: TableCodable {
     
     public static func emptySession() -> Session {
         return Session(id: 0)
+    }
+    
+    public static func emptyTypeSession(_ type: Int) -> Session {
+        return Session(id: 0, type: type)
     }
     
 }

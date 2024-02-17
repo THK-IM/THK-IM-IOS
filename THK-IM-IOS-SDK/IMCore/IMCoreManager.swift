@@ -132,6 +132,7 @@ open class IMCoreManager: SignalListener {
             messageModule.syncLatestSessionsFromServer()
             messageModule.syncOfflineMessages()
             contactModule.syncContacts()
+            messageModule.syncSuperGroupMessages()
         }
         SwiftEventBus.post(IMEvent.OnlineStatusUpdate.rawValue, sender: status)
     }
