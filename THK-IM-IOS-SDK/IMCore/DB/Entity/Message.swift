@@ -39,6 +39,8 @@ public final class Message: TableCodable, Hashable {
     // 消息最近修改时间
     public var mTime: Int64
     
+    public var referMsg: Message?
+    
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Message
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {

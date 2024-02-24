@@ -9,7 +9,7 @@
 import UIKit
 
 protocol TextViewBackwardDelegate: AnyObject {
-    
+
     func onDeleted() -> Bool
 }
 

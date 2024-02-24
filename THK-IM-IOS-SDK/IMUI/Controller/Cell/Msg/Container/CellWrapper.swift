@@ -31,7 +31,7 @@ class CellWrapper  {
     }
     
     /**
-     消息状态视图
+     头像视图
      */
     open func avatarView() -> UIImageView? {
         return nil
@@ -57,7 +57,6 @@ class CellWrapper  {
     open func resendButton() -> UIButton? {
         return nil
     }
-    
     
     /**
      已读状态视图

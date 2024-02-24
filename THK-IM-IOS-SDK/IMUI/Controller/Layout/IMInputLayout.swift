@@ -18,6 +18,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     weak var sender: IMMsgSender? = nil {
         didSet {
             self.speakView.sender = sender
+            self.replyView.sender = sender
         }
     }
     private static let maxTextInputHeight: CGFloat = 120.0
@@ -26,10 +27,14 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     private var textInputHeight = IMInputLayout.minTextInputHeight
     private var inputLayoutHeight: CGFloat {
         get {
-            if (self.isSpeakViewShow) {
-                return IMInputLayout.minTextInputHeight + 20
+            var replyMsgHeight = 0.0
+            if (self.isReplyMsgShow) {
+                replyMsgHeight = 40.0
             }
-            return self.textInputHeight + 20.0
+            if (self.isSpeakViewShow) {
+                return IMInputLayout.minTextInputHeight + replyMsgHeight + 20.0
+            }
+            return self.textInputHeight + replyMsgHeight + 20.0
         }
     }
     
@@ -40,11 +45,17 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     private var isSpeakViewShow = false
     private var isSpeakImageShow = false
+    private var isReplyMsgShow = false
     
     private var disposeBag = DisposeBag()
     private var isKeyboardShow = false
     private var atMap = [String: String]()
     private var atRanges = [NSRange]()
+    
+    lazy private var replyView: IMReplyView = {
+        let view = IMReplyView()
+        return view
+    }()
     
     lazy private var speakButton: UIButton = {
         let voiceButton = UIButton()
@@ -117,22 +128,23 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         inputLayout.addSubview(self.speakView)
         inputLayout.addSubview(self.emojiButton)
         inputLayout.addSubview(self.moreButton)
+        inputLayout.addSubview(self.replyView)
         
-        self.speakButton.snp.makeConstraints {  (make) -> Void in
+        self.speakButton.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-bottom)
             make.left.equalToSuperview().offset(spacing)
             make.width.equalTo(buttonSize)
             make.height.equalTo(buttonSize)
         }
         
-        self.moreButton.snp.makeConstraints {  (make) -> Void in
+        self.moreButton.snp.makeConstraints {  make in
             make.bottom.equalToSuperview().offset(-bottom)
             make.right.equalToSuperview().offset(-spacing)
             make.width.equalTo(buttonSize)
             make.height.equalTo(buttonSize)
         }
         
-        self.emojiButton.snp.makeConstraints{ [weak self] (make) -> Void in
+        self.emojiButton.snp.makeConstraints{ [weak self] make in
             guard let sf = self else {
                 return
             }
@@ -142,7 +154,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             make.height.equalTo(buttonSize)
         }
         
-        self.textView.snp.makeConstraints {  [weak self] (make) -> Void in
+        self.textView.snp.makeConstraints {  [weak self] make in
             guard let sf = self else {
                 return
             }
@@ -152,7 +164,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             make.height.equalTo(IMInputLayout.minTextInputHeight)
         }
         
-        self.speakView.snp.makeConstraints {  [weak self] (make) -> Void in
+        self.speakView.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
             }
@@ -161,8 +173,17 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             make.right.equalTo(sf.emojiButton.snp.left).offset(-spacing)
             make.height.equalTo(IMInputLayout.minTextInputHeight)
         }
-        
         self.speakView.isHidden = !self.isSpeakViewShow
+        
+        self.replyView.snp.makeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
+            }
+            make.top.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.height.equalTo(0)
+        }
         
         return inputLayout
     }()
@@ -170,7 +191,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(self.inputLayout)
-        self.inputLayout.snp.makeConstraints {  (make) -> Void in
+        self.inputLayout.snp.makeConstraints {  make in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.top.equalToSuperview()
@@ -323,6 +344,18 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             }
             make.height.equalTo(sf.inputLayoutHeight)
         }
+        
+        var replyHeight = 0
+        if self.isReplyMsgShow {
+            replyHeight = 40
+        }
+        self.replyView.snp.updateConstraints { make in
+            make.top.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.height.equalTo(replyHeight)
+        }
+        self.replyView.requestLayout()
         self.snp.updateConstraints { [weak self](make) -> Void in
             guard let sf = self else {
                 return
@@ -454,7 +487,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         if (!atUIds.isEmpty) {
             atUsers = atUIds
         }
-        self.sender?.sendMessage(MsgType.TEXT.rawValue, String(msgContent), textMessage, atUsers, nil)
+        self.sender?.sendMessage(MsgType.TEXT.rawValue, String(msgContent), textMessage, atUsers)
         self.atRanges.removeAll()
         self.renderAtMsg("")
         self.textInputHeight = IMInputLayout.minTextInputHeight
@@ -557,6 +590,24 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     func onDeleted() -> Bool {
         self.deleteInputContent(1)
         return true
+    }
+    
+    func showReplyMessage(_ msg: Message) {
+        self.isReplyMsgShow = true
+        self.replyView.setMessage(msg)
+        self.resetLayout()
+    }
+    
+    func clearReplyMessage() {
+        if self.isReplyMsgShow {
+            self.isReplyMsgShow = false
+            self.replyView.clearMessage()
+            self.resetLayout()
+        }
+    }
+    
+    func getReplyMessage() -> Message? {
+        return self.replyView.getReplyMessage()
     }
         
 }

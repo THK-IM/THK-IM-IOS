@@ -87,16 +87,6 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             self.sessions.insert(session, at: insertPos)
             tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
         }
-//        let pos = findPosition(session)
-//        if (pos != -1) {
-//            self.sessions.remove(at: pos)
-//            tableView.deleteRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
-//        }
-//        // 新Session
-//        let insertPos = findInsertPosition(session)
-//        self.sessions.insert(session, at: insertPos)
-//        tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
-
     }
     
     private func onSessionRemove(_ session: Session) {

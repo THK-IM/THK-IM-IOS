@@ -224,13 +224,40 @@ open class DefaultMessageDao : MessageDao {
     }
     
     public func findBySidAfterCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) -> Array<Message> {
-        let message: Array<Message>? = try?self.database?.getObjects(
+        let messages: Array<Message>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId && Message.Properties.cTime < cTime && Message.Properties.type > 0,
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             limit: count
         )
-        return message ?? Array<Message>()
+        if messages == nil {
+            return Array<Message>()
+        }
+        
+        var referMsgIds = [Int64]()
+        for m in messages! {
+            if m.referMsgId != nil {
+                referMsgIds.append(m.referMsgId!)
+            }
+        }
+        if !referMsgIds.isEmpty {
+            let referMsgs: Array<Message>? = try? self.database?.getObjects(
+                fromTable: self.tableName,
+                where: Message.Properties.sessionId == sessionId &&
+                    Message.Properties.msgId.in(referMsgIds)
+            )
+            if referMsgs != nil {
+                for referMsg in referMsgs! {
+                    for m in messages! {
+                        if m.referMsgId == referMsg.msgId {
+                            m.referMsg = referMsg
+                        }
+                    }
+                }
+            }
+            
+        }
+        return messages!
     }
     
     // 查询ctime之前的消息

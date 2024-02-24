@@ -28,8 +28,12 @@ open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
     }
     
     open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        let maxWidth = UIScreen.main.bounds.width - 100
+        let maxWidth = UIScreen.main.bounds.width - 112
         return CGSize(width: maxWidth, height: 36)
+    }
+    
+    open override func hasBubble() -> Bool {
+        return true
     }
     
 }

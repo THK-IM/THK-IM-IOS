@@ -190,9 +190,10 @@ class IMSpeakView: UILabel {
     }
     
     func sendAudioMsg(duration: Int, path: String) {
-        let audioData = IMAudioMsgData(path: path, duration: duration, played: true)
-        self.sender?.sendMessage(MsgType.Audio.rawValue, nil, audioData, nil, nil)
-    
+        DispatchQueue.main.async { [weak self] in
+            let audioData = IMAudioMsgData(path: path, duration: duration, played: true)
+            self?.sender?.sendMessage(MsgType.Audio.rawValue, nil, audioData, nil)
+        }
     }
     
     func endRecordAudio() {

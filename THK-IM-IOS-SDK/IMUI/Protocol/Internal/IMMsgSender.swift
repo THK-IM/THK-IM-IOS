@@ -17,7 +17,7 @@ public protocol IMMsgSender : AnyObject {
     func resendMessage(_ msg: Message)
     
     /// 发送消息
-    func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable?, _ atUsers: String?, _ referMsgId: Int64?)
+    func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable?, _ atUsers: String?)
     
     /// 发送输入框内容
     func sendInputContent()
@@ -68,13 +68,13 @@ public protocol IMMsgSender : AnyObject {
     func popupMessageOperatorPanel(_ view: UIView, _ message: Message)
     
     /// show loading
-    func showLoading(text: String)
+    func showSenderLoading(text: String)
 
     /// dismiss Loading
-    func dismissLoading()
+    func dismissSenderLoading()
 
     /// show message
-    func showMessage(text: String, success: Bool)
+    func showSenderMessage(text: String, success: Bool)
 
     /// 发送消息到session forwardType 0单条转发, 1合并转发
     func forwardMessageToSession(messages: Array<Message>, forwardType: Int)
@@ -87,4 +87,10 @@ public protocol IMMsgSender : AnyObject {
     
     ///  添加at会话
     func addAtUser(user: User, sessionMember: SessionMember?)
+    
+    /// 回复消息
+    func replyMessage(msg: Message)
+    
+    /// 关闭回复消息
+    func closeReplyMessage()
 }

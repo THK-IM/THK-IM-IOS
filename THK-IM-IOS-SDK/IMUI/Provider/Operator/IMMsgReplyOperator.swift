@@ -22,7 +22,7 @@ public class IMMsgReplyOperator: IMMessageOperator {
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {
-        //
+        sender.replyMessage(msg: message)
     }
     
     

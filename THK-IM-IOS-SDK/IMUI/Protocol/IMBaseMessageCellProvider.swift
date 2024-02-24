@@ -55,15 +55,7 @@ open class IMBaseMessageCellProvider {
     }
     
     open func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        return CGSize(width: 100.0, height: 20.0)
-    }
-    
-    open func cellHeightForSessionType(_ sessionType: Int) -> CGFloat {
-        if sessionType == SessionType.Group.rawValue {
-            return 20.0
-        } else {
-            return 0
-        }
+        return CGSize(width: 100.0, height: 48.0)
     }
     
     open func canSelected() -> Bool {
@@ -86,6 +78,30 @@ open class IMBaseMessageCellProvider {
             height = retSize.height
         }
         return height
+    }
+    
+    open func replyMsgView(_ msg: Message) -> UIView? {
+        return nil
+    }
+    
+    open func replyMsgViewHeight(_ message: Message) -> CGFloat {
+        return 20.0
+    }
+    
+    open func msgTopForSession(_ message: Message, _ session: Session?) -> CGFloat {
+        if message.fromUId > 0 {
+            var top:CGFloat = 16
+            if session?.type == SessionType.Group.rawValue || session?.type == SessionType.SuperGroup.rawValue {
+                top += 20
+            }
+            return top
+        } else {
+            return 10
+        }
+    }
+    
+    open func hasBubble() -> Bool {
+        return false
     }
     
 }

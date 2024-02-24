@@ -252,6 +252,9 @@ open class IMBaseMsgProcessor {
     open func insertOrUpdateDb(_ msg: Message, _ notify: Bool = true, _ notifySession: Bool = true) throws {
         try IMCoreManager.shared.database.messageDao().insertOrReplace([msg])
         if notify {
+            if (msg.referMsgId != nil && msg.referMsg == nil) {
+                msg.referMsg = try? IMCoreManager.shared.database.messageDao().findByMsgId(msg.referMsgId!, msg.sessionId)
+            }
             SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
         }
         if notify && notifySession {
@@ -271,6 +274,9 @@ open class IMBaseMsgProcessor {
             msg.sessionId, msg.id, msg.fromUId, MsgSendStatus.Failed.rawValue
         )
         if (notify) {
+            if (msg.referMsgId != nil && msg.referMsg == nil) {
+                msg.referMsg = try? IMCoreManager.shared.database.messageDao().findByMsgId(msg.referMsgId!, msg.sessionId)
+            }
             SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
             if msg.sendStatus == MsgSendStatus.Uploading.rawValue
                 || msg.sendStatus == MsgSendStatus.Success.rawValue

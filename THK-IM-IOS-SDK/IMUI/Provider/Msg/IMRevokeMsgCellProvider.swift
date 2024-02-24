@@ -33,18 +33,14 @@ public class IMRevokeMsgCellProvider: IMBaseMessageCellProvider {
     }
     
     public override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        return CGSize(width: UIScreen.main.bounds.width - 120, height: 30.0)
-    }
-    
-    public override func cellHeightForSessionType(_ sessionType: Int) -> CGFloat {
-        if sessionType == SessionType.Group.rawValue {
-            return 30.0
-        } else {
-            return 0
-        }
+        return CGSize(width: UIScreen.main.bounds.width - 112, height: 30.0)
     }
     
     open override func canSelected() -> Bool {
         return false
+    }
+    
+    open override func hasBubble() -> Bool {
+        return true
     }
 }

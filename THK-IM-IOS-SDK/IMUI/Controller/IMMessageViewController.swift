@@ -15,7 +15,7 @@ import RxGesture
 import ImageIO
 import CoreServices
 
-class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, IMSessionMemberAtDelegate {
+class IMMessageViewController: BaseViewController {
     
     var session: Session? = nil
     private var containerView = UIView()
@@ -198,14 +198,14 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         
         self.keyboardShow = true
         let height = keyboardHeight
-        self.moveUpAlwaysShowView(true, height, duration)
+        self.moveKeyboard(true, height, duration)
     }
     
     @objc func keyboardWillDisappear(note: NSNotification){
         let animation = note.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey]
         let duration: Double = (animation as AnyObject).doubleValue
         let height = self.bottomPanelLayout.getLayoutHeight()
-        self.moveUpAlwaysShowView(false, height, duration)
+        self.moveKeyboard(false, height, duration)
     }
     
     func registerMsgEvent() {
@@ -277,39 +277,7 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         _ = inputLayout.endEditing(true)
     }
     
-    func showBottomPanel(_ type: Int) {
-        self.bottomPanelLayout.showBottomPanel(type)
-    }
-    
-    func closeBottomPanel() {
-        self.bottomPanelLayout.closeBottomPanel()
-    }
-    
-    func sendInputContent() {
-        return self.inputLayout.sendInputContent()
-    }
-    
-    func addInputContent(text: String) {
-        self.inputLayout.addInputText(text)
-    }
-    
-    func deleteInputContent(count: Int) {
-        self.inputLayout.deleteInputContent(count)
-    }
-    
-    func openKeyboard() -> Bool {
-        self.inputLayout.openKeyboard()
-    }
-    
-    func isKeyboardShowing() -> Bool {
-        return self.keyboardShow
-    }
-    
-    func closeKeyboard() -> Bool {
-        self.inputLayout.closeKeyboard()
-    }
-    
-    func moveUpAlwaysShowView(_ isKeyboardShow: Bool, _ height: CGFloat, _ duration: Double) {
+    func moveKeyboard(_ isKeyboardShow: Bool, _ height: CGFloat, _ duration: Double) {
         self.inputLayout.onKeyboardChange(isKeyboardShow, duration, height)
         if (height > 0) {
             self.bottomPanelLayout.onKeyboardChange(isKeyboardShow, duration, height)
@@ -344,28 +312,97 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         })
     }
     
-    
-    func moveToLatestMessage() {
-        self.messageLayout.scrollToBottom()
+    private func showReplyMessage(_ msg: Message) {
+        self.inputLayout.showReplyMessage(msg)
     }
     
-    func resendMessage(_ msg: Message) {
-        IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).resend(msg)
+    private func dismissReplyMessage() {
+        self.inputLayout.clearReplyMessage()
     }
     
+    private func sendVideo(_ data: Data, ext: String) throws {
+        let fileName = "\(String().random(8)).\(ext)"
+        let localPath = IMCoreManager.shared.storageModule
+            .allocSessionFilePath((self.session?.id)!, fileName, IMFileFormat.Video.rawValue)
+        try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
+        let videoData = IMVideoMsgData()
+        videoData.path = localPath
+        self.sendMessage(MsgType.VIDEO.rawValue, nil, videoData)
+    }
+    
+    private func sendImage(_ data: Data, ext: String) throws {
+        let fileName = "\(String().random(8)).\(ext)"
+        let localPath = IMCoreManager.shared.storageModule
+            .allocSessionFilePath((self.session?.id)!, fileName, IMFileFormat.Image.rawValue)
+        try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
+        let imageData = IMImageMsgData(width: nil, height: nil, path: localPath, thumbnailPath: nil)
+        self.sendMessage(MsgType.IMAGE.rawValue, nil, imageData)
+    }
+    
+    private func fetchMoreMessage(_ msgId: Int64, _ sessionId: Int64, _ before: Bool, _ count: Int) -> [Message] {
+        do {
+            let types = [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue]
+            let msgDao = IMCoreManager.shared.database.messageDao()
+            var messages: [Message]
+            if before {
+                messages = try msgDao.findOlderMessages(msgId, types, sessionId, count)
+                messages = messages.reversed()
+            } else {
+                messages = try msgDao.findNewerMessages(msgId, types, sessionId, count)
+            }
+            return messages
+        } catch {
+            DDLogError("\(error)")
+        }
+        return []
+    }
+}
+
+extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberAtDelegate {
+    
+    /// 获取session信息
     func getSession() -> Session? {
         return self.session
     }
     
+    /// 重发消息
+    func resendMessage(_ msg: Message) {
+        IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).resend(msg)
+    }
     
-    func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable? = nil, _ atUser: String? = nil, _ referMsgId: Int64? = nil) {
+    
+    /// 发送消息
+    func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable? = nil, _ atUser: String? = nil) {
         guard let sessionId = self.session?.id else {
             return
         }
+        var referMsgId :Int64? = nil
+        if let replyMsg = self.inputLayout.getReplyMessage() {
+            referMsgId = replyMsg.msgId
+        }
         IMCoreManager.shared.messageModule.sendMessage(sessionId, type, body, data, atUser, referMsgId, { _, _ in
         })
+        
+        self.inputLayout.clearReplyMessage()
     }
     
+    /// 发送输入框内容
+    func sendInputContent() {
+        return self.inputLayout.sendInputContent()
+    }
+    
+    /// 输入框添加内容
+    func addInputContent(text: String) {
+        self.inputLayout.addInputText(text)
+    }
+    
+    /// 删除输入框内容
+    func deleteInputContent(count: Int) {
+        self.inputLayout.deleteInputContent(count)
+    }
+    
+    
+    /// 选择照片
     func choosePhoto() {
         guard let cp = IMUIManager.shared.contentProvider else {
             return
@@ -392,6 +429,8 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         }
     }
     
+    
+    /// 相机拍照
     func openCamera() {
         guard let cp = IMUIManager.shared.contentProvider else {
             return
@@ -418,7 +457,46 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         }
     }
     
+    /// 移动到最新消息
+    func moveToLatestMessage() {
+        self.messageLayout.scrollToBottom()
+    }
     
+    /// 打开底部面本:position: 1表情 2更多
+    func showBottomPanel(_ type: Int) {
+        self.bottomPanelLayout.showBottomPanel(type)
+    }
+    
+    /// 关闭底部面板
+    func closeBottomPanel() {
+        self.bottomPanelLayout.closeBottomPanel()
+    }
+    
+    
+    /// 顶起常驻视图（消息列表+底部输入框）
+    func moveUpAlwaysShowView(_ isKeyboardShow: Bool, _ height: CGFloat, _ duration: Double) {
+        self.moveKeyboard(isKeyboardShow, height, duration)
+    }
+    
+    /// 打开键盘
+    @discardableResult func openKeyboard() -> Bool {
+        self.inputLayout.openKeyboard()
+    }
+    
+    
+    /// 键盘是否显示
+    func isKeyboardShowing() -> Bool {
+        return self.keyboardShow
+    }
+    
+    
+    /// 关闭键盘
+    func closeKeyboard() -> Bool {
+        self.inputLayout.closeKeyboard()
+    }
+    
+    
+    /// 打开/关闭多选消息视图
     func setSelectMode(_ selected: Bool, message: Message?) {
         if (selected) {
             self.messageLayout.setSelectMode(selected, message: message)
@@ -429,6 +507,7 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         }
     }
     
+    /// 删除多选视图选中的消息
     func deleteSelectedMessages() {
         let messages = self.messageLayout.getSelectMessages()
         if (messages.count > 0 && session != nil) {
@@ -443,12 +522,13 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         }
     }
     
+    /// 设置已读消息
     func readMessage(_ message: Message) {
         IMCoreManager.shared.messageModule
             .sendMessage(message.sessionId, MsgType.READ.rawValue, nil, nil, nil, message.msgId, nil)
     }
     
-    
+    /// 弹出消息操作面板弹窗
     func popupMessageOperatorPanel(_ view: UIView, _ message: Message) {
         let screenWidth = UIScreen.main.bounds.width
         let screenHeight = UIScreen.main.bounds.height
@@ -470,14 +550,27 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         popupView.show(rowCount, operators, self, message)
     }
     
-    func showMessage(text: String, success: Bool) {
-        
+    /// show loading
+    func showSenderLoading(text: String) {
+        self.showLoading(text: text)
     }
     
+    /// dismiss Loading
+    func dismissSenderLoading() {
+        self.dismissLoading()
+    }
+    
+    /// show message
+    func showSenderMessage(text: String, success: Bool) {
+        self.showToast(text, success)
+    }
+    
+    /// 发送消息到session forwardType 0单条转发, 1合并转发
     func forwardMessageToSession(messages: Array<Message>, forwardType: Int) {
         IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: messages)
     }
     
+    /// 转发选定的消息 forwardType 0单条转发, 1合并转发
     func forwardSelectedMessages(forwardType: Int) {
         let messages = self.messageLayout.getSelectMessages()
         if (messages.count > 0 && session != nil) {
@@ -485,6 +578,7 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         }
     }
     
+    ///  打开at会话成员控制器
     func openAtViewController() {
         guard let session = self.session else {
             return
@@ -502,36 +596,25 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         self.present(atSessionMemberController, animated: true)
     }
     
-    func onSessionMemberAt(sessionMember: SessionMember, user: User) {
-        self.inputLayout.addAtSessionMember(user: user, sessionMember: sessionMember)
-    }
-    
-    
     ///  添加at会话
     func addAtUser(user: User, sessionMember: SessionMember?) {
         self.inputLayout.addAtSessionMember(user: user, sessionMember: sessionMember)
     }
     
-    
-    private func sendVideo(_ data: Data, ext: String) throws {
-        let fileName = "\(String().random(8)).\(ext)"
-        let localPath = IMCoreManager.shared.storageModule
-            .allocSessionFilePath((self.session?.id)!, fileName, IMFileFormat.Video.rawValue)
-        try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
-        let videoData = IMVideoMsgData()
-        videoData.path = localPath
-        self.sendMessage(MsgType.VIDEO.rawValue, nil, videoData)
+    /// 回复消息
+    func replyMessage(msg: Message) {
+        self.showReplyMessage(msg)
     }
     
-    private func sendImage(_ data: Data, ext: String) throws {
-        let fileName = "\(String().random(8)).\(ext)"
-        let localPath = IMCoreManager.shared.storageModule
-            .allocSessionFilePath((self.session?.id)!, fileName, IMFileFormat.Image.rawValue)
-        try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
-        let imageData = IMImageMsgData(width: nil, height: nil, path: localPath, thumbnailPath: nil)
-        self.sendMessage(MsgType.IMAGE.rawValue, nil, imageData)
+    func closeReplyMessage() {
+        self.dismissReplyMessage()
     }
     
+    func onSessionMemberAt(sessionMember: SessionMember, user: User) {
+        self.inputLayout.addAtSessionMember(user: user, sessionMember: sessionMember)
+    }
+    
+    ///  预览消息
     func previewMessage(_ msg: Message, _ position: Int,  _ originView: UIView) {
         if msg.type == MsgType.Audio.rawValue {
             guard let cp = IMUIManager.shared.contentProvider else {
@@ -569,24 +652,4 @@ class IMMessageViewController: BaseViewController, IMMsgSender, IMMsgPreviewer, 
         }
     }
     
-    private func fetchMoreMessage(_ msgId: Int64, _ sessionId: Int64, _ before: Bool, _ count: Int) -> [Message] {
-        do {
-            let types = [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue]
-            let msgDao = IMCoreManager.shared.database.messageDao()
-            var messages: [Message]
-            if before {
-                messages = try msgDao.findOlderMessages(msgId, types, sessionId, count)
-                messages = messages.reversed()
-            } else {
-                messages = try msgDao.findNewerMessages(msgId, types, sessionId, count)
-            }
-            return messages
-        } catch {
-            DDLogError("\(error)")
-        }
-        return []
-    }
-    
-    
 }
-

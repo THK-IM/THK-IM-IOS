@@ -68,7 +68,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         ProgressHUD.dismiss()
     }
     
-    open func showToast(_ toast: String) {
+    open func showToast(_ toast: String, _ success: Bool = true) {
         NotificationPresenter.shared.present(toast)
         NotificationPresenter.shared.dismiss(after: 1)
     }

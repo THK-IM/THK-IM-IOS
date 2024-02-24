@@ -20,7 +20,8 @@ open class BaseMsgCell : BaseTableCell {
     var message: Message? = nil
     var session: Session? = nil
     var position: Int? = nil
-    var bubbleView: UIImageView?
+    var bubbleView = UIImageView()
+    var replyView = BaseMsgCellReplyView()
     
     init(_ reuseIdentifier: String, _ wrapper: CellWrapper) {
         self.cellWrapper = wrapper
@@ -28,8 +29,8 @@ open class BaseMsgCell : BaseTableCell {
         selectionStyle = .blue
         cellWrapper.attach(contentView)
         let msgContainerView = cellWrapper.containerView()
-        self.bubbleView = UIImageView()
-        msgContainerView.insertSubview(self.bubbleView!, at: 0)
+        msgContainerView.insertSubview(self.bubbleView, at: 0)
+        msgContainerView.addSubview(self.replyView)
         let msgView = self.msgView()
         msgContainerView.addSubview(msgView)
         self.backgroundColor = UIColor.clear
@@ -58,10 +59,16 @@ open class BaseMsgCell : BaseTableCell {
         msgView.rx.longPressGesture()
             .when(.began)
             .subscribe(onNext: { [weak self]  _ in
-                self?.delegate?.onMsgCellLongClick(
-                    message: (self?.message)!,
-                    position: self?.position ?? 0,
-                    view: (self?.msgView())!
+                guard let sf = self else {
+                    return
+                }
+                if !sf.canSelected() {
+                    return
+                }
+                sf.delegate?.onMsgCellLongClick(
+                    message: (sf.message)!,
+                    position: sf.position ?? 0,
+                    view: sf.msgView()
                 )
             })
             .disposed(by: disposeBag)
@@ -106,15 +113,53 @@ open class BaseMsgCell : BaseTableCell {
     }
     
     func initMsgView() {
-        let msgView = self.msgView()
-        bubbleView!.snp.makeConstraints { make in
-            make.edges.equalTo(msgView)
+        self.initMsgContent()
+        self.initMessageStatus()
+        self.initAvatar()
+        self.initBubble()
+    }
+    
+    private func initReplyMsg() {
+        guard let msg = self.message?.referMsg else {
+            return
         }
-        msgView.snp.makeConstraints { make in
+        IMCoreManager.shared.userModule.queryUser(id: msg.fromUId)
+        .compose(RxTransformer.shared.io2Main())
+        .subscribe(onNext: { [weak self] user in
+            self?.showReplyMsg(user)
+        }).disposed(by: self.disposeBag)
+    }
+    
+    private func showReplyMsg(_ user: User) {
+        guard let msg = self.message?.referMsg else {
+            return
+        }
+        self.replyView.updateContent(user, msg)
+    }
+    
+    open func initMsgContent() {
+        self.bubbleView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        showMessageStatus()
-        
+        var replyHeight = 0.0
+        if let msg = message?.referMsg {
+            replyHeight = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgViewHeight(msg)
+            self.replyView.resetHeight(replyHeight)
+            self.initReplyMsg()
+        } else {
+            replyHeight = 0.0
+            self.replyView.resetHeight(replyHeight)
+        }
+        let msgView = self.msgView()
+        msgView.snp.remakeConstraints { make in
+            make.top.equalToSuperview().offset(replyHeight)
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+    }
+    
+    open func initAvatar() {
         let fromUId = self.message?.fromUId
         if (self.showAvatar() && fromUId != nil) {
             self.cellWrapper.avatarView()?.isHidden = false
@@ -130,6 +175,10 @@ open class BaseMsgCell : BaseTableCell {
         } else {
             self.cellWrapper.avatarView()?.isHidden = true
         }
+    }
+    
+    open func initBubble() {
+        let fromUId = self.message?.fromUId
         if (self.hasBubble() && fromUId != nil) {
             let position = cellPosition()
             var image: UIImage? = nil
@@ -143,20 +192,14 @@ open class BaseMsgCell : BaseTableCell {
                     borderColor: UIColor.init(hex: "ffd1e3fe"), width: 40, height: 40, pos: 2)
             } else {
                 image = Bubble().drawRectWithRoundedCorner(
-                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "20000000"),
-                    borderColor: UIColor.init(hex: "20000000"), width: 80, height: 30, pos: 0)
-                
+                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "40000000"),
+                    borderColor: UIColor.init(hex: "20000000"), width: 40, height: 24, pos: 0)
             }
             updateUserBubble(image: image)
         } else {
             updateUserBubble(image: nil)
         }
     }
-    
-    open func removeMsgView() {
-        self.msgView().removeFromSuperview()
-    }
-    
     
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -179,10 +222,10 @@ open class BaseMsgCell : BaseTableCell {
     }
     
     private func updateUserBubble(image: UIImage?) {
-        self.bubbleView?.image = image
+        self.bubbleView.image = image
     }
     
-    private func showMessageStatus() {
+    open func initMessageStatus() {
         guard let message = self.message else {
             return
         }
@@ -212,11 +255,20 @@ open class BaseMsgCell : BaseTableCell {
     
     open override func disappear() {
         self.cellWrapper.disAppear()
-        self.delegate = nil
     }
     
     open func hasBubble() -> Bool {
-        return false
+        guard let msg = self.message else {
+            return false
+        }
+        return IMUIManager.shared.getMsgCellProvider(msg.type).hasBubble()
+    }
+    
+    open func canSelected() -> Bool {
+        guard let msg = self.message else {
+            return false
+        }
+        return IMUIManager.shared.getMsgCellProvider(msg.type).canSelected()
     }
     
     open func showAvatar() -> Bool {

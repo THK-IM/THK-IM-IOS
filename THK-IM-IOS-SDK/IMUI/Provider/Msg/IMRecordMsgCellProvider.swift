@@ -37,8 +37,11 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         }
         let maxWidth = UIScreen.main.bounds.width - 112
         let height = self.heightWithString(recordBody.content, UIFont.boldSystemFont(ofSize: 12), maxWidth)
-        return CGSize(width: maxWidth, height: height + 61)
-        
+        return CGSize(width: maxWidth, height: height + 60)
+    }
+    
+    open override func hasBubble() -> Bool {
+        return true
     }
     
 }

@@ -27,6 +27,10 @@ open class IMUnSupportMsgCellProvide: IMBaseMessageCellProvider {
         }
     }
     
+    open override func hasBubble() -> Bool {
+        return true
+    }
+    
 }
 
 
