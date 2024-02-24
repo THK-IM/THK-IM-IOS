@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMRevokeMsgView: UIView {
+class IMRevokeMsgView: UIView, BaseMsgView {
     
     private weak var delegate: IMMsgCellOperator?
     private var message: Message?
@@ -73,7 +73,7 @@ class IMRevokeMsgView: UIView {
         }
     }
     
-    open func setMessage(_ message: Message, _ session: Session, _ delegate: IMMsgCellOperator) {
+    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
         self.message = message
         self.delegate = delegate
         if (message.fromUId != IMCoreManager.shared.uId) {

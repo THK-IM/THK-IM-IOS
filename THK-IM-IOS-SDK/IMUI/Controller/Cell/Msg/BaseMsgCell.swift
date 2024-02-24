@@ -134,25 +134,24 @@ open class BaseMsgCell : BaseTableCell {
         guard let msg = self.message?.referMsg else {
             return
         }
-        self.replyView.updateContent(user, msg)
+        self.replyView.updateContent(user, msg, self.session, self.delegate)
     }
     
     open func initMsgContent() {
         self.bubbleView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        var replyHeight = 0.0
+        var size = CGSize(width: 0, height: 0)
         if let msg = message?.referMsg {
-            replyHeight = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgViewHeight(msg)
-            self.replyView.resetHeight(replyHeight)
+            size = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgViewSize(msg, self.session)
+            self.replyView.resetSize(size)
             self.initReplyMsg()
         } else {
-            replyHeight = 0.0
-            self.replyView.resetHeight(replyHeight)
+            self.replyView.resetSize(size)
         }
         let msgView = self.msgView()
         msgView.snp.remakeConstraints { make in
-            make.top.equalToSuperview().offset(replyHeight)
+            make.top.equalToSuperview().offset(size.height)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.bottom.equalToSuperview()

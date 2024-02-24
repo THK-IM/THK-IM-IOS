@@ -23,7 +23,7 @@ class IMImageMsgCell: BaseMsgCell {
         guard let msg = self.message else {
             return
         }
-        self.view.setMessage(msg, session)
+        self.view.setMessage(msg, session, delegate)
     }
     
 }

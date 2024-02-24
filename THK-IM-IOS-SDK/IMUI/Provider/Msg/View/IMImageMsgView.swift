@@ -9,7 +9,8 @@
 import UIKit
 import CocoaLumberjack
 
-class IMImageMsgView: UIImageView {
+class IMImageMsgView: UIImageView, BaseMsgView {
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,11 +22,12 @@ class IMImageMsgView: UIImageView {
     }
     
     private func setupUI() {
-        self.contentMode = .scaleToFill
+        self.contentMode = .scaleAspectFit
     }
     
-    open func setMessage(_ message: Message, _ session: Session) {
-        let size = IMUIManager.shared.getMsgCellProvider(message.type).viewSize(message, session)
+    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
+        let provider = IMUIManager.shared.getMsgCellProvider(message.type)
+        let size = isReply ? provider.replyMsgViewSize(message, session) : provider.viewSize(message, session)
         self.removeConstraints(self.constraints)
         self.isHidden = true
         self.snp.makeConstraints { make in

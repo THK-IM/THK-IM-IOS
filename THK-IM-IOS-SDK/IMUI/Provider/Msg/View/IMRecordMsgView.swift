@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMRecordMsgView: UIView {
+class IMRecordMsgView: UIView, BaseMsgView {
     
     private weak var delegate: IMMsgCellOperator?
     private var message: Message?
@@ -66,32 +66,49 @@ class IMRecordMsgView: UIView {
         self.addSubview(self.descView)
     }
     
-    func setMessage(_ message: Message, _ session: Session, _ delegate: IMMsgCellOperator) {
+    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
         guard let content = message.content else {
             return
         }
         guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
             return
         }
-        let size = IMUIManager.shared.getMsgCellProvider(message.type).viewSize(message, session)
+        let provider = IMUIManager.shared.getMsgCellProvider(message.type)
+        let size = isReply ? provider.replyMsgViewSize(message, session) : provider.viewSize(message, session)
         self.removeConstraints(self.constraints)
-        self.snp.makeConstraints { make in
-            make.height.equalTo(size.height)
-            make.width.greaterThanOrEqualTo(200)
+        
+        var padding = 0
+        if isReply {
+            self.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            self.recordTitleView.textColor = .darkGray
+            self.recordTitleView.font = UIFont.systemFont(ofSize: 12)
+            self.recordContentView.textColor = .darkGray
+            self.recordContentView.font = UIFont.systemFont(ofSize: 12)
+            self.descView.textColor = .darkGray
+            self.descView.font = UIFont.systemFont(ofSize: 12)
+            self.lineView.backgroundColor = .darkGray
+        } else {
+            padding = 4
+            self.snp.makeConstraints { make in
+                make.height.equalTo(size.height)
+                make.width.equalTo(size.width)
+            }
         }
         
         self.recordTitleView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(4)
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
-            make.height.equalTo(16)
+            make.height.equalTo(14)
+            make.top.equalToSuperview().offset(padding)
+            make.left.equalToSuperview().offset(padding)
+            make.right.equalToSuperview().offset(0-padding)
         }
         
         self.descView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-4)
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
-            make.height.equalTo(16)
+            make.height.equalTo(14)
+            make.bottom.equalToSuperview().offset(-2)
+            make.left.equalToSuperview().offset(padding)
+            make.right.equalToSuperview().offset(0-padding)
         }
         
         self.lineView.snp.makeConstraints { [weak self] make in
@@ -99,8 +116,8 @@ class IMRecordMsgView: UIView {
                 return
             }
             make.bottom.equalTo(sf.descView.snp.top)
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
+            make.left.equalToSuperview().offset(padding)
+            make.right.equalToSuperview().offset(0-padding)
             make.height.equalTo(1)
         }
         
@@ -109,8 +126,8 @@ class IMRecordMsgView: UIView {
                 return
             }
             make.top.equalTo(sf.recordTitleView.snp.bottom)
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
+            make.left.equalToSuperview().offset(padding)
+            make.right.equalToSuperview().offset(0-padding)
             make.bottom.equalTo(sf.lineView.snp.top)
         }
         

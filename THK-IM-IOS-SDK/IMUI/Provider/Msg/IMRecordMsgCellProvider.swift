@@ -35,13 +35,23 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
             return super.viewSize(message, session)
         }
-        let maxWidth = UIScreen.main.bounds.width - 112
-        let height = self.heightWithString(recordBody.content, UIFont.boldSystemFont(ofSize: 12), maxWidth)
-        return CGSize(width: maxWidth, height: height + 60)
+        let maxWidth = UIScreen.main.bounds.width - 120
+        let size = self.textRenderSize(recordBody.content, UIFont.systemFont(ofSize: 12), maxWidth)
+        return CGSize(width: maxWidth, height: size.height + 30)
     }
     
     open override func hasBubble() -> Bool {
         return true
+    }
+    
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> BaseMsgView? {
+        let view = IMRecordMsgView(frame:.null)
+        view.setMessage(msg, session, delegate)
+        return view
+    }
+    
+    open override func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
+        return CGSize(width: 80, height: 60)
     }
     
 }

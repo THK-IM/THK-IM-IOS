@@ -57,6 +57,7 @@
 		A033FB062B8A1CC50053045E /* IMUnSupportMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB052B8A1CC50053045E /* IMUnSupportMsgView.swift */; };
 		A033FB082B8A1DBB0053045E /* IMRevokeMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB072B8A1DBB0053045E /* IMRevokeMsgView.swift */; };
 		A033FB0A2B8A1F6C0053045E /* IMRecordMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB092B8A1F6C0053045E /* IMRecordMsgView.swift */; };
+		A033FB0C2B8A33F60053045E /* BaseMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB0B2B8A33F60053045E /* BaseMsgView.swift */; };
 		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A050072F2B08BC9700526713 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072E2B08BC9700526713 /* AppUtils.swift */; };
 		A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */; };
@@ -350,6 +351,7 @@
 		A033FB052B8A1CC50053045E /* IMUnSupportMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUnSupportMsgView.swift; sourceTree = "<group>"; };
 		A033FB072B8A1DBB0053045E /* IMRevokeMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgView.swift; sourceTree = "<group>"; };
 		A033FB092B8A1F6C0053045E /* IMRecordMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgView.swift; sourceTree = "<group>"; };
+		A033FB0B2B8A33F60053045E /* BaseMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMsgView.swift; sourceTree = "<group>"; };
 		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A050072E2B08BC9700526713 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
 		A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallViewController.swift; sourceTree = "<group>"; };
@@ -831,6 +833,7 @@
 				A0D68B142A888678004D11A5 /* Container */,
 				A0D68B1B2A888678004D11A5 /* BaseMsgCell.swift */,
 				A033FAF82B89A0B30053045E /* BaseMsgCellReplyView.swift */,
+				A033FB0B2B8A33F60053045E /* BaseMsgView.swift */,
 			);
 			path = Msg;
 			sourceTree = "<group>";
@@ -1852,6 +1855,7 @@
 				A0C431F42A909CCE00A84D4A /* RoomApi.swift in Sources */,
 				A0C431FD2A909D2500A84D4A /* ParticipantView.swift in Sources */,
 				A0D68BCF2A888679004D11A5 /* PresentAnimator.swift in Sources */,
+				A033FB0C2B8A33F60053045E /* BaseMsgView.swift in Sources */,
 				A0D68BB52A888679004D11A5 /* IMInputLayout.swift in Sources */,
 				A0D68B912A888679004D11A5 /* Session.swift in Sources */,
 				A0C431E72A909CB200A84D4A /* Room.swift in Sources */,

@@ -65,5 +65,16 @@ open class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> BaseMsgView? {
+        let view = IMVideoMsgView(frame:.null)
+        view.setMessage(msg, session, delegate)
+        return view
+    }
+    
+    open override func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
+        let size = self.viewSize(message, session)
+        return CGSize(width: size.width * 0.25, height: size.height * 0.25)
+    }
+    
 }
 

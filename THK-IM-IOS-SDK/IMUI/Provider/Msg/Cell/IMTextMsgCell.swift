@@ -11,8 +11,13 @@ import RxSwift
 
 class IMTextMsgCell: BaseMsgCell {
     
+    private let fontSize:CGFloat = 16
+    
     private lazy var view: IMTextMsgView = {
         let view = IMTextMsgView()
+        view.numberOfLines = 0
+        view.font = UIFont.systemFont(ofSize: fontSize)
+        view.padding = UIEdgeInsets.init(top: 12, left: 8, bottom: 12, right: 8)
         view.textColor = UIColor.black
         if self.cellPosition() == IMMsgPosType.Mid.rawValue {
             view.textAlignment = .center
@@ -31,7 +36,7 @@ class IMTextMsgCell: BaseMsgCell {
         guard let msg = self.message else {
             return
         }
-        self.view.setMessage(msg, session)
+        self.view.setMessage(msg, session, delegate)
     }
     
 }

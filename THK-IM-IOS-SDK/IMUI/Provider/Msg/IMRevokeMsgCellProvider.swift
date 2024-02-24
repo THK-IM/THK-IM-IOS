@@ -43,4 +43,5 @@ public class IMRevokeMsgCellProvider: IMBaseMessageCellProvider {
     open override func hasBubble() -> Bool {
         return true
     }
+    
 }

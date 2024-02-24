@@ -99,7 +99,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         let size = provider.viewSize(msg, self.session)
         var addHeight = provider.msgTopForSession(msg, self.session)
         if let referMsg = msg.referMsg  {
-            addHeight += IMUIManager.shared.getMsgCellProvider(referMsg.type).replyMsgViewHeight(referMsg)
+            addHeight += IMUIManager.shared.getMsgCellProvider(referMsg.type).replyMsgViewSize(referMsg, self.session).height
         }
         return size.height + addHeight
     }

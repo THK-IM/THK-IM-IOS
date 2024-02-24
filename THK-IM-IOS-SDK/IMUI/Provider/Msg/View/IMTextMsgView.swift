@@ -10,9 +10,8 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMTextMsgView: IMMsgLabelView {
+class IMTextMsgView: IMMsgLabelView, BaseMsgView {
     
-    private let fontSize:CGFloat = 16
     private var disposeBag = DisposeBag()
     
     override init(frame: CGRect) {
@@ -26,12 +25,14 @@ class IMTextMsgView: IMMsgLabelView {
     
     private func setupUI() {
         self.sizeToFit()
-        self.numberOfLines = 0
-        self.font = UIFont.systemFont(ofSize: fontSize)
-        self.padding = UIEdgeInsets.init(top: 12, left: 8, bottom: 12, right: 8)
     }
     
-    open func setMessage(_ message: Message, _ session: Session) {
+    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
+        if isReply {
+            self.snp.remakeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        }
         if (message.data != nil && message.data!.length > 0) {
             self.renderAtMsg(message.data!)
         } else if (message.atUsers != nil) {
@@ -108,7 +109,7 @@ class IMTextMsgView: IMMsgLabelView {
             )
             attributedStr.addAttribute(
                 .font,
-                value: UIFont.boldSystemFont(ofSize: fontSize),
+                value: UIFont.boldSystemFont(ofSize: self.font.pointSize),
                 range: range
             )
         }

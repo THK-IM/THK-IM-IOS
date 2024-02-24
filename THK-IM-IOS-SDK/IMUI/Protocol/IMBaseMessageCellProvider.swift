@@ -62,10 +62,9 @@ open class IMBaseMessageCellProvider {
         return true
     }
     
-    open func heightWithString(_ text: String, _ font: UIFont, _ maxWidth: CGFloat) -> CGFloat {
-        var height: CGFloat = 0
+    open func textRenderSize(_ text: String, _ font: UIFont, _ maxWidth: CGFloat) -> CGSize {
         if text.isEmpty {
-            height = 0
+            return CGSize(width: 0, height: font.pointSize)
         } else {
             var attribute = [NSAttributedString.Key: Any]()
             attribute[.font] = font
@@ -75,23 +74,27 @@ open class IMBaseMessageCellProvider {
                 attributes: attribute,
                 context: nil
             ).size
-            height = retSize.height
+            return retSize
         }
-        return height
     }
     
-    open func replyMsgView(_ msg: Message) -> UIView? {
-        return nil
+    open func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> BaseMsgView? {
+        let view = IMTextMsgView()
+        view.textColor = UIColor.darkGray
+        view.font = UIFont.systemFont(ofSize: 12)
+        view.numberOfLines = 0
+        return view
     }
     
-    open func replyMsgViewHeight(_ message: Message) -> CGFloat {
-        return 20.0
+    open func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
+        return self.viewSize(message, session)
     }
     
     open func msgTopForSession(_ message: Message, _ session: Session?) -> CGFloat {
         if message.fromUId > 0 {
             var top:CGFloat = 16
-            if session?.type == SessionType.Group.rawValue || session?.type == SessionType.SuperGroup.rawValue {
+            if session?.type == SessionType.Group.rawValue || session?.type == SessionType.SuperGroup.rawValue
+                || session?.type == SessionType.MsgRecord.rawValue {
                 top += 20
             }
             return top

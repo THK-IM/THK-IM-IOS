@@ -36,4 +36,15 @@ open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
         return true
     }
     
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> BaseMsgView? {
+        let view = IMAudioMsgView(frame:.null)
+        view.setMessage(msg, session, delegate)
+        return view
+    }
+    
+    open override func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
+        let size = self.viewSize(message, session)
+        return size
+    }
+    
 }

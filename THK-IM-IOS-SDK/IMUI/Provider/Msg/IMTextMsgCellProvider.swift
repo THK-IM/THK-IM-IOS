@@ -33,12 +33,32 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
             return baseSize
         }
         let maxWidth = UIScreen.main.bounds.width - 112
-        let height = self.heightWithString(content, UIFont.systemFont(ofSize: 16), maxWidth)
-        return CGSize(width: baseSize.width, height: height + 20)
+        let size = self.textRenderSize(content, UIFont.systemFont(ofSize: 16), maxWidth)
+        return CGSize(width: size.width, height: size.height + 20)
     }
     
     open override func hasBubble() -> Bool {
         return true
+    }
+    
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> BaseMsgView? {
+        let view = IMTextMsgView(frame:.null)
+        view.textColor = UIColor.darkGray
+        view.font = UIFont.systemFont(ofSize: 12)
+        view.textAlignment = .justified
+        view.numberOfLines = 0
+        view.setMessage(msg, session, delegate)
+        return view
+    }
+    
+    open override func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
+        let baseSize = super.viewSize(message, session)
+        guard let content = message.content else {
+            return baseSize
+        }
+        let maxWidth = UIScreen.main.bounds.width - 160
+        let size = self.textRenderSize(content, UIFont.systemFont(ofSize: 12), maxWidth)
+        return size
     }
     
 }

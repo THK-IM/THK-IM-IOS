@@ -10,7 +10,8 @@ import UIKit
 import CocoaLumberjack
 
 
-class IMVideoMsgView: UIImageView {
+class IMVideoMsgView: UIImageView, BaseMsgView {
+    
     
     private let durationLabel = IMMsgLabelView()
     private let playView = UIImageView()
@@ -36,8 +37,10 @@ class IMVideoMsgView: UIImageView {
         self.addSubview(self.playView)
     }
     
-    open func setMessage(_ message: Message, _ session: Session) {
-        let size = IMUIManager.shared.getMsgCellProvider(message.type).viewSize(message, session)
+    
+    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
+        let provider = IMUIManager.shared.getMsgCellProvider(message.type)
+        let size = isReply ? provider.replyMsgViewSize(message, session) : provider.viewSize(message, session)
         self.removeConstraints(self.constraints)
         self.isHidden = true
         self.snp.makeConstraints { make in

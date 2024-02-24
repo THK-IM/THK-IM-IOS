@@ -53,13 +53,9 @@ class LeftCellWrapper: CellWrapper {
             make.size.equalTo(42)
         }
         contentView.addSubview(_messageStack)
-        var top = 16
-        if _nickView != nil {
-            top = 0
-        }
         _messageStack.snp.makeConstraints { make in
             make.left.equalTo(_avatarView.snp.right).offset(4)
-            make.top.equalToSuperview().offset(top)
+            make.top.equalToSuperview()
             make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 100)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }

@@ -12,7 +12,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMAudioMsgView: UIView {
+class IMAudioMsgView: UIView, BaseMsgView {
     
     private lazy var durationView : IMMsgLabelView = {
         let view = IMMsgLabelView()
@@ -62,7 +62,8 @@ class IMAudioMsgView: UIView {
         }
     }
     
-    func setMessage(_ message: Message, _ session: Session) {
+    
+    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
         if (message.data != nil) {
             do {
                 let data = try JSONDecoder().decode(
