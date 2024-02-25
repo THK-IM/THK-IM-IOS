@@ -210,7 +210,7 @@ open class IMBaseMsgProcessor {
             }, onError: { error in
                 originMsg.sendStatus = MsgSendStatus.Failed.rawValue
                 do {
-                    try self.updateFailedMsgStatus(msg)
+                    try self.insertOrUpdateDb(msg)
                 } catch let error {
                     DDLogError("\(error)")
                 }
@@ -258,26 +258,6 @@ open class IMBaseMsgProcessor {
             SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
         }
         if notify && notifySession {
-            if msg.sendStatus == MsgSendStatus.Uploading.rawValue
-                || msg.sendStatus == MsgSendStatus.Success.rawValue
-                || msg.sendStatus == MsgSendStatus.Failed.rawValue {
-                IMCoreManager.shared.messageModule.processSessionByMessage(msg)
-            }
-        }
-    }
-    
-    /**
-     * 【更新消息状态】用于在调用api发送消息失败时更新本地数据库消息状态
-     */
-    open func updateFailedMsgStatus(_ msg: Message, _ notify: Bool = true) throws {
-        try IMCoreManager.shared.database.messageDao().updateSendStatus(
-            msg.sessionId, msg.id, msg.fromUId, MsgSendStatus.Failed.rawValue
-        )
-        if (notify) {
-            if (msg.referMsgId != nil && msg.referMsg == nil) {
-                msg.referMsg = try? IMCoreManager.shared.database.messageDao().findByMsgId(msg.referMsgId!, msg.sessionId)
-            }
-            SwiftEventBus.post(IMEvent.MsgUpdate.rawValue, sender: msg)
             if msg.sendStatus == MsgSendStatus.Uploading.rawValue
                 || msg.sendStatus == MsgSendStatus.Success.rawValue
                 || msg.sendStatus == MsgSendStatus.Failed.rawValue {
