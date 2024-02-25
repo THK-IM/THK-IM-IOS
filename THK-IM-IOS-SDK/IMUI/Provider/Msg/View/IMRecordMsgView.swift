@@ -98,14 +98,14 @@ class IMRecordMsgView: UIView, BaseMsgView {
         }
         
         self.recordTitleView.snp.makeConstraints { make in
-            make.height.equalTo(14)
+            make.height.equalTo(14).priority(.required)
             make.top.equalToSuperview().offset(padding)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
         }
         
         self.descView.snp.makeConstraints { make in
-            make.height.equalTo(14)
+            make.height.equalTo(14).priority(.required)
             make.bottom.equalToSuperview().offset(-2)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
@@ -118,7 +118,7 @@ class IMRecordMsgView: UIView, BaseMsgView {
             make.bottom.equalTo(sf.descView.snp.top)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
-            make.height.equalTo(1)
+            make.height.equalTo(1).priority(.required)
         }
         
         self.recordContentView.snp.makeConstraints { [weak self] make in

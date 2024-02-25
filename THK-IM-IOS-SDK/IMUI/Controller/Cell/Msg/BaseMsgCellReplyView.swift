@@ -24,14 +24,14 @@ class BaseMsgCellReplyView: UIView {
     lazy private var lineView: UIImageView = {
         let view = UIImageView()
         view.image = Bubble().drawRectWithRoundedCorner(
-            radius: 2, borderWidth: 0, backgroundColor: UIColor.init(hex: "#ff999999"),
-            borderColor: UIColor.init(hex: "#ff999999"), width: 4, height: 20, pos: 0)
+            radius: 2, borderWidth: 0, backgroundColor: UIColor.init(hex: "#ff08AAFF"),
+            borderColor: UIColor.init(hex: "#ff08AAFF"), width: 4, height: 20, pos: 0)
         return view
     }()
     
     lazy private var replyUserView: UILabel = {
         let view = UILabel()
-        view.textColor = UIColor.darkGray
+        view.textColor = UIColor.init(hex: "#ff08AAFF")
         view.font = UIFont.systemFont(ofSize: 12)
         view.textAlignment = .justified
         view.numberOfLines = 1
@@ -52,54 +52,63 @@ class BaseMsgCellReplyView: UIView {
     
     func resetSize(_ size: CGSize) {
         self.viewSize = size
-        self.snp.remakeConstraints { make in
+        self.removeConstraints(self.constraints)
+        self.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.height.equalTo(size.height)
-            make.width.greaterThanOrEqualTo(size.width)
+            make.height.equalTo(size.height > 0 ? size.height + 30 : 0)
+            make.width.greaterThanOrEqualTo(size.width + 30)
         }
-        if (size.height > 0) {
-            self.lineView.snp.remakeConstraints { make in
-                make.top.equalToSuperview().offset(6)
-                make.height.equalTo(16)
-                make.left.equalToSuperview().offset(6)
-                make.width.equalTo(4)
-            }
-            self.replyUserView.snp.remakeConstraints { [weak self] make in
-                guard let sf = self else {
-                    return
-                }
-                make.top.equalToSuperview().offset(6)
-                make.height.lessThanOrEqualToSuperview()
-                make.left.equalTo(sf.lineView.snp.right).offset(6)
-            }
-            self.replyMsgView.snp.remakeConstraints { [weak self] make in
-                guard let sf = self else {
-                    return
-                }
-                make.top.equalToSuperview().offset(6)
-                make.height.lessThanOrEqualToSuperview()
-                make.left.equalTo(sf.replyUserView.snp.right)
-                make.right.equalToSuperview().offset(-6)
-            }
-        } else {
+        self.lineView.removeConstraints(self.lineView.constraints)
+        self.replyUserView.removeConstraints(self.replyUserView.constraints)
+        self.replyMsgView.removeConstraints(self.replyMsgView.constraints)
+        if (size.height == 0) {
             self.replyMsgView.subviews.forEach { v in
                 v.removeFromSuperview()
             }
-            self.lineView.snp.remakeConstraints { make in
-                make.height.equalTo(0)
+            self.lineView.snp.makeConstraints { make in
+                make.top.equalToSuperview()
+                make.bottom.equalToSuperview()
             }
-            self.replyUserView.snp.remakeConstraints { make in
-                make.height.equalTo(0)
+            self.replyUserView.snp.makeConstraints { make in
+                make.top.equalToSuperview()
+                make.bottom.equalToSuperview()
             }
-            self.replyMsgView.snp.remakeConstraints { make in
-                make.height.equalTo(0)
+            self.replyMsgView.snp.makeConstraints { make in
+                make.top.equalToSuperview()
+                make.bottom.equalToSuperview()
+            }
+        } else {
+            self.lineView.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(6)
+                make.bottom.equalToSuperview().offset(-6)
+                make.left.equalToSuperview().offset(6)
+                make.width.equalTo(4)
+            }
+            self.replyUserView.snp.makeConstraints { [weak self] make in
+                guard let sf = self else {
+                    return
+                }
+                make.top.equalToSuperview().offset(6)
+                make.height.equalTo(14)
+                make.left.equalTo(sf.lineView.snp.right).offset(6)
+                make.right.equalToSuperview().offset(-6)
+            }
+            self.replyMsgView.snp.makeConstraints { [weak self] make in
+                guard let sf = self else {
+                    return
+                }
+                make.top.equalToSuperview().offset(24)
+                make.bottom.equalToSuperview().offset(-6)
+                make.left.equalTo(sf.lineView.snp.right).offset(6)
+                make.right.equalToSuperview().offset(-6)
             }
         }
     }
     
     func updateContent(_ user: User, _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) {
+       
         self.replyMsgView.subviews.forEach { v in
             v.removeFromSuperview()
         }
@@ -111,27 +120,14 @@ class BaseMsgCellReplyView: UIView {
         
         let attributes = [NSAttributedString.Key.font: self.replyUserView.font]
         let textSize = (self.replyUserView.text! as NSString).size(withAttributes: attributes as [NSAttributedString.Key : Any])
-        self.replyUserView.snp.remakeConstraints { [weak self] make in
+        
+        self.snp.updateConstraints { [weak self] make in
             guard let sf = self else {
                 return
             }
-            make.top.equalToSuperview().offset(6)
-            make.width.equalTo(textSize.width+6)
-            make.height.lessThanOrEqualToSuperview()
-            make.left.equalTo(sf.lineView.snp.right).offset(6)
+            make.width.greaterThanOrEqualTo(max(sf.viewSize.width, textSize.width) + 30)
         }
-        
-        self.snp.remakeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.top.equalToSuperview()
-            make.left.equalToSuperview().priority(.required)
-            make.right.equalToSuperview().priority(.required)
-            make.height.equalTo(sf.viewSize.height)
-            make.width.greaterThanOrEqualTo(sf.viewSize.width + textSize.width + 30)
-        }
-        
+
     }
     
 }

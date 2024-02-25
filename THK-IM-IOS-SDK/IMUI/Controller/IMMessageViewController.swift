@@ -314,6 +314,7 @@ class IMMessageViewController: BaseViewController {
     
     private func showReplyMessage(_ msg: Message) {
         self.inputLayout.showReplyMessage(msg)
+        self.messageLayout.scrollToBottom()
     }
     
     private func dismissReplyMessage() {

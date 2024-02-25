@@ -151,7 +151,7 @@ open class BaseMsgCell : BaseTableCell {
         }
         let msgView = self.msgView()
         msgView.snp.remakeConstraints { make in
-            make.top.equalToSuperview().offset(size.height)
+            make.top.equalToSuperview().offset(size.height > 0 ? size.height + 30 : 0) // 补齐回复人高度
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.bottom.equalToSuperview()

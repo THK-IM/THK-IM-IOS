@@ -18,6 +18,9 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     private let disposeBag = DisposeBag()
     private var isLoading = false
     private let lock = NSLock()
+    private var isTop = false
+    private var newSessions = [Session]()
+    private var removeSessions = [Session]()
     
     var parentId: Int64 = 0
     
@@ -35,6 +38,24 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         self.view.addSubview(self.sessionTableView)
         self.sessionTableView.frame = self.view.frame
         self.loadSessions()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.isTop = true
+        for s in newSessions {
+            self.onSessionUpdate(s)
+        }
+        newSessions.removeAll()
+        for s in removeSessions {
+            self.onSessionRemove(s)
+        }
+        removeSessions.removeAll()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.isTop = false
     }
     
     func loadSessions() {
@@ -68,6 +89,13 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     }
     
     private func onSessionUpdate(_ session: Session) {
+        if !isTop {
+            newSessions.removeAll(where: { newSession in
+                return newSession.id == session.id
+            })
+            newSessions.append(session)
+            return
+        }
         let tableView = self.sessionTableView
         let oldPos = findPosition(session)
         if (oldPos >= 0 && oldPos < self.sessions.count) {
@@ -87,11 +115,18 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             self.sessions.insert(session, at: insertPos)
             tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
         }
+
     }
     
     private func onSessionRemove(_ session: Session) {
-        lock.lock()
-        defer {lock.unlock()}
+        if !isTop {
+            removeSessions.removeAll(where: { newSession in
+                return newSession.id == session.id
+            })
+            removeSessions.append(session)
+            return
+        }
+        
         let tableView = self.sessionTableView
         let pos = findPosition(session)
         if (pos != -1) {
@@ -141,6 +176,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             }
             self?.onNewSession(session)
         })
+        
         SwiftEventBus.onMainThread(self, name: IMEvent.SessionUpdate.rawValue, handler: { [weak self ] result in
             guard let session = result?.object as? Session else {
                 return

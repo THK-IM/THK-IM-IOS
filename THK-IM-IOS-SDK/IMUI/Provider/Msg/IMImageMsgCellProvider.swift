@@ -74,7 +74,6 @@ open class IMImageMsgCellProvider: IMBaseMessageCellProvider {
     
     open override func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
         let size = self.viewSize(message, session)
-        return CGSize(width: size.width * 0.25, height: size.height * 0.25)
+        return CGSize(width: size.width * 0.25, height: size.height * 0.25) 
     }
-    
 }

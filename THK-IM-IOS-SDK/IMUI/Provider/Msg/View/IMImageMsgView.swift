@@ -22,7 +22,8 @@ class IMImageMsgView: UIImageView, BaseMsgView {
     }
     
     private func setupUI() {
-        self.contentMode = .scaleAspectFit
+        self.backgroundColor = .black
+        self.contentMode = .scaleAspectFill
     }
     
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {

@@ -495,11 +495,11 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     }
     
     
-    func openKeyboard() -> Bool {
+    @discardableResult func openKeyboard() -> Bool {
         return self.textView.becomeFirstResponder()
     }
     
-    func closeKeyboard() -> Bool {
+    @discardableResult func closeKeyboard() -> Bool {
         return self.textView.endEditing(true)
     }
     
@@ -595,7 +595,11 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     func showReplyMessage(_ msg: Message) {
         self.isReplyMsgShow = true
         self.replyView.setMessage(msg)
-        self.resetLayout()
+        if !isKeyboardShow {
+            self.openKeyboard()
+        } else {
+            self.resetLayout()
+        }
     }
     
     func clearReplyMessage() {
