@@ -108,25 +108,26 @@ class BaseMsgCellReplyView: UIView {
     }
     
     func updateContent(_ user: User, _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) {
-       
         self.replyMsgView.subviews.forEach { v in
             v.removeFromSuperview()
         }
         self.replyUserView.text = "\(user.nickname):"
         
-        let view = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgView(msg, session, delegate)
-        self.replyMsgView.addSubview(view!)
-        view?.setMessage(msg, session, delegate, true)
-        
-        let attributes = [NSAttributedString.Key.font: self.replyUserView.font]
-        let textSize = (self.replyUserView.text! as NSString).size(withAttributes: attributes as [NSAttributedString.Key : Any])
-        
-        self.snp.updateConstraints { [weak self] make in
-            guard let sf = self else {
-                return
+        if let view = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgView(msg, session, delegate) {
+            self.replyMsgView.addSubview(view.contentView())
+            view.setMessage(msg, session, delegate, true)
+            
+            let attributes = [NSAttributedString.Key.font: self.replyUserView.font]
+            let textSize = (self.replyUserView.text! as NSString).size(withAttributes: attributes as [NSAttributedString.Key : Any])
+            
+            self.snp.updateConstraints { [weak self] make in
+                guard let sf = self else {
+                    return
+                }
+                make.width.greaterThanOrEqualTo(max(sf.viewSize.width, textSize.width) + 30)
             }
-            make.width.greaterThanOrEqualTo(max(sf.viewSize.width, textSize.width) + 30)
         }
+        
 
     }
     

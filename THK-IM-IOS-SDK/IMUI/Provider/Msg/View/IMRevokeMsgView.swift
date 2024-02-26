@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMRevokeMsgView: UIView, BaseMsgView {
+class IMRevokeMsgView: UIView, IMsgView {
     
     private weak var delegate: IMMsgCellOperator?
     private var message: Message?
@@ -120,6 +120,10 @@ class IMRevokeMsgView: UIView, BaseMsgView {
                 DDLogError("\(error)")
             }
         }
+    }
+    
+    func contentView() -> UIView {
+        return self
     }
 }
 

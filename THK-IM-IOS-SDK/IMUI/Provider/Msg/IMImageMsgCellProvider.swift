@@ -66,7 +66,7 @@ open class IMImageMsgCellProvider: IMBaseMessageCellProvider {
         return baseSize
     }
     
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> BaseMsgView? {
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgView? {
         let view = IMImageMsgView(frame:.null)
         view.setMessage(msg, session, delegate)
         return view

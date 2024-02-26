@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMTextMsgView: IMMsgLabelView, BaseMsgView {
+class IMTextMsgView: IMMsgLabelView, IMsgView {
     
     private var disposeBag = DisposeBag()
     
@@ -118,5 +118,9 @@ class IMTextMsgView: IMMsgLabelView, BaseMsgView {
     
     func reset() {
         disposeBag = DisposeBag()
+    }
+    
+    func contentView() -> UIView {
+        return self
     }
 }

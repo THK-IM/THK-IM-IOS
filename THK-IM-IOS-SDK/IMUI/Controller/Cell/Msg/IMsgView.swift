@@ -1,5 +1,5 @@
 //
-//  BaseMsgView.swift
+//  IMsgView.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/2/24.
@@ -8,7 +8,9 @@
 
 import UIKit
 
-public protocol BaseMsgView: UIView {
+public protocol IMsgView {
     
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool)
+    
+    func contentView() -> UIView
 }

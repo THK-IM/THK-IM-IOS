@@ -30,12 +30,21 @@ class IMReplyView: UIView {
         return view
     }()
     
-    lazy private var replyView: UILabel = {
+    lazy private var replyUserView: UILabel = {
         let view = UILabel()
         view.textColor = UIColor.darkGray
         view.font = UIFont.systemFont(ofSize: 12)
         view.textAlignment = .justified
-        view.numberOfLines = 2
+        view.numberOfLines = 1
+        return view
+    }()
+    
+    lazy private var replyMsgView: UILabel = {
+        let view = UILabel()
+        view.textColor = UIColor.darkGray
+        view.font = UIFont.systemFont(ofSize: 12)
+        view.textAlignment = .justified
+        view.numberOfLines = 1
         return view
     }()
     
@@ -49,9 +58,10 @@ class IMReplyView: UIView {
     }
     
     private func setupUI() {
-        self.addSubview(self.closeView)
         self.addSubview(self.lineView)
-        self.addSubview(self.replyView)
+        self.addSubview(self.closeView)
+        self.addSubview(self.replyUserView)
+        self.addSubview(self.replyMsgView)
         
         self.closeView.rx.tapGesture().asObservable()
             .subscribe(onNext: { [weak self] _ in
@@ -65,28 +75,34 @@ class IMReplyView: UIView {
     
     func requestLayout() {
         if let msg = self.message  {
-            self.closeView.snp.remakeConstraints { make in
-                make.left.equalToSuperview()
-                make.size.equalTo(36)
-                make.centerY.equalToSuperview()
-            }
-            self.lineView.snp.remakeConstraints { [weak self] make in
-                guard let sf = self else {
-                    return
-                }
-                make.top.equalToSuperview().offset(6)
-                make.bottom.equalToSuperview().offset(-6)
-                make.left.equalTo(sf.closeView.snp.right)
+            self.lineView.snp.remakeConstraints { make in
+                make.top.equalToSuperview().offset(2)
+                make.bottom.equalToSuperview().offset(-2)
+                make.left.equalToSuperview().offset(12)
                 make.width.equalTo(4)
             }
-            self.replyView.snp.remakeConstraints { [weak self] make in
+            self.closeView.snp.remakeConstraints { make in
+                make.right.equalToSuperview().offset(-12)
+                make.size.equalTo(20)
+                make.centerY.equalToSuperview()
+            }
+            self.replyUserView.snp.remakeConstraints { [weak self] make in
                 guard let sf = self else {
                     return
                 }
                 make.top.equalToSuperview().offset(2)
-                make.bottom.equalToSuperview().offset(-2)
                 make.left.equalTo(sf.lineView.snp.right).offset(6)
-                make.right.equalToSuperview().offset(-12)
+                make.right.equalTo(sf.closeView.snp.left).offset(-6)
+                make.height.equalTo(14)
+            }
+            self.replyMsgView.snp.remakeConstraints { [weak self] make in
+                guard let sf = self else {
+                    return
+                }
+                make.top.equalToSuperview().offset(16)
+                make.left.equalTo(sf.lineView.snp.right).offset(6)
+                make.right.equalTo(sf.closeView.snp.left).offset(-6)
+                make.bottom.equalToSuperview().offset(-2)
             }
             IMCoreManager.shared.userModule.queryUser(id: msg.fromUId)
                 .compose(RxTransformer.shared.io2Main())
@@ -101,7 +117,10 @@ class IMReplyView: UIView {
             self.lineView.snp.remakeConstraints { make in
                 make.height.equalToSuperview()
             }
-            self.replyView.snp.remakeConstraints { make in
+            self.replyUserView.snp.remakeConstraints { make in
+                make.height.equalToSuperview()
+            }
+            self.replyMsgView.snp.remakeConstraints { make in
                 make.height.equalToSuperview()
             }
         }
@@ -109,7 +128,8 @@ class IMReplyView: UIView {
     
     private func showContentView(_ user: User, _ msg: Message) {
         let sessionDesc = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).sessionDesc(msg: msg)
-        self.replyView.text = "\(user.nickname): \(sessionDesc)"
+        self.replyUserView.text = "\(user.nickname)"
+        self.replyMsgView.text = sessionDesc
     }
     
     func clearMessage() {

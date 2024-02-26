@@ -10,8 +10,7 @@ import UIKit
 import CocoaLumberjack
 
 
-class IMVideoMsgView: UIImageView, BaseMsgView {
-    
+class IMVideoMsgView: UIImageView, IMsgView {
     
     private let durationLabel = IMMsgLabelView()
     private let playView = UIImageView()
@@ -91,5 +90,9 @@ class IMVideoMsgView: UIImageView, BaseMsgView {
                 DDLogError("\(error)")
             }
         }
+    }
+    
+    func contentView() -> UIView {
+        return self
     }
 }

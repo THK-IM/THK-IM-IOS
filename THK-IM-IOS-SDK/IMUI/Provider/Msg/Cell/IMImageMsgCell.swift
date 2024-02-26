@@ -15,7 +15,7 @@ class IMImageMsgCell: BaseMsgCell {
     private let view = IMImageMsgView(frame: .null)
     
     open override func msgView() -> UIView {
-        return self.view
+        return self.view.contentView()
     }
     
     open override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {

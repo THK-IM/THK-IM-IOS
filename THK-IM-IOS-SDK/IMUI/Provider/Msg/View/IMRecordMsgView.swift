@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMRecordMsgView: UIView, BaseMsgView {
+class IMRecordMsgView: UIView, IMsgView {
     
     private weak var delegate: IMMsgCellOperator?
     private var message: Message?
@@ -134,6 +134,10 @@ class IMRecordMsgView: UIView, BaseMsgView {
         self.recordTitleView.text = recordBody.title
         self.recordContentView.text = recordBody.content
         self.descView.text = "聊天记录"
+    }
+    
+    func contentView() -> UIView {
+        return self
     }
     
     

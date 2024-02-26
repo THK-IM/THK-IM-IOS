@@ -9,7 +9,7 @@
 import UIKit
 import CocoaLumberjack
 
-class IMImageMsgView: UIImageView, BaseMsgView {
+class IMImageMsgView: UIImageView, IMsgView {
     
     
     override init(frame: CGRect) {
@@ -64,5 +64,9 @@ class IMImageMsgView: UIImageView, BaseMsgView {
                 DDLogDebug("\(error)")
             }
         }
+    }
+    
+    func contentView() -> UIView {
+        return self
     }
 }

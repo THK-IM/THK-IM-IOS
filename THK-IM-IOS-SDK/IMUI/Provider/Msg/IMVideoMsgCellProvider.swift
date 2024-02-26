@@ -65,7 +65,7 @@ open class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> BaseMsgView? {
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgView? {
         let view = IMVideoMsgView(frame:.null)
         view.setMessage(msg, session, delegate)
         return view

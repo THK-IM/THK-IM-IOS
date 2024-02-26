@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMUnSupportMsgView: IMMsgLabelView, BaseMsgView {
+class IMUnSupportMsgView: IMMsgLabelView, IMsgView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,5 +30,9 @@ class IMUnSupportMsgView: IMMsgLabelView, BaseMsgView {
     
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
         self.text = "当前版本不支持该消息类型，请更新"
+    }
+    
+    func contentView() -> UIView {
+        return self
     }
 }

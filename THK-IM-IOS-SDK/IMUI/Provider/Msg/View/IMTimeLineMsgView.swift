@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMTimeLineMsgView: IMMsgLabelView, BaseMsgView {
+class IMTimeLineMsgView: IMMsgLabelView, IMsgView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupUI()
@@ -33,5 +33,9 @@ class IMTimeLineMsgView: IMMsgLabelView, BaseMsgView {
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
         let dateString = DateUtils.timeToMsgTime(ms: message.cTime, now: IMCoreManager.shared.severTime)
         self.text = dateString
+    }
+    
+    func contentView() -> UIView {
+        return self
     }
 }

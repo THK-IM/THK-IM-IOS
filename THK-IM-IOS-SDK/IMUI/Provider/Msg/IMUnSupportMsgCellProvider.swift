@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-open class IMUnSupportMsgCellProvide: IMBaseMessageCellProvider {
+open class IMUnSupportMsgCellProvider: IMBaseMessageCellProvider {
     
     open override func messageType() -> Int {
         return MsgType.UnSupport.rawValue
@@ -31,7 +31,7 @@ open class IMUnSupportMsgCellProvide: IMBaseMessageCellProvider {
         return true
     }
     
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> BaseMsgView? {
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgView? {
         let view = IMUnSupportMsgView(frame:.null)
         view.setMessage(msg, session, delegate)
         return view

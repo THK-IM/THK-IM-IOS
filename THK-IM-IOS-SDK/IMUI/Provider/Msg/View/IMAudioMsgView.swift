@@ -12,7 +12,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMAudioMsgView: UIView, BaseMsgView {
+class IMAudioMsgView: UIView, IMsgView {
     
     private lazy var durationView : IMMsgLabelView = {
         let view = IMMsgLabelView()
@@ -100,6 +100,10 @@ class IMAudioMsgView: UIView, BaseMsgView {
                 DDLogError("\(error)")
             }
         }
+    }
+    
+    func contentView() -> UIView {
+        return self
     }
     
 }

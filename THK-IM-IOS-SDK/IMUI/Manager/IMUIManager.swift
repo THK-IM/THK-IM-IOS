@@ -16,19 +16,13 @@ open class IMUIManager: NSObject {
     private var sessionCellProviders = [Int:IMBaseSessionCellProvider]()
     private var bottomFunctionProviders = [IMBaseFunctionCellProvider]()
     private var panelProviders = [IMBasePanelViewProvider]()
-    private var msgOperators = [String: IMMessageOperator]()
+    private var msgOperators = [IMMessageOperator]()
     public var contentProvider: IMProvider? = nil
     public var contentPreviewer: IMPreviewer? = nil
     public var pageRouter: IMPageRouter? = nil
     
-    
-    private var cornerImageMap = [String: UIImage]()
-    
-    private let lock = NSLock()
-    
     private override init() {
         super.init()
-        
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMUnSupportMsgProcessor())
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMTextMsgProcessor())
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMImageMsgProcessor())
@@ -38,7 +32,7 @@ open class IMUIManager: NSObject {
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMRevokeMsgProcessor())
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMRecordMsgProcessor())
         
-        self.registerMsgCellProviders(IMUnSupportMsgCellProvide())
+        self.registerMsgCellProviders(IMUnSupportMsgCellProvider())
         self.registerMsgCellProviders(IMTimeLineMsgCellProvider())
         self.registerMsgCellProviders(IMTextMsgCellProvider())
         self.registerMsgCellProviders(IMImageMsgCellProvider())
@@ -65,34 +59,24 @@ open class IMUIManager: NSObject {
     }
     
     public func registerMsgCellProviders(_ provider: IMBaseMessageCellProvider) {
-        lock.lock()
-        defer {lock.unlock()}
         self.msgCellProviders[provider.messageType()] = provider
     }
     
     public func getMsgCellProvider(_ type: Int) -> IMBaseMessageCellProvider {
-        lock.lock()
-        defer {lock.unlock()}
         let provider = self.msgCellProviders[type]
         return provider == nil ? self.msgCellProviders[MsgType.UnSupport.rawValue]! : provider!
     }
     
     public func registerSessionCellProvider(_ provider: IMBaseSessionCellProvider) {
-        lock.lock()
-        defer {lock.unlock()}
         self.sessionCellProviders[provider.sessionType()] = provider
     }
     
     public func getSessionCellProvider(_ type: Int) -> IMBaseSessionCellProvider {
-        lock.lock()
-        defer {lock.unlock()}
         let provider = self.sessionCellProviders[type]
         return provider == nil ? self.sessionCellProviders[0]! : provider!
     }
     
     public func registerBottomFunctionProvider(_ ps: IMBaseFunctionCellProvider...) {
-        lock.lock()
-        defer {lock.unlock()}
         for p in ps {
             self.bottomFunctionProviders.append(p)
         }
@@ -103,8 +87,6 @@ open class IMUIManager: NSObject {
     }
     
     public func registerPanelProvider(_ ps: IMBasePanelViewProvider...) {
-        lock.lock()
-        defer {lock.unlock()}
         for p in ps {
             self.panelProviders.append(p)
         }
@@ -115,38 +97,13 @@ open class IMUIManager: NSObject {
     }
     
     public func registerMessageOperator(_ msgOperator: IMMessageOperator) {
-        msgOperators[msgOperator.id()] = msgOperator
+        msgOperators.append(msgOperator)
     }
     
     public func getMessageOperators(_ message: Message) -> [IMMessageOperator] {
-        var operators = [IMMessageOperator]()
-        for msgOperator in msgOperators {
-            operators.append(msgOperator.value)
+        return msgOperators.sorted { p1, p2 in
+            return p1.id() < p2.id()
         }
-        return operators
-    }
-    
-    public lazy var bubble: Bubble = {
-        return Bubble()
-    }()
-    
-    public lazy var systemBubbleImage = {
-        let image = self.bubble.drawRectWithRoundedCorner(
-            radius: 6.0, borderWidth: 0.0,
-            backgroundColor: UIColor.init(hex: "333333").withAlphaComponent(0.2),
-            borderColor: UIColor.init(hex: "333333"), width: 20, height: 20, pos: 0)
-        return image
-    }()
-    
-    public func cornerBackgroundImage(_ radius: Int, _ color: UIColor) -> UIImage {
-        let key = "\(radius)-\(color.toHexString())"
-        var image = cornerImageMap[key]
-        if image == nil {
-            let size = CGFloat(2 * (radius+1) + 8)
-            image = self.bubble.drawRectWithRoundedCorner(radius: CGFloat(radius), borderWidth: 1, backgroundColor: color, borderColor: color, width: size, height: size)
-            cornerImageMap[key] = image
-        }
-        return image!
     }
     
     public func initConfig() {
