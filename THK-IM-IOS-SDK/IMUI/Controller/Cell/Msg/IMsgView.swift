@@ -8,9 +8,18 @@
 
 import UIKit
 
-public protocol IMsgView {
+public protocol IMsgView : AnyObject {
     
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool)
     
     func contentView() -> UIView
+    
+    func onViewDisappear()
+    
+    func onViewAppear()
+}
+
+extension IMsgView {
+    func onViewDisappear() {}
+    func onViewAppear() {}
 }

@@ -31,14 +31,14 @@ open class BaseMsgCell : BaseTableCell {
         let msgContainerView = cellWrapper.containerView()
         msgContainerView.insertSubview(self.bubbleView, at: 0)
         msgContainerView.addSubview(self.replyView)
-        let msgView = self.msgView()
+        let msgView = self.msgView().contentView()
         msgContainerView.addSubview(msgView)
         self.backgroundColor = UIColor.clear
         self.setupEvent()
     }
     
     func setupEvent() {
-        let msgView = self.msgView()
+        let msgView = self.msgView().contentView()
         // 点击事件
         msgView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
@@ -50,7 +50,7 @@ open class BaseMsgCell : BaseTableCell {
             self?.delegate?.onMsgCellClick(
                 message: (self?.message)!,
                 position: self?.position ?? 0,
-                view: (self?.msgView())!
+                view: (self?.msgView().contentView())!
             )
         })
         .disposed(by: disposeBag)
@@ -68,7 +68,7 @@ open class BaseMsgCell : BaseTableCell {
                 sf.delegate?.onMsgCellLongClick(
                     message: (sf.message)!,
                     position: sf.position ?? 0,
-                    view: sf.msgView()
+                    view: sf.msgView().contentView()
                 )
             })
             .disposed(by: disposeBag)
@@ -106,7 +106,7 @@ open class BaseMsgCell : BaseTableCell {
                 self?.delegate?.onMsgSenderLongClick(
                     message: (self?.message)!,
                     position: self?.position ?? 0,
-                    view: (self?.msgView())!
+                    view: (self?.msgView().contentView())!
                 )
             })
             .disposed(by: disposeBag)
@@ -149,7 +149,7 @@ open class BaseMsgCell : BaseTableCell {
         } else {
             self.replyView.resetSize(size)
         }
-        let msgView = self.msgView()
+        let msgView = self.msgView().contentView()
         msgView.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(size.height > 0 ? size.height + 30 : 0) // 补齐回复人高度
             make.left.equalToSuperview()
@@ -204,8 +204,8 @@ open class BaseMsgCell : BaseTableCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    open func msgView() -> UIView {
-        return UIView()
+    open func msgView() -> IMsgView {
+        return IMUnSupportMsgView()
     }
     
     open func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
@@ -250,10 +250,12 @@ open class BaseMsgCell : BaseTableCell {
     open override func appear() {
         self.cellWrapper.appear()
         self.onMessageShow()
+        self.msgView().onViewAppear()
     }
     
     open override func disappear() {
         self.cellWrapper.disAppear()
+        self.msgView().onViewDisappear()
     }
     
     open func hasBubble() -> Bool {

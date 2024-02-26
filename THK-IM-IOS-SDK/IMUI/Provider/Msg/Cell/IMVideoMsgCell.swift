@@ -14,8 +14,8 @@ open class IMVideoMsgCell: BaseMsgCell {
     
     private let view = IMVideoMsgView(frame: .null)
     
-    open override func msgView() -> UIView {
-        return self.view.contentView()
+    open override func msgView() -> IMsgView {
+        return self.view
     }
     
     open override func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
