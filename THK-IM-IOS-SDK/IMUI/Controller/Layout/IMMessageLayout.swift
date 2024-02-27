@@ -142,17 +142,17 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             return
         }
         isLoading = true
-        var firstMsgTime: Int64 = 0
+        var endTime: Int64 = 0
         if let firstMsg = self.messages.first(where: { msg in
             return msg.type != MsgType.TimeLine.rawValue
         }) {
-            firstMsgTime = firstMsg.cTime
+            endTime = firstMsg.cTime
         } else {
-            firstMsgTime = IMCoreManager.shared.severTime
+            endTime = IMCoreManager.shared.severTime
         }
         if (self.session != nil) {
             IMCoreManager.shared.messageModule
-                .queryLocalMessages((self.session?.id)!, firstMsgTime, 0, self.loadCount)
+                .queryLocalMessages((self.session?.id)!, 0, endTime, self.loadCount)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] value in
                     guard let sf = self else { return }
@@ -382,8 +382,8 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             self.scrollToRow(row)
         } else {
             // 尝试从db中获取
-            if let startTime = self.messages.last?.cTime {
-                let endTime = message.cTime
+            if let endTime = self.messages.last?.cTime {
+                let startTime = message.cTime
                 IMCoreManager.shared.messageModule.queryLocalMessages(message.sessionId, startTime, endTime, Int.max)
                     .compose(RxTransformer.shared.io2Main())
                     .subscribe(onNext: { [weak self] messages in

@@ -227,8 +227,8 @@ open class DefaultMessageDao : MessageDao {
         let messages: Array<Message>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId
-            && Message.Properties.cTime <= startTime 
-            && Message.Properties.cTime >= endTime
+            && Message.Properties.cTime >= startTime
+            && Message.Properties.cTime <= endTime
             && Message.Properties.type > 0,
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             limit: count
