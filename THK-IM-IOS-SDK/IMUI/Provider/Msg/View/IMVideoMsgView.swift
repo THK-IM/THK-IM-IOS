@@ -51,9 +51,16 @@ class IMVideoMsgView: UIImageView, IMsgView {
             make.right.equalToSuperview().offset(-5)
             make.height.equalTo(20)
         }
+        if isReply {
+            self.durationLabel.isHidden = true
+        }
         self.playView.snp.remakeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalTo(40)
+            if isReply {
+                make.size.equalTo(10)
+            } else {
+                make.size.equalTo(40)
+            }
         }
         if (message.data != nil) {
             do {
