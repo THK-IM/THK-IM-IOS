@@ -57,7 +57,7 @@ public protocol MessageModule : BaseModule {
     /**
      * 分页获取本地message
      */
-    func queryLocalMessages(_ sessionId: Int64, _ cTime: Int64, _ count: Int) -> Observable<Array<Message>>
+    func queryLocalMessages(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int) -> Observable<Array<Message>>
     
     /**
      * 批量删除多条Session

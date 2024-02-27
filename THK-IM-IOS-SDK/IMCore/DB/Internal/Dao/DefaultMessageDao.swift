@@ -37,15 +37,15 @@ open class DefaultMessageDao : MessageDao {
             )
         }
     }
-
+    
     public func updateMsgData(_ sessionId: Int64, _ id: Int64, _ fromUId: Int64, _ data: String) throws {
         let update = StatementUpdate().update(table:self.tableName)
             .set(Message.Properties.data)
             .to(data)
             .where(
                 Message.Properties.sessionId == sessionId
-                   && Message.Properties.id == id
-                   && Message.Properties.fromUId == fromUId
+                && Message.Properties.id == id
+                && Message.Properties.fromUId == fromUId
             )
         try self.database?.exec(update)
     }
@@ -56,13 +56,13 @@ open class DefaultMessageDao : MessageDao {
         let expression1 = Expression(with: operateStatusColumn)
         let expression2 = Expression(with: operateStatus)
         let expression3 = expression1 | expression2
-
+        
         let update = StatementUpdate().update(table:self.tableName)
             .set(Message.Properties.operateStatus)
             .to(expression3)
             .where(
                 Message.Properties.sessionId == sessionId
-                   && Message.Properties.msgId.in(msgIds)
+                && Message.Properties.msgId.in(msgIds)
             )
         try self.database?.exec(update)
     }
@@ -90,8 +90,8 @@ open class DefaultMessageDao : MessageDao {
             on: Message.Properties.msgId.count(),
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
-                (Message.Properties.type > 0) &&
-                (Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue != 2)
+            (Message.Properties.type > 0) &&
+            (Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue != 2)
         ).int32Value else {
             return 0
         }
@@ -114,7 +114,7 @@ open class DefaultMessageDao : MessageDao {
             )
         try self.database?.exec(update)
     }
-
+    
     
     public func delete(_ messages: Message...) throws {
         var ids = Array<Int64>()
@@ -202,8 +202,8 @@ open class DefaultMessageDao : MessageDao {
             on: Message.Properties.all,
             fromTable: self.tableName,
             where: Message.Properties.id == id &&
-                Message.Properties.fromUId == fromUId &&
-                Message.Properties.sessionId == sessionId
+            Message.Properties.fromUId == fromUId &&
+            Message.Properties.sessionId == sessionId
         )
     }
     
@@ -223,10 +223,13 @@ open class DefaultMessageDao : MessageDao {
         return self.queryBySidAndTypesAfterCTime(sessionId, msgId, types, time, count)
     }
     
-    public func findBySidAfterCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) -> Array<Message> {
+    public func findByTimeRange(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int) -> Array<Message> {
         let messages: Array<Message>? = try? self.database?.getObjects(
             fromTable: self.tableName,
-            where: Message.Properties.sessionId == sessionId && Message.Properties.cTime < cTime && Message.Properties.type > 0,
+            where: Message.Properties.sessionId == sessionId
+            && Message.Properties.cTime <= startTime 
+            && Message.Properties.cTime >= endTime
+            && Message.Properties.type > 0,
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             limit: count
         )
@@ -244,7 +247,7 @@ open class DefaultMessageDao : MessageDao {
             let referMsgs: Array<Message>? = try? self.database?.getObjects(
                 fromTable: self.tableName,
                 where: Message.Properties.sessionId == sessionId &&
-                    Message.Properties.msgId.in(referMsgIds)
+                Message.Properties.msgId.in(referMsgIds)
             )
             if referMsgs != nil {
                 for referMsg in referMsgs! {
@@ -265,9 +268,9 @@ open class DefaultMessageDao : MessageDao {
         let message: Array<Message>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
-                    Message.Properties.msgId != msgId &&
-                    Message.Properties.cTime <= cTime &&
-                    Message.Properties.type.in(types),
+            Message.Properties.msgId != msgId &&
+            Message.Properties.cTime <= cTime &&
+            Message.Properties.type.in(types),
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             limit: count
         )
@@ -279,9 +282,9 @@ open class DefaultMessageDao : MessageDao {
         let message: Array<Message>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
-                    Message.Properties.msgId != msgId &&
-                    Message.Properties.cTime >= cTime &&
-                    Message.Properties.type.in(types),
+            Message.Properties.msgId != msgId &&
+            Message.Properties.cTime >= cTime &&
+            Message.Properties.type.in(types),
             orderBy: [Message.Properties.cTime.order(Order.ascending)],
             limit: count
         )
@@ -292,7 +295,7 @@ open class DefaultMessageDao : MessageDao {
         return try self.database?.getObject(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
-                    Message.Properties.type >= 0,
+            Message.Properties.type >= 0,
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             offset: 0
         )

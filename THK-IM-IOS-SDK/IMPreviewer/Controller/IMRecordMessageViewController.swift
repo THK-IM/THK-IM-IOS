@@ -29,7 +29,7 @@ class IMRecordMessageViewController: UIViewController, IMMsgPreviewer {
         self.messageLayout.previewer = self
         self.view.addSubview(messageLayout)
         if let messages = self.recordMessages {
-            self.messageLayout.addMessage(messages)
+            self.messageLayout.addMessages(messages)
         }
         self.initEvent()
         messageLayout.snp.makeConstraints { make in

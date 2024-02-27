@@ -10,7 +10,7 @@ import Foundation
 open class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
     
     open override func messageType() -> Int {
-        return 9999
+        return MsgType.TimeLine.rawValue
     }
     
     open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {

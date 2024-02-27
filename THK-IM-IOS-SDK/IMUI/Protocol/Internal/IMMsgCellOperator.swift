@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 public protocol IMMsgCellOperator: AnyObject {
+    func onMsgReferContentClick(message: Message, view: UIView)
     func onMsgCellClick(message: Message, position:Int, view: UIView)
     func onMsgSenderClick(message: Message, position: Int, view: UIView)
     func onMsgSenderLongClick(message: Message, position: Int, view: UIView)

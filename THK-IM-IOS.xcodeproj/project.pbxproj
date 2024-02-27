@@ -1147,8 +1147,6 @@
 		A0D68B032A888678004D11A5 /* Layout */ = {
 			isa = PBXGroup;
 			children = (
-				A033FAF62B88D9C00053045E /* IMReplyView.swift */,
-				A0EF355E2B5CEB4E00940F54 /* IMTextView.swift */,
 				A0D68B042A888678004D11A5 /* IMInputLayout.swift */,
 				A0D68B062A888678004D11A5 /* IMMessageLayout.swift */,
 				A0D68B072A888678004D11A5 /* IMMessageSelectedLayout.swift */,
@@ -1160,6 +1158,8 @@
 		A0D68B092A888678004D11A5 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				A033FAF62B88D9C00053045E /* IMReplyView.swift */,
+				A0EF355E2B5CEB4E00940F54 /* IMTextView.swift */,
 				A0D68B0A2A888678004D11A5 /* IMSpeakView.swift */,
 				A0D68B0B2A888678004D11A5 /* IMFunctionPanelView.swift */,
 				A0D68B0D2A888678004D11A5 /* IMTabPanelView.swift */,

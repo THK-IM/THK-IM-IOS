@@ -24,7 +24,6 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     private var isLoading = false
     private var isLoadAble = false
     private var lastMessageTime: Int64 = 0
-    private let timeLineMsgType = 9999
     private let timeLineInterval = 5 * 60 * 1000
     private let lock = NSLock()
     private var lastResize = 0.0
@@ -143,19 +142,21 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             return
         }
         isLoading = true
-        var latestMsgTime: Int64 = 0
-        if (self.messages.count == 0) {
-            latestMsgTime = IMCoreManager.shared.severTime
+        var firstMsgTime: Int64 = 0
+        if let firstMsg = self.messages.first(where: { msg in
+            return msg.type != MsgType.TimeLine.rawValue
+        }) {
+            firstMsgTime = firstMsg.cTime
         } else {
-            latestMsgTime = self.messages[0].cTime
+            firstMsgTime = IMCoreManager.shared.severTime
         }
         if (self.session != nil) {
             IMCoreManager.shared.messageModule
-                .queryLocalMessages((self.session?.id)!, latestMsgTime, self.loadCount)
+                .queryLocalMessages((self.session?.id)!, firstMsgTime, 0, self.loadCount)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] value in
                     guard let sf = self else { return }
-                    sf.addMessage(value.reversed())
+                    sf.addMessages(value.reversed())
                     if (value.count >= sf.loadCount) {
                         sf.isLoading = false
                     }
@@ -200,11 +201,10 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     private func newTimelineMessage(_ cTime: Int64) -> Message {
         let id = IMCoreManager.shared.messageModule.generateNewMsgId()
         let message = Message(
-            id: id, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0, type: 0, content: "", data: "",
-            sendStatus: 0, operateStatus: 0, referMsgId: nil, extData: nil, atUsers: nil, cTime: 0, mTime: 0
+            id: id, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0, type: MsgType.TimeLine.rawValue,
+            content: "", data: "", sendStatus: 0, operateStatus: 0, referMsgId: nil, extData: nil, atUsers: nil,
+            cTime: cTime, mTime: 0
         )
-        message.cTime = cTime
-        message.type = 9999
         return message
     }
     
@@ -232,7 +232,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         return newMessages
     }
     
-    func addMessage(_ messages: Array<Message>) {
+    func addMessages(_ messages: Array<Message>) {
         if (messages.isEmpty) {
             return
         }
@@ -327,7 +327,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             return
         }
         positions.append(pos)
-        if (pos - 1 > 0 && self.messages[pos - 1].type == 9999) {
+        if (pos - 1 > 0 && self.messages[pos - 1].type == MsgType.TimeLine.rawValue) {
             positions.append(pos-1)
         }
         for pos in positions.sorted().reversed() {
@@ -346,7 +346,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
                 continue
             }
             positions.append(pos)
-            if (pos - 1 > 0 && self.messages[pos - 1].type == 9999) {
+            if (pos - 1 > 0 && self.messages[pos - 1].type == MsgType.TimeLine.rawValue) {
                 positions.append(pos-1)
             }
         }
@@ -377,6 +377,34 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         return 0
     }
     
+    func onMsgReferContentClick(message: Message, view: UIView) {
+        if let row = self.messages.firstIndex(of: message) {
+            self.scrollToRow(row)
+        } else {
+            // 尝试从db中获取
+            if let startTime = self.messages.last?.cTime {
+                let endTime = message.cTime
+                IMCoreManager.shared.messageModule.queryLocalMessages(message.sessionId, startTime, endTime, Int.max)
+                    .compose(RxTransformer.shared.io2Main())
+                    .subscribe(onNext: { [weak self] messages in
+                        guard let sf = self else {
+                            return
+                        }
+                        sf.addMessages(messages.reversed())
+                        if let row = sf.messages.firstIndex(of: message) {
+                            sf.scrollToRow(row)
+                        }
+                    }).disposed(by: self.disposeBag)
+            }
+        }
+    }
+    
+    private func scrollToRow(_ row: Int) {
+        self.messageTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .top, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
+            (self?.messageTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? BaseMsgCell)?.setScrolled(true)
+        })
+    }
     
     func onMsgCellClick(message: Message, position: Int, view: UIView) {
         self.previewer?.previewMessage(message, position, view)

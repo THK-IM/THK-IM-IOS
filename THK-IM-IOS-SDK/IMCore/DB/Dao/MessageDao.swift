@@ -112,9 +112,9 @@ public protocol MessageDao {
     func findNewerMessages(_ msgId: Int64, _ types: [Int], _ sessionId: Int64,  _ count: Int) throws -> [Message]
     
     /**
-     * 查询session下某时间之后的消息
+     * 查询session下时间范围内的消息
      */
-    func findBySidAfterCTime(_ sessionId: Int64, _ cTime: Int64, _ count: Int) -> Array<Message>
+    func findByTimeRange(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int) -> Array<Message>
     
     /**
      * 查询session下某时间之前的消息

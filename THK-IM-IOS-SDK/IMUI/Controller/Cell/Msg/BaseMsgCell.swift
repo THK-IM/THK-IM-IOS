@@ -37,7 +37,46 @@ open class BaseMsgCell : BaseTableCell {
         self.setupEvent()
     }
     
+    open func setScrolled(_ highlighted: Bool) {
+        if highlighted {
+            self.highlightedCell(6)
+        } else {
+            self.backgroundColor = UIColor.clear
+        }
+    }
+    
+    private func highlightedCell(_ times: Int) {
+        if (times == 0) {
+            return
+        }
+        if (times%2 == 0) {
+            self.backgroundColor = UIColor.init(hex: "#2008AAFF")
+        } else {
+            self.backgroundColor = UIColor.clear
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.35, execute: { [weak self] in
+            self?.highlightedCell(times - 1)
+        })
+    }
+    
     func setupEvent() {
+        self.replyView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
+            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                return otherGestureRecognizer is UILongPressGestureRecognizer
+            }
+        })
+        .when(.ended)
+        .subscribe(onNext: { [weak self]  _ in
+            guard let sf = self else {
+                return
+            }
+            guard let referMsg = sf.message?.referMsg else {
+                return
+            }
+            sf.delegate?.onMsgReferContentClick(message: referMsg, view: sf.replyView)
+        })
+        .disposed(by: disposeBag)
+        
         let msgView = self.msgView().contentView()
         // 点击事件
         msgView.rx.tapGesture(configuration: { gestureRecognizer, delegate in

@@ -73,7 +73,8 @@ public enum MsgType : Int {
          RICH  = 5,         // 富文本
          VIDEO = 6,         // 视频
          Record = 7,        // 消息记录
-         Revoke = 100       // 撤回消息
+         Revoke = 100,      // 撤回消息
+         TimeLine = 9999    // 时间线消息
 }
 
 /**
