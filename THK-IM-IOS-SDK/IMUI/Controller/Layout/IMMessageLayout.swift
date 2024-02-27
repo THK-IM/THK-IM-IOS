@@ -402,7 +402,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     private func scrollToRow(_ row: Int) {
         self.messageTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .top, animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
-            (self?.messageTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? BaseMsgCell)?.setScrolled(true)
+            (self?.messageTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? BaseMsgCell)?.highlightFlashing(6)
         })
     }
     

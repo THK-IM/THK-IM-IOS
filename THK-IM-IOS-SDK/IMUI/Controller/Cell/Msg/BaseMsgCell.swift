@@ -37,15 +37,7 @@ open class BaseMsgCell : BaseTableCell {
         self.setupEvent()
     }
     
-    open func setScrolled(_ highlighted: Bool) {
-        if highlighted {
-            self.highlightedCell(6)
-        } else {
-            self.backgroundColor = UIColor.clear
-        }
-    }
-    
-    private func highlightedCell(_ times: Int) {
+    open func highlightFlashing(_ times: Int) {
         if (times == 0) {
             return
         }
@@ -55,7 +47,7 @@ open class BaseMsgCell : BaseTableCell {
             self.backgroundColor = UIColor.clear
         }
         DispatchQueue.main.asyncAfter(deadline: .now()+0.35, execute: { [weak self] in
-            self?.highlightedCell(times - 1)
+            self?.highlightFlashing(times - 1)
         })
     }
     
