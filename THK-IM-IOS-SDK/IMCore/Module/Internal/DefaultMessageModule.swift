@@ -539,7 +539,10 @@ open class DefaultMessageModule : MessageModule {
                         if (s.mTime <= msg.mTime || s.unreadCount != unReadCount) {
                             let processor = self?.getMsgProcessor(msg.type)
                             var statusText = ""
-                            if (msg.sendStatus == MsgSendStatus.Sending.rawValue || msg.sendStatus == MsgSendStatus.Init.rawValue) {
+                            if (msg.sendStatus == MsgSendStatus.Sending.rawValue || 
+                                msg.sendStatus == MsgSendStatus.Init.rawValue ||
+                                msg.sendStatus == MsgSendStatus.Uploading.rawValue
+                            ) {
                                 statusText = "⬅️"
                             } else if (msg.sendStatus == MsgSendStatus.Failed.rawValue) {
                                 statusText = "❗"
