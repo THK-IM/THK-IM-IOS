@@ -149,7 +149,7 @@ open class IMBaseMsgProcessor {
             let originMsg = try self.buildSendMsg(sessionId, body, data, atUsers, rMsgId)
             self.send(originMsg, false, sendResult)
         } catch {
-            DDLogError("\(error)")
+            DDLogError("sendMessage: \(error)")
         }
     }
     
@@ -258,11 +258,7 @@ open class IMBaseMsgProcessor {
             SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
         }
         if notify && notifySession {
-            if msg.sendStatus == MsgSendStatus.Uploading.rawValue
-                || msg.sendStatus == MsgSendStatus.Success.rawValue
-                || msg.sendStatus == MsgSendStatus.Failed.rawValue {
-                IMCoreManager.shared.messageModule.processSessionByMessage(msg)
-            }
+            IMCoreManager.shared.messageModule.processSessionByMessage(msg)
         }
     }
     
