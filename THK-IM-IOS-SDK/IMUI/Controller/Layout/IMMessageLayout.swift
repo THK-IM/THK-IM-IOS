@@ -23,7 +23,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     private let loadCount = 20
     private var isLoading = false
     private var isLoadAble = false
-    private var lastMessageTime: Int64 = 0
+    private var lastTimelineMsgCTime: Int64 = 0
     private let timeLineInterval = 5 * 60 * 1000
     private let lock = NSLock()
     private var lastResize = 0.0
@@ -94,6 +94,10 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let msg = self.messages[indexPath.row]
+        return self.msgCellHeight(msg)
+    }
+    
+    private func msgCellHeight(_ msg: Message) -> CGFloat {
         let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
         let size = provider.viewSize(msg, self.session)
         var addHeight = provider.msgTopForSession(msg, self.session)
@@ -109,15 +113,15 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             return
         }
         let offsetY = self.messageTableView.contentOffset.y
-        if (offsetY < -20) {
-            if (isLoadAble && !self.messageTableView.isDragging ) {
-                self.loadMessages()
-                isLoadAble = false
+        if (offsetY < 200) {
+            if isLoadAble {
+                if (!self.messageTableView.isDragging) {
+                    self.loadMessages()
+                    isLoadAble = false
+                }
             }
-        } else if (offsetY >= 0 ) { // 回弹时再去load
-            if (!isLoadAble) {
-                isLoadAble = true
-            }
+        } else {
+            isLoadAble = true
         }
     }
     
@@ -156,7 +160,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] value in
                     guard let sf = self else { return }
-                    sf.addMessages(value.reversed())
+                    sf.addMessages(value)
                     if (value.count >= sf.loadCount) {
                         sf.isLoading = false
                     }
@@ -205,29 +209,32 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             content: "", data: "", sendStatus: 0, operateStatus: 0, referMsgId: nil, extData: nil, atUsers: nil,
             cTime: cTime, mTime: 0
         )
+        lastTimelineMsgCTime = cTime
         return message
     }
     
     private func addTimelineMessage(_ message: Message) -> Message? {
-        var msg : Message? = nil
-        if (abs(message.cTime - lastMessageTime) > timeLineInterval) {
-            msg = newTimelineMessage(message.cTime)
+        var timeLineMsg : Message? = nil
+        if (abs(message.cTime - lastTimelineMsgCTime) > timeLineInterval) {
+            timeLineMsg = newTimelineMessage(message.cTime)
         }
-        lastMessageTime = message.cTime
-        return msg
+        return timeLineMsg
     }
     
-    func appendMessages(_ messages: Array<Message>) -> Array<Message> {
+    func appendTimeLineMessages(_ messages: Array<Message>) -> Array<Message> {
         if (messages.isEmpty) {
             return []
         }
+        if let firstMsg = self.messages.first {
+            lastTimelineMsgCTime = firstMsg.cTime
+        }
         var newMessages = Array<Message>()
         for m in messages {
+            newMessages.append(m)
             let msg = addTimelineMessage(m)
             if (msg != nil) {
                 newMessages.append(msg!)
             }
-            newMessages.append(m)
         }
         return newMessages
     }
@@ -236,20 +243,16 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         if (messages.isEmpty) {
             return
         }
-        let tableView = self.messageTableView
-        let messagesWithTimeLine = self.appendMessages(messages)
-        self.messages.insert(contentsOf: messagesWithTimeLine, at: 0)
-        var paths = Array<IndexPath>()
-        for i in (0 ..< messagesWithTimeLine.count) {
-            paths.append(IndexPath.init(row: i, section: 0))
-        }
+        let messagesWithTimeLine = self.appendTimeLineMessages(messages)
         UIView.setAnimationsEnabled(false)
-        tableView.insertRows(at: paths, with: .none)
-        var scrollTo = messagesWithTimeLine.count + 2
-        if (scrollTo > self.messages.count - 1) {
-            scrollTo = self.messages.count - 1
+        var indexPaths = [IndexPath]()
+        for i in (0 ..< messagesWithTimeLine.count) {
+            self.messages.insert(messagesWithTimeLine[i], at: 0)
+            indexPaths.append(IndexPath(row: i, section: 0))
         }
-        tableView.scrollToRow(
+        self.messageTableView.insertRows(at: indexPaths, with: .none)
+        let scrollTo = min(messagesWithTimeLine.count + 1, self.messages.count - 1)
+        self.messageTableView.scrollToRow(
             at: IndexPath(row: scrollTo, section: 0),
             at: .none,
             animated: false
@@ -271,7 +274,6 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
                 }
             }
         }
-        
         for m in realInsertMsgs {
             self.insertMessage(m)
         }
@@ -287,12 +289,6 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             return
         }
         let insertPos = findInsertPosition(message)
-        if (insertPos > 1){
-            lastMessageTime = self.messages[insertPos-1].cTime
-        } else {
-            lastMessageTime = 0
-        }
-        
         UIView.setAnimationsEnabled(false)
         let timelineMsg = addTimelineMessage(message)
         if (timelineMsg != nil) {
@@ -390,7 +386,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
                         guard let sf = self else {
                             return
                         }
-                        sf.addMessages(messages.reversed())
+                        sf.addMessages(messages)
                         if let row = sf.messages.firstIndex(of: message) {
                             sf.scrollToRow(row)
                         }

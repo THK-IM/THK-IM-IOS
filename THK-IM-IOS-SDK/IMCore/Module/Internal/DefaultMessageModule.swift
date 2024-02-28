@@ -366,7 +366,9 @@ open class DefaultMessageModule : MessageModule {
     
     public func queryLocalMessages(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int) -> Observable<Array<Message>> {
         return Observable.create({observer -> Disposable in
+            DDLogDebug("queryLocalMessages  start: \(Date().timeMilliStamp)")
             let messages = IMCoreManager.shared.database.messageDao().findByTimeRange(sessionId, startTime, endTime, count)
+            DDLogDebug("queryLocalMessages  end: \(Date().timeMilliStamp)")
             observer.onNext(messages)
             observer.onCompleted()
             return Disposables.create()
