@@ -50,7 +50,7 @@ extension IMSessionApi: TargetType {
             }
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         case let .queryLatestSessionMessage(id, cTime, offset, count, asc):
-            var urlParameters = ["s_id": id, "c_time": cTime, "count": count, "offset": offset, "asc": asc] as [String : Any]
+            let urlParameters = ["s_id": id, "c_time": cTime, "count": count, "offset": offset, "asc": asc] as [String : Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         }
     }

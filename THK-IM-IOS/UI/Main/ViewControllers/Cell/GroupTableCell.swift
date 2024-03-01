@@ -51,7 +51,7 @@ class GroupTableCell: UITableViewCell {
     
     func setData(group: Group) {
         showNickname(nickname: group.name)
-        self.avatarView.ca_setImageUrlWithCorner(url: group.avatar, radius: 8)
+        self.avatarView.renderImageByUrlWithCorner(url: group.avatar, radius: 8)
     }
     
     private func showNickname(nickname: String?) {

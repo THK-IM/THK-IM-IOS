@@ -66,7 +66,7 @@ class CallingInfoLayout: UIView {
     
     func setUserInfo(user: User) {
         if let avatar = user.avatar {
-            self.avatarView.ca_setImageUrlWithCorner(url: avatar, radius: 8)
+            self.avatarView.renderImageByUrlWithCorner(url: avatar, radius: 8)
         }
         self.nickerView.text = user.nickname
     }

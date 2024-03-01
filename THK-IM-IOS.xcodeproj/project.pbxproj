@@ -213,7 +213,6 @@
 		A0D68BFE2A888679004D11A5 /* ImageCompress.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B622A888679004D11A5 /* ImageCompress.swift */; };
 		A0D68BFF2A888679004D11A5 /* GCDTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B632A888679004D11A5 /* GCDTool.swift */; };
 		A0D68C002A888679004D11A5 /* MimeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B642A888679004D11A5 /* MimeType.swift */; };
-		A0D68C012A888679004D11A5 /* WeakReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B652A888679004D11A5 /* WeakReference.swift */; };
 		A0D68C022A888679004D11A5 /* IMCoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B662A888679004D11A5 /* IMCoreManager.swift */; };
 		A0D68C032A888679004D11A5 /* DefaultStorageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B692A888679004D11A5 /* DefaultStorageModule.swift */; };
 		A0D68C042A888679004D11A5 /* StorageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B6A2A888679004D11A5 /* StorageModule.swift */; };
@@ -252,7 +251,6 @@
 		A0F031012B220B940058B05B /* DefaultContactModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031002B220B940058B05B /* DefaultContactModule.swift */; };
 		A0F031032B220C120058B05B /* DefaultGroupModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031022B220C120058B05B /* DefaultGroupModule.swift */; };
 		A0F031052B220C6C0058B05B /* DefaultCustomModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031042B220C6C0058B05B /* DefaultCustomModule.swift */; };
-		A0F031072B2217250058B05B /* CodeMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031062B2217250058B05B /* CodeMessage.swift */; };
 		A0FCA8D32B484A5B00FC6E47 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8D22B484A5B00FC6E47 /* WelcomeViewController.swift */; };
 		A0FCA8D72B484AB300FC6E47 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8D62B484AB300FC6E47 /* BaseViewController.swift */; };
 		A0FCA8DA2B48E66000FC6E47 /* DataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA8D92B48E66000FC6E47 /* DataRepository.swift */; };
@@ -510,7 +508,6 @@
 		A0D68B622A888679004D11A5 /* ImageCompress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCompress.swift; sourceTree = "<group>"; };
 		A0D68B632A888679004D11A5 /* GCDTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDTool.swift; sourceTree = "<group>"; };
 		A0D68B642A888679004D11A5 /* MimeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimeType.swift; sourceTree = "<group>"; };
-		A0D68B652A888679004D11A5 /* WeakReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakReference.swift; sourceTree = "<group>"; };
 		A0D68B662A888679004D11A5 /* IMCoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMCoreManager.swift; sourceTree = "<group>"; };
 		A0D68B692A888679004D11A5 /* DefaultStorageModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultStorageModule.swift; sourceTree = "<group>"; };
 		A0D68B6A2A888679004D11A5 /* StorageModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageModule.swift; sourceTree = "<group>"; };
@@ -549,7 +546,6 @@
 		A0F031002B220B940058B05B /* DefaultContactModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultContactModule.swift; sourceTree = "<group>"; };
 		A0F031022B220C120058B05B /* DefaultGroupModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultGroupModule.swift; sourceTree = "<group>"; };
 		A0F031042B220C6C0058B05B /* DefaultCustomModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCustomModule.swift; sourceTree = "<group>"; };
-		A0F031062B2217250058B05B /* CodeMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeMessage.swift; sourceTree = "<group>"; };
 		A0FCA8D22B484A5B00FC6E47 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		A0FCA8D62B484AB300FC6E47 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		A0FCA8D92B48E66000FC6E47 /* DataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRepository.swift; sourceTree = "<group>"; };
@@ -758,15 +754,12 @@
 				A018CDF42AFF18D400896B87 /* Utils */,
 				A0D68ADF2A888678004D11A5 /* Extension */,
 				A0D68B5F2A888679004D11A5 /* Bubble.swift */,
-				A0D68AE02A888678004D11A5 /* UIImageView+Cache.swift */,
 				A0D68B622A888679004D11A5 /* ImageCompress.swift */,
 				A0EA42FC2A99A60200F64A90 /* ImageCacheManager.swift */,
 				A0D68B602A888679004D11A5 /* RxTransform.swift */,
-				A0F031062B2217250058B05B /* CodeMessage.swift */,
 				A0D68ABE2A888678004D11A5 /* CodeMessageError.swift */,
 				A0D68B632A888679004D11A5 /* GCDTool.swift */,
 				A0D68B642A888679004D11A5 /* MimeType.swift */,
-				A0D68B652A888679004D11A5 /* WeakReference.swift */,
 				A050072C2B086CB200526713 /* SwiftEventBus.swift */,
 			);
 			path = Base;
@@ -1055,6 +1048,7 @@
 		A0D68ADF2A888678004D11A5 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				A0D68AE02A888678004D11A5 /* UIImageView+Cache.swift */,
 				A0D68B3A2A888679004D11A5 /* Date+TimeStamp.swift */,
 				A0D68B3B2A888679004D11A5 /* ObservableType+Compose.swift */,
 				A0D68B612A888679004D11A5 /* Data+ImageFormat.swift */,
@@ -1753,7 +1747,6 @@
 				A0D68BB22A888679004D11A5 /* IMBaseMessageCellProvider.swift in Sources */,
 				A0D68BAC2A888679004D11A5 /* IMUnicodeEmojiPanelProvider.swift in Sources */,
 				A0FCA9362B498AC700FC6E47 /* UpdateGroupVo.swift in Sources */,
-				A0F031072B2217250058B05B /* CodeMessage.swift in Sources */,
 				A0FCA9152B4970AB00FC6E47 /* DefaultSessionMemberDao.swift in Sources */,
 				A0FCA9032B4952CD00FC6E47 /* Contact.swift in Sources */,
 				A0D68BD52A888679004D11A5 /* AVCacheManager.swift in Sources */,
@@ -1902,7 +1895,6 @@
 				A050072F2B08BC9700526713 /* AppUtils.swift in Sources */,
 				A0CA4E692B4AAB860031DDDB /* ExternalPageRouter.swift in Sources */,
 				A0D68BF22A888679004D11A5 /* IMUnSupportMsgProcessor.swift in Sources */,
-				A0D68C012A888679004D11A5 /* WeakReference.swift in Sources */,
 				A0FCA91C2B49844200FC6E47 /* ApplyFriendVo.swift in Sources */,
 				A0C431F62A909CCE00A84D4A /* CreateRoomVo.swift in Sources */,
 				A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */,

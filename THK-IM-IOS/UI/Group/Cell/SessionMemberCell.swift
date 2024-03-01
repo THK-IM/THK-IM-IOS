@@ -48,7 +48,7 @@ class SessionMemberCell: UICollectionViewCell {
         IMCoreManager.shared.userModule.queryUser(id: id)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] user in
-                self?.avatarView.ca_setImageUrlWithCorner(url: user.avatar ?? "", radius: 10)
+                self?.avatarView.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 10)
                 self?.nicknameView.text = user.nickname
             }).disposed(by: self.disposeBag)
     }

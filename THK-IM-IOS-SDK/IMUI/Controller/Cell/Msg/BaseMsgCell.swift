@@ -247,7 +247,7 @@ open class BaseMsgCell : BaseTableCell {
     }
     
     private func updateUserInfo(user: User) {
-        self.cellWrapper.avatarView()?.ca_setImageUrlWithCorner(url: user.avatar ?? "", radius: 20)
+        self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 20)
         self.cellWrapper.nickView()?.text = user.nickname
     }
     

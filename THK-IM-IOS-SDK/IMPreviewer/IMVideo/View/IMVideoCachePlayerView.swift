@@ -182,7 +182,7 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     
     public func initCover(_ path: String) {
         self.coverPath = path
-        self.playView.ca_setImagePath(path: path)
+        self.playView.renderImageByPath(path: path)
     }
     
     public func initDataSource(_ url: URL?) {

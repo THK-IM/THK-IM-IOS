@@ -11,19 +11,19 @@ import Kingfisher
 
 public extension UIImageView {
     
-    func ca_setImagePathWithCorner(path: String, radius: CGFloat) {
+    func renderImageByPathWithCorner(path: String, radius: CGFloat) {
         self.layer.cornerRadius = radius
         self.clipsToBounds = true
         self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)))
     }
     
-    func ca_setImageUrlWithCorner(url: String, radius: CGFloat) {
+    func renderImageByUrlWithCorner(url: String, radius: CGFloat) {
         self.layer.cornerRadius = radius
         self.clipsToBounds = true
         self.kf.setImage(with: URL(string: url))
     }
     
-    func ca_setImagePath(path: String) {
+    func renderImageByPath(path: String) {
         self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)))
     }
     

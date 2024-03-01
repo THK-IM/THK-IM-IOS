@@ -278,7 +278,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
             self.groupAvatarLayout.isHidden = true
         } else {
             self.groupAvatarLayout.isHidden = false
-            self.groupAvatarImageView.ca_setImageUrlWithCorner(url: group?.avatar ?? "", radius: 10)
+            self.groupAvatarImageView.renderImageByUrlWithCorner(url: group?.avatar ?? "", radius: 10)
         }
     }
     

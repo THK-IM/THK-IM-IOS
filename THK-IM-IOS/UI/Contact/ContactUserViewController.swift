@@ -56,7 +56,7 @@ class ContactUserViewController: BaseViewController {
             make.height.equalTo(60)
             make.width.equalTo(60)
         }
-        self.avatarView.ca_setImageUrlWithCorner(url: user.avatar ?? "", radius: 0)
+        self.avatarView.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 0)
         
         self.nicknameView.snp.makeConstraints { make in
             make.left.equalTo(self.avatarView.snp.right).offset(10)

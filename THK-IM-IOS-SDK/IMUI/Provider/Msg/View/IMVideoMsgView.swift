@@ -72,7 +72,7 @@ class IMVideoMsgView: UIImageView, IMsgView {
                 }
                 if (data.thumbnailPath != nil) {
                     let path = IMCoreManager.shared.storageModule.sandboxFilePath(data.thumbnailPath!)
-                    self.ca_setImagePathWithCorner(path: path, radius: 8.0)
+                    self.renderImageByPathWithCorner(path: path, radius: 8.0)
                     self.isHidden = false
                 }
             } catch {

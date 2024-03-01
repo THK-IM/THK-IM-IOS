@@ -17,10 +17,10 @@ class DownloadTask: LoadTask {
     private let downLoadParam: String
     private let tmpFilePath: String
     private let filePath: String
-    private let fileModuleReference: WeakReference<DefaultFileLoadModule>
+    private weak var fileModule: DefaultFileLoadModule?
     
     init(fileModule: DefaultFileLoadModule, key: String, downLoadParam: String) {
-        self.fileModuleReference = WeakReference(value: fileModule)
+        self.fileModule = fileModule
         self.key = key
         self.downLoadParam = downLoadParam
         let hashUrl = key.sha1Hash
@@ -41,7 +41,7 @@ class DownloadTask: LoadTask {
                 return
             }
         }
-        guard let fileLoadModule = self.fileModuleReference.value else {
+        guard let fileLoadModule = self.fileModule else {
             notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError.init(.executableNotLoadable))
             return
         }
@@ -52,7 +52,7 @@ class DownloadTask: LoadTask {
             guard let location = response.headers["Location"] else {
                 return nil
             }
-            guard let fileLoadModule = self?.fileModuleReference.value else {
+            guard let fileLoadModule = self?.fileModule else {
                 return nil
             }
             do {
@@ -126,7 +126,7 @@ class DownloadTask: LoadTask {
     }
     
     func notify(progress: Int, state: Int, err: Error? = nil) {
-        guard let fileLoadModule = self.fileModuleReference.value else {
+        guard let fileLoadModule = self.fileModule else {
             return
         }
         if (state == FileLoadState.Success.rawValue) {

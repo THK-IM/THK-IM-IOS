@@ -16,7 +16,7 @@ open class GroupSessionCell: BaseSessionCell {
                 guard let g = group else {
                     return
                 }
-                self?.avatarView.ca_setImageUrlWithCorner(url: g.avatar , radius: 10)
+                self?.avatarView.renderImageByUrlWithCorner(url: g.avatar , radius: 10)
                 self?.nickView.text = g.name
             }).disposed(by: self.disposeBag)
     }

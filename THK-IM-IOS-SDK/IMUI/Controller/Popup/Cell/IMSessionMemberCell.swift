@@ -58,7 +58,7 @@ class IMSessionMemberCell: UITableViewCell {
     
     private func showAvatar(user: User, sessionMember: SessionMember) {
         self.user = user
-        self.avatarView.ca_setImageUrlWithCorner(url: user.avatar ?? "", radius: 10)
+        self.avatarView.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 10)
         if (sessionMember.noteName != nil && !sessionMember.noteName!.isEmpty ) {
             self.showNickname(nickname: sessionMember.noteName!)
         } else {

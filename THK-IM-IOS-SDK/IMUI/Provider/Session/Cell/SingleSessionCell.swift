@@ -13,7 +13,7 @@ open class SingleSessionCell: BaseSessionCell {
     override open func showSessionEntityInfo(_ session: Session) {
         IMCoreManager.shared.userModule.queryUser(id: session.entityId)
             .subscribe(onNext: { [weak self] user in
-                self?.avatarView.ca_setImageUrlWithCorner(url: user.avatar ?? "", radius: 10)
+                self?.avatarView.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 10)
                 self?.nickView.text = user.nickname
             }).disposed(by: self.disposeBag)
     }

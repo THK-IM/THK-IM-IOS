@@ -74,7 +74,7 @@ class ContactTableCell: UITableViewCell {
     }
     
     private func showAvatar(user: User, contact: Contact) {
-        self.avatarView.ca_setImageUrlWithCorner(url: user.avatar ?? "", radius: 10)
+        self.avatarView.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 10)
         if (contact.noteName == nil) {
             self.showNickname(nickname: user.nickname)
         }

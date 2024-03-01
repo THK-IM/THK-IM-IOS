@@ -42,7 +42,7 @@ class IMImageMsgView: UIImageView, IMsgView {
                     from: message.data!.data(using: .utf8) ?? Data())
                 if (data.thumbnailPath != nil) {
                     let path = IMCoreManager.shared.storageModule.sandboxFilePath(data.thumbnailPath!)
-                    self.ca_setImagePathWithCorner(path: path, radius: 8.0)
+                    self.renderImageByPathWithCorner(path: path, radius: 8.0)
                     self.isHidden = false
                 }
             } catch {

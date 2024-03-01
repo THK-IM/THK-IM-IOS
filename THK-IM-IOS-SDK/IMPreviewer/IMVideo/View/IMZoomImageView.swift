@@ -39,7 +39,7 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
     }
     
     public func setImagePath(_ path: String) {
-        _zoomImageView.ca_setImagePath(path: path)
+        _zoomImageView.renderImageByPath(path: path)
     }
     
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {

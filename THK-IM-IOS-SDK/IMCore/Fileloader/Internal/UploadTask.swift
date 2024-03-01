@@ -16,18 +16,18 @@ class UploadTask: LoadTask {
     private var keyUrl: String?
     private let path: String
     private let param: String
-    private let fileModuleReference: WeakReference<DefaultFileLoadModule>
+    private weak var fileModule: DefaultFileLoadModule?
     private var running = true
     
     init(fileModule: DefaultFileLoadModule, path: String, param: String) {
-        self.fileModuleReference = WeakReference(value: fileModule)
+        self.fileModule = fileModule
         self.path = path
         self.param = param
     }
     
     func start() {
         self.notify(progress: 0, state: FileLoadState.Init.rawValue)
-        guard let fileLoadModule = self.fileModuleReference.value else {
+        guard let fileLoadModule = self.fileModule else {
             self.notify(progress: 0, state: FileLoadState.Failed.rawValue)
             return
         }
@@ -130,7 +130,7 @@ class UploadTask: LoadTask {
     
     
     func notify(progress: Int, state: Int, err: Error? = nil) {
-        guard let fileLoadModule = self.fileModuleReference.value else {
+        guard let fileLoadModule = self.fileModule else {
             return
         }
         var url = ""

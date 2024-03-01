@@ -57,7 +57,7 @@ class MineTabViewController: BaseViewController {
             make.height.equalTo(60)
             make.width.equalTo(60)
         }
-        self.avatarView.ca_setImageUrlWithCorner(url: userVo.avatar ?? "", radius: 0)
+        self.avatarView.renderImageByUrlWithCorner(url: userVo.avatar ?? "", radius: 0)
         
         self.nicknameView.snp.makeConstraints { make in
             make.left.equalTo(self.avatarView.snp.right).offset(10)
@@ -95,7 +95,7 @@ class MineTabViewController: BaseViewController {
             make.width.equalTo(20)
             make.height.equalTo(20)
         }
-        self.qrcodeView.ca_setImageUrlWithCorner(url: userVo.qrcode ?? "", radius: 0)
+        self.qrcodeView.renderImageByUrlWithCorner(url: userVo.qrcode ?? "", radius: 0)
         
         self.arrowView.snp.makeConstraints { make in
             make.left.equalTo(self.qrcodeView.snp.right).offset(30)
