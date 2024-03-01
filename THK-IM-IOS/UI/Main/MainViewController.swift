@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import RxSwift
 
 
 class MainViewController: UITabBarController {
+    
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         
@@ -45,6 +48,17 @@ class MainViewController: UITabBarController {
     }
     
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        
+    }
+    
+    private func updateNewMessageCount(_ count: Int) {
+        if count <= 0 {
+            self.tabBar.items?[0].badgeValue = nil
+        } else if count < 99 {
+            self.tabBar.items?[0].badgeValue = "\(count)"
+        } else {
+            self.tabBar.items?[0].badgeValue = "99+"
+        }
     }
     
 }

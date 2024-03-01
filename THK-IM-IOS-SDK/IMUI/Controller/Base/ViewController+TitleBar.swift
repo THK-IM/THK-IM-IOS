@@ -8,6 +8,9 @@
 
 import UIKit
 
+import JDStatusBarNotification
+import ProgressHUD
+
 extension UIViewController {
     
     func setTitle(title: String) {
@@ -31,6 +34,19 @@ extension UIViewController {
             i+=1
         }
         self.navigationItem.rightBarButtonItems = rightBarButtonItems
+    }
+    
+    public func showLoading(text: String? = nil) {
+        ProgressHUD.animate(text, .horizontalBarScaling, interaction: true)
+    }
+    
+    public func dismissLoading() {
+        ProgressHUD.dismiss()
+    }
+    
+    public func showToast(_ toast: String, _ success: Bool = true) {
+        NotificationPresenter.shared.present(toast)
+        NotificationPresenter.shared.dismiss(after: 1)
     }
     
 }
