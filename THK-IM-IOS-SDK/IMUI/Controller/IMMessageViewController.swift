@@ -19,7 +19,6 @@ class IMMessageViewController: BaseViewController {
     
     var session: Session? = nil
     private var containerView = UIView()
-    //    private var alwaysShowView = UIView()
     private var messageLayout = IMMessageLayout()
     private var inputLayout = IMInputLayout()
     private var bottomPanelLayout = IMBottomPanelLayout()
@@ -33,8 +32,8 @@ class IMMessageViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.init(hex: "#F0F0F0")
         self.showSessionTitle()
-        self.view.backgroundColor = UIColor.init(hex: "f3f3f3")
         self.setupView()
         self.registerMsgEvent()
         self.registerKeyboardEvent()
@@ -112,6 +111,7 @@ class IMMessageViewController: BaseViewController {
         containerView.clipsToBounds = true
         
         self.containerView.addSubview(self.bottomPanelLayout)
+        self.bottomPanelLayout.backgroundColor = UIColor.init(hex: "#F0F0F0")
         self.bottomPanelLayout.sender = self
         self.bottomPanelLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -125,7 +125,7 @@ class IMMessageViewController: BaseViewController {
         
         // 输入框等布局
         self.inputLayout.sender = self
-        self.inputLayout.backgroundColor = UIColor.init(hex: "f3f3f3")
+        self.inputLayout.backgroundColor = UIColor.init(hex: "#F0F0F0")
         self.containerView.addSubview(self.inputLayout)
         self.inputLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -141,7 +141,7 @@ class IMMessageViewController: BaseViewController {
         self.containerView.addSubview(self.msgSelectedLayout)
         self.msgSelectedLayout.sender = self
         self.msgSelectedLayout.alpha = 1
-        self.msgSelectedLayout.backgroundColor = UIColor.init(hex: "f3f3f3")
+        self.msgSelectedLayout.backgroundColor = UIColor.init(hex: "#F0F0F0")
         self.msgSelectedLayout.isHidden = true
         self.msgSelectedLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -155,7 +155,7 @@ class IMMessageViewController: BaseViewController {
         
         // 消息视图，在输入框之上，铺满alwaysShowView
         self.containerView.addSubview(self.messageLayout)
-        self.messageLayout.backgroundColor = UIColor.init(hex: "eeeeee")
+        self.messageLayout.backgroundColor = UIColor.init(hex: "#F8F8F8")
         self.messageLayout.session = self.session
         self.messageLayout.sender = self
         self.messageLayout.previewer = self

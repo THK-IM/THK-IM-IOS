@@ -27,8 +27,6 @@ class IMBottomPanelLayout: UIView {
         super.init(frame: frame)
         self.emojiPanelView.isHidden = true
         self.functionPanelView.isHidden = true
-        self.addSubview(self.emojiPanelView)
-        self.addSubview(self.functionPanelView)
     }
     
     required init?(coder: NSCoder) {
@@ -36,11 +34,15 @@ class IMBottomPanelLayout: UIView {
     }
     
     override func layoutSubviews() {
-        self.emojiPanelView.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
+        if self.subviews.contains(self.emojiPanelView) {
+            self.emojiPanelView.snp.remakeConstraints { make in
+                make.edges.equalToSuperview()
+            }
         }
-        self.functionPanelView.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
+        if self.subviews.contains(self.functionPanelView) {
+            self.functionPanelView.snp.remakeConstraints { make in
+                make.edges.equalToSuperview()
+            }
         }
     }
     
@@ -49,13 +51,17 @@ class IMBottomPanelLayout: UIView {
     }
     
     func showBottomPanel(_ position: Int) {
+        self.emojiPanelView.sender = self.sender
+        self.functionPanelView.sender = self.sender
         if position == 0 {
             if (!self.isEmojiPanelShow) {
                 self.isEmojiPanelShow = true
                 self.isMorePanelShow = false
                 self.emojiPanelView.isHidden = false
                 self.functionPanelView.isHidden = true
-                self.emojiPanelView.sender = self.sender
+                if !self.subviews.contains(self.emojiPanelView) {
+                    self.addSubview(self.emojiPanelView)
+                }
                 panelLayoutHeight = emojiHeight
             }
         } else {
@@ -64,7 +70,9 @@ class IMBottomPanelLayout: UIView {
                 self.isMorePanelShow = true
                 self.emojiPanelView.isHidden = true
                 self.functionPanelView.isHidden = false
-                functionPanelView.sender = self.sender
+                if !self.subviews.contains(self.functionPanelView) {
+                    self.addSubview(self.functionPanelView)
+                }
                 panelLayoutHeight = moreFunctionHeight
             }
         }

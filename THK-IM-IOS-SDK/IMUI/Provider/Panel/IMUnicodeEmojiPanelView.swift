@@ -11,7 +11,7 @@ import UIKit
 open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     private let cellId = "unicode_emoji_cell_id"
-    private let countOneRow = 8.0
+    private let countOneRow = 7.0
     
     weak var sender: IMMsgSender?
     
@@ -64,10 +64,7 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
     
     func updateUI() {
         self.emojiView.snp.makeConstraints { make in
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.top.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-20)
+            make.edges.equalToSuperview()
         }
         
     }

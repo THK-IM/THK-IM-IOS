@@ -16,7 +16,7 @@ public class IMMessageOperatorItemView: UIView {
     private var message: Message?
     private lazy var titleView: UILabel = {
         let v = UILabel()
-        v.font = UIFont.boldSystemFont(ofSize: 8)
+        v.font = UIFont.systemFont(ofSize: 12)
         v.textColor = .black
         v.textAlignment = .center
         return v

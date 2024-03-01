@@ -18,11 +18,15 @@ public class IMMsgCopyOperator: IMMessageOperator {
     }
     
     public func icon() -> UIImage? {
-        return UIImage(named: "icon_msg_operate_cancel")
+        return UIImage(named: "ic_msg_opr_copy")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {
-        //
+        if message.type == MsgType.TEXT.rawValue {
+            UIPasteboard.general.string = message.data
+            sender.showSenderMessage(text: "Copyed", success: true)
+        }
+        // TODO other msgType
     }
     
     

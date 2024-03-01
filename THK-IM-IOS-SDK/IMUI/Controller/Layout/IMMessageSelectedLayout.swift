@@ -15,6 +15,7 @@ class IMMessageSelectedLayout: UIView {
     
     weak var sender: IMMsgSender?
     private let disposeBag = DisposeBag()
+    private let iconSize = CGSize(width: 32.0, height: 32.0)
     
     lazy private var contentView: UIStackView =  {
         let v = UIStackView()
@@ -29,7 +30,7 @@ class IMMessageSelectedLayout: UIView {
     
     lazy private var deleteButton: UIImageView = {
         let button = UIImageView()
-        let image = UIImage(named: "icon_msg_operate_delete")
+        let image = UIImage(named: "ic_msg_opr_delete")?.scaledToSize(iconSize)
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit
@@ -40,7 +41,7 @@ class IMMessageSelectedLayout: UIView {
     
     lazy private var forwardButton: UIImageView = {
         let button = UIImageView()
-        let image = UIImage(named: "icon_msg_operate_forward")
+        let image = UIImage(named: "ic_msg_opr_forward")?.scaledToSize(iconSize)
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit
@@ -51,7 +52,7 @@ class IMMessageSelectedLayout: UIView {
     
     lazy private var cancelButton: UIImageView = {
         let button = UIImageView()
-        let image = UIImage(named: "icon_msg_operate_cancel")
+        let image = UIImage(named: "ic_msg_opr_cancel")?.scaledToSize(iconSize)
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit

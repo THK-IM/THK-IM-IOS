@@ -23,6 +23,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     }
     private static let maxTextInputHeight: CGFloat = 120.0
     private static let minTextInputHeight: CGFloat = 40.0
+    private let iconSize = CGSize(width: 24.0, height: 24.0)
     
     private var textInputHeight = IMInputLayout.minTextInputHeight
     private var inputLayoutHeight: CGFloat {
@@ -59,7 +60,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     lazy private var speakButton: UIButton = {
         let voiceButton = UIButton()
-        let image = UIImage(named: "ic_msg_voice")
+        let image = UIImage(named: "ic_msg_voice")?.scaledToSize(iconSize)
         if image != nil {
             voiceButton.setImage(image!, for: .normal)
             voiceButton.contentHorizontalAlignment = .fill
@@ -78,7 +79,9 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         textView.font = UIFont.systemFont(ofSize: 16.0)
         textView.returnKeyType = .send
         textView.keyboardType = .default
-        textView.backgroundColor = UIColor.white
+        textView.backgroundColor = UIColor.init(hex: "#FFF8F8F8")
+        textView.layer.cornerRadius = 8
+        textView.layer.masksToBounds = true
         textView.showsVerticalScrollIndicator = false
         textView.showsHorizontalScrollIndicator = false
         textView.contentInset = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
@@ -93,7 +96,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     lazy private var emojiButton: UIButton = {
         let emojiButton = UIButton()
-        let image = UIImage(named: "ic_msg_emoji")
+        let image = UIImage(named: "ic_msg_emoji")?.scaledToSize(iconSize)
         if image != nil {
             emojiButton.setImage(image!, for: .normal)
             emojiButton.contentHorizontalAlignment = .fill
@@ -106,7 +109,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     lazy private var moreButton: UIButton = {
         let moreButton = UIButton()
-        let image = UIImage(named: "ic_msg_more")
+        let image = UIImage(named: "ic_msg_more")?.scaledToSize(iconSize)
         if image != nil {
             moreButton.setImage(image!, for: .normal)
             moreButton.contentHorizontalAlignment = .fill
@@ -260,12 +263,12 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         }
         self.isEmojiImageShow = !self.isEmojiPanelShow
         if self.isEmojiImageShow {
-            let image = UIImage(named: "ic_msg_emoji")
+            let image = UIImage(named: "ic_msg_emoji")?.scaledToSize(iconSize)
             if image != nil {
                 self.emojiButton.setImage(image!, for: .normal)
             }
         } else {
-            let image = UIImage(named: "ic_msg_keyboard")
+            let image = UIImage(named: "ic_msg_keyboard")?.scaledToSize(iconSize)
             if image != nil {
                 self.emojiButton.setImage(image!, for: .normal)
             }
@@ -280,7 +283,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         if self.isSpeakImageShow {
             self.speakView.isHidden = false
             self.textView.isHidden = true
-            let image = UIImage(named: "ic_msg_keyboard")
+            let image = UIImage(named: "ic_msg_keyboard")?.scaledToSize(iconSize)
             if image != nil {
                 self.speakButton.setImage(image!, for: .normal)
             }
@@ -289,7 +292,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         } else {
             self.speakView.isHidden = true
             self.textView.isHidden = false
-            let image = UIImage(named: "ic_msg_voice")
+            let image = UIImage(named: "ic_msg_voice")?.scaledToSize(iconSize)
             if image != nil {
                 self.speakButton.setImage(image!, for: .normal)
             }

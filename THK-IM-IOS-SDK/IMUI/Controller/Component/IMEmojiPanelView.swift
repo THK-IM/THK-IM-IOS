@@ -69,7 +69,7 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     
     lazy var emojiTabContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.init(hex: "#F5F5F5")
         view.addSubview(self.sendView)
         view.addSubview(self.delView)
         view.addSubview(self.emojiTabView)
@@ -79,7 +79,6 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.init(hex: "#f0f0f0")
         self.addSubview(self.emojiTabContainer)
         self.addSubview(self.emojiContentView)
         self.delView.rx.tapGesture()
@@ -93,36 +92,6 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
             .subscribe(onNext: { [weak self] _ in
                 self?.sender?.sendInputContent()
             }).disposed(by: self.disposeBag)
-    }
-    
-//    override var isHidden: Bool {
-//        get {
-//            return super.isHidden
-//        }
-//        set(v) {
-//            super.isHidden = v
-//            if (v) {
-//                resetUI()
-//            }
-//        }
-//    }
-    
-    func resetUI() {
-        self.emojiContentView.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        self.emojiTabContainer.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        self.sendView.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        self.delView.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        self.emojiTabView.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
-        }
     }
     
     override func layoutSubviews() {

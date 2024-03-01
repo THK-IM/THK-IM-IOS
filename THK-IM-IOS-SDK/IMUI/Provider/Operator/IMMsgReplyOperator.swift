@@ -18,7 +18,7 @@ public class IMMsgReplyOperator: IMMessageOperator {
     }
     
     public func icon() -> UIImage? {
-        return UIImage(named: "icon_msg_operate_cancel")
+        return UIImage(named: "ic_msg_opr_reply")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

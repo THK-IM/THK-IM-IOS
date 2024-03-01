@@ -15,7 +15,7 @@ class IMUnicodeEmojiCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.contentView.addSubview(labelView)
-        labelView.font = UIFont.systemFont(ofSize: 32)
+        labelView.font = UIFont.systemFont(ofSize: 36)
         labelView.textAlignment = .center
         labelView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
