@@ -7,13 +7,11 @@
 
 import Foundation
 import UIKit
-import RxSwift
 
 open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     private let cellId = "unicode_emoji_cell_id"
     private let countOneRow = 8.0
-    private let disposeBag = DisposeBag()
     
     weak var sender: IMMsgSender?
     
@@ -33,28 +31,6 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
         collectionView.register(IMUnicodeEmojiCell.self, forCellWithReuseIdentifier: self.cellId)
         collectionView.alpha = 1
         return collectionView
-    }()
-    
-    lazy var deleteButton: UIButton = {
-        let button = UIButton.init(type: .roundedRect)
-        button.setTitle("del", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        button.backgroundColor = .blue
-        button.layer.cornerRadius = 6
-        button.layer.masksToBounds = true
-        return button
-    }()
-    
-    lazy var sendButton: UIButton = {
-        let button = UIButton.init(type: .roundedRect)
-        button.setTitle("send", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        button.backgroundColor = .blue
-        button.layer.cornerRadius = 6
-        button.layer.masksToBounds = true
-        return button
     }()
     
     // 来自: https://emojixd.com/
@@ -84,18 +60,6 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
     
     func setupUI() {
         self.addSubview(self.emojiView)
-        self.addSubview(self.sendButton)
-        self.addSubview(self.deleteButton)
-        
-        self.sendButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.sender?.sendInputContent()
-            }).disposed(by: disposeBag)
-        
-        self.deleteButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.sender?.deleteInputContent(count: 1)
-            }).disposed(by: disposeBag)
     }
     
     func updateUI() {
@@ -106,22 +70,6 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
             make.bottom.equalToSuperview().offset(-20)
         }
         
-        self.sendButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-20)
-            make.right.equalToSuperview().offset(-10)
-            make.width.equalTo(40)
-            make.height.equalTo(30)
-        }
-        
-        self.deleteButton.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.bottom.equalToSuperview().offset(-20)
-            make.right.equalTo(sf.sendButton.snp.left).offset(-10)
-            make.width.equalTo(40)
-            make.height.equalTo(30)
-        }
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

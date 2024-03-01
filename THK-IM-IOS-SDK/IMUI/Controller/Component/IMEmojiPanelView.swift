@@ -8,15 +8,18 @@
 import Foundation
 import UIKit
 import CocoaLumberjack
+import RxSwift
 
 class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     private let cellTitleId = "emoji_panel_title_cell"
     private let cellContentId = "emoji_panel_title_cell"
+    private var selectIndex = IndexPath(row: 0, section: 0)
     
     weak var sender: IMMsgSender?
+    private let disposeBag = DisposeBag()
     
-    lazy var emojiTitleView: UICollectionView = {
+    lazy var emojiTabView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.scrollDirection = .horizontal
@@ -43,7 +46,7 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
         let collectionView = UICollectionView(frame: self.frame, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.isPagingEnabled = false
+        collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundView = nil
         collectionView.backgroundColor = UIColor.clear
@@ -52,36 +55,106 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
         return collectionView
     }()
     
+    lazy var sendView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "ic_emoji_send")
+        return view
+    }()
+    
+    lazy var delView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "ic_emoji_del")
+        return view
+    }()
+    
+    lazy var emojiTabContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.addSubview(self.sendView)
+        view.addSubview(self.delView)
+        view.addSubview(self.emojiTabView)
+        return view
+    }()
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(self.emojiTitleView)
+        self.backgroundColor = UIColor.init(hex: "#f0f0f0")
+        self.addSubview(self.emojiTabContainer)
         self.addSubview(self.emojiContentView)
+        self.delView.rx.tapGesture()
+            .asObservable()
+            .subscribe(onNext: { [weak self] _ in
+                self?.sender?.deleteInputContent(count: 1)
+            }).disposed(by: self.disposeBag)
+        
+        self.sendView.rx.tapGesture()
+            .asObservable()
+            .subscribe(onNext: { [weak self] _ in
+                self?.sender?.sendInputContent()
+            }).disposed(by: self.disposeBag)
+    }
+    
+//    override var isHidden: Bool {
+//        get {
+//            return super.isHidden
+//        }
+//        set(v) {
+//            super.isHidden = v
+//            if (v) {
+//                resetUI()
+//            }
+//        }
+//    }
+    
+    func resetUI() {
+        self.emojiContentView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        self.emojiTabContainer.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        self.sendView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        self.delView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        self.emojiTabView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     override func layoutSubviews() {
-        self.emojiTitleView.snp.remakeConstraints { make in
-            make.left.equalToSuperview().offset(10)
-            make.right.equalToSuperview().offset(-10)
-            make.top.equalToSuperview()
-            make.height.equalTo(40)
-        }
-        self.emojiContentView.snp.remakeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
+        self.emojiContentView.snp.remakeConstraints { make in
             make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalToSuperview()
+            make.height.equalTo(256)
+        }
+        self.emojiTabContainer.snp.remakeConstraints { make in
+            make.left.equalToSuperview()
+            make.width.equalToSuperview()
             make.bottom.equalToSuperview()
-            make.top.equalTo(sf.emojiTitleView.snp.bottom)
+            make.height.equalTo(80)
         }
-        if (IMUIManager.shared.getPanelProviders().count > 0) {
-            let view = IMUIManager.shared.getPanelProviders()[0].contentView(sender: self.sender)
-            self.emojiContentView.addSubview(view)
-            view.snp.remakeConstraints {make in
-                make.edges.equalToSuperview()
-            }
+        self.sendView.snp.remakeConstraints { make in
+            make.size.equalTo(30)
+            make.right.equalToSuperview().offset(-10)
+            make.top.equalToSuperview().offset(6)
         }
+        self.delView.snp.remakeConstraints { make in
+            make.size.equalTo(30)
+            make.right.equalToSuperview().offset(-50)
+            make.top.equalToSuperview().offset(6)
+        }
+        self.emojiTabView.snp.remakeConstraints { make in
+            make.top.equalToSuperview().offset(6)
+            make.height.equalTo(40)
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview().offset(-100)
+        }
+        self.emojiTabView.selectItem(at: selectIndex, animated: false, scrollPosition: .centeredHorizontally)
     }
     
     required init?(coder: NSCoder) {
@@ -93,7 +166,7 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == self.emojiTitleView {
+        if collectionView == self.emojiTabView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellTitleId, for: indexPath)
             let tabCell = cell as! IMEmojiPanelTitleCell
             let provider = IMUIManager.shared.getPanelProviders()[indexPath.row]
@@ -110,7 +183,7 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionView == self.emojiTitleView {
+        if collectionView == self.emojiTabView {
             let boundSize: CGFloat = collectionView.frame.height
             return CGSize(width: boundSize, height: boundSize)
         } else {
@@ -120,10 +193,11 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == self.emojiTitleView {
+        self.selectIndex = indexPath
+        if collectionView == self.emojiTabView {
             self.emojiContentView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         } else {
-            self.emojiTitleView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            self.emojiTabView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
     }
     

@@ -15,12 +15,18 @@ class IMEmojiPanelTitleCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.contentView.addSubview(titleView)
-        
         titleView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
+            make.center.equalToSuperview()
             make.width.equalTo(30)
             make.height.equalTo(30)
         }
+        let backgroundView = UIImageView(frame: frame)
+        backgroundView.image = Bubble().drawRectWithRoundedCorner(
+            radius: 4, borderWidth: 0,
+            backgroundColor: UIColor.init(hex: "#ffe0e0e0"), borderColor: UIColor.init(hex: "#ffe0e0e0"),
+            width: 20, height: 20
+        )
+        self.selectedBackgroundView = backgroundView
     }
     
     required init?(coder: NSCoder) {

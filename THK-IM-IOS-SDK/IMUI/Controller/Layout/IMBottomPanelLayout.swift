@@ -20,12 +20,28 @@ class IMBottomPanelLayout: UIView {
     private var isMorePanelShow = false
     private var isKeyboardShow = false
     
+    private let emojiPanelView = IMEmojiPanelView()
+    private let functionPanelView = IMFunctionPanelView()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.emojiPanelView.isHidden = true
+        self.functionPanelView.isHidden = true
+        self.addSubview(self.emojiPanelView)
+        self.addSubview(self.functionPanelView)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        self.emojiPanelView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        self.functionPanelView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     func getLayoutHeight() -> CGFloat {
@@ -37,30 +53,18 @@ class IMBottomPanelLayout: UIView {
             if (!self.isEmojiPanelShow) {
                 self.isEmojiPanelShow = true
                 self.isMorePanelShow = false
-                self.subviews.forEach {
-                    $0.removeFromSuperview()
-                }
-                let tabPanelView = IMEmojiPanelView()
-                tabPanelView.sender = self.sender
-                self.addSubview(tabPanelView)
-                tabPanelView.snp.remakeConstraints { make in
-                    make.edges.equalToSuperview()
-                }
+                self.emojiPanelView.isHidden = false
+                self.functionPanelView.isHidden = true
+                self.emojiPanelView.sender = self.sender
                 panelLayoutHeight = emojiHeight
             }
         } else {
             if (!self.isMorePanelShow) {
                 self.isEmojiPanelShow = false
                 self.isMorePanelShow = true
-                self.subviews.forEach {
-                    $0.removeFromSuperview()
-                }
-                let functionPanelView = IMFunctionPanelView()
+                self.emojiPanelView.isHidden = true
+                self.functionPanelView.isHidden = false
                 functionPanelView.sender = self.sender
-                self.addSubview(functionPanelView)
-                functionPanelView.snp.makeConstraints { make in
-                    make.edges.equalToSuperview()
-                }
                 panelLayoutHeight = moreFunctionHeight
             }
         }
@@ -74,9 +78,8 @@ class IMBottomPanelLayout: UIView {
     func closeBottomPanel() {
         self.isMorePanelShow = false
         self.isEmojiPanelShow = false
-        self.subviews.forEach {
-            $0.removeFromSuperview()
-        }
+        self.emojiPanelView.isHidden = true
+        self.functionPanelView.isHidden = true
         panelLayoutHeight = 0.0
         if isKeyboardShow {
             _ = self.sender?.closeKeyboard()
@@ -100,9 +103,8 @@ class IMBottomPanelLayout: UIView {
             // 如果键盘显示
             self.isMorePanelShow = false
             self.isEmojiPanelShow = false
-            self.subviews.forEach {
-                $0.removeFromSuperview()
-            }
+            self.emojiPanelView.isHidden = true
+            self.functionPanelView.isHidden = true
             self.panelLayoutHeight = 0
         } else {
             // 如果键盘关闭
@@ -116,7 +118,5 @@ class IMBottomPanelLayout: UIView {
         }
         self.resetLayout()
     }
-    
-    
     
 }
