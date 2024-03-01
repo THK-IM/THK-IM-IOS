@@ -27,7 +27,7 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = false
-        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundView = nil
         collectionView.backgroundColor = UIColor.clear
         collectionView.register(IMUnicodeEmojiCell.self, forCellWithReuseIdentifier: self.cellId)
@@ -71,40 +71,21 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupView()
+        self.setupUI()
     }
     
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupView() {
+    override open func layoutSubviews() {
+        updateUI()
+    }
+    
+    func setupUI() {
         self.addSubview(self.emojiView)
-        self.emojiView.snp.makeConstraints { make in
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.top.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-20)
-        }
-        
         self.addSubview(self.sendButton)
-        self.sendButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-20)
-            make.right.equalToSuperview().offset(-10)
-            make.width.equalTo(40)
-            make.height.equalTo(30)
-        }
-        
         self.addSubview(self.deleteButton)
-        self.deleteButton.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.bottom.equalToSuperview().offset(-20)
-            make.right.equalTo(sf.sendButton.snp.left).offset(-10)
-            make.width.equalTo(40)
-            make.height.equalTo(30)
-        }
         
         self.sendButton.rx.tap
             .subscribe(onNext: { [weak self] in
@@ -115,6 +96,32 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
             .subscribe(onNext: { [weak self] in
                 self?.sender?.deleteInputContent(count: 1)
             }).disposed(by: disposeBag)
+    }
+    
+    func updateUI() {
+        self.emojiView.snp.makeConstraints { make in
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-20)
+        }
+        
+        self.sendButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-20)
+            make.right.equalToSuperview().offset(-10)
+            make.width.equalTo(40)
+            make.height.equalTo(30)
+        }
+        
+        self.deleteButton.snp.makeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
+            }
+            make.bottom.equalToSuperview().offset(-20)
+            make.right.equalTo(sf.sendButton.snp.left).offset(-10)
+            make.width.equalTo(40)
+            make.height.equalTo(30)
+        }
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

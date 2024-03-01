@@ -58,6 +58,7 @@
 		A033FB082B8A1DBB0053045E /* IMRevokeMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB072B8A1DBB0053045E /* IMRevokeMsgView.swift */; };
 		A033FB0A2B8A1F6C0053045E /* IMRecordMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB092B8A1F6C0053045E /* IMRecordMsgView.swift */; };
 		A033FB0C2B8A33F60053045E /* IMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB0B2B8A33F60053045E /* IMsgView.swift */; };
+		A033FB112B918BF80053045E /* IMEmojiPanelContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */; };
 		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A050072F2B08BC9700526713 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072E2B08BC9700526713 /* AppUtils.swift */; };
 		A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */; };
@@ -90,7 +91,7 @@
 		A0CA4E652B4A9BA10031DDDB /* ContactTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA4E642B4A9BA10031DDDB /* ContactTableCell.swift */; };
 		A0CA4E672B4AAAF50031DDDB /* IMPageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA4E662B4AAAF50031DDDB /* IMPageRouter.swift */; };
 		A0CA4E692B4AAB860031DDDB /* ExternalPageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA4E682B4AAB860031DDDB /* ExternalPageRouter.swift */; };
-		A0CC9F742AFC88F200801B25 /* IMTabCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CC9F732AFC88F200801B25 /* IMTabCell.swift */; };
+		A0CC9F742AFC88F200801B25 /* IMEmojiPanelTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CC9F732AFC88F200801B25 /* IMEmojiPanelTitleCell.swift */; };
 		A0D51DC22B09E40E00E21E75 /* IMRevokeMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC12B09E40E00E21E75 /* IMRevokeMsgCell.swift */; };
 		A0D51DC42B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC32B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift */; };
 		A0D51DC62B09EFF800E21E75 /* RevokeMsgVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC52B09EFF800E21E75 /* RevokeMsgVo.swift */; };
@@ -163,7 +164,7 @@
 		A0D68BBA2A888679004D11A5 /* IMSpeakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0A2A888678004D11A5 /* IMSpeakView.swift */; };
 		A0D68BBB2A888679004D11A5 /* IMFunctionPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0B2A888678004D11A5 /* IMFunctionPanelView.swift */; };
 		A0D68BBC2A888679004D11A5 /* IMFunctionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0C2A888678004D11A5 /* IMFunctionCell.swift */; };
-		A0D68BBD2A888679004D11A5 /* IMTabPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0D2A888678004D11A5 /* IMTabPanelView.swift */; };
+		A0D68BBD2A888679004D11A5 /* IMEmojiPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0D2A888678004D11A5 /* IMEmojiPanelView.swift */; };
 		A0D68BBF2A888679004D11A5 /* IMMsgLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0F2A888678004D11A5 /* IMMsgLabelView.swift */; };
 		A0D68BC02A888679004D11A5 /* IMMsgSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B112A888678004D11A5 /* IMMsgSender.swift */; };
 		A0D68BC12A888679004D11A5 /* IMMsgPreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */; };
@@ -352,6 +353,7 @@
 		A033FB072B8A1DBB0053045E /* IMRevokeMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgView.swift; sourceTree = "<group>"; };
 		A033FB092B8A1F6C0053045E /* IMRecordMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgView.swift; sourceTree = "<group>"; };
 		A033FB0B2B8A33F60053045E /* IMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMsgView.swift; sourceTree = "<group>"; };
+		A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMEmojiPanelContentCell.swift; sourceTree = "<group>"; };
 		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A050072E2B08BC9700526713 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
 		A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallViewController.swift; sourceTree = "<group>"; };
@@ -384,7 +386,7 @@
 		A0CA4E642B4A9BA10031DDDB /* ContactTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableCell.swift; sourceTree = "<group>"; };
 		A0CA4E662B4AAAF50031DDDB /* IMPageRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPageRouter.swift; sourceTree = "<group>"; };
 		A0CA4E682B4AAB860031DDDB /* ExternalPageRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalPageRouter.swift; sourceTree = "<group>"; };
-		A0CC9F732AFC88F200801B25 /* IMTabCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMTabCell.swift; sourceTree = "<group>"; };
+		A0CC9F732AFC88F200801B25 /* IMEmojiPanelTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMEmojiPanelTitleCell.swift; sourceTree = "<group>"; };
 		A0D51DC12B09E40E00E21E75 /* IMRevokeMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgCell.swift; sourceTree = "<group>"; };
 		A0D51DC32B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgCellProvider.swift; sourceTree = "<group>"; };
 		A0D51DC52B09EFF800E21E75 /* RevokeMsgVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevokeMsgVo.swift; sourceTree = "<group>"; };
@@ -459,7 +461,7 @@
 		A0D68B0A2A888678004D11A5 /* IMSpeakView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSpeakView.swift; sourceTree = "<group>"; };
 		A0D68B0B2A888678004D11A5 /* IMFunctionPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMFunctionPanelView.swift; sourceTree = "<group>"; };
 		A0D68B0C2A888678004D11A5 /* IMFunctionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMFunctionCell.swift; sourceTree = "<group>"; };
-		A0D68B0D2A888678004D11A5 /* IMTabPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMTabPanelView.swift; sourceTree = "<group>"; };
+		A0D68B0D2A888678004D11A5 /* IMEmojiPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMEmojiPanelView.swift; sourceTree = "<group>"; };
 		A0D68B0F2A888678004D11A5 /* IMMsgLabelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgLabelView.swift; sourceTree = "<group>"; };
 		A0D68B112A888678004D11A5 /* IMMsgSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgSender.swift; sourceTree = "<group>"; };
 		A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgPreviewer.swift; sourceTree = "<group>"; };
@@ -721,6 +723,15 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		A033FB0F2B918B490053045E /* emoji */ = {
+			isa = PBXGroup;
+			children = (
+				A0CC9F732AFC88F200801B25 /* IMEmojiPanelTitleCell.swift */,
+				A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */,
+			);
+			path = emoji;
+			sourceTree = "<group>";
+		};
 		A045CF8B2A92561900654957 /* IMProvider */ = {
 			isa = PBXGroup;
 			children = (
@@ -842,7 +853,6 @@
 			isa = PBXGroup;
 			children = (
 				A0D68B0C2A888678004D11A5 /* IMFunctionCell.swift */,
-				A0CC9F732AFC88F200801B25 /* IMTabCell.swift */,
 			);
 			path = Function;
 			sourceTree = "<group>";
@@ -1162,7 +1172,7 @@
 				A0EF355E2B5CEB4E00940F54 /* IMTextView.swift */,
 				A0D68B0A2A888678004D11A5 /* IMSpeakView.swift */,
 				A0D68B0B2A888678004D11A5 /* IMFunctionPanelView.swift */,
-				A0D68B0D2A888678004D11A5 /* IMTabPanelView.swift */,
+				A0D68B0D2A888678004D11A5 /* IMEmojiPanelView.swift */,
 				A0D68B0F2A888678004D11A5 /* IMMsgLabelView.swift */,
 			);
 			path = Component;
@@ -1189,6 +1199,7 @@
 			isa = PBXGroup;
 			children = (
 				A0D68B1A2A888678004D11A5 /* BaseTableCell.swift */,
+				A033FB0F2B918B490053045E /* emoji */,
 				A0CC9F722AFC83FC00801B25 /* Session */,
 				A0CC9F712AFC83D300801B25 /* Function */,
 				A0CC9F702AFC83C600801B25 /* Msg */,
@@ -1873,6 +1884,7 @@
 				A0E82F642B528AB0008DC681 /* GroupSessionCell.swift in Sources */,
 				A0EF35542B5BFFFB00940F54 /* IMSessionMemberAtDelegate.swift in Sources */,
 				A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */,
+				A033FB112B918BF80053045E /* IMEmojiPanelContentCell.swift in Sources */,
 				A0FCA90F2B496D3800FC6E47 /* DefaultContactDao.swift in Sources */,
 				A0C431EA2A909CB200A84D4A /* BaseParticipant.swift in Sources */,
 				A0D68BE52A888679004D11A5 /* DefaultCommonModule.swift in Sources */,
@@ -1974,7 +1986,7 @@
 				A03082CF2AF66BD7001B8373 /* IMReeditMsgProcessor.swift in Sources */,
 				A0F031012B220B940058B05B /* DefaultContactModule.swift in Sources */,
 				A0978E5F2B71CFDA0047E6A2 /* CallingLayout.swift in Sources */,
-				A0D68BBD2A888679004D11A5 /* IMTabPanelView.swift in Sources */,
+				A0D68BBD2A888679004D11A5 /* IMEmojiPanelView.swift in Sources */,
 				A0D68B9F2A888679004D11A5 /* IMTimeLineMsgCellProvider.swift in Sources */,
 				A0D68B9B2A888679004D11A5 /* UIColor+HexString.swift in Sources */,
 				A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */,
@@ -1990,7 +2002,7 @@
 				A0D68C052A888679004D11A5 /* DefaultSignalModule.swift in Sources */,
 				A02578C82AA427BD00A66CEF /* DefaultLiveApi.swift in Sources */,
 				A0D68BAA2A888679004D11A5 /* IMDefaultSessionCellProvider.swift in Sources */,
-				A0CC9F742AFC88F200801B25 /* IMTabCell.swift in Sources */,
+				A0CC9F742AFC88F200801B25 /* IMEmojiPanelTitleCell.swift in Sources */,
 				A0D68BCD2A888679004D11A5 /* IMMediaPreviewController.swift in Sources */,
 				A018CDFC2B00856B00896B87 /* IMAVCacheProtocol.swift in Sources */,
 				A0D68B9A2A888679004D11A5 /* UIImageView+Cache.swift in Sources */,

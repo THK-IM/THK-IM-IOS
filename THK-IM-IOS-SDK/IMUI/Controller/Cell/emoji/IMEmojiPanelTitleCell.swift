@@ -1,26 +1,25 @@
 //
-//  IMTabCell.swift
+//  IMEmojiPanelTitleCell.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/11/9.
 //  Copyright © 2023 THK. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
-class IMTabCell: UICollectionViewCell {
+class IMEmojiPanelTitleCell: UICollectionViewCell {
     
-    private let icon = UIImageView()
+    private let titleView = UIImageView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.contentView.addSubview(icon)
+        self.contentView.addSubview(titleView)
         
-        icon.snp.makeConstraints { make in
+        titleView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalTo(35)
-            make.height.equalTo(35)
+            make.width.equalTo(30)
+            make.height.equalTo(30)
         }
     }
     
@@ -28,8 +27,7 @@ class IMTabCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     func setProvider(_ provider: IMBasePanelViewProvider) {
-        self.icon.image = provider.icon(selected: false)
+        self.titleView.image = provider.icon(selected: false)
     }
 }
