@@ -448,6 +448,11 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         self.sender?.popupMessageOperatorPanel(view, message)
     }
     
+    func onMsgReadStatusClick(message: Message) {
+        /// TODO 跳转到已读用户列表页面
+    }
+    
+    
     func onMsgResendClick(message: Message) {
         self.sender?.resendMessage(message)
     }

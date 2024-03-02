@@ -18,4 +18,6 @@ public protocol SessionMemberDao {
     
     func findBySessionId(_ sessionId: Int64) -> Array<SessionMember>
     
+    func findSessionMemberCount(_ sessionId: Int64) -> Int
+    
 }

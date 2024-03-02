@@ -59,13 +59,16 @@ class RightCellWrapper: CellWrapper {
         return v
     }()
     
-    lazy var _readLabel: UIView = {
-        let v = UILabel()
+    lazy var _readStatusView: IMReadStatusView = {
+        let v = IMReadStatusView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         return v
     }()
     
     lazy var _stateStack: UIStackView = {
-        let v = UIStackView(arrangedSubviews: [_resendButton, _indicatorView, _readLabel])
+        let v = UIStackView(arrangedSubviews: [_readStatusView, _resendButton, _indicatorView])
+        _readStatusView.snp.makeConstraints { make in
+            make.size.equalTo(20)
+        }
         v.axis = .horizontal
         v.alignment = .trailing
         v.distribution = .equalSpacing
@@ -117,8 +120,8 @@ class RightCellWrapper: CellWrapper {
         return self._resendButton
     }
     
-    override func readStatusView() -> UIView? {
-        return self._readLabel
+    override func readStatusView() -> IMReadStatusView? {
+        return self._readStatusView
     }
     
     override func appear() {

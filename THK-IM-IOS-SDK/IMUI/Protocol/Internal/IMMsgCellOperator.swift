@@ -15,6 +15,7 @@ public protocol IMMsgCellOperator: AnyObject {
     func onMsgSenderClick(message: Message, position: Int, view: UIView)
     func onMsgSenderLongClick(message: Message, position: Int, view: UIView)
     func onMsgCellLongClick(message: Message, position:Int, view: UIView)
+    func onMsgReadStatusClick(message: Message)
     func onMsgResendClick(message: Message)
     func isSelectMode() ->Bool
     func isItemSelected(message: Message) ->Bool

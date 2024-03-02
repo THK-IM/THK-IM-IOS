@@ -129,8 +129,8 @@ open class BaseMsgCell : BaseTableCell {
                 position: self?.position ?? 0,
                 view: (self?.cellWrapper.avatarView())!
             )
-        })
-        .disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
+        
         avatarView?.rx.longPressGesture()
             .when(.began)
             .subscribe(onNext: { [weak self]  _ in
@@ -141,6 +141,20 @@ open class BaseMsgCell : BaseTableCell {
                 )
             })
             .disposed(by: disposeBag)
+        if let readStatusView = self.cellWrapper.readStatusView() {
+            readStatusView.rx.tapGesture(configuration: { [weak self] gestureRecognizer, delegate in
+                delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+                    return touches.view == self?.cellWrapper.readStatusView()
+                }
+                delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                    return otherGestureRecognizer is UILongPressGestureRecognizer
+                }
+            })
+            .when(.ended)
+            .subscribe(onNext: { [weak self]  _ in
+                self?.delegate?.onMsgReadStatusClick(message: (self?.message)!)
+            }).disposed(by: self.disposeBag)
+        }
     }
     
     func initMsgView() {
@@ -274,7 +288,34 @@ open class BaseMsgCell : BaseTableCell {
             self.cellWrapper.statusView()?.isHidden = true
             self.cellWrapper.resendButton()?.isHidden = true
             self.cellWrapper.readStatusView()?.isHidden = false
+            self.queryReadStatus()
             break
+        }
+    }
+    
+    private func queryReadStatus() {
+        guard let session = self.session else {
+            return
+        }
+        if session.type == SessionType.MsgRecord.rawValue {
+            return
+        }
+        Observable.just(session.id).flatMap { sessionId in
+            let count = IMCoreManager.shared.database.sessionMemberDao().findSessionMemberCount(sessionId)
+            return Observable.just(count)
+        }.compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] count in
+                self?.showReadStatus(count)
+            }).disposed(by: self.disposeBag)
+    }
+    
+    private func showReadStatus(_ count: Int) {
+        if let readUIds = self.message?.getReadUIds() {
+            let realCount = max(count-1, 1)
+            let progress = CGFloat(readUIds.count)/CGFloat(realCount)
+            self.cellWrapper.readStatusView()?.updateStatus(UIColor.init(hex: "#17a121"), 4, progress)
+        } else {
+            self.cellWrapper.readStatusView()?.updateStatus(UIColor.init(hex: "#17a121"), 4, 0)
         }
     }
     

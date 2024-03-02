@@ -61,6 +61,7 @@
 		A033FB112B918BF80053045E /* IMEmojiPanelContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */; };
 		A033FB132B92F8A10053045E /* IMMsgEditOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB122B92F8A10053045E /* IMMsgEditOperator.swift */; };
 		A033FB152B931CB80053045E /* ReeditMsgVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB142B931CB80053045E /* ReeditMsgVo.swift */; };
+		A033FB172B933EA20053045E /* IMReadStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB162B933EA20053045E /* IMReadStatusView.swift */; };
 		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A050072F2B08BC9700526713 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072E2B08BC9700526713 /* AppUtils.swift */; };
 		A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */; };
@@ -356,6 +357,7 @@
 		A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMEmojiPanelContentCell.swift; sourceTree = "<group>"; };
 		A033FB122B92F8A10053045E /* IMMsgEditOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgEditOperator.swift; sourceTree = "<group>"; };
 		A033FB142B931CB80053045E /* ReeditMsgVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReeditMsgVo.swift; sourceTree = "<group>"; };
+		A033FB162B933EA20053045E /* IMReadStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMReadStatusView.swift; sourceTree = "<group>"; };
 		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A050072E2B08BC9700526713 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
 		A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallViewController.swift; sourceTree = "<group>"; };
@@ -1174,6 +1176,7 @@
 				A0D68B0B2A888678004D11A5 /* IMFunctionPanelView.swift */,
 				A0D68B0D2A888678004D11A5 /* IMEmojiPanelView.swift */,
 				A0D68B0F2A888678004D11A5 /* IMMsgLabelView.swift */,
+				A033FB162B933EA20053045E /* IMReadStatusView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -1899,6 +1902,7 @@
 				A0D51DC82B11ABC600E21E75 /* ForwardMessageVo.swift in Sources */,
 				A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */,
 				A0D68BFD2A888679004D11A5 /* Data+ImageFormat.swift in Sources */,
+				A033FB172B933EA20053045E /* IMReadStatusView.swift in Sources */,
 				A050072F2B08BC9700526713 /* AppUtils.swift in Sources */,
 				A0CA4E692B4AAB860031DDDB /* ExternalPageRouter.swift in Sources */,
 				A0D68BF22A888679004D11A5 /* IMUnSupportMsgProcessor.swift in Sources */,

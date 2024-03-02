@@ -17,7 +17,7 @@ class IMTextMsgCell: BaseMsgCell {
         let view = IMTextMsgView()
         view.numberOfLines = 0
         view.font = UIFont.systemFont(ofSize: fontSize)
-        view.padding = UIEdgeInsets.init(top: 12, left: 8, bottom: 12, right: 8)
+        view.padding = UIEdgeInsets.init(top: 4, left: 8, bottom: 4, right: 8)
         view.textColor = UIColor.black
         if self.cellPosition() == IMMsgPosType.Mid.rawValue {
             view.textAlignment = .center

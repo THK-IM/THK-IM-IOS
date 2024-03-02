@@ -49,5 +49,18 @@ open class DefaultSessionMemberDao: SessionMemberDao {
     }
     
     
+    public func findSessionMemberCount(_ sessionId: Int64) -> Int {
+        if let count = try? self.database?.getValue(
+            on: SessionMember.Properties.userId.count(),
+            fromTable: self.tableName,
+            where: SessionMember.Properties.sessionId == sessionId &&
+            SessionMember.Properties.deleted == 0
+        ).int32Value {
+            return Int(count)
+        }
+        return 0
+    }
+    
+    
 }
 

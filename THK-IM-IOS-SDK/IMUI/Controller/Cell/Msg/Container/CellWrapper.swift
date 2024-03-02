@@ -61,7 +61,7 @@ class CellWrapper  {
     /**
      已读状态视图
      */
-    open func readStatusView() -> UIView? {
+    open func readStatusView() -> IMReadStatusView? {
         return nil
     }
     

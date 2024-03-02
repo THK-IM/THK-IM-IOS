@@ -86,6 +86,19 @@ public final class Message: TableCodable, Hashable {
         self.mTime = mTime
     }
     
+    public func getReadUIds() -> Set<Int64> {
+        var uIds = Set<Int64>()
+        if let rUsers = self.rUsers {
+            let uIdStrs = rUsers.split(separator: "#")
+            for uIdStr in uIdStrs {
+                if let uId = Int64(uIdStr) {
+                    uIds.insert(uId)
+                }
+            }
+        }
+        return uIds
+    }
+    
     public func clone() -> Message {
         return Message(
             id: self.id, sessionId: self.sessionId, fromUId: self.fromUId, msgId: self.msgId,
