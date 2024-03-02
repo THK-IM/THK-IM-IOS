@@ -20,6 +20,8 @@ enum IMMessageApi {
     case readMsgs(_ req: ReadMsgVo)
     /// 撤回消息
     case revokeMsg(_ req: RevokeMsgVo)
+    /// 重编辑消息
+    case reeditMsg(_ req: ReeditMsgVo)
     /// 转发消息
     case forwardMsg(_ req: ForwardMessageVo)
     /// 删除消息
@@ -45,6 +47,8 @@ extension IMMessageApi: TargetType {
             return "/message/read"
         case .revokeMsg:
             return "/message/revoke"
+        case .reeditMsg:
+            return "/message/reedit"
         case .forwardMsg:
             return "/message/forward"
         case .deleteMsgs:
@@ -63,6 +67,8 @@ extension IMMessageApi: TargetType {
         case .readMsgs:
             return .post
         case .revokeMsg:
+            return .post
+        case .reeditMsg:
             return .post
         case .forwardMsg:
             return .post
@@ -83,6 +89,8 @@ extension IMMessageApi: TargetType {
         case let .readMsgs(req):
             return .requestJSONEncodable(req)
         case let .revokeMsg(req):
+            return .requestJSONEncodable(req)
+        case let .reeditMsg(req):
             return .requestJSONEncodable(req)
         case let .forwardMsg(req):
             return .requestJSONEncodable(req)

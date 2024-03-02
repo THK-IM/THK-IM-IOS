@@ -361,6 +361,10 @@ class IMMessageViewController: BaseViewController {
 
 extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberAtDelegate {
     
+    func viewController() -> UIViewController {
+        return self
+    }
+    
     /// 获取session信息
     func getSession() -> Session? {
         return self.session
@@ -607,8 +611,14 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         self.showReplyMessage(msg)
     }
     
+    /// 关闭回复消息
     func closeReplyMessage() {
         self.dismissReplyMessage()
+    }
+    
+    /// 重编辑消息
+    func reeditMessage(_ message: Message) {
+        self.inputLayout.setReeditMessage(message)
     }
     
     func onSessionMemberAt(sessionMember: SessionMember, user: User) {

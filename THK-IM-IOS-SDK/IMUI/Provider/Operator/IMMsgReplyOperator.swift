@@ -25,5 +25,11 @@ public class IMMsgReplyOperator: IMMessageOperator {
         sender.replyMessage(msg: message)
     }
     
+    public func supportMessage(_ message: Message) -> Bool {
+        if message.type == MsgType.Revoke.rawValue {
+            return false
+        }
+        return true
+    }
     
 }

@@ -25,5 +25,11 @@ public class IMMsgForwardOperator: IMMessageOperator {
         sender.forwardMessageToSession(messages: [message], forwardType: 0)
     }
     
+    public func supportMessage(_ message: Message) -> Bool {
+        if message.type == MsgType.Revoke.rawValue {
+            return false
+        }
+        return true
+    }
     
 }

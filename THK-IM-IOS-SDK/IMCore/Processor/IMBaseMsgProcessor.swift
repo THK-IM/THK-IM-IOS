@@ -35,7 +35,7 @@ open class IMBaseMsgProcessor {
                         MsgOperateStatus.ServerRead.rawValue
                 }
                 try self.insertOrUpdateDb(msg)
-                if (SessionType.Group.rawValue != session?.type) {
+                if (SessionType.SuperGroup.rawValue != session?.type) {
                     if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
                         IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                     }
@@ -54,7 +54,7 @@ open class IMBaseMsgProcessor {
                     msg.sendStatus = MsgSendStatus.Success.rawValue
                     try insertOrUpdateDb(msg)
                 }
-                if (SessionType.Group.rawValue != session?.type) {
+                if (SessionType.SuperGroup.rawValue != session?.type) {
                     if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
                         IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                     }

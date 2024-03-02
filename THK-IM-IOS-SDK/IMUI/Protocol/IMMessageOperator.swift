@@ -13,4 +13,5 @@ public protocol IMMessageOperator: AnyObject {
     func title() -> String
     func icon() -> UIImage?
     func onClick(sender: IMMsgSender, message: Message)
+    func supportMessage(_ message: Message) -> Bool
 }

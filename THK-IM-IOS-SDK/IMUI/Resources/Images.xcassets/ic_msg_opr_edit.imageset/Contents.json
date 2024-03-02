@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ic_msg_opr_edit.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

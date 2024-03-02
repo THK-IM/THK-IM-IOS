@@ -206,3 +206,22 @@ public class IMRecordMsgBody: Codable {
     
 }
 
+public class IMReeditMsgData: Codable {
+    var sessionId: Int64
+    var originId: Int64
+    var edit: String
+    
+    init(sessionId: Int64, originId: Int64, edit: String) {
+        self.sessionId = sessionId
+        self.originId = originId
+        self.edit = edit
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case sessionId = "session_id"
+        case originId = "origin_id"
+        case edit = "edit"
+    }
+    
+}
+

@@ -40,14 +40,14 @@ class IMTextMsgView: IMMsgLabelView, IMsgView {
             if (atUsers.isEmpty) {
                 self.renderAtMsg(message.content!)
             } else {
-                self.renderAtUserInfo(message, atUsers)
+                self.renderAtMsgAndUserInfo(message, atUsers)
             }
         } else {
             self.text = message.content
         }
     }
     
-    private func renderAtUserInfo(_ message: Message, _ atUsers: [Substring]) {
+    private func renderAtMsgAndUserInfo(_ message: Message, _ atUsers: [Substring]) {
         var uIds = Set<Int64>()
         for atUser in atUsers {
             if let id = Int64(atUser) {
@@ -114,10 +114,6 @@ class IMTextMsgView: IMMsgLabelView, IMsgView {
             )
         }
         self.attributedText = attributedStr
-    }
-    
-    func reset() {
-        disposeBag = DisposeBag()
     }
     
     func contentView() -> UIView {

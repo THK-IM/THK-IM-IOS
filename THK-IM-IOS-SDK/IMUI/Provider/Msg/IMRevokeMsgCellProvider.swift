@@ -37,7 +37,7 @@ public class IMRevokeMsgCellProvider: IMBaseMessageCellProvider {
     }
     
     open override func canSelected() -> Bool {
-        return false
+        return true
     }
     
     open override func hasBubble() -> Bool {

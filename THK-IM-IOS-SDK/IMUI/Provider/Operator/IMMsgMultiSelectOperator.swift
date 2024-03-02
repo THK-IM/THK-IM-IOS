@@ -25,5 +25,8 @@ public class IMMsgMultiSelectOperator: IMMessageOperator {
         sender.setSelectMode(true, message: message)
     }
     
+    public func supportMessage(_ message: Message) -> Bool {
+        return true
+    }
     
 }

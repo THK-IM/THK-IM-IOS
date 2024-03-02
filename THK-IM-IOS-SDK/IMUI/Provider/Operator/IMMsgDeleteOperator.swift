@@ -34,5 +34,8 @@ public class IMMsgDeleteOperator: IMMessageOperator {
             }).disposed(by: self.disposeBag)
     }
     
+    public func supportMessage(_ message: Message) -> Bool {
+        return true
+    }
     
 }

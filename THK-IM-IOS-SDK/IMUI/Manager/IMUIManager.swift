@@ -55,6 +55,7 @@ open class IMUIManager: NSObject {
         self.registerMessageOperator(IMMsgRevokeOperator())
         self.registerMessageOperator(IMMsgReplyOperator())
         self.registerMessageOperator(IMMsgMultiSelectOperator())
+        self.registerMessageOperator(IMMsgEditOperator())
         
     }
     
@@ -98,11 +99,14 @@ open class IMUIManager: NSObject {
     
     public func registerMessageOperator(_ msgOperator: IMMessageOperator) {
         msgOperators.append(msgOperator)
+        msgOperators = msgOperators.sorted { p1, p2 in
+            return p1.id() < p2.id()
+        }
     }
     
     public func getMessageOperators(_ message: Message) -> [IMMessageOperator] {
-        return msgOperators.sorted { p1, p2 in
-            return p1.id() < p2.id()
+        return msgOperators.filter { p in
+            return p.supportMessage(message)
         }
     }
     

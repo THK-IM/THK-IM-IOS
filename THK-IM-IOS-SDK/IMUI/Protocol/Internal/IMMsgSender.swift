@@ -10,6 +10,9 @@ import UIKit
 
 public protocol IMMsgSender : AnyObject {
     
+    /// 获取视图控制器
+    func viewController() -> UIViewController
+    
     /// 获取session信息
     func getSession() -> Session?
     
@@ -47,7 +50,7 @@ public protocol IMMsgSender : AnyObject {
     func moveUpAlwaysShowView(_ isKeyboardShow: Bool, _ height: CGFloat, _ duration: Double)
     
     /// 打开键盘
-    func openKeyboard() -> Bool
+    @discardableResult func openKeyboard() -> Bool
     
     /// 键盘是否显示
     func isKeyboardShowing() -> Bool
@@ -93,4 +96,7 @@ public protocol IMMsgSender : AnyObject {
     
     /// 关闭回复消息
     func closeReplyMessage()
+    
+    /// 重编辑消息
+    func reeditMessage(_ message: Message)
 }

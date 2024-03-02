@@ -52,6 +52,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     private var isKeyboardShow = false
     private var atMap = [String: String]()
     private var atRanges = [NSRange]()
+    private var reeditMsg: Message? = nil
     
     lazy private var replyView: IMReplyView = {
         let view = IMReplyView()
@@ -306,6 +307,8 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         } else if (text == "@") {
             self.showAtSessionMemberPopup()
             return true
+        } else if (text.count == 0) {
+            self.reeditMsg = nil
         }
         return true
     }
@@ -455,24 +458,24 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     }
     
     func sendInputContent() {
-        guard let textMessage = self.textView.text else {
+        guard let text = self.textView.text else {
             return
         }
-        if (textMessage.length == 0) {
+        if (text.length == 0) {
             return
         }
-        let msgContent = NSMutableString(string: textMessage)
+        let msgContent = NSMutableString(string: text)
         guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
             return
         }
-        let allRange = NSRange(textMessage.startIndex..<textMessage.endIndex, in: textMessage)
+        let allRange = NSRange(text.startIndex..<text.endIndex, in: text)
         var atUIds = ""
-        regex.matches(in: textMessage, options: [], range: allRange).forEach { [weak self] matchResult in
+        regex.matches(in: text, options: [], range: allRange).forEach { [weak self] matchResult in
             guard let sf = self else {
                 return
             }
-            if let nickRange = Range.init(matchResult.range, in: textMessage) {
-                let nickName = String(textMessage[nickRange])
+            if let nickRange = Range.init(matchResult.range, in: text) {
+                let nickName = String(text[nickRange])
                 for (k, v) in sf.atMap {
                     if (v == nickName) {
                         if (!atUIds.isEmpty) {
@@ -490,7 +493,13 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         if (!atUIds.isEmpty) {
             atUsers = atUIds
         }
-        self.sender?.sendMessage(MsgType.TEXT.rawValue, String(msgContent), textMessage, atUsers)
+        if let reeditMsg = self.reeditMsg  {
+            let msg = IMReeditMsgData(sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId, edit: String(msgContent))
+            self.sender?.sendMessage(MsgType.REEDIT.rawValue, nil, msg, atUsers)
+            self.reeditMsg = nil
+        } else {
+            self.sender?.sendMessage(MsgType.TEXT.rawValue, String(msgContent), text, atUsers)
+        }
         self.atRanges.removeAll()
         self.renderAtMsg("")
         self.textInputHeight = IMInputLayout.minTextInputHeight
@@ -615,6 +624,18 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     func getReplyMessage() -> Message? {
         return self.replyView.getReplyMessage()
+    }
+    
+    func setReeditMessage(_ message: Message) {
+        self.reeditMsg = message
+        if let content = message.content {
+            self.renderAtMsg(content)
+        }
+        if let sender = self.sender {
+            if !sender.isKeyboardShowing() {
+                sender.openKeyboard()
+            }
+        }
     }
         
 }

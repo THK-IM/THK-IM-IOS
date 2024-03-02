@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CodeMessage : Codable {
+open class CodeMessageError: NSObject, Error, Codable {
     let code: Int
     let message: String
     
@@ -16,25 +16,13 @@ class CodeMessage : Codable {
         self.message = message
     }
     
-    enum CodingKeys: String, CodingKey {
-        case code = "code"
-        case message = "message"
-    }
-}
-
-class CodeMessageError: NSObject, Error {
-    
-    private let codeMsg: CodeMessage
-    
-    init(codeMsg: CodeMessage) {
-        self.codeMsg = codeMsg
+    open override var description: String {
+        return "[code:\(self.code), message:\(self.message)]"
     }
     
-    override var description: String {
-        return "[code:\(self.codeMsg.code), message:\(self.codeMsg.message)]"
+    open override var debugDescription: String {
+        return "[code:\(self.code), message:\(self.message)]"
     }
     
-    override var debugDescription: String {
-        return "[code:\(self.codeMsg.code), message:\(self.codeMsg.message)]"
-    }
+    public static let Unknown = CodeMessageError(code: -1, message: "unknown")
 }

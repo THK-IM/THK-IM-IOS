@@ -18,16 +18,15 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
     
     override public func send(_ msg: Message, _ resend: Bool = false, _ sendResult: IMSendMsgResult? = nil) {
         if (msg.fromUId != IMCoreManager.shared.uId) {
+            sendResult?(msg, CodeMessageError.Unknown)
             return
         }
         IMCoreManager.shared.api.revokeMessage(msg.fromUId, msg.sessionId, msg.msgId)
             .compose(RxTransformer.shared.io2Io())
-            .subscribe(onNext: {
-                sendResult?(msg, nil)
-            }, onError: { err in
+            .subscribe(onError: { err in
                 sendResult?(msg, err)
             }, onCompleted: {
-                
+                sendResult?(msg, nil)
             }).disposed(by: self.disposeBag)
     }
     
@@ -35,15 +34,12 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
         getIMRevokeMsg(msg: msg)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { newMsg in
-            }, onError: { err in
-                
-            }, onCompleted: {
-                
+                if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
+                    IMCoreManager.shared.messageModule.ackMessageToCache(msg)
+                }
             }).disposed(by: self.disposeBag)
         
-        if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
-            IMCoreManager.shared.messageModule.ackMessageToCache(msg)
-        }
+        
         
     }
     

@@ -59,6 +59,8 @@
 		A033FB0A2B8A1F6C0053045E /* IMRecordMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB092B8A1F6C0053045E /* IMRecordMsgView.swift */; };
 		A033FB0C2B8A33F60053045E /* IMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB0B2B8A33F60053045E /* IMsgView.swift */; };
 		A033FB112B918BF80053045E /* IMEmojiPanelContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */; };
+		A033FB132B92F8A10053045E /* IMMsgEditOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB122B92F8A10053045E /* IMMsgEditOperator.swift */; };
+		A033FB152B931CB80053045E /* ReeditMsgVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB142B931CB80053045E /* ReeditMsgVo.swift */; };
 		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A050072F2B08BC9700526713 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072E2B08BC9700526713 /* AppUtils.swift */; };
 		A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */; };
@@ -352,6 +354,8 @@
 		A033FB092B8A1F6C0053045E /* IMRecordMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgView.swift; sourceTree = "<group>"; };
 		A033FB0B2B8A33F60053045E /* IMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMsgView.swift; sourceTree = "<group>"; };
 		A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMEmojiPanelContentCell.swift; sourceTree = "<group>"; };
+		A033FB122B92F8A10053045E /* IMMsgEditOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgEditOperator.swift; sourceTree = "<group>"; };
+		A033FB142B931CB80053045E /* ReeditMsgVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReeditMsgVo.swift; sourceTree = "<group>"; };
 		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A050072E2B08BC9700526713 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
 		A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallViewController.swift; sourceTree = "<group>"; };
@@ -652,6 +656,7 @@
 				A018CE092B00A48C00896B87 /* IMMsgRevokeOperator.swift */,
 				A018CE0B2B00A4A200896B87 /* IMMsgReplyOperator.swift */,
 				A018CE0D2B00A4BB00896B87 /* IMMsgMultiSelectOperator.swift */,
+				A033FB122B92F8A10053045E /* IMMsgEditOperator.swift */,
 			);
 			path = Operator;
 			sourceTree = "<group>";
@@ -967,6 +972,7 @@
 				A0D51DC52B09EFF800E21E75 /* RevokeMsgVo.swift */,
 				A0D51DC72B11ABC600E21E75 /* ForwardMessageVo.swift */,
 				A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */,
+				A033FB142B931CB80053045E /* ReeditMsgVo.swift */,
 			);
 			path = Vo;
 			sourceTree = "<group>";
@@ -1784,6 +1790,7 @@
 				A03082E12AF7BFEC001B8373 /* UpdateSessionVo.swift in Sources */,
 				A0E8ED482AEDED23004163BD /* IMPreviewer.swift in Sources */,
 				A0D68BA92A888679004D11A5 /* IMUnSupportMsgCellProvider.swift in Sources */,
+				A033FB132B92F8A10053045E /* IMMsgEditOperator.swift in Sources */,
 				A0D68BD42A888679004D11A5 /* VideoController.swift in Sources */,
 				A03082CD2AF66AF1001B8373 /* IMReadMsgProcessor.swift in Sources */,
 				A0D68B802A888679004D11A5 /* IMUserSessionApi.swift in Sources */,
@@ -1901,6 +1908,7 @@
 				A0E8ED4C2AEDF23B004163BD /* PreviewCellView.swift in Sources */,
 				A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */,
 				A0FCA9282B49866000FC6E47 /* ReviewFriendApplyVo.swift in Sources */,
+				A033FB152B931CB80053045E /* ReeditMsgVo.swift in Sources */,
 				A0E82F622B528A97008DC681 /* IMGroupSessionCellProvider.swift in Sources */,
 				A0FCA8FF2B4931EC00FC6E47 /* SessionTabViewController.swift in Sources */,
 				A018CDFF2B008F6F00896B87 /* IMMessageOperatorPopupView.swift in Sources */,

@@ -40,13 +40,12 @@ public class RxTransformer {
                     let body = try JSONDecoder().decode(type, from: response.data)
                     return Observable.just(body)
                 } else {
-                    var codeMsg = try? JSONDecoder().decode(CodeMessage.self, from: response.data)
-                    if (codeMsg != nil) {
-                        return Observable.error(CodeMessageError(codeMsg: codeMsg!))
+                    if let error = try? JSONDecoder().decode(CodeMessageError.self, from: response.data) {
+                        return Observable.error(error)
                     } else {
                         let msg = String(data: response.data, encoding: .utf8) ?? ""
-                        codeMsg = CodeMessage(code: response.statusCode, message: msg)
-                        return Observable.error(CodeMessageError(codeMsg: codeMsg!))
+                        let error = CodeMessageError(code: response.statusCode, message: msg)
+                        return Observable.error(error)
                     }
                 }
             })
@@ -59,16 +58,16 @@ public class RxTransformer {
                 if (response.statusCode >= 200 && response.statusCode < 300) {
                     return Observable.empty()
                 } else {
-                    var codeMsg = try? JSONDecoder().decode(CodeMessage.self, from: response.data)
-                    if (codeMsg != nil) {
-                        return Observable.error(CodeMessageError(codeMsg: codeMsg!))
+                    if let error = try? JSONDecoder().decode(CodeMessageError.self, from: response.data) {
+                        return Observable.error(error)
                     } else {
                         let msg = String(data: response.data, encoding: .utf8) ?? ""
-                        codeMsg = CodeMessage(code: response.statusCode, message: msg)
-                        return Observable.error(CodeMessageError(codeMsg: codeMsg!))
+                        let error = CodeMessageError(code: response.statusCode, message: msg)
+                        return Observable.error(error)
                     }
                 }
             })
         })
     }
 }
+

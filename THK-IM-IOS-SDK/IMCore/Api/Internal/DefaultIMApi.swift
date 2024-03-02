@@ -159,11 +159,9 @@ public class DefaultIMApi: IMApi {
     }
     
     public func reeditMessage(_ uId: Int64, _ sessionId: Int64, _ msgId: Int64, _ body: String) -> Observable<Void> {
-        var msgIds = Set<Int64>()
-        msgIds.insert(msgId)
-        let req = AckMsgVo(sessionId: sessionId, uId: uId, msgIds: msgIds)
+        let req = ReeditMsgVo(sessionId: sessionId, uId: uId, msgId: msgId, content: body)
         return messageApi.rx
-            .request(.ackMsgs(req))
+            .request(.reeditMsg(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }
