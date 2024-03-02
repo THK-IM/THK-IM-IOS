@@ -307,13 +307,14 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         } else if (text == "@") {
             self.showAtSessionMemberPopup()
             return true
-        } else if (text.count == 0) {
-            self.reeditMsg = nil
         }
         return true
     }
     
     func textViewDidChange(_ textView: UITextView) {
+        if (textView.text.count == 0) {
+            self.reeditMsg = nil
+        }
         let textViewFrame = textView.frame
         let constraintSize = CGSizeMake(textViewFrame.size.width, CGFloat(MAXFLOAT))
         var size = textView.sizeThatFits(constraintSize)

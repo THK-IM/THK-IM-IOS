@@ -24,7 +24,7 @@ public class IMMsgCopyOperator: IMMessageOperator {
     public func onClick(sender: IMMsgSender, message: Message) {
         if message.type == MsgType.TEXT.rawValue {
             UIPasteboard.general.string = message.data
-            sender.showSenderMessage(text: "Copyed", success: true)
+            sender.showSenderMessage(text: "Copied", success: true)
         }
         // TODO other msgType
     }
