@@ -57,6 +57,7 @@ public final class Message: TableCodable, Hashable {
         case data = "data"
         case sendStatus = "send_status"
         case operateStatus = "opr_status"
+        case rUsers = "r_users"
         case referMsgId = "r_msg_id"
         case atUsers = "at_users"
         case extData = "ext_data"
@@ -100,15 +101,18 @@ public final class Message: TableCodable, Hashable {
     }
     
     public func clone() -> Message {
-        return Message(
+        let message = Message(
             id: self.id, sessionId: self.sessionId, fromUId: self.fromUId, msgId: self.msgId,
-            type: self.type, content: self.content, data: self.data, sendStatus: self.sendStatus,
-            operateStatus: self.operateStatus, extData: self.extData, cTime: self.cTime, mTime: self.mTime
+            type: self.type, content: self.content, data: self.data, sendStatus: self.sendStatus, 
+            operateStatus: self.operateStatus, rUsers: self.rUsers, referMsgId: self.referMsgId,
+            extData: self.extData, cTime: self.cTime, mTime: self.mTime
         )
+        message.referMsg = self.referMsg
+        return message
     }
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine("\(sessionId)/\(msgId)")
     }
     
     

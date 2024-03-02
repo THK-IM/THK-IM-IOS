@@ -70,6 +70,13 @@ class IMMessageViewController: BaseViewController {
         }
     }
     
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if self.isKeyboardShowing() {
+            _ = self.closeKeyboard()
+        }
+    }
+    
     override func onMenuClick(menu: String) {
         guard let session = self.session else {
             return
@@ -496,7 +503,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     
     /// 关闭键盘
-    func closeKeyboard() -> Bool {
+    @discardableResult func closeKeyboard() -> Bool {
         self.inputLayout.closeKeyboard()
     }
     
