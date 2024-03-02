@@ -48,15 +48,16 @@ class LeftCellWrapper: CellWrapper {
     override func attach(_ contentView: UIView) {
         contentView.addSubview(_avatarView)
         _avatarView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview().offset(10)
             make.size.equalTo(42)
         }
         contentView.addSubview(_messageStack)
         _messageStack.snp.makeConstraints { make in
             make.left.equalTo(_avatarView.snp.right).offset(4)
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(10)
             make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 100)
+            make.height.greaterThanOrEqualTo(48)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
     }

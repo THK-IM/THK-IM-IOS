@@ -114,7 +114,7 @@ public protocol MessageDao {
     /**
      * 查询session下时间范围内的消息
      */
-    func findByTimeRange(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int) -> Array<Message>
+    func findByTimeRange(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int, _ excludeMsgId: [Int64]) -> Array<Message>
     
     /**
      * 查询session下某时间之前的消息

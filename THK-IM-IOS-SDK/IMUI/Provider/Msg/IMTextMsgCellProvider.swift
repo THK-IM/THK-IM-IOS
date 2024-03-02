@@ -34,7 +34,7 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         }
         let maxWidth = UIScreen.main.bounds.width - 112
         let size = self.textRenderSize(content, UIFont.systemFont(ofSize: 16), maxWidth)
-        return CGSize(width: size.width, height: size.height + 20)
+        return CGSize(width: size.width, height: max(size.height, 28) + 20)
     }
     
     open override func hasBubble() -> Bool {

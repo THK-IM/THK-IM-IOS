@@ -222,10 +222,11 @@ open class DefaultMessageDao : MessageDao {
         return self.queryBySidAndTypesAfterCTime(sessionId, msgId, types, time, count)
     }
     
-    public func findByTimeRange(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int) -> Array<Message> {
+    public func findByTimeRange(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int, _ excludeMsgId: [Int64]) -> Array<Message> {
         let messages: Array<Message>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId
+            && !Message.Properties.msgId.in(excludeMsgId)
             && Message.Properties.cTime >= startTime
             && Message.Properties.cTime <= endTime
             && Message.Properties.type > 0,

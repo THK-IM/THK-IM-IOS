@@ -147,23 +147,23 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         }
         isLoading = true
         var endTime: Int64 = 0
+        var excludeIds = [Int64]()
         if let firstMsg = self.messages.first(where: { msg in
             return msg.type != MsgType.TimeLine.rawValue
         }) {
+            excludeIds.append(firstMsg.msgId)
             endTime = firstMsg.cTime
         } else {
             endTime = IMCoreManager.shared.severTime
         }
         if (self.session != nil) {
             IMCoreManager.shared.messageModule
-                .queryLocalMessages((self.session?.id)!, 0, endTime, self.loadCount)
+                .queryLocalMessages((self.session?.id)!, 0, endTime, self.loadCount, excludeIds)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] value in
-                    guard let sf = self else { return }
-                    sf.addMessages(value)
-                    if (value.count >= sf.loadCount) {
-                        sf.isLoading = false
-                    }
+                    self?.addMessages(value)
+                }, onCompleted: { [weak self] in
+                    self?.isLoading = false
                 }).disposed(by: self.disposeBag)
         }
     }
@@ -234,6 +234,12 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             let msg = addTimelineMessage(m)
             if (msg != nil) {
                 newMessages.append(msg!)
+            }
+        }
+        if let lastMsg = newMessages.last {
+            if lastMsg.type != MsgType.TimeLine.rawValue {
+                let timeLineMsg = newTimelineMessage(lastMsg.cTime)
+                newMessages.append(timeLineMsg)
             }
         }
         return newMessages
@@ -378,9 +384,10 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             self.scrollToRow(row)
         } else {
             // 尝试从db中获取
-            if let endTime = self.messages.last?.cTime {
+            if let lastMsg = self.messages.last {
                 let startTime = message.cTime
-                IMCoreManager.shared.messageModule.queryLocalMessages(message.sessionId, startTime, endTime, Int.max)
+                let endTime = lastMsg.cTime
+                IMCoreManager.shared.messageModule.queryLocalMessages(message.sessionId, startTime, endTime, Int.max, [lastMsg.msgId])
                     .compose(RxTransformer.shared.io2Main())
                     .subscribe(onNext: { [weak self] messages in
                         guard let sf = self else {
