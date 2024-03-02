@@ -23,7 +23,7 @@ class LeftCellWrapper: CellWrapper {
         v.axis = .vertical
         v.alignment = .leading
         v.distribution = .fill
-        v.spacing = 4
+        v.spacing = 0
         
         if self.type != SessionType.Single.rawValue {
             _nickView = UILabel()
@@ -38,7 +38,7 @@ class LeftCellWrapper: CellWrapper {
         
         v.addArrangedSubview(_containerView)
         _containerView.snp.makeConstraints { make in
-            make.height.greaterThanOrEqualTo(40)
+            make.height.greaterThanOrEqualTo(48)
             make.width.greaterThanOrEqualTo(20)
         }
         
@@ -57,7 +57,6 @@ class LeftCellWrapper: CellWrapper {
             make.left.equalTo(_avatarView.snp.right).offset(4)
             make.top.equalToSuperview().offset(10)
             make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 100)
-            make.height.greaterThanOrEqualTo(48)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
     }

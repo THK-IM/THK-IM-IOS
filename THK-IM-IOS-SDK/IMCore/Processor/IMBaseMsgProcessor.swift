@@ -161,12 +161,13 @@ open class IMBaseMsgProcessor {
         var originMsg = msg
         Observable.just(msg)
             .flatMap({ (message) -> Observable<Message> in
-                if (!resend) {
-                    do {
-                        try self.insertOrUpdateDb(message)
-                    } catch let error {
-                        return Observable.error(error)
-                    }
+                if (resend) {
+                    message.sendStatus = MsgSendStatus.Init.rawValue
+                }
+                do {
+                    try self.insertOrUpdateDb(message)
+                } catch let error {
+                    return Observable.error(error)
                 }
                 // 消息二次处理
                 let reprocessingObservable = self.reprocessingObservable(message)

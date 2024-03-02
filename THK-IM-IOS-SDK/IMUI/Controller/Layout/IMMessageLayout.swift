@@ -286,6 +286,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func insertMessage(_ message: Message) {
+        DDLogDebug("insertMessage \(message)")
         let tableView = self.messageTableView
         let pos = findPosition(message)
         if (pos != -1) {
@@ -296,6 +297,9 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         }
         let insertPos = findInsertPosition(message)
         UIView.setAnimationsEnabled(false)
+        if insertPos > 0 {
+            lastTimelineMsgCTime = self.messages[insertPos-1].cTime
+        }
         let timelineMsg = addTimelineMessage(message)
         if (timelineMsg != nil) {
             self.messages.insert(timelineMsg!, at: insertPos)

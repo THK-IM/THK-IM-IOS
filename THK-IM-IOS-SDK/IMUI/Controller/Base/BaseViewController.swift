@@ -109,5 +109,8 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         return self.navigationController?.children.count ?? 0 > 1
     }
     
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
     
 }

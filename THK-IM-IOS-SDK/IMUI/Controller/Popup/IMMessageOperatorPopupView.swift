@@ -56,7 +56,9 @@ class IMMessageOperatorPopupView: UIView {
         for i in operators.indices {
             let view = IMMessageOperatorItemView(frame: CGRect(x: (i%rowCount) * 60 , y: (i/rowCount) * 60, width: 60, height: 60))
             self.cornerRadiusView.addSubview(view)
-            view.setIMMessageOperator(operators[i], sender, message)
+            view.setIMMessageOperator(operators[i], sender, message, { [weak self] in
+                self?.dismiss()
+            })
         }
         UIApplication.shared.windows.first?.addSubview(self)
     }
@@ -66,13 +68,13 @@ class IMMessageOperatorPopupView: UIView {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
         if let touch = touches.first {
             let location = touch.location(in: self)
             if !self.contentView.frame.contains(location) {
                 dismiss()
             }
         }
-        super.touchesBegan(touches, with: event)
     }
     
 }

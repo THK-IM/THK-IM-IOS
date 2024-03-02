@@ -10,10 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+public typealias OnItemClick = () -> Void
+
 public class IMMessageOperatorItemView: UIView {
     private weak var msgOperator: IMMessageOperator?
     private weak var sender: IMMsgSender?
     private var message: Message?
+    private var onItemClick: OnItemClick?
     private lazy var titleView: UILabel = {
         let v = UILabel()
         v.font = UIFont.systemFont(ofSize: 12)
@@ -64,11 +67,12 @@ public class IMMessageOperatorItemView: UIView {
             return
         }
         msgOperator.onClick(sender: sender, message: message)
-        self.superview?.removeFromSuperview()
+        self.onItemClick?()
     }
     
-    func setIMMessageOperator(_ msgOperator: IMMessageOperator, _ sender: IMMsgSender, _ message: Message) {
+    func setIMMessageOperator(_ msgOperator: IMMessageOperator, _ sender: IMMsgSender, _ message: Message, _ onItemClick: OnItemClick? ) {
         self.msgOperator = msgOperator
+        self.onItemClick = onItemClick
         self.sender = sender
         self.message = message
         self.iconView.image = msgOperator.icon()
