@@ -25,7 +25,7 @@ public class IMReeditMsgProcessor: IMBaseMsgProcessor {
             sendResult?(msg, CodeMessageError.Unknown)
             return
         }
-        IMCoreManager.shared.api.reeditMessage(msg.fromUId, msg.sessionId, reeditMsgData.originId, reeditMsgData.edit)
+        IMCoreManager.shared.api.reeditMessage(msg.fromUId, msg.sessionId, reeditMsgData.originId, data)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onError: { err in
                 sendResult?(msg, err)
@@ -43,10 +43,10 @@ public class IMReeditMsgProcessor: IMBaseMsgProcessor {
     }
     
     override public func received(_ msg: Message) {
-        guard let data = msg.data else {
+        guard let content = msg.content else {
             return
         }
-        guard let reeditMsgData = try? JSONDecoder().decode(IMReeditMsgData.self, from: data.data(using: .utf8) ?? Data()) else {
+        guard let reeditMsgData = try? JSONDecoder().decode(IMReeditMsgData.self, from: content.data(using: .utf8) ?? Data()) else {
             return
         }
         let success = self.updateOriginMsg(reeditMsgData)
@@ -63,7 +63,7 @@ public class IMReeditMsgProcessor: IMBaseMsgProcessor {
         ) else {
             return false
         }
-        originMsg.content = reeditMsgData.edit + "(已编辑)"
+        originMsg.content = reeditMsgData.edit + "[已编辑]"
         originMsg.data = nil
         do {
             try self.insertOrUpdateDb(originMsg)

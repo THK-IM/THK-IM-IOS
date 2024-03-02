@@ -214,8 +214,8 @@ open class BaseMsgCell : BaseTableCell {
             var image: UIImage? = nil
             if (position == IMMsgPosType.Left.rawValue) {
                 image = Bubble().drawRectWithRoundedCorner(
-                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffffffff"),
-                    borderColor: UIColor.init(hex: "ffffffff"), width: 40, height: 40, pos: 1)
+                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffdddddd"),
+                    borderColor: UIColor.init(hex: "ffdddddd"), width: 40, height: 40, pos: 1)
             } else if (position == IMMsgPosType.Right.rawValue) {
                 image = Bubble().drawRectWithRoundedCorner(
                     radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffd1e3fe"),

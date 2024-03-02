@@ -24,7 +24,7 @@ class IMUnSupportMsgView: IMMsgLabelView, IMsgView {
     private func setupUI() {
         self.sizeToFit()
         self.numberOfLines = 0
-        self.font = UIFont.boldSystemFont(ofSize: 14)
+        self.font = UIFont.systemFont(ofSize: 14)
         self.padding = UIEdgeInsets.init(top: 4, left: 4, bottom: 4, right: 4)
     }
     
