@@ -28,12 +28,7 @@ public class IMMsgEditOperator: IMMessageOperator {
     }
     
     public func supportMessage(_ message: Message) -> Bool {
-        if message.type == MsgType.Text.rawValue {
-            if message.fromUId == IMCoreManager.shared.uId {
-                return true
-            }
-        }
-        return false
+        return message.type == MsgType.Text.rawValue && message.fromUId == IMCoreManager.shared.uId
     }
     
 }
