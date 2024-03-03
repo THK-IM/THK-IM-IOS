@@ -13,7 +13,7 @@ import AVFoundation
 open class IMVideoMsgProcessor : IMBaseMsgProcessor {
     
     open override func messageType() -> Int {
-        return MsgType.VIDEO.rawValue
+        return MsgType.Video.rawValue
     }
     
     open override func sessionDesc(msg: Message) -> String {

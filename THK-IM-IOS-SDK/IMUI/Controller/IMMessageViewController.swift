@@ -335,7 +335,7 @@ class IMMessageViewController: BaseViewController {
         try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
         let videoData = IMVideoMsgData()
         videoData.path = localPath
-        self.sendMessage(MsgType.VIDEO.rawValue, nil, videoData)
+        self.sendMessage(MsgType.Video.rawValue, nil, videoData)
     }
     
     private func sendImage(_ data: Data, ext: String) throws {
@@ -344,12 +344,12 @@ class IMMessageViewController: BaseViewController {
             .allocSessionFilePath((self.session?.id)!, fileName, IMFileFormat.Image.rawValue)
         try IMCoreManager.shared.storageModule.saveMediaDataInto(localPath, data)
         let imageData = IMImageMsgData(width: nil, height: nil, path: localPath, thumbnailPath: nil)
-        self.sendMessage(MsgType.IMAGE.rawValue, nil, imageData)
+        self.sendMessage(MsgType.Image.rawValue, nil, imageData)
     }
     
     private func fetchMoreMessage(_ msgId: Int64, _ sessionId: Int64, _ before: Bool, _ count: Int) -> [Message] {
         do {
-            let types = [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue]
+            let types = [MsgType.Image.rawValue, MsgType.Video.rawValue]
             let msgDao = IMCoreManager.shared.database.messageDao()
             var messages: [Message]
             if before {
@@ -537,7 +537,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     /// 设置已读消息
     func readMessage(_ message: Message) {
         IMCoreManager.shared.messageModule
-            .sendMessage(message.sessionId, MsgType.READ.rawValue, nil, nil, nil, message.msgId, nil)
+            .sendMessage(message.sessionId, MsgType.Read.rawValue, nil, nil, nil, message.msgId, nil)
     }
     
     /// 弹出消息操作面板弹窗
@@ -656,7 +656,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
                     DDLogError("previewMessage audio \(error)")
                 }
             }
-        } else if msg.type == MsgType.IMAGE.rawValue || msg.type == MsgType.VIDEO.rawValue {
+        } else if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
             var ay = [Message]()
             ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, true, 5))
             let current = msg

@@ -12,7 +12,7 @@ import CocoaLumberjack
 open class IMImageMsgCellProvider: IMBaseMessageCellProvider {
     
     open override func messageType() -> Int {
-        return MsgType.IMAGE.rawValue
+        return MsgType.Image.rawValue
     }
     
     open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {

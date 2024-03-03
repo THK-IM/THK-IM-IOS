@@ -35,7 +35,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     }
     
     override public func messageType() -> Int {
-        return MsgType.READ.rawValue
+        return MsgType.Read.rawValue
     }
     
     override public func received(_ msg: Message) {

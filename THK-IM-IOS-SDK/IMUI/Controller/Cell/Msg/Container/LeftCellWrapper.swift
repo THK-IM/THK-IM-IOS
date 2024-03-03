@@ -23,7 +23,7 @@ class LeftCellWrapper: CellWrapper {
         v.axis = .vertical
         v.alignment = .leading
         v.distribution = .fill
-        v.spacing = 0
+        v.spacing = 4
         
         if self.type != SessionType.Single.rawValue {
             _nickView = UILabel()

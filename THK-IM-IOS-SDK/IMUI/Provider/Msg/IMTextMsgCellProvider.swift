@@ -11,7 +11,7 @@ import UIKit
 open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
     
     open override func messageType() -> Int {
-        return MsgType.TEXT.rawValue
+        return MsgType.Text.rawValue
     }
     
     open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {

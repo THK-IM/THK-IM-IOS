@@ -13,32 +13,35 @@ import RxSwift
 public class IMReeditMsgProcessor: IMBaseMsgProcessor {
     
     override public func messageType() -> Int {
-        return MsgType.REEDIT.rawValue
+        return MsgType.Reedit.rawValue
     }
     
     override public func send(_ msg: Message, _ resend: Bool = false, _ sendResult: IMSendMsgResult? = nil) {
-        guard let data = msg.data else {
+        guard let content = msg.content else {
             sendResult?(msg, CodeMessageError.Unknown)
             return
         }
-        guard let reeditMsgData = try? JSONDecoder().decode(IMReeditMsgData.self, from: data.data(using: .utf8) ?? Data()) else {
+        guard let reeditMsgData = try? JSONDecoder().decode(IMReeditMsgData.self, from: content.data(using: .utf8) ?? Data()) else {
             sendResult?(msg, CodeMessageError.Unknown)
             return
         }
-        IMCoreManager.shared.api.reeditMessage(msg.fromUId, msg.sessionId, reeditMsgData.originId, data)
-            .compose(RxTransformer.shared.io2Io())
-            .subscribe(onError: { err in
-                sendResult?(msg, err)
-            }, onCompleted: { [weak self] in
+        IMCoreManager.shared.api.reeditMessage(msg.fromUId, msg.sessionId, reeditMsgData.originId, content)
+            .flatMap({ [weak self] in
                 if let success = self?.updateOriginMsg(reeditMsgData) {
-                    if (success) {
-                        sendResult?(msg, nil)
-                    } else {
-                        sendResult?(msg, CodeMessageError.Unknown)
-                    }
+                    return Observable.just(success)
+                } else {
+                    return Observable.just(false)
+                }
+            })
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { success in
+                if (success) {
+                    sendResult?(msg, nil)
                 } else {
                     sendResult?(msg, CodeMessageError.Unknown)
                 }
+            }, onError: { err in
+                sendResult?(msg, err)
             }).disposed(by: self.disposeBag)
     }
     

@@ -10,7 +10,7 @@ import Foundation
 open class IMTextMsgProcessor : IMBaseMsgProcessor {
     
     open override func messageType() -> Int {
-        return MsgType.TEXT.rawValue
+        return MsgType.Text.rawValue
     }
     
     open override func sessionDesc(msg: Message) -> String {

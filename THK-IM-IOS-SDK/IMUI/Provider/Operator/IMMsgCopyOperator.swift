@@ -22,7 +22,7 @@ public class IMMsgCopyOperator: IMMessageOperator {
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {
-        if message.type == MsgType.TEXT.rawValue {
+        if message.type == MsgType.Text.rawValue {
             UIPasteboard.general.string = message.data
             sender.showSenderMessage(text: "Copied", success: true)
         }
@@ -30,10 +30,7 @@ public class IMMsgCopyOperator: IMMessageOperator {
     }
     
     public func supportMessage(_ message: Message) -> Bool {
-        if message.type == MsgType.TEXT.rawValue {
-            return true
-        }
-        return false
+        return message.type == MsgType.Text.rawValue
     }
     
 }

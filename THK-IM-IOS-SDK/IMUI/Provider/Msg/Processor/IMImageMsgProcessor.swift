@@ -12,7 +12,7 @@ import CocoaLumberjack
 open class IMImageMsgProcessor : IMBaseMsgProcessor {
     
     open override func messageType() -> Int {
-        return MsgType.IMAGE.rawValue
+        return MsgType.Image.rawValue
     }
     
     open override func sessionDesc(msg: Message) -> String {

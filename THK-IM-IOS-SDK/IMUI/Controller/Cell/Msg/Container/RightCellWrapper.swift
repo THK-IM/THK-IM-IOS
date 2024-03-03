@@ -24,7 +24,7 @@ class RightCellWrapper: CellWrapper {
         v.axis = .vertical
         v.alignment = .trailing
         v.distribution = .fill
-        v.spacing = 0
+        v.spacing = 4
         
         if self.type != SessionType.Single.rawValue {
             _nickView = UILabel()

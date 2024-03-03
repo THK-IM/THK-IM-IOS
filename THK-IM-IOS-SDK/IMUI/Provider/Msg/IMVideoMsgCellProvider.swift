@@ -12,7 +12,7 @@ import CocoaLumberjack
 open class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
     
     open override func messageType() -> Int {
-        return MsgType.VIDEO.rawValue
+        return MsgType.Video.rawValue
     }
     
     open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {

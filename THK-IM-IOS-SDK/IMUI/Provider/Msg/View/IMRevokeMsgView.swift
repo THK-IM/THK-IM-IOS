@@ -113,7 +113,7 @@ class IMRevokeMsgView: UIView, IMsgView {
         if (message != nil && message!.data != nil) {
             do {
                 let revokeData = try JSONDecoder().decode(IMRevokeMsgData.self, from: message!.data!.data(using: .utf8) ?? Data())
-                if (revokeData.type == MsgType.TEXT.rawValue && revokeData.content != nil ) {
+                if (revokeData.type == MsgType.Text.rawValue && revokeData.content != nil ) {
                     self.delegate?.setEditText(text: revokeData.content!)
                 }
             } catch {

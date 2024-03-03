@@ -495,11 +495,11 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             atUsers = atUIds
         }
         if let reeditMsg = self.reeditMsg  {
-            let msg = IMReeditMsgData(sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId, edit: String(msgContent))
-            self.sender?.sendMessage(MsgType.REEDIT.rawValue, nil, msg, atUsers)
+            let content = IMReeditMsgData(sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId, edit: String(msgContent))
+            self.sender?.sendMessage(MsgType.Reedit.rawValue, content, nil, atUsers)
             self.reeditMsg = nil
         } else {
-            self.sender?.sendMessage(MsgType.TEXT.rawValue, String(msgContent), text, atUsers)
+            self.sender?.sendMessage(MsgType.Text.rawValue, String(msgContent), text, atUsers)
         }
         self.atRanges.removeAll()
         self.renderAtMsg("")

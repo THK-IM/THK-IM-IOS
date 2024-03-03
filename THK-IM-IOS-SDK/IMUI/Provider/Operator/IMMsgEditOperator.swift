@@ -22,13 +22,13 @@ public class IMMsgEditOperator: IMMessageOperator {
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {
-        if message.type == MsgType.TEXT.rawValue {
+        if message.type == MsgType.Text.rawValue {
             sender.reeditMessage(message)
         }
     }
     
     public func supportMessage(_ message: Message) -> Bool {
-        if message.type == MsgType.TEXT.rawValue {
+        if message.type == MsgType.Text.rawValue {
             if message.fromUId == IMCoreManager.shared.uId {
                 return true
             }

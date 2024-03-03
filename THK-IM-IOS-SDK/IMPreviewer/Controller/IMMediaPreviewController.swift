@@ -103,7 +103,7 @@ public class IMMediaPreviewController: UIViewController,
     private func messageUpdate(msg: Message) {
         for  i in 0 ... self.messages.count-1 {
             if (self.messages[i].id == msg.id) {
-                if (self.messages[i].type == MsgType.IMAGE.rawValue) {
+                if (self.messages[i].type == MsgType.Image.rawValue) {
                     self.messages[i] = msg
                     self._collectView.reloadItems(at: [IndexPath(row: i, section: 0)])
                 }
@@ -195,7 +195,7 @@ public class IMMediaPreviewController: UIViewController,
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let message = self.messages[indexPath.row]
-        if message.type == MsgType.IMAGE.rawValue {
+        if message.type == MsgType.Image.rawValue {
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: NSStringFromClass(PreviewImageCellView.self),
                 for: indexPath
@@ -256,10 +256,10 @@ public class IMMediaPreviewController: UIViewController,
         Observable.just(message)
             .map({ message in
                 if (older) {
-                    let messages = try IMCoreManager.shared.database.messageDao().findOlderMessages(message.msgId, [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue], message.sessionId, 10)
+                    let messages = try IMCoreManager.shared.database.messageDao().findOlderMessages(message.msgId, [MsgType.Image.rawValue, MsgType.Video.rawValue], message.sessionId, 10)
                     return messages
                 } else {
-                    let messages = try IMCoreManager.shared.database.messageDao().findNewerMessages(message.msgId, [MsgType.IMAGE.rawValue, MsgType.VIDEO.rawValue], message.sessionId, 10)
+                    let messages = try IMCoreManager.shared.database.messageDao().findNewerMessages(message.msgId, [MsgType.Image.rawValue, MsgType.Video.rawValue], message.sessionId, 10)
                     return messages
                 }
             })
