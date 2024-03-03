@@ -33,10 +33,10 @@ public class IMReadStatusView: UIView {
     public override func draw(_ rect: CGRect) {
         super.draw(rect)
         self.drawCircle(rect)
-        if self.progress < 1.0 {
-            self.drawNotReady(rect)
-        } else if self.progress > 0.0 {
+        if self.progress >= 1.0 {
             self.drawReady(rect)
+        } else if self.progress > 0.0 {
+            self.drawNotReady(rect)
         }
     }
     
