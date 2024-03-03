@@ -287,7 +287,6 @@ open class BaseMsgCell : BaseTableCell {
         default:
             self.cellWrapper.statusView()?.isHidden = true
             self.cellWrapper.resendButton()?.isHidden = true
-            self.cellWrapper.readStatusView()?.isHidden = false
             self.queryReadStatus()
             break
         }
@@ -310,13 +309,14 @@ open class BaseMsgCell : BaseTableCell {
     }
     
     private func showReadStatus(_ count: Int) {
-        if let readUIds = self.message?.getReadUIds() {
-            let realCount = max(count-1, 1)
-            let progress = CGFloat(readUIds.count)/CGFloat(realCount)
-            self.cellWrapper.readStatusView()?.updateStatus(UIColor.init(hex: "#17a121"), 4, progress)
-        } else {
-            self.cellWrapper.readStatusView()?.updateStatus(UIColor.init(hex: "#17a121"), 4, 0)
+        guard let message = self.message else {
+            return
         }
+        let readUIds = message.getReadUIds()
+        let realCount = max(count-1, 1)
+        let progress = CGFloat(readUIds.count)/CGFloat(realCount)
+        self.cellWrapper.readStatusView()?.isHidden = false
+        self.cellWrapper.readStatusView()?.updateStatus(UIColor.init(hex: "#17a121"), 4, progress)
     }
     
     open override func appear() {
