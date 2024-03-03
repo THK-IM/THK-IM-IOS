@@ -28,6 +28,7 @@ open class BaseMsgCell : BaseTableCell {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         selectionStyle = .blue
         cellWrapper.attach(contentView)
+        cellWrapper.layoutSubViews(self.isEditing)
         let msgContainerView = cellWrapper.containerView()
         msgContainerView.insertSubview(self.bubbleView, at: 0)
         msgContainerView.addSubview(self.replyView)
@@ -35,20 +36,6 @@ open class BaseMsgCell : BaseTableCell {
         msgContainerView.addSubview(msgView)
         self.backgroundColor = UIColor.clear
         self.setupEvent()
-    }
-    
-    open func highlightFlashing(_ times: Int) {
-        if (times == 0) {
-            return
-        }
-        if (times%2 == 0) {
-            self.backgroundColor = UIColor.init(hex: "#2008AAFF")
-        } else {
-            self.backgroundColor = UIColor.clear
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.35, execute: { [weak self] in
-            self?.highlightFlashing(times - 1)
-        })
     }
     
     func setupEvent() {
@@ -157,11 +144,24 @@ open class BaseMsgCell : BaseTableCell {
         }
     }
     
-    func initMsgView() {
-        self.initMsgContent()
-        self.initMessageStatus()
+    open func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+        self.message = messages[position]
+        self.position = position
+        self.session = session
+        layoutMessageView()
+    }
+    
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        self.cellWrapper.layoutSubViews(self.isEditing)
+    }
+    
+    
+    func layoutMessageView() {
         self.initAvatar()
         self.initBubble()
+        self.initMsgContent()
+        self.initMessageStatus()
     }
     
     private func initReplyMsg() {
@@ -251,13 +251,6 @@ open class BaseMsgCell : BaseTableCell {
     
     open func msgView() -> IMsgView {
         return IMUnSupportMsgView()
-    }
-    
-    open func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
-        self.message = messages[position]
-        self.position = position
-        self.session = session
-        initMsgView()
     }
     
     private func updateUserInfo(user: User) {
@@ -377,5 +370,19 @@ open class BaseMsgCell : BaseTableCell {
         }
         self.delegate?.readMessage(message!)
         message!.operateStatus = message!.operateStatus | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ClientRead.rawValue
+    }
+    
+    open func highlightFlashing(_ times: Int) {
+        if (times == 0) {
+            return
+        }
+        if (times%2 == 0) {
+            self.backgroundColor = UIColor.init(hex: "#2008AAFF")
+        } else {
+            self.backgroundColor = UIColor.clear
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.35, execute: { [weak self] in
+            self?.highlightFlashing(times - 1)
+        })
     }
 }

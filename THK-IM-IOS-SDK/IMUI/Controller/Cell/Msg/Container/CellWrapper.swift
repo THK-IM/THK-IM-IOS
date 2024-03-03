@@ -24,6 +24,13 @@ class CellWrapper  {
     }
     
     /**
+     视图渲染
+     */
+    open func layoutSubViews(_ isEditing: Bool) {
+        
+    }
+    
+    /**
      内容视图
      */
     open func containerView() -> UIView {

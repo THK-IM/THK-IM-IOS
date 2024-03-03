@@ -77,27 +77,29 @@ class RightCellWrapper: CellWrapper {
     
     override func attach(_ contentView: UIView) {
         contentView.addSubview(_avatarView)
-        _avatarView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
-            make.right.equalToSuperview().offset(-10)
-            make.size.equalTo(42)
-        }
-        contentView.addSubview(_messageStack)
-        
-        _messageStack.snp.makeConstraints { make in
-            make.right.equalTo(_avatarView.snp.left).offset(-4)
-            make.top.equalToSuperview().offset(10)
-            make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 100)
-            make.bottom.equalToSuperview().offset(-10).priority(.low)
-        }
-        
         contentView.addSubview(_stateStack)
-        _stateStack.snp.makeConstraints { make in
-            make.right.equalTo(_messageStack.snp.left).offset(-8)
-            make.centerY.equalTo(_containerView)
-        }
+        contentView.addSubview(_messageStack)
     }
     
+    override func layoutSubViews(_ isEditing: Bool) {
+        let editingWidth = isEditing ? 0 : 44
+        _avatarView.snp.remakeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.right.equalToSuperview().offset(-10)
+            make.size.equalTo(editingWidth)
+        }
+        _messageStack.snp.remakeConstraints { make in
+            make.right.equalTo(_avatarView.snp.left).offset(-4)
+            make.top.equalToSuperview().offset(10)
+            make.left.greaterThanOrEqualToSuperview().offset(24)
+            make.bottom.equalToSuperview().offset(-10).priority(.low)
+        }
+        _stateStack.snp.remakeConstraints { make in
+            make.right.equalTo(_messageStack.snp.left).offset(-2)
+            make.size.equalTo(20)
+            make.bottom.equalTo(_containerView)
+        }
+    }
     
     
     override func containerView() -> UIView {

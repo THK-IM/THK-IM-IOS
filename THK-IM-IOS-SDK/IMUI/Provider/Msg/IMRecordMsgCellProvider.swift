@@ -35,7 +35,7 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
             return super.viewSize(message, session)
         }
-        let maxWidth = UIScreen.main.bounds.width - 120
+        let maxWidth = self.cellMaxWidth() - 8
         let size = self.textRenderSize(recordBody.content, UIFont.systemFont(ofSize: 12), maxWidth)
         return CGSize(width: maxWidth, height: size.height + 30)
     }

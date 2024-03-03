@@ -47,16 +47,20 @@ class LeftCellWrapper: CellWrapper {
     
     override func attach(_ contentView: UIView) {
         contentView.addSubview(_avatarView)
-        _avatarView.snp.makeConstraints { make in
+        contentView.addSubview(_messageStack)
+    }
+    
+    override func layoutSubViews(_ isEditing: Bool) {
+        let editingWidth = isEditing ? 0 : 44
+        _avatarView.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview().offset(10)
-            make.size.equalTo(42)
+            make.size.equalTo(editingWidth)
         }
-        contentView.addSubview(_messageStack)
-        _messageStack.snp.makeConstraints { make in
+        _messageStack.snp.remakeConstraints { make in
             make.left.equalTo(_avatarView.snp.right).offset(4)
             make.top.equalToSuperview().offset(10)
-            make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 100)
+            make.right.lessThanOrEqualToSuperview().offset(-24)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
     }

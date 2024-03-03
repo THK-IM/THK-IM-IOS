@@ -58,6 +58,10 @@ open class IMBaseMessageCellProvider {
         return CGSize(width: 100.0, height: 48.0)
     }
     
+    open func cellMaxWidth() -> CGFloat {
+        return UIScreen.main.bounds.width-44-10-4-24 // 头像宽度（44）、 头像距边框（10）、 头像距离消息宽度（4）、 已读宽度 24
+    }
+    
     open func canSelected() -> Bool {
         return true
     }

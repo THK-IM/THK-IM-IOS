@@ -33,7 +33,7 @@ public class IMRevokeMsgCellProvider: IMBaseMessageCellProvider {
     }
     
     public override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        return CGSize(width: UIScreen.main.bounds.width - 112, height: 30.0)
+        return CGSize(width: self.cellMaxWidth(), height: 30.0)
     }
     
     open override func canSelected() -> Bool {
