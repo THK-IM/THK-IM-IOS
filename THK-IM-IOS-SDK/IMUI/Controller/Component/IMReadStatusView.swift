@@ -56,7 +56,7 @@ public class IMReadStatusView: UIView {
         let maxRadius = min(rect.width, rect.height) / 2
         let radius = maxRadius - lineWidth/2 - maxRadius / 3
         let startAngle = -0.5 * .pi
-        let endAngle = startAngle + 2.0 * .pi * progress
+        let endAngle = startAngle + 2.0 * .pi * min(progress, 1.0)
         let path = UIBezierPath(arcCenter: centerPoint, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
         path.addLine(to: centerPoint)
         path.close()
@@ -70,9 +70,9 @@ public class IMReadStatusView: UIView {
     private func drawReady(_ rect: CGRect) {
         let checkmarkPath = UIBezierPath()
         checkmarkPath.lineWidth = lineWidth/2
-        let startPoint = CGPoint(x: rect.minX + rect.width * 0.28, y: rect.midY)
-        let kneePoint = CGPoint(x: rect.minX + rect.width * 0.45, y: rect.maxY - rect.height * 0.25)
-        let endPoint = CGPoint(x: rect.maxX - rect.width * 0.25, y: rect.minY + rect.height * 0.30)
+        let startPoint = CGPoint(x: rect.minX + rect.width * 0.25, y: rect.minY + rect.height * 0.5)
+        let kneePoint = CGPoint(x: rect.minX + rect.width * 0.5, y: rect.minY + rect.height * 0.75)
+        let endPoint = CGPoint(x: rect.minX + rect.width * 0.75, y: rect.minY + rect.height * 0.25)
         checkmarkPath.move(to: startPoint)
         checkmarkPath.addLine(to: kneePoint)
         checkmarkPath.addLine(to: endPoint)
