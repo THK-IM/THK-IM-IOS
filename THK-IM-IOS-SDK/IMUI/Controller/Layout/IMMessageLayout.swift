@@ -457,26 +457,6 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         self.sender?.resendMessage(message)
     }
     
-    func readMessage(_ message: Message) {
-        self.sender?.readMessage(message)
-    }
-    
-    func setEditText(text: String) {
-        _ = self.sender?.openKeyboard()
-        self.sender?.addInputContent(text: text)
-    }
-    
-    
-    func getContentHeight() -> CGFloat {
-        return self.messageTableView.contentSize.height
-    }
-    
-    func layoutResize(_ height: CGFloat) {
-        let offsetY = self.messageTableView.contentOffset.y + (height-lastResize)
-        self.messageTableView.setContentOffset(CGPoint(x: 0, y: offsetY), animated: false)
-        lastResize = height
-    }
-    
     func isSelectMode() -> Bool {
         return self.messageTableView.isEditing
     }
@@ -510,9 +490,37 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         }
     }
     
+    
+    func readMessage(_ message: Message) {
+        self.sender?.readMessage(message)
+    }
+    
+    func setEditText(text: String) {
+        _ = self.sender?.openKeyboard()
+        self.sender?.addInputContent(text: text)
+    }
+    
+    
+    func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)? {
+        return sender?.syncGetSessionMemberInfo(userId)
+    }
+    
+    func saveSessionMemberInfo(_ info: (User, SessionMember?)) {
+        sender?.saveSessionMemberInfo(info)
+    }
+    
+    func asyncGetSessionMemberInfo(_ userId: Int64) -> RxSwift.Observable<(User, SessionMember?)> {
+        if let s = sender {
+            return s.asyncGetSessionMemberInfo(userId)
+        } else {
+            return Observable.error(CodeMessageError.Unknown)
+        }
+    }
+    
     func getSelectMessages() -> Set<Message> {
         return self.selectedMessages
     }
+    
     
     func refreshMessageView() {
         self.messageTableView.reloadData()
@@ -527,5 +535,15 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             }
         }
         return nil
+    }
+    
+    func getContentHeight() -> CGFloat {
+        return self.messageTableView.contentSize.height
+    }
+    
+    func layoutResize(_ height: CGFloat) {
+        let offsetY = self.messageTableView.contentOffset.y + (height-lastResize)
+        self.messageTableView.setContentOffset(CGPoint(x: 0, y: offsetY), animated: false)
+        lastResize = height
     }
 }
