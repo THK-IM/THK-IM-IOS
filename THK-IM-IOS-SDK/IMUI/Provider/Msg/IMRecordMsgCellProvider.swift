@@ -51,7 +51,15 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
     }
     
     open override func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
-        return CGSize(width: 80, height: 60)
+        guard let content = message.content else {
+            return super.viewSize(message, session)
+        }
+        guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
+            return super.viewSize(message, session)
+        }
+        let maxWidth = self.cellMaxWidth() - 8 - 20
+        let size = self.textRenderSize(recordBody.content, UIFont.systemFont(ofSize: 12), maxWidth)
+        return CGSize(width: maxWidth, height: size.height + 30)
     }
     
 }
