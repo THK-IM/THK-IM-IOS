@@ -24,6 +24,7 @@ class IMMessageViewController: BaseViewController {
     private var bottomPanelLayout = IMBottomPanelLayout()
     private var msgSelectedLayout = IMMessageSelectedLayout()
     private var keyboardShow = false
+    private var memberMap = [Int64: (User, SessionMember?)]()
     
     deinit {
         DDLogDebug("IMMessageViewController, de init")
@@ -38,6 +39,7 @@ class IMMessageViewController: BaseViewController {
         self.registerMsgEvent()
         self.registerKeyboardEvent()
         self.messageLayout.loadMessages()
+        self.fetchSessionMembers()
     }
     
     private func showSessionTitle() {
@@ -68,6 +70,42 @@ class IMMessageViewController: BaseViewController {
         } else {
             return UIImage(named: "ic_titlebar_more")?.scaledToSize(CGSize.init(width: 24, height: 24))
         }
+    }
+    
+    private func fetchSessionMembers() {
+        guard let sessionId = self.session?.id else {
+            return
+        }
+        IMCoreManager.shared.messageModule.querySessionMembers(sessionId)
+            .flatMap { members in
+                var ids = Set<Int64>()
+                for m in members {
+                    ids.insert(m.userId)
+                }
+                return IMCoreManager.shared.userModule.queryUsers(ids: ids)
+                    .flatMap { userMap in
+                        var memberMap = [Int64: (User, SessionMember?)]()
+                        for (k, v) in userMap {
+                            var member: SessionMember? = nil
+                            for m in members {
+                                if (m.userId == k) {
+                                    member = m
+                                    break
+                                }
+                            }
+                            memberMap[k] = (v, member)
+                        }
+                        return Observable.just(memberMap)
+                    }
+            }.compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] map in
+                self?.updateSessionMember(map)
+            }).disposed(by: self.disposeBag)
+    }
+    
+    private func updateSessionMember(_ map: [Int64: (User, SessionMember?)]) {
+        self.memberMap = map
+        self.messageLayout.refreshMessageView()
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
@@ -626,6 +664,29 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     /// 重编辑消息
     func reeditMessage(_ message: Message) {
         self.inputLayout.setReeditMessage(message)
+    }
+    
+    /// 同步获取用户信息
+    func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)? {
+        return self.memberMap[userId]
+    }
+    
+    /// 设置用户信息
+    func saveSessionMemberInfo(_ info: (User, SessionMember?)) {
+        self.memberMap[info.0.id] = info
+    }
+    
+    /// 异步获取用户信息
+    func asyncGetSessionMemberInfo(_ userId: Int64) -> Observable<(User, SessionMember?)> {
+        return IMCoreManager.shared.userModule.queryUser(id: userId)
+            .flatMap { [weak self] user in
+                if let sessionId = self?.session?.id {
+                    let sessionMember = IMCoreManager.shared.database.sessionMemberDao().findSessionMember(sessionId, user.id)
+                    return Observable.just((user, sessionMember))
+                } else {
+                    return Observable.just((user, nil))
+                }
+            }
     }
     
     func onSessionMemberAt(sessionMember: SessionMember, user: User) {

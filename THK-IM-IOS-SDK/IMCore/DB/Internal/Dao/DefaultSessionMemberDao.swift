@@ -36,15 +36,27 @@ open class DefaultSessionMemberDao: SessionMemberDao {
         }
         try self.database?.delete(
             fromTable: self.tableName,
-            where: SessionMember.Properties.sessionId == sessionId && SessionMember.Properties.userId.in(memberIds)
+            where: SessionMember.Properties.sessionId == sessionId
+            && SessionMember.Properties.userId.in(memberIds)
+        )
+    }
+    
+    
+    public func findSessionMember(_ sessionId: Int64, _ userId: Int64) -> SessionMember? {
+        return try? self.database?.getObject(
+            fromTable: self.tableName,
+            where: SessionMember.Properties.sessionId == sessionId
+            && SessionMember.Properties.userId == userId
+            && SessionMember.Properties.deleted == 0
         )
     }
     
     public func findBySessionId(_ sessionId: Int64) -> Array<SessionMember> {
         let members: Array<SessionMember>? = try? self.database?.getObjects(
             fromTable: self.tableName,
-            where: SessionMember.Properties.sessionId == sessionId
-        ) 
+            where: SessionMember.Properties.sessionId == sessionId 
+            && SessionMember.Properties.deleted == 0
+        )
         return members ?? Array<SessionMember>()
     }
     
@@ -53,8 +65,8 @@ open class DefaultSessionMemberDao: SessionMemberDao {
         if let count = try? self.database?.getValue(
             on: SessionMember.Properties.userId.count(),
             fromTable: self.tableName,
-            where: SessionMember.Properties.sessionId == sessionId &&
-            SessionMember.Properties.deleted == 0
+            where: SessionMember.Properties.sessionId == sessionId 
+            && SessionMember.Properties.deleted == 0
         ).int32Value {
             return Int(count)
         }

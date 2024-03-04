@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 public protocol IMMsgSender : AnyObject {
     
@@ -99,4 +100,13 @@ public protocol IMMsgSender : AnyObject {
     
     /// 重编辑消息
     func reeditMessage(_ message: Message)
+    
+    /// 同步获取用户信息
+    func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)?
+    
+    /// 设置用户信息
+    func saveSessionMemberInfo(_ info: (User, SessionMember?))
+    
+    /// 异步获取用户信息
+    func asyncGetSessionMemberInfo(_ userId: Int64) -> Observable<(User, SessionMember?)>
 }

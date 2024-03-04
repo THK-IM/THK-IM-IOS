@@ -16,6 +16,8 @@ public protocol SessionMemberDao {
     
     func delete(_ members: [SessionMember]) throws
     
+    func findSessionMember(_ sessionId: Int64, _ userId: Int64) -> SessionMember?
+    
     func findBySessionId(_ sessionId: Int64) -> Array<SessionMember>
     
     func findSessionMemberCount(_ sessionId: Int64) -> Int

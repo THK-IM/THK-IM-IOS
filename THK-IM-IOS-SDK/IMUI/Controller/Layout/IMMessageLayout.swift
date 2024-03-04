@@ -514,6 +514,10 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         return self.selectedMessages
     }
     
+    func refreshMessageView() {
+        self.messageTableView.reloadData()
+    }
+    
     private func getViewController() -> UIViewController? {
         for view in sequence(first: self.superview, next: { $0?.superview }) {
             if let responder = view?.next {
