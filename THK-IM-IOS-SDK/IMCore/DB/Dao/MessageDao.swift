@@ -97,6 +97,11 @@ public protocol MessageDao {
     func findByMsgId(_ msgId: Int64, _ sessionId: Int64) throws -> Message?
     
     /**
+     * 根据msgIds和sessionId查询消息
+     */
+    func findByMsgIds(_ msgIds: [Int64], _ sessionId: Int64) throws -> [Message]
+    
+    /**
      * 根据id、fromUId、sessionId查询消息
      */
     func findById(_ id: Int64, _ fromUId: Int64,  _ sessionId: Int64) throws -> Message?

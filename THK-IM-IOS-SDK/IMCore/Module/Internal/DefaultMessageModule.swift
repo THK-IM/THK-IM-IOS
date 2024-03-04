@@ -142,9 +142,28 @@ open class DefaultMessageModule : MessageModule {
             self.getMsgProcessor(needReprocessMsg.type).received(needReprocessMsg)
         }
         
-        // 更新每个session的最后一条消息
         for (sid, msgs) in sessionMsgs {
+            var referMsgIds = [Int64]()
+            for m in msgs {
+                if m.referMsgId != nil {
+                    referMsgIds.append(m.referMsgId!)
+                }
+            }
+            if !referMsgIds.isEmpty {
+                let referMsgs = try? IMCoreManager.shared.database.messageDao().findByMsgIds(referMsgIds, sid)
+                if referMsgs != nil {
+                    for referMsg in referMsgs! {
+                        for m in msgs {
+                            if m.referMsgId == referMsg.msgId {
+                                m.referMsg = referMsg
+                            }
+                        }
+                    }
+                }
+            }
             SwiftEventBus.post(IMEvent.BatchMsgNew.rawValue, sender: (sid, msgs))
+            
+            // 更新每个session的最后一条消息
             let lastMsg = try IMCoreManager.shared.database.messageDao().findLastMessageBySessionId(sid)
             if lastMsg != nil {
                 self.processSessionByMessage(lastMsg!)

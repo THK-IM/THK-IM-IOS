@@ -196,6 +196,15 @@ open class DefaultMessageDao : MessageDao {
         )
     }
     
+    func findByMsgIds(_ msgIds: [Int64], _ sessionId: Int64) throws -> [Message] {
+        let referMsgs: Array<Message>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId &&
+            Message.Properties.msgId.in(referMsgIds)
+        )
+        return referMsgs ?? []
+    }
+    
     public func findById(_ id: Int64, _ fromUId: Int64, _ sessionId: Int64) throws -> Message? {
         return try self.database?.getObject(
             on: Message.Properties.all,
@@ -244,11 +253,7 @@ open class DefaultMessageDao : MessageDao {
             }
         }
         if !referMsgIds.isEmpty {
-            let referMsgs: Array<Message>? = try? self.database?.getObjects(
-                fromTable: self.tableName,
-                where: Message.Properties.sessionId == sessionId &&
-                Message.Properties.msgId.in(referMsgIds)
-            )
+            let referMsgs = try? self.findByMsgIds(referMsgIds, sessionId)
             if referMsgs != nil {
                 for referMsg in referMsgs! {
                     for m in messages! {
@@ -258,7 +263,6 @@ open class DefaultMessageDao : MessageDao {
                     }
                 }
             }
-            
         }
         return messages!
     }

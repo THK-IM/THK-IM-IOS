@@ -235,7 +235,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
                     sf.isMorePanelShow = !sf.isEmojiPanelShow
                     sf.sender?.showBottomPanel(0)
                 } else {
-                    _ = sf.openKeyboard()
+                    sf.openKeyboard()
                 }
             })
             .disposed(by: disposeBag)
@@ -252,7 +252,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
                     sf.isEmojiPanelShow = !sf.isMorePanelShow
                     sf.sender?.showBottomPanel(1)
                 } else {
-                    _ = sf.openKeyboard()
+                    sf.openKeyboard()
                 }
             })
             .disposed(by: disposeBag)
