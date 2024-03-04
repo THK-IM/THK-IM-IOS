@@ -91,7 +91,7 @@ class RightCellWrapper: CellWrapper {
         _messageStack.snp.remakeConstraints { make in
             make.right.equalTo(_avatarView.snp.left).offset(-4)
             make.top.equalToSuperview().offset(10)
-            make.left.greaterThanOrEqualToSuperview().offset(24)
+            make.left.greaterThanOrEqualToSuperview().offset(32)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
         _stateStack.snp.remakeConstraints { make in
@@ -128,12 +128,14 @@ class RightCellWrapper: CellWrapper {
     
     override func appear() {
         if (self._indicatorView.isHidden == false) {
-            self._indicatorView.startAnimating()
+            if (!self._indicatorView.isAnimating) {
+                self._indicatorView.startAnimating()
+            }
         }
     }
     
     override func disAppear() {
-        if (self._indicatorView.isHidden == false) {
+        if (self._indicatorView.isAnimating) {
             self._indicatorView.stopAnimating()
         }
     }

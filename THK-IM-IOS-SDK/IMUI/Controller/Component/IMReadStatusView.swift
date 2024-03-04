@@ -48,6 +48,7 @@ public class IMReadStatusView: UIView {
         path.addArc(withCenter: centerPoint, radius: radius, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
         path.lineWidth = CGFloat(lineWidth/2)
         color.setStroke()
+        path.close()
         path.stroke()
     }
     

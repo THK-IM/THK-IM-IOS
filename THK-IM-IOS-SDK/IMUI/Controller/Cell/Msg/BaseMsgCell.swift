@@ -280,7 +280,9 @@ open class BaseMsgCell : BaseTableCell {
         default:
             self.cellWrapper.statusView()?.isHidden = true
             self.cellWrapper.resendButton()?.isHidden = true
-            self.queryReadStatus()
+            if self.message?.fromUId == IMCoreManager.shared.uId {
+                self.queryReadStatus()
+            }
             break
         }
     }

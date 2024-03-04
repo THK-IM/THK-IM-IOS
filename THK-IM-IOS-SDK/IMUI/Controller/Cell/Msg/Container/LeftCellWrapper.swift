@@ -45,8 +45,40 @@ class LeftCellWrapper: CellWrapper {
         return v
     }()
     
+    lazy var _resendButton: UIButton = {
+        let v = UIButton()
+        v.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        let failedImage = UIImage(named: "ic_msg_failed")?.scaledToSize(CGSize(width: 20, height: 20))
+        v.setImage(failedImage, for: .normal)
+        return v
+    }()
+    
+    lazy var _indicatorView: UIActivityIndicatorView = {
+        let v = UIActivityIndicatorView()
+        v.style = .medium
+        v.tintColor = UIColor.init(hex: "999999")
+        return v
+    }()
+    
+    lazy var _readStatusView: IMReadStatusView = {
+        let v = IMReadStatusView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        return v
+    }()
+    
+    lazy var _stateStack: UIStackView = {
+        let v = UIStackView(arrangedSubviews: [_readStatusView, _resendButton, _indicatorView])
+        _readStatusView.snp.makeConstraints { make in
+            make.size.equalTo(20)
+        }
+        v.axis = .horizontal
+        v.alignment = .trailing
+        v.distribution = .equalSpacing
+        return v
+    }()
+    
     override func attach(_ contentView: UIView) {
         contentView.addSubview(_avatarView)
+        contentView.addSubview(_stateStack)
         contentView.addSubview(_messageStack)
     }
     
@@ -60,8 +92,13 @@ class LeftCellWrapper: CellWrapper {
         _messageStack.snp.remakeConstraints { make in
             make.left.equalTo(_avatarView.snp.right).offset(4)
             make.top.equalToSuperview().offset(10)
-            make.right.lessThanOrEqualToSuperview().offset(-24)
+            make.right.lessThanOrEqualToSuperview().offset(-32)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
+        }
+        _stateStack.snp.remakeConstraints { make in
+            make.left.equalTo(_messageStack.snp.right).offset(2)
+            make.size.equalTo(20)
+            make.bottom.equalTo(_containerView)
         }
     }
     
@@ -76,6 +113,34 @@ class LeftCellWrapper: CellWrapper {
     override func nickView() -> UILabel? {
         return self._nickView
     }
+    
+    override func statusView() -> UIView? {
+        return self._indicatorView
+    }
+    
+    override func resendButton() -> UIButton? {
+        return self._resendButton
+    }
+    
+    override func readStatusView() -> IMReadStatusView? {
+        return self._readStatusView
+    }
+    
+    override func appear() {
+        if (self._indicatorView.isHidden == false) {
+            if (!self._indicatorView.isAnimating) {
+                self._indicatorView.startAnimating()
+            }
+        }
+    }
+    
+    override func disAppear() {
+        if (self._indicatorView.isAnimating) {
+            self._indicatorView.stopAnimating()
+        }
+    }
+    
+    
     
     
 }

@@ -58,7 +58,7 @@ class BaseMsgCellReplyView: UIView {
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.height.equalTo(size.height > 0 ? size.height + 30 : 0)
-            make.width.greaterThanOrEqualTo(size.width + 30)
+            make.width.greaterThanOrEqualTo(size.width + 16)
         }
         self.lineView.removeConstraints(self.lineView.constraints)
         self.replyUserView.removeConstraints(self.replyUserView.constraints)
@@ -124,7 +124,7 @@ class BaseMsgCellReplyView: UIView {
                 guard let sf = self else {
                     return
                 }
-                make.width.greaterThanOrEqualTo(max(sf.viewSize.width, textSize.width) + 30)
+                make.width.greaterThanOrEqualTo(max(sf.viewSize.width, textSize.width) + 16)
             }
         }
         

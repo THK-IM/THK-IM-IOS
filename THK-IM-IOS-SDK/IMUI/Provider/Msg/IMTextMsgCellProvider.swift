@@ -56,7 +56,7 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         guard let content = message.content else {
             return baseSize
         }
-        let maxWidth = self.cellMaxWidth() - 20 - 16
+        let maxWidth = self.cellMaxWidth() - 16 - 20
         let size = self.textRenderSize(content, UIFont.systemFont(ofSize: 12), maxWidth)
         return CGSize(width: size.width, height: min(size.height, 40))
     }
