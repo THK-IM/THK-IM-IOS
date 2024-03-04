@@ -85,7 +85,6 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         textView.layer.masksToBounds = true
         textView.showsVerticalScrollIndicator = false
         textView.showsHorizontalScrollIndicator = false
-        textView.contentInset = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
         return textView
     }()
     
