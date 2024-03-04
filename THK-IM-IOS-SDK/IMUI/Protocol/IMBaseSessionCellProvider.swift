@@ -18,7 +18,7 @@ open class IMBaseSessionCellProvider {
         return "session_cell_\(self.sessionType())"
     }
     
-    open func viewCell() -> BaseSessionCell {
-        return BaseSessionCell(style: .default, reuseIdentifier: self.identifier())
+    open func viewCell() -> IMBaseSessionCell {
+        return IMBaseSessionCell(style: .default, reuseIdentifier: self.identifier())
     }
 }

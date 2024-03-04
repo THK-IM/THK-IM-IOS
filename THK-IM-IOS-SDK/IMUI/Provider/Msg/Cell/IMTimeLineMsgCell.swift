@@ -7,7 +7,7 @@
 
 import UIKit
 
-class IMTimeLineMsgCell: BaseMsgCell {
+class IMTimeLineMsgCell: IMBaseMsgCell {
     
     private lazy var view: IMTimeLineMsgView = {
         let view = IMTimeLineMsgView()
@@ -21,7 +21,7 @@ class IMTimeLineMsgCell: BaseMsgCell {
         return view
     }()
     
-    open override func msgView() -> IMsgView {
+    open override func msgView() -> IMsgBodyView {
         return self.view
     }
     

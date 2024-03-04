@@ -13,16 +13,16 @@ open class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.TimeLine.rawValue
     }
     
-    open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open override func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
         case 3 * msgType:  // 中间消息
-            return IMTimeLineMsgCell(identifier, MiddleCellWrapper(type: cellType))
+            return IMTimeLineMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
         case 3 * msgType + 2: // 自己消息
-            return IMTimeLineMsgCell(identifier, RightCellWrapper(type: cellType))
+            return IMTimeLineMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
         default: // 他人消息
-            return IMTimeLineMsgCell(identifier, LeftCellWrapper(type: cellType))
+            return IMTimeLineMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
         }
     }
     

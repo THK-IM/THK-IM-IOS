@@ -14,16 +14,16 @@ open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.Audio.rawValue
     }
     
-    open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open override func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
         case 3 * msgType:  // 中间消息
-            return IMAudioMsgCell(identifier, MiddleCellWrapper(type: cellType))
+            return IMAudioMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
         case 3 * msgType + 2: // 自己消息
-            return IMAudioMsgCell(identifier, RightCellWrapper(type: cellType))
+            return IMAudioMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
         default: // 他人消息
-            return IMAudioMsgCell(identifier, LeftCellWrapper(type: cellType))
+            return IMAudioMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
         }
     }
     
@@ -36,7 +36,7 @@ open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
         return true
     }
     
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgView? {
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView? {
         let view = IMAudioMsgView(frame:.null)
         view.setMessage(msg, session, delegate)
         return view

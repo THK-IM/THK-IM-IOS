@@ -1,5 +1,5 @@
 //
-//  IMsgView.swift
+//  IMsgBodyView.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/2/24.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol IMsgView : AnyObject {
+public protocol IMsgBodyView : AnyObject {
     
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool)
     
@@ -19,7 +19,7 @@ public protocol IMsgView : AnyObject {
     func onViewAppear()
 }
 
-extension IMsgView {
+extension IMsgBodyView {
     func onViewDisappear() {}
     func onViewAppear() {}
 }

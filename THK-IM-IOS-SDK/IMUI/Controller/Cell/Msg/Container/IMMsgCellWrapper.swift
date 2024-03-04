@@ -1,5 +1,5 @@
 //
-//  CellWrapper.swift
+//  IMMsgCellWrapper.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/6.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CellWrapper  {
+class IMMsgCellWrapper  {
     
     // cellWrapper类型 单聊/群聊,不同的类型有细微差别，如单聊不显示昵称
     let type: Int

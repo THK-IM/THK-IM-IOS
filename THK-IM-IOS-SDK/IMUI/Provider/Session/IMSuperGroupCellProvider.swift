@@ -14,7 +14,7 @@ open class IMSuperGroupSessionCellProvider: IMBaseSessionCellProvider {
         return SessionType.SuperGroup.rawValue
     }
     
-    open override func viewCell() -> BaseSessionCell {
+    open override func viewCell() -> IMBaseSessionCell {
         return GroupSessionCell(style: .default, reuseIdentifier: self.identifier())
     }
 }

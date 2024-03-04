@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class IMUnSupportMsgCell: BaseMsgCell {
+class IMUnSupportMsgCell: IMBaseMsgCell {
     
     private lazy var view: IMUnSupportMsgView = {
         let view = IMUnSupportMsgView()
@@ -22,7 +22,7 @@ class IMUnSupportMsgCell: BaseMsgCell {
         return view
     }()
     
-    open override func msgView() -> IMsgView {
+    open override func msgView() -> IMsgBodyView {
         return self.view
     }
     

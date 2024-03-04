@@ -41,16 +41,16 @@ open class IMBaseMessageCellProvider {
      @param viewType 视图类型
      @param cellType cell类型 sessionType不一样 cell有区别
      */
-    open func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
         case 3 * msgType:  // 中间消息
-            return BaseMsgCell(identifier, MiddleCellWrapper(type: cellType))
+            return IMBaseMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
         case 3 * msgType + 2: // 自己消息
-            return BaseMsgCell(identifier, RightCellWrapper(type: cellType))
+            return IMBaseMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
         default: // 他人消息
-            return BaseMsgCell(identifier, LeftCellWrapper(type: cellType))
+            return IMBaseMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
         }
     }
     
@@ -82,7 +82,7 @@ open class IMBaseMessageCellProvider {
         }
     }
     
-    open func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgView? {
+    open func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView? {
         let view = IMTextMsgView()
         view.textColor = UIColor.darkGray
         view.font = UIFont.systemFont(ofSize: 12)

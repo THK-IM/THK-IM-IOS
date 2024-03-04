@@ -9,7 +9,7 @@
 import UIKit
 import CocoaLumberjack
 
-class IMImageMsgView: UIImageView, IMsgView {
+class IMImageMsgView: UIImageView, IMsgBodyView {
     
     
     override init(frame: CGRect) {

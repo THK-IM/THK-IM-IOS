@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMTextMsgView: IMMsgLabelView, IMsgView {
+class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     
     private var disposeBag = DisposeBag()
     

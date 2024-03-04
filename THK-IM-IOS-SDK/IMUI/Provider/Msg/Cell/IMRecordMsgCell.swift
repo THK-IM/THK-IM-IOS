@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-class IMRecordMsgCell: BaseMsgCell {
+class IMRecordMsgCell: IMBaseMsgCell {
     
     private lazy var view: IMRecordMsgView = {
         let view = IMRecordMsgView()
         return view
     }()
     
-    open override func msgView() -> IMsgView {
+    open override func msgView() -> IMsgBodyView {
         return self.view
     }
     

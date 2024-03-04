@@ -9,7 +9,7 @@ import UIKit
 import CocoaLumberjack
 import Kingfisher
 
-class IMAudioMsgCell: BaseMsgCell {
+class IMAudioMsgCell: IMBaseMsgCell {
     
     private lazy var view : IMAudioMsgView = {
         let view = IMAudioMsgView()
@@ -26,7 +26,7 @@ class IMAudioMsgCell: BaseMsgCell {
     }()
     
     
-    open override func msgView() -> IMsgView {
+    open override func msgView() -> IMsgBodyView {
         return self.view
     }
     

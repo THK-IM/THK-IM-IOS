@@ -11,7 +11,7 @@ import UIKit
 import CocoaLumberjack
 import RxGesture
 
-class IMRevokeMsgCell: BaseMsgCell {
+class IMRevokeMsgCell: IMBaseMsgCell {
     
     private lazy var view: IMRevokeMsgView = {
         let view = IMRevokeMsgView()
@@ -19,7 +19,7 @@ class IMRevokeMsgCell: BaseMsgCell {
     }()
     
     
-    open override func msgView() -> IMsgView {
+    open override func msgView() -> IMsgBodyView {
         return self.view
     }
     

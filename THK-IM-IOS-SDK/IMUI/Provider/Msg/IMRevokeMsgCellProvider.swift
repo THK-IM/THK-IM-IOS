@@ -19,16 +19,16 @@ public class IMRevokeMsgCellProvider: IMBaseMessageCellProvider {
         return 3 * msg.type
     }
     
-    override public func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    override public func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
         case 3 * msgType:  // 中间消息
-            return IMRevokeMsgCell(identifier, MiddleCellWrapper(type: cellType))
+            return IMRevokeMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
         case 3 * msgType + 2: // 自己消息
-            return IMRevokeMsgCell(identifier, RightCellWrapper(type: cellType))
+            return IMRevokeMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
         default: // 他人消息
-            return IMRevokeMsgCell(identifier, LeftCellWrapper(type: cellType))
+            return IMRevokeMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
         }
     }
     

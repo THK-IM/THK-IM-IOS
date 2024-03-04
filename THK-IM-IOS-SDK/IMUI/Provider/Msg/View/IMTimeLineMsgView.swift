@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMTimeLineMsgView: IMMsgLabelView, IMsgView {
+class IMTimeLineMsgView: IMMsgLabelView, IMsgBodyView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupUI()

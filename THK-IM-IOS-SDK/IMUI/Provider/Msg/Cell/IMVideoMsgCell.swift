@@ -10,11 +10,11 @@ import UIKit
 import CocoaLumberjack
 import Kingfisher
 
-open class IMVideoMsgCell: BaseMsgCell {
+open class IMVideoMsgCell: IMBaseMsgCell {
     
     private let view = IMVideoMsgView(frame: .null)
     
-    open override func msgView() -> IMsgView {
+    open override func msgView() -> IMsgBodyView {
         return self.view
     }
     

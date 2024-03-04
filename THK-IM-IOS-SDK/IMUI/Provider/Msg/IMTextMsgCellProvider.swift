@@ -14,16 +14,16 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.Text.rawValue
     }
     
-    open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open override func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
         case 3 * msgType:  // 中间消息
-            return IMTextMsgCell(identifier, MiddleCellWrapper(type: cellType))
+            return IMTextMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
         case 3 * msgType + 2: // 自己消息
-            return IMTextMsgCell(identifier, RightCellWrapper(type: cellType))
+            return IMTextMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
         default: // 他人消息
-            return IMTextMsgCell(identifier, LeftCellWrapper(type: cellType))
+            return IMTextMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
         }
     }
     
@@ -41,7 +41,7 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         return true
     }
     
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgView? {
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView? {
         let view = IMTextMsgView(frame:.null)
         view.textColor = UIColor.darkGray
         view.font = UIFont.systemFont(ofSize: 12)

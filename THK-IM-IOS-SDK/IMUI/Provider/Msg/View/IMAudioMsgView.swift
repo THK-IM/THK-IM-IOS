@@ -12,7 +12,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMAudioMsgView: UIView, IMsgView {
+class IMAudioMsgView: UIView, IMsgBodyView {
     
     private lazy var durationView : IMMsgLabelView = {
         let view = IMMsgLabelView()

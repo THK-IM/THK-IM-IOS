@@ -1,14 +1,13 @@
 //
-//  RightCellWrapper.swift
+//  IMMsgLeftCellWrapper.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/6.
 //
 
 import UIKit
-import CocoaLumberjack
 
-class RightCellWrapper: CellWrapper {
+class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     
     private let _avatarView = UIImageView()
     private var _nickView: UILabel? = nil
@@ -22,7 +21,7 @@ class RightCellWrapper: CellWrapper {
     lazy var _messageStack: UIStackView = {
         let v = UIStackView()
         v.axis = .vertical
-        v.alignment = .trailing
+        v.alignment = .leading
         v.distribution = .fill
         v.spacing = 4
         
@@ -36,11 +35,13 @@ class RightCellWrapper: CellWrapper {
             _nickView?.font = UIFont.systemFont(ofSize: 12)
             v.addArrangedSubview(_nickView!)
         }
+        
         v.addArrangedSubview(_containerView)
         _containerView.snp.makeConstraints { make in
             make.height.greaterThanOrEqualTo(48)
             make.width.greaterThanOrEqualTo(20)
         }
+        
         return v
     }()
     
@@ -85,22 +86,21 @@ class RightCellWrapper: CellWrapper {
         let editingWidth = isEditing ? 0 : 44
         _avatarView.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(10)
-            make.right.equalToSuperview().offset(-10)
+            make.left.equalToSuperview().offset(10)
             make.size.equalTo(editingWidth)
         }
         _messageStack.snp.remakeConstraints { make in
-            make.right.equalTo(_avatarView.snp.left).offset(-4)
+            make.left.equalTo(_avatarView.snp.right).offset(4)
             make.top.equalToSuperview().offset(10)
-            make.left.greaterThanOrEqualToSuperview().offset(32)
+            make.right.lessThanOrEqualToSuperview().offset(-32)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
         _stateStack.snp.remakeConstraints { make in
-            make.right.equalTo(_messageStack.snp.left).offset(-2)
+            make.left.equalTo(_messageStack.snp.right).offset(2)
             make.size.equalTo(20)
             make.bottom.equalTo(_containerView)
         }
     }
-    
     
     override func containerView() -> UIView {
         return self._containerView
@@ -139,5 +139,8 @@ class RightCellWrapper: CellWrapper {
             self._indicatorView.stopAnimating()
         }
     }
+    
+    
+    
     
 }

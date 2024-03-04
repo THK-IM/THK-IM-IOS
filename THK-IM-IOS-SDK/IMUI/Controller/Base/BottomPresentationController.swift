@@ -9,16 +9,14 @@
 import UIKit
 
 class BottomPresentationController: UIPresentationController {
-    // 2. 背景遮罩视图
+    
     private var dimmingView: UIView!
     
     override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
-        
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         setupDimmingView()
     }
     
-    // 设置背景遮罩
     private func setupDimmingView() {
         dimmingView = UIView()
         dimmingView.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +31,6 @@ class BottomPresentationController: UIPresentationController {
         presentingViewController.dismiss(animated: true)
     }
     
-    // 呈现过渡即将开始时被调用
     override func presentationTransitionWillBegin() {
         guard let containerView = containerView else { return }
         
@@ -56,25 +53,20 @@ class BottomPresentationController: UIPresentationController {
         })
     }
     
-    // 撤销过渡结束时被调用
     override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed {
             dimmingView.removeFromSuperview()
         }
     }
     
-    // 设置呈现视图的frame
     override var frameOfPresentedViewInContainerView: CGRect {
         guard let containerView = containerView else { return .zero }
-        
-        // 返回一个新的frame，这里我们设置高度为容器视图高度的一半，并居中显示
         return CGRect(x: 0, y: containerView.bounds.height / 2,
                       width: containerView.bounds.width, height: containerView.bounds.height / 2)
     }
     
     override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
-        // 设置被呈现视图的frame
         presentedView?.frame = frameOfPresentedViewInContainerView
     }
 }

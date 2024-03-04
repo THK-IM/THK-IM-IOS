@@ -1,5 +1,5 @@
 //
-//  IMMessageCellView.swift
+//  IMBaseMsgCell.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/28.
@@ -13,17 +13,17 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
-open class BaseMsgCell : BaseTableCell {
+open class IMBaseMsgCell : IMBaseTableCell {
     
     weak var delegate: IMMsgCellOperator? = nil
-    var cellWrapper: CellWrapper
+    var cellWrapper: IMMsgCellWrapper
     var message: Message? = nil
     var session: Session? = nil
     var position: Int? = nil
     var bubbleView = UIImageView()
-    var replyView = BaseMsgCellReplyView()
+    var replyView = IMMsgReplyView()
     
-    init(_ reuseIdentifier: String, _ wrapper: CellWrapper) {
+    init(_ reuseIdentifier: String, _ wrapper: IMMsgCellWrapper) {
         self.cellWrapper = wrapper
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         selectionStyle = .blue
@@ -249,7 +249,7 @@ open class BaseMsgCell : BaseTableCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    open func msgView() -> IMsgView {
+    open func msgView() -> IMsgBodyView {
         return IMUnSupportMsgView()
     }
     
@@ -350,9 +350,9 @@ open class BaseMsgCell : BaseTableCell {
      cell 位置0: 中间1: 左边2:右边
      */
     open func cellPosition() -> Int {
-        if cellWrapper is LeftCellWrapper {
+        if cellWrapper is IMMsgLeftCellWrapper {
             return IMMsgPosType.Left.rawValue
-        } else if cellWrapper is RightCellWrapper {
+        } else if cellWrapper is IMMsgRightCellWrapper {
             return IMMsgPosType.Right.rawValue
         }
         return IMMsgPosType.Mid.rawValue

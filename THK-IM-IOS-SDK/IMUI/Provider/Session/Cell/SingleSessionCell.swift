@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class SingleSessionCell: BaseSessionCell {
+open class SingleSessionCell: IMBaseSessionCell {
     
     override open func showSessionEntityInfo(_ session: Session) {
         IMCoreManager.shared.userModule.queryUser(id: session.entityId)

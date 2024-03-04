@@ -1,13 +1,13 @@
 //
-//  MiddleCellWrapper.swift
-//  IM
+//  IMMsgMiddleCellWrapper.swift
+//  IHK-IM-IOS
 //
 //  Created by vizoss on 2023/6/6.
 //
 
 import UIKit
 
-class MiddleCellWrapper : CellWrapper {
+class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
     
     /// 包裹消息体的容器视图
     let _containerView: UIView = {

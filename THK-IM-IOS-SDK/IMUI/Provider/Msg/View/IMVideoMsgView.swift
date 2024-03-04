@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 
 
-class IMVideoMsgView: UIImageView, IMsgView {
+class IMVideoMsgView: UIImageView, IMsgBodyView {
     
     private let durationLabel = IMMsgLabelView()
     private let playView = UIImageView()

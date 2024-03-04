@@ -48,7 +48,7 @@
 		A033FA9D2B80AE430053045E /* SuperGroupSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FA9C2B80AE430053045E /* SuperGroupSessionCell.swift */; };
 		A033FA9F2B80AE8B0053045E /* IMSuperGroupCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FA9E2B80AE8B0053045E /* IMSuperGroupCellProvider.swift */; };
 		A033FAF72B88D9C00053045E /* IMReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FAF62B88D9C00053045E /* IMReplyView.swift */; };
-		A033FAF92B89A0B30053045E /* BaseMsgCellReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FAF82B89A0B30053045E /* BaseMsgCellReplyView.swift */; };
+		A033FAF92B89A0B30053045E /* IMMsgReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FAF82B89A0B30053045E /* IMMsgReplyView.swift */; };
 		A033FAFC2B8A0E500053045E /* IMVideoMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FAFB2B8A0E500053045E /* IMVideoMsgView.swift */; };
 		A033FAFE2B8A11BA0053045E /* IMImageMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FAFD2B8A11BA0053045E /* IMImageMsgView.swift */; };
 		A033FB002B8A15AA0053045E /* IMTextMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FAFF2B8A15AA0053045E /* IMTextMsgView.swift */; };
@@ -57,7 +57,7 @@
 		A033FB062B8A1CC50053045E /* IMUnSupportMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB052B8A1CC50053045E /* IMUnSupportMsgView.swift */; };
 		A033FB082B8A1DBB0053045E /* IMRevokeMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB072B8A1DBB0053045E /* IMRevokeMsgView.swift */; };
 		A033FB0A2B8A1F6C0053045E /* IMRecordMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB092B8A1F6C0053045E /* IMRecordMsgView.swift */; };
-		A033FB0C2B8A33F60053045E /* IMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB0B2B8A33F60053045E /* IMsgView.swift */; };
+		A033FB0C2B8A33F60053045E /* IMsgBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB0B2B8A33F60053045E /* IMsgBodyView.swift */; };
 		A033FB112B918BF80053045E /* IMEmojiPanelContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */; };
 		A033FB132B92F8A10053045E /* IMMsgEditOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB122B92F8A10053045E /* IMMsgEditOperator.swift */; };
 		A033FB152B931CB80053045E /* ReeditMsgVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB142B931CB80053045E /* ReeditMsgVo.swift */; };
@@ -171,13 +171,13 @@
 		A0D68BBF2A888679004D11A5 /* IMMsgLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B0F2A888678004D11A5 /* IMMsgLabelView.swift */; };
 		A0D68BC02A888679004D11A5 /* IMMsgSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B112A888678004D11A5 /* IMMsgSender.swift */; };
 		A0D68BC12A888679004D11A5 /* IMMsgPreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */; };
-		A0D68BC22A888679004D11A5 /* MiddleCellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B152A888678004D11A5 /* MiddleCellWrapper.swift */; };
-		A0D68BC42A888679004D11A5 /* CellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B172A888678004D11A5 /* CellWrapper.swift */; };
-		A0D68BC52A888679004D11A5 /* LeftCellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B182A888678004D11A5 /* LeftCellWrapper.swift */; };
-		A0D68BC62A888679004D11A5 /* RightCellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B192A888678004D11A5 /* RightCellWrapper.swift */; };
-		A0D68BC72A888679004D11A5 /* BaseTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1A2A888678004D11A5 /* BaseTableCell.swift */; };
-		A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1B2A888678004D11A5 /* BaseMsgCell.swift */; };
-		A0D68BC92A888679004D11A5 /* BaseSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */; };
+		A0D68BC22A888679004D11A5 /* IMMsgMiddleCellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B152A888678004D11A5 /* IMMsgMiddleCellWrapper.swift */; };
+		A0D68BC42A888679004D11A5 /* IMMsgCellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B172A888678004D11A5 /* IMMsgCellWrapper.swift */; };
+		A0D68BC52A888679004D11A5 /* IMMsgLeftCellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B182A888678004D11A5 /* IMMsgLeftCellWrapper.swift */; };
+		A0D68BC62A888679004D11A5 /* IMMsgRightCellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B192A888678004D11A5 /* IMMsgRightCellWrapper.swift */; };
+		A0D68BC72A888679004D11A5 /* IMBaseTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1A2A888678004D11A5 /* IMBaseTableCell.swift */; };
+		A0D68BC82A888679004D11A5 /* IMBaseMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1B2A888678004D11A5 /* IMBaseMsgCell.swift */; };
+		A0D68BC92A888679004D11A5 /* IMBaseSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1C2A888678004D11A5 /* IMBaseSessionCell.swift */; };
 		A0D68BCA2A888679004D11A5 /* IMSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */; };
 		A0D68BCB2A888679004D11A5 /* IMUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B1F2A888678004D11A5 /* IMUIManager.swift */; };
 		A0D68BCD2A888679004D11A5 /* IMMediaPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68B232A888678004D11A5 /* IMMediaPreviewController.swift */; };
@@ -344,7 +344,7 @@
 		A033FA9C2B80AE430053045E /* SuperGroupSessionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperGroupSessionCell.swift; sourceTree = "<group>"; };
 		A033FA9E2B80AE8B0053045E /* IMSuperGroupCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSuperGroupCellProvider.swift; sourceTree = "<group>"; };
 		A033FAF62B88D9C00053045E /* IMReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMReplyView.swift; sourceTree = "<group>"; };
-		A033FAF82B89A0B30053045E /* BaseMsgCellReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMsgCellReplyView.swift; sourceTree = "<group>"; };
+		A033FAF82B89A0B30053045E /* IMMsgReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgReplyView.swift; sourceTree = "<group>"; };
 		A033FAFB2B8A0E500053045E /* IMVideoMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMVideoMsgView.swift; sourceTree = "<group>"; };
 		A033FAFD2B8A11BA0053045E /* IMImageMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMImageMsgView.swift; sourceTree = "<group>"; };
 		A033FAFF2B8A15AA0053045E /* IMTextMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMTextMsgView.swift; sourceTree = "<group>"; };
@@ -353,7 +353,7 @@
 		A033FB052B8A1CC50053045E /* IMUnSupportMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUnSupportMsgView.swift; sourceTree = "<group>"; };
 		A033FB072B8A1DBB0053045E /* IMRevokeMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgView.swift; sourceTree = "<group>"; };
 		A033FB092B8A1F6C0053045E /* IMRecordMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgView.swift; sourceTree = "<group>"; };
-		A033FB0B2B8A33F60053045E /* IMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMsgView.swift; sourceTree = "<group>"; };
+		A033FB0B2B8A33F60053045E /* IMsgBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMsgBodyView.swift; sourceTree = "<group>"; };
 		A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMEmojiPanelContentCell.swift; sourceTree = "<group>"; };
 		A033FB122B92F8A10053045E /* IMMsgEditOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgEditOperator.swift; sourceTree = "<group>"; };
 		A033FB142B931CB80053045E /* ReeditMsgVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReeditMsgVo.swift; sourceTree = "<group>"; };
@@ -469,13 +469,13 @@
 		A0D68B0F2A888678004D11A5 /* IMMsgLabelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgLabelView.swift; sourceTree = "<group>"; };
 		A0D68B112A888678004D11A5 /* IMMsgSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgSender.swift; sourceTree = "<group>"; };
 		A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgPreviewer.swift; sourceTree = "<group>"; };
-		A0D68B152A888678004D11A5 /* MiddleCellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiddleCellWrapper.swift; sourceTree = "<group>"; };
-		A0D68B172A888678004D11A5 /* CellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellWrapper.swift; sourceTree = "<group>"; };
-		A0D68B182A888678004D11A5 /* LeftCellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftCellWrapper.swift; sourceTree = "<group>"; };
-		A0D68B192A888678004D11A5 /* RightCellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightCellWrapper.swift; sourceTree = "<group>"; };
-		A0D68B1A2A888678004D11A5 /* BaseTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableCell.swift; sourceTree = "<group>"; };
-		A0D68B1B2A888678004D11A5 /* BaseMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMsgCell.swift; sourceTree = "<group>"; };
-		A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseSessionCell.swift; sourceTree = "<group>"; };
+		A0D68B152A888678004D11A5 /* IMMsgMiddleCellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgMiddleCellWrapper.swift; sourceTree = "<group>"; };
+		A0D68B172A888678004D11A5 /* IMMsgCellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgCellWrapper.swift; sourceTree = "<group>"; };
+		A0D68B182A888678004D11A5 /* IMMsgLeftCellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgLeftCellWrapper.swift; sourceTree = "<group>"; };
+		A0D68B192A888678004D11A5 /* IMMsgRightCellWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMsgRightCellWrapper.swift; sourceTree = "<group>"; };
+		A0D68B1A2A888678004D11A5 /* IMBaseTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBaseTableCell.swift; sourceTree = "<group>"; };
+		A0D68B1B2A888678004D11A5 /* IMBaseMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBaseMsgCell.swift; sourceTree = "<group>"; };
+		A0D68B1C2A888678004D11A5 /* IMBaseSessionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMBaseSessionCell.swift; sourceTree = "<group>"; };
 		A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSessionViewController.swift; sourceTree = "<group>"; };
 		A0D68B1F2A888678004D11A5 /* IMUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUIManager.swift; sourceTree = "<group>"; };
 		A0D68B232A888678004D11A5 /* IMMediaPreviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMMediaPreviewController.swift; sourceTree = "<group>"; };
@@ -639,12 +639,7 @@
 		A018CDFD2B008CA800896B87 /* Popup */ = {
 			isa = PBXGroup;
 			children = (
-				A0EF35552B5C013F00940F54 /* Cell */,
 				A018CDFE2B008F6F00896B87 /* IMMessageOperatorPopupView.swift */,
-				A018CE0F2B00ADE400896B87 /* IMMessageOperatorItemView.swift */,
-				A0D51DC92B11BBDE00E21E75 /* IMSessionChooseViewController.swift */,
-				A0EF35512B5BFA7700940F54 /* IMAtSessionMemberController.swift */,
-				A0EF35532B5BFFFB00940F54 /* IMSessionMemberAtDelegate.swift */,
 			);
 			path = Popup;
 			sourceTree = "<group>";
@@ -733,6 +728,14 @@
 				A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */,
 			);
 			path = emoji;
+			sourceTree = "<group>";
+		};
+		A033FB182B956F720053045E /* sessionmember */ = {
+			isa = PBXGroup;
+			children = (
+				A0EF35562B5C014E00940F54 /* IMSessionMemberCell.swift */,
+			);
+			path = sessionmember;
 			sourceTree = "<group>";
 		};
 		A045CF8B2A92561900654957 /* IMProvider */ = {
@@ -842,9 +845,9 @@
 			isa = PBXGroup;
 			children = (
 				A0D68B142A888678004D11A5 /* Container */,
-				A0D68B1B2A888678004D11A5 /* BaseMsgCell.swift */,
-				A033FAF82B89A0B30053045E /* BaseMsgCellReplyView.swift */,
-				A033FB0B2B8A33F60053045E /* IMsgView.swift */,
+				A0D68B1B2A888678004D11A5 /* IMBaseMsgCell.swift */,
+				A033FAF82B89A0B30053045E /* IMMsgReplyView.swift */,
+				A033FB0B2B8A33F60053045E /* IMsgBodyView.swift */,
 			);
 			path = Msg;
 			sourceTree = "<group>";
@@ -860,7 +863,7 @@
 		A0CC9F722AFC83FC00801B25 /* Session */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B1C2A888678004D11A5 /* BaseSessionCell.swift */,
+				A0D68B1C2A888678004D11A5 /* IMBaseSessionCell.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -1152,6 +1155,8 @@
 				A0D68B132A888678004D11A5 /* Cell */,
 				A0D68B1D2A888678004D11A5 /* IMSessionViewController.swift */,
 				A0D68B022A888678004D11A5 /* IMMessageViewController.swift */,
+				A0D51DC92B11BBDE00E21E75 /* IMSessionChooseViewController.swift */,
+				A0EF35512B5BFA7700940F54 /* IMAtSessionMemberController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1170,6 +1175,7 @@
 		A0D68B092A888678004D11A5 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				A018CE0F2B00ADE400896B87 /* IMMessageOperatorItemView.swift */,
 				A033FAF62B88D9C00053045E /* IMReplyView.swift */,
 				A0EF355E2B5CEB4E00940F54 /* IMTextView.swift */,
 				A0D68B0A2A888678004D11A5 /* IMSpeakView.swift */,
@@ -1201,7 +1207,8 @@
 		A0D68B132A888678004D11A5 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B1A2A888678004D11A5 /* BaseTableCell.swift */,
+				A0D68B1A2A888678004D11A5 /* IMBaseTableCell.swift */,
+				A033FB182B956F720053045E /* sessionmember */,
 				A033FB0F2B918B490053045E /* emoji */,
 				A0CC9F722AFC83FC00801B25 /* Session */,
 				A0CC9F712AFC83D300801B25 /* Function */,
@@ -1213,10 +1220,10 @@
 		A0D68B142A888678004D11A5 /* Container */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68B152A888678004D11A5 /* MiddleCellWrapper.swift */,
-				A0D68B172A888678004D11A5 /* CellWrapper.swift */,
-				A0D68B182A888678004D11A5 /* LeftCellWrapper.swift */,
-				A0D68B192A888678004D11A5 /* RightCellWrapper.swift */,
+				A0D68B152A888678004D11A5 /* IMMsgMiddleCellWrapper.swift */,
+				A0D68B172A888678004D11A5 /* IMMsgCellWrapper.swift */,
+				A0D68B182A888678004D11A5 /* IMMsgLeftCellWrapper.swift */,
+				A0D68B192A888678004D11A5 /* IMMsgRightCellWrapper.swift */,
 			);
 			path = Container;
 			sourceTree = "<group>";
@@ -1434,6 +1441,7 @@
 		A0E8ED462AEDEC10004163BD /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				A0EF35532B5BFFFB00940F54 /* IMSessionMemberAtDelegate.swift */,
 				A0D68B112A888678004D11A5 /* IMMsgSender.swift */,
 				A0D68B122A888678004D11A5 /* IMMsgPreviewer.swift */,
 				A02529162ACADE72001561A0 /* IMMsgCellOperator.swift */,
@@ -1462,14 +1470,6 @@
 				A0FCA8EB2B48F60500FC6E47 /* APITokenInterceptor.swift */,
 			);
 			path = Internal;
-			sourceTree = "<group>";
-		};
-		A0EF35552B5C013F00940F54 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				A0EF35562B5C014E00940F54 /* IMSessionMemberCell.swift */,
-			);
-			path = Cell;
 			sourceTree = "<group>";
 		};
 		A0FCA8D42B484A7A00FC6E47 /* UI */ = {
@@ -1761,9 +1761,9 @@
 				A0D68BD52A888679004D11A5 /* AVCacheManager.swift in Sources */,
 				A0C431EB2A909CB200A84D4A /* RemoteParticipant.swift in Sources */,
 				A0978E6A2B73D1C70047E6A2 /* IMCustomModule.swift in Sources */,
-				A0D68BC62A888679004D11A5 /* RightCellWrapper.swift in Sources */,
+				A0D68BC62A888679004D11A5 /* IMMsgRightCellWrapper.swift in Sources */,
 				A0D68B782A888679004D11A5 /* OggOpusAudioRecorder.swift in Sources */,
-				A0D68BC42A888679004D11A5 /* CellWrapper.swift in Sources */,
+				A0D68BC42A888679004D11A5 /* IMMsgCellWrapper.swift in Sources */,
 				A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */,
 				A0FCA8EA2B48EF7500FC6E47 /* UserBasicInfoVo.swift in Sources */,
 				A0FCA9302B498A8300FC6E47 /* GroupVo.swift in Sources */,
@@ -1786,7 +1786,7 @@
 				A02529222ADBD5BF001561A0 /* Data+HexString.swift in Sources */,
 				A0EA42FB2A94CCE200F64A90 /* DefaultIMApi.swift in Sources */,
 				A0EF355F2B5CEB4E00940F54 /* IMTextView.swift in Sources */,
-				A0D68BC72A888679004D11A5 /* BaseTableCell.swift in Sources */,
+				A0D68BC72A888679004D11A5 /* IMBaseTableCell.swift in Sources */,
 				A033FAFC2B8A0E500053045E /* IMVideoMsgView.swift in Sources */,
 				A018CE012B00A00B00896B87 /* IMMessageOperator.swift in Sources */,
 				A0FCA8D32B484A5B00FC6E47 /* WelcomeViewController.swift in Sources */,
@@ -1841,7 +1841,7 @@
 				A025291A2ACC31CA001561A0 /* IMProvider.swift in Sources */,
 				A0FCA8F92B4919DE00FC6E47 /* GroupTabViewController.swift in Sources */,
 				A0EA42E62A94904400F64A90 /* IMDatabaseDefines.swift in Sources */,
-				A0D68BC22A888679004D11A5 /* MiddleCellWrapper.swift in Sources */,
+				A0D68BC22A888679004D11A5 /* IMMsgMiddleCellWrapper.swift in Sources */,
 				A0D68A9B2A88838A004D11A5 /* MainTestViewController.swift in Sources */,
 				A0FCA9092B49599A00FC6E47 /* ContactDao.swift in Sources */,
 				A0D68BA52A888679004D11A5 /* IMImageMsgCell.swift in Sources */,
@@ -1869,7 +1869,7 @@
 				A0C431F42A909CCE00A84D4A /* RoomApi.swift in Sources */,
 				A0C431FD2A909D2500A84D4A /* ParticipantView.swift in Sources */,
 				A0D68BCF2A888679004D11A5 /* PresentAnimator.swift in Sources */,
-				A033FB0C2B8A33F60053045E /* IMsgView.swift in Sources */,
+				A033FB0C2B8A33F60053045E /* IMsgBodyView.swift in Sources */,
 				A0D68BB52A888679004D11A5 /* IMInputLayout.swift in Sources */,
 				A0D68B912A888679004D11A5 /* Session.swift in Sources */,
 				A0C431E72A909CB200A84D4A /* Room.swift in Sources */,
@@ -1877,7 +1877,7 @@
 				A0978E662B723CAB0047E6A2 /* CallingInfoLayout.swift in Sources */,
 				A0D51DC42B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift in Sources */,
 				A0978E632B71D2AB0047E6A2 /* LiveCallProtocol.swift in Sources */,
-				A0D68BC52A888679004D11A5 /* LeftCellWrapper.swift in Sources */,
+				A0D68BC52A888679004D11A5 /* IMMsgLeftCellWrapper.swift in Sources */,
 				A0E82F592B526780008DC681 /* SessionMemberCell.swift in Sources */,
 				A018CE042B00A3CD00896B87 /* IMMsgDeleteOperator.swift in Sources */,
 				A0D68BFE2A888679004D11A5 /* ImageCompress.swift in Sources */,
@@ -1910,7 +1910,7 @@
 				A0C431F62A909CCE00A84D4A /* CreateRoomVo.swift in Sources */,
 				A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */,
 				A0E8ED4C2AEDF23B004163BD /* PreviewCellView.swift in Sources */,
-				A0D68BC82A888679004D11A5 /* BaseMsgCell.swift in Sources */,
+				A0D68BC82A888679004D11A5 /* IMBaseMsgCell.swift in Sources */,
 				A0FCA9282B49866000FC6E47 /* ReviewFriendApplyVo.swift in Sources */,
 				A033FB152B931CB80053045E /* ReeditMsgVo.swift in Sources */,
 				A0E82F622B528A97008DC681 /* IMGroupSessionCellProvider.swift in Sources */,
@@ -1947,7 +1947,7 @@
 				A0D68B922A888679004D11A5 /* Message.swift in Sources */,
 				A0FCA9222B4984F800FC6E47 /* ContactSessionCreateVo.swift in Sources */,
 				A0D68BF12A888679004D11A5 /* IMBaseMsgProcessor.swift in Sources */,
-				A033FAF92B89A0B30053045E /* BaseMsgCellReplyView.swift in Sources */,
+				A033FAF92B89A0B30053045E /* IMMsgReplyView.swift in Sources */,
 				A0FCA8EC2B48F60500FC6E47 /* APITokenInterceptor.swift in Sources */,
 				A0C431F32A909CCE00A84D4A /* StreamApi.swift in Sources */,
 				A0FCA9392B498D2000FC6E47 /* GroupApi.swift in Sources */,
@@ -1965,7 +1965,7 @@
 				A025291C2ACC31E2001561A0 /* IMUIProtocolDefines.swift in Sources */,
 				A0D51DC22B09E40E00E21E75 /* IMRevokeMsgCell.swift in Sources */,
 				A03082D32AF67C57001B8373 /* ReadMsgVo.swift in Sources */,
-				A0D68BC92A888679004D11A5 /* BaseSessionCell.swift in Sources */,
+				A0D68BC92A888679004D11A5 /* IMBaseSessionCell.swift in Sources */,
 				A0D68BB42A888679004D11A5 /* IMMessageViewController.swift in Sources */,
 				A02578C62AA4269B00A66CEF /* LiveApi.swift in Sources */,
 				A033FA9D2B80AE430053045E /* SuperGroupSessionCell.swift in Sources */,

@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class GroupSessionCell: BaseSessionCell {
+open class GroupSessionCell: IMBaseSessionCell {
     
     override open func showSessionEntityInfo(_ session: Session) {
         IMCoreManager.shared.groupModule.findById(id: session.entityId)

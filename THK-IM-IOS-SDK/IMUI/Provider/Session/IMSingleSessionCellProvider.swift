@@ -14,7 +14,7 @@ open class IMSingleSessionCellProvider: IMBaseSessionCellProvider {
         return SessionType.Single.rawValue
     }
     
-    open override func viewCell() -> BaseSessionCell {
+    open override func viewCell() -> IMBaseSessionCell {
         return SingleSessionCell(style: .default, reuseIdentifier: self.identifier())
     }
 }

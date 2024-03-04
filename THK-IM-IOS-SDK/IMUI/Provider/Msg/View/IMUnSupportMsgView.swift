@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMUnSupportMsgView: IMMsgLabelView, IMsgView {
+class IMUnSupportMsgView: IMMsgLabelView, IMsgBodyView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)

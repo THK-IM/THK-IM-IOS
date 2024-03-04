@@ -1,5 +1,5 @@
 //
-//  BaseMsgCellReplyView.swift
+//  IMMsgReplyView.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/2/24.
@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-class BaseMsgCellReplyView: UIView {
+class IMMsgReplyView: UIView {
     
     weak var sender: IMMsgSender? = nil
     private let disposeBag = DisposeBag()

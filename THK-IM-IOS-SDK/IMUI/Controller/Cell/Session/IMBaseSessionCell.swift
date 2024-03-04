@@ -1,5 +1,5 @@
 //
-//  IMSessionCellView.swift
+//  IMBaseSessionCell.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/5/28.
@@ -11,7 +11,7 @@ import Kingfisher
 import CocoaLumberjack
 import BadgeSwift
 
-open class BaseSessionCell : BaseTableCell {
+open class IMBaseSessionCell : IMBaseTableCell {
     
     lazy var unreadCountView: BadgeSwift = {
         let view = BadgeSwift()

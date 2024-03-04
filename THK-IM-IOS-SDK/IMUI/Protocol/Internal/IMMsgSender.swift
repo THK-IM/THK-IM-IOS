@@ -1,5 +1,5 @@
 //
-//  MsgSender.swift
+//  IMMsgSender.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/6/4.

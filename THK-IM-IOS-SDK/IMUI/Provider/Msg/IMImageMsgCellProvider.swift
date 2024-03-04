@@ -15,16 +15,16 @@ open class IMImageMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.Image.rawValue
     }
     
-    open override func viewCell(_ viewType: Int, _ cellType: Int) -> BaseMsgCell {
+    open override func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
         let msgType = self.messageType()
         let identifier = self.identifier(viewType)
         switch viewType {
         case 3 * msgType:  // 中间消息
-            return IMImageMsgCell(identifier, MiddleCellWrapper(type: cellType))
+            return IMImageMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
         case 3 * msgType + 2: // 自己消息
-            return IMImageMsgCell(identifier, RightCellWrapper(type: cellType))
+            return IMImageMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
         default: // 他人消息
-            return IMImageMsgCell(identifier, LeftCellWrapper(type: cellType))
+            return IMImageMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
         }
     }
     
@@ -66,7 +66,7 @@ open class IMImageMsgCellProvider: IMBaseMessageCellProvider {
         return baseSize
     }
     
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgView? {
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView? {
         let view = IMImageMsgView(frame:.null)
         view.setMessage(msg, session, delegate)
         return view

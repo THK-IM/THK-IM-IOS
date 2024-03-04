@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMRevokeMsgView: UIView, IMsgView {
+class IMRevokeMsgView: UIView, IMsgBodyView {
     
     private weak var delegate: IMMsgCellOperator?
     private var message: Message?

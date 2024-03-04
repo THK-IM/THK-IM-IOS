@@ -204,7 +204,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         if (cell == nil) {
             cell = provider.viewCell()
         }
-        let sessionCell = cell as! BaseSessionCell
+        let sessionCell = cell as! IMBaseSessionCell
         sessionCell.setSession(self.sessions[indexPath.row])
         return cell!
     }
@@ -214,12 +214,12 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let sessionCell = cell as! BaseSessionCell
+        let sessionCell = cell as! IMBaseSessionCell
         sessionCell.appear()
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let sessionCell = cell as! BaseSessionCell
+        let sessionCell = cell as! IMBaseSessionCell
         sessionCell.disappear()
     }
     

@@ -51,22 +51,22 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         if cell == nil {
             cell = provider.viewCell(viewType, (self.session?.type)!)
         }
-        (cell as! BaseMsgCell).setMessage(indexPath.row, self.messages, self.session!, self)
-        (cell as! BaseMsgCell).selectedBackgroundView = UIView()
-        (cell as! BaseMsgCell).isSelected = selectedMessages.contains(msg)
-        (cell as! BaseMsgCell).multipleSelectionBackgroundView = UIView(frame: cell!.bounds)
-        (cell as! BaseMsgCell).multipleSelectionBackgroundView?.backgroundColor = UIColor.clear
+        (cell as! IMBaseMsgCell).setMessage(indexPath.row, self.messages, self.session!, self)
+        (cell as! IMBaseMsgCell).selectedBackgroundView = UIView()
+        (cell as! IMBaseMsgCell).isSelected = selectedMessages.contains(msg)
+        (cell as! IMBaseMsgCell).multipleSelectionBackgroundView = UIView(frame: cell!.bounds)
+        (cell as! IMBaseMsgCell).multipleSelectionBackgroundView?.backgroundColor = UIColor.clear
         return cell!
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let messageCellView = cell as! BaseMsgCell
+        let messageCellView = cell as! IMBaseMsgCell
         messageCellView.delegate = self
         messageCellView.appear()
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let sessionCell = cell as! BaseMsgCell
+        let sessionCell = cell as! IMBaseMsgCell
         sessionCell.disappear()
     }
     
@@ -409,7 +409,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     private func scrollToRow(_ row: Int) {
         self.messageTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .top, animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
-            (self?.messageTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? BaseMsgCell)?.highlightFlashing(6)
+            (self?.messageTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? IMBaseMsgCell)?.highlightFlashing(6)
         })
     }
     

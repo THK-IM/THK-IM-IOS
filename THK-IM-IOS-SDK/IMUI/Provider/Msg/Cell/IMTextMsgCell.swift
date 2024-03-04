@@ -9,7 +9,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMTextMsgCell: BaseMsgCell {
+class IMTextMsgCell: IMBaseMsgCell {
     
     private let fontSize:CGFloat = 16
     
@@ -27,7 +27,7 @@ class IMTextMsgCell: BaseMsgCell {
         return view
     }()
     
-    open override func msgView() -> IMsgView {
+    open override func msgView() -> IMsgBodyView {
         return self.view
     }
     
