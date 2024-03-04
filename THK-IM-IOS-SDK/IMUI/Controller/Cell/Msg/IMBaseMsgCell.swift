@@ -158,7 +158,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
     
     
     func layoutMessageView() {
-        self.initAvatar()
+        self.initUser()
         self.initBubble()
         self.initMsgContent()
         self.initMessageStatus()
@@ -203,19 +203,29 @@ open class IMBaseMsgCell : IMBaseTableCell {
         }
     }
     
-    open func initAvatar() {
+    open func initUser() {
+        print("asyncGetSessionMemberInfo initUser 1")
         let fromUId = self.message?.fromUId
-        if (self.showAvatar() && fromUId != nil) {
+        if (self.showAvatar() && fromUId != nil && self.cellWrapper.avatarView() != nil) {
             self.cellWrapper.avatarView()?.isHidden = false
-            IMCoreManager.shared.userModule
-                .queryUser(id: fromUId!)
+            print("asyncGetSessionMemberInfo initUser 2")
+            guard let delegate = self.delegate else {
+                return
+            }
+            print("asyncGetSessionMemberInfo initUser 3")
+            if let info = delegate.syncGetSessionMemberInfo(fromUId!) {
+                self.updateUserInfo(user: info.0, sessionMember: info.1)
+            } else {
+                delegate.asyncGetSessionMemberInfo(fromUId!)
                 .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] user in
-                    guard let sf = self else {
-                        return
-                    }
-                    sf.updateUserInfo(user: user)
+                .subscribe(onNext: { [weak self] info in
+                    print("asyncGetSessionMemberInfo \(info)")
+                    self?.updateUserInfo(user: info.0, sessionMember: info.1)
+                    self?.delegate?.saveSessionMemberInfo(info)
+                }, onError: { err in
+                    print("asyncGetSessionMemberInfo \(err)")
                 }).disposed(by: disposeBag)
+            }
         } else {
             self.cellWrapper.avatarView()?.isHidden = true
         }
@@ -253,8 +263,14 @@ open class IMBaseMsgCell : IMBaseTableCell {
         return IMUnSupportMsgView()
     }
     
-    private func updateUserInfo(user: User) {
+    private func updateUserInfo(user: User, sessionMember: SessionMember?) {
         self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 20)
+        if let noteName = sessionMember?.noteName {
+            if !noteName.isEmpty {
+                self.cellWrapper.nickView()?.text = noteName
+                return
+            }
+        }
         self.cellWrapper.nickView()?.text = user.nickname
     }
     

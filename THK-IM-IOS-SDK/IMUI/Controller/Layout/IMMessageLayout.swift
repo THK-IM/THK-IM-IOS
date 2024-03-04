@@ -51,6 +51,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         if cell == nil {
             cell = provider.viewCell(viewType, (self.session?.type)!)
         }
+        (cell as! IMBaseMsgCell).delegate = self
         (cell as! IMBaseMsgCell).setMessage(indexPath.row, self.messages, self.session!, self)
         (cell as! IMBaseMsgCell).selectedBackgroundView = UIView()
         (cell as! IMBaseMsgCell).isSelected = selectedMessages.contains(msg)
@@ -522,8 +523,12 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     
-    func refreshMessageView() {
-        self.messageTableView.reloadData()
+    func refreshMessageUserInfo() {
+        for i in 0...self.messages.count {
+            if let cell = self.messageTableView.cellForRow(at: IndexPath(row: i, section: 0)) as? IMBaseMsgCell {
+                cell.initUser()
+            }
+        }
     }
     
     private func getViewController() -> UIViewController? {

@@ -45,7 +45,8 @@ class IMAudioMsgView: UIView, IMsgBodyView {
         self.addSubview(durationView)
         self.durationView.snp.makeConstraints { make in
             make.left.equalToSuperview()
-            make.height.equalToSuperview()
+            make.height.lessThanOrEqualToSuperview()
+            make.centerY.equalToSuperview()
             make.width.lessThanOrEqualToSuperview()
         }
         

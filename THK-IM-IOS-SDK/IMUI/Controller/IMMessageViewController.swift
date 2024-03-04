@@ -39,7 +39,7 @@ class IMMessageViewController: BaseViewController {
         self.registerMsgEvent()
         self.registerKeyboardEvent()
         self.messageLayout.loadMessages()
-        self.fetchSessionMembers()
+//        self.fetchSessionMembers()
     }
     
     private func showSessionTitle() {
@@ -104,8 +104,10 @@ class IMMessageViewController: BaseViewController {
     }
     
     private func updateSessionMember(_ map: [Int64: (User, SessionMember?)]) {
-        self.memberMap = map
-        self.messageLayout.refreshMessageView()
+        map.forEach { (key: Int64, value: (User, SessionMember?)) in
+            self.memberMap[key] = value
+        }
+        self.messageLayout.refreshMessageUserInfo()
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
