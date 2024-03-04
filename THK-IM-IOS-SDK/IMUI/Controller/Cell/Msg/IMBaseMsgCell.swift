@@ -74,7 +74,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
         .disposed(by: disposeBag)
         
         // 长按事件
-        msgView.rx.longPressGesture()
+        cellWrapper.containerView().rx.longPressGesture()
             .when(.began)
             .subscribe(onNext: { [weak self]  _ in
                 guard let sf = self else {

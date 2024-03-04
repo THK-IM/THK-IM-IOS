@@ -28,7 +28,7 @@ class IMMsgLeftCellWrapper: IMMsgCellWrapper {
         if self.type != SessionType.Single.rawValue {
             _nickView = UILabel()
             _nickView?.snp.makeConstraints { make in
-                make.height.lessThanOrEqualTo(12)
+                make.height.lessThanOrEqualTo(14)
                 make.width.greaterThanOrEqualTo(20)
             }
             _nickView?.textColor = UIColor.init(hex: "666666")
