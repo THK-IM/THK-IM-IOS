@@ -255,10 +255,11 @@ open class DefaultMessageDao : MessageDao {
         if !referMsgIds.isEmpty {
             let referMsgs = try? self.findByMsgIds(referMsgIds, sessionId)
             if referMsgs != nil {
-                for referMsg in referMsgs! {
-                    for m in messages! {
+                for m in messages! {
+                    for referMsg in referMsgs! {
                         if m.referMsgId == referMsg.msgId {
                             m.referMsg = referMsg
+                            break
                         }
                     }
                 }

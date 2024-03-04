@@ -152,10 +152,11 @@ open class DefaultMessageModule : MessageModule {
             if !referMsgIds.isEmpty {
                 let referMsgs = try? IMCoreManager.shared.database.messageDao().findByMsgIds(referMsgIds, sid)
                 if referMsgs != nil {
-                    for referMsg in referMsgs! {
-                        for m in msgs {
+                    for m in msgs {
+                        for referMsg in referMsgs! {
                             if m.referMsgId == referMsg.msgId {
                                 m.referMsg = referMsg
+                                break
                             }
                         }
                     }
