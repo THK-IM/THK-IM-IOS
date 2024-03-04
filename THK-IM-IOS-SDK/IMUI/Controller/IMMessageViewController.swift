@@ -39,7 +39,7 @@ class IMMessageViewController: BaseViewController {
         self.registerMsgEvent()
         self.registerKeyboardEvent()
         self.messageLayout.loadMessages()
-//        self.fetchSessionMembers()
+        self.fetchSessionMembers()
     }
     
     private func showSessionTitle() {

@@ -204,27 +204,20 @@ open class IMBaseMsgCell : IMBaseTableCell {
     }
     
     open func initUser() {
-        print("asyncGetSessionMemberInfo initUser 1")
         let fromUId = self.message?.fromUId
         if (self.showAvatar() && fromUId != nil && self.cellWrapper.avatarView() != nil) {
-            self.cellWrapper.avatarView()?.isHidden = false
-            print("asyncGetSessionMemberInfo initUser 2")
             guard let delegate = self.delegate else {
                 return
             }
-            print("asyncGetSessionMemberInfo initUser 3")
             if let info = delegate.syncGetSessionMemberInfo(fromUId!) {
                 self.updateUserInfo(user: info.0, sessionMember: info.1)
             } else {
-                delegate.asyncGetSessionMemberInfo(fromUId!)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] info in
-                    print("asyncGetSessionMemberInfo \(info)")
-                    self?.updateUserInfo(user: info.0, sessionMember: info.1)
-                    self?.delegate?.saveSessionMemberInfo(info)
-                }, onError: { err in
-                    print("asyncGetSessionMemberInfo \(err)")
-                }).disposed(by: disposeBag)
+//                delegate.asyncGetSessionMemberInfo(fromUId!)
+//                .compose(RxTransformer.shared.io2Main())
+//                .subscribe(onNext: { [weak self] info in
+//                    self?.updateUserInfo(user: info.0, sessionMember: info.1)
+//                    self?.delegate?.saveSessionMemberInfo(info)
+//                }).disposed(by: disposeBag)
             }
         } else {
             self.cellWrapper.avatarView()?.isHidden = true
@@ -264,6 +257,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
     }
     
     private func updateUserInfo(user: User, sessionMember: SessionMember?) {
+        self.cellWrapper.avatarView()?.isHidden = false
         self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 20)
         if let noteName = sessionMember?.noteName {
             if !noteName.isEmpty {
