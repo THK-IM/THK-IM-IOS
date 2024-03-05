@@ -38,10 +38,11 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         guard var content = message.content else {
             return
         }
+        let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0
         if (message.atUsers != nil && message.atUsers!.length > 0) {
             content = self.replaceIdToNickname(content, message.atUsers!)
         }
-        render(content)
+        render(content, updated)
     }
     
     private func replaceIdToNickname(_ content: String, _ atUser: String) -> String {
@@ -55,28 +56,45 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     }
     
     
-    private func render(_ data: String) {
+    private func render(_ data: String, _ updated: Bool) {
         guard let regex = try? NSRegularExpression(pattern: AtStringUtils.atRegular) else {
             return
         }
         let range = NSRange(data.startIndex..<data.endIndex, in: data)
-        let attributedStr = NSMutableAttributedString(string: data)
+        let contentAttributedStr = NSMutableAttributedString(string: data)
         regex.matches(in: data, options: [], range: range).forEach { matchResult in
             var range = matchResult.range
             range.length += 2
             range.location -= 1
-            attributedStr.addAttribute(
+            contentAttributedStr.addAttribute(
                 .foregroundColor,
                 value: UIColor.init(hex: "#1390f4"),
                 range: range
             )
-            attributedStr.addAttribute(
+            contentAttributedStr.addAttribute(
                 .font,
                 value: UIFont.boldSystemFont(ofSize: self.font.pointSize),
                 range: range
             )
         }
-        self.attributedText = attributedStr
+        
+        if (updated) {
+            let editStr = "已编辑"
+            let editAttributedStr = NSMutableAttributedString(string: editStr)
+            let editRange = NSRange(editStr.startIndex..<editStr.endIndex, in: editStr)
+            editAttributedStr.addAttribute(
+                .foregroundColor,
+                value: UIColor.init(hex: "#999999"),
+                range: editRange
+            )
+            editAttributedStr.addAttribute(
+                .font,
+                value: UIFont.boldSystemFont(ofSize: self.font.pointSize),
+                range: editRange
+            )
+            contentAttributedStr.append(editAttributedStr)
+        }
+        self.attributedText = contentAttributedStr
     }
     
     func contentView() -> UIView {

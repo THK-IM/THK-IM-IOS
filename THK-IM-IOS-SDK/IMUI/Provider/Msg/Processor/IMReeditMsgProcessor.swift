@@ -66,8 +66,8 @@ public class IMReeditMsgProcessor: IMBaseMsgProcessor {
         ) else {
             return false
         }
-        originMsg.content = reeditMsgData.edit + "[已编辑]"
-        originMsg.data = nil
+        originMsg.content = reeditMsgData.edit
+        originMsg.operateStatus = originMsg.operateStatus | MsgOperateStatus.Update.rawValue
         do {
             try self.insertOrUpdateDb(originMsg)
             return true

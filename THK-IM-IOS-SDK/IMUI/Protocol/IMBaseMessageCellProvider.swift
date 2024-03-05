@@ -99,7 +99,7 @@ open class IMBaseMessageCellProvider {
             var top:CGFloat = 10
             if session?.type == SessionType.Group.rawValue || session?.type == SessionType.SuperGroup.rawValue
                 || session?.type == SessionType.MsgRecord.rawValue {
-                top += 18
+                top += 24
             }
             return top
         } else {
