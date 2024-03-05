@@ -18,7 +18,7 @@ open class IMTextMsgProcessor : IMBaseMsgProcessor {
             if (msg.atUsers != nil && msg.atUsers!.length > 0) {
                 let content = AtStringUtils.replaceAtUIdsToNickname(msg.content!, msg.atUsers!, { id in
                     if id == -1 {
-                        return "All"
+                        return User.all.nickname
                     }
                     if let sessionMember = IMCoreManager.shared.database.sessionMemberDao().findSessionMember(msg.sessionId, id) {
                         if let noteName = sessionMember.noteName {

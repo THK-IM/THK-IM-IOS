@@ -405,10 +405,10 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         self.textView.layoutManager.allowsNonContiguousLayout = false
         var content = self.textView.text
         if content == nil {
-            self.renderAtMsg(text)
+            self.renderInputText(text)
         } else {
             content!.append(contentsOf: text)
-            self.renderAtMsg(content!)
+            self.renderInputText(content!)
         }
         self.textViewDidChange(self.textView)
         self.textView.scrollRectToVisible(
@@ -447,7 +447,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             self.textView.text.remove(at: endIndex)
             data = NSMutableString(string: self.textView.text)
         }
-        renderAtMsg(String(data))
+        self.renderInputText(String(data))
         self.textViewDidChange(self.textView)
         self.textView.scrollRectToVisible(
             CGRect(x: 0,
@@ -481,10 +481,10 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             self.sender?.sendMessage(MsgType.Reedit.rawValue, content, nil, nil)
             self.reeditMsg = nil
         } else {
-            self.sender?.sendMessage(MsgType.Text.rawValue, content, content, atUIds)
+            self.sender?.sendMessage(MsgType.Text.rawValue, content, nil, atUIds)
         }
         self.atRanges.removeAll()
-        self.renderAtMsg("")
+        self.renderInputText("")
         self.textInputHeight = IMInputLayout.minTextInputHeight
         self.resetLayout(false)
     }
@@ -520,7 +520,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         guard let atNickname = self.atNickname(user.id) else {
             return
         }
-        guard let content = self.textView.text else {
+        guard var content = self.textView.text else {
             return
         }
         let u16Content = NSString(string: content)
@@ -530,22 +530,21 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         let lastInput = u16Content.substring(with: lastRange)
         let offset = u16Content.substring(to: lastRange.location+lastRange.length).count
         if (lastInput == "@") {
-            self.textView.text.insert(
+            content.insert(
                 contentsOf: "\(atNickname) ",
                 at: content.index(content.startIndex, offsetBy: offset)
             )
-            self.renderAtMsg(self.textView.text)
         } else {
-            self.textView.text.insert(
+            content.insert(
                 contentsOf: "@\(atNickname) ",
                 at: content.index(content.startIndex, offsetBy: offset)
             )
-            self.renderAtMsg(self.textView.text)
         }
+        self.renderInputText(content)
     }
     
-    private func renderAtMsg(_ data: String) {
-        guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
+    private func renderInputText(_ data: String) {
+        guard let regex = try? NSRegularExpression(pattern: AtStringUtils.atRegular) else {
             return
         }
         let allRange = NSRange(data.startIndex..<data.endIndex, in: data)
@@ -627,7 +626,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
                     return ""
                 }
             }
-            self.renderAtMsg(content)
+            self.renderInputText(content)
             if let sender = self.sender {
                 if !sender.isKeyboardShowing() {
                     sender.openKeyboard()
