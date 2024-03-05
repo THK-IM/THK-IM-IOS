@@ -56,7 +56,7 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     
     
     private func render(_ data: String) {
-        guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
+        guard let regex = try? NSRegularExpression(pattern: AtStringUtils.atRegular) else {
             return
         }
         let range = NSRange(data.startIndex..<data.endIndex, in: data)

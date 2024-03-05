@@ -14,9 +14,11 @@ public class AtStringUtils {
     public typealias findIdByNickname =  (_ nickname: String) -> Int64
     public typealias findNicknameById =  (_ id: Int64) -> String
     
+    public static let atRegular = "(?<=@)(.+?)(?=\\s)"
+    
     public static func replaceAtNickNamesToUIds(_ text: String, _ finder: findIdByNickname) -> (String, String?) {
         let replacement = NSMutableString(string: text)
-        guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
+        guard let regex = try? NSRegularExpression(pattern: atRegular) else {
             return (text, nil)
         }
         let allRange = NSRange(text.startIndex..<text.endIndex, in: text)
@@ -38,7 +40,7 @@ public class AtStringUtils {
 
     public static func replaceAtUIdsToNickname(_ text: String, _ atUIds: String, _ finder: findNicknameById) -> String {
         let replacement = NSMutableString(string: text)
-        guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
+        guard let regex = try? NSRegularExpression(pattern: atRegular) else {
             return text
         }
         let allRange = NSRange(text.startIndex..<text.endIndex, in: text)
