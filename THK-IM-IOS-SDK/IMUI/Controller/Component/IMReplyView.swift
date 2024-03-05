@@ -127,9 +127,15 @@ class IMReplyView: UIView {
     }
     
     private func showContentView(_ user: User, _ msg: Message) {
-        let sessionDesc = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).sessionDesc(msg: msg)
         self.replyUserView.text = "\(user.nickname)"
-        self.replyMsgView.text = sessionDesc
+        Observable.just("")
+            .flatMap { it in
+                let sessionDesc = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).sessionDesc(msg: msg)
+                return Observable.just(sessionDesc)
+            }.compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] msg in
+                self?.replyMsgView.text = msg
+            }).disposed(by: self.disposeBag)
     }
     
     func clearMessage() {
