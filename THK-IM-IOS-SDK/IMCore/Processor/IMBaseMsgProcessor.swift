@@ -251,6 +251,7 @@ open class IMBaseMsgProcessor {
      * 【插入或更新消息状态】
      */
     open func insertOrUpdateDb(_ msg: Message, _ notify: Bool = true, _ notifySession: Bool = true) throws {
+        msg.mTime = IMCoreManager.shared.severTime
         try IMCoreManager.shared.database.messageDao().insertOrReplace([msg])
         if notify {
             if (msg.referMsgId != nil && msg.referMsg == nil) {
