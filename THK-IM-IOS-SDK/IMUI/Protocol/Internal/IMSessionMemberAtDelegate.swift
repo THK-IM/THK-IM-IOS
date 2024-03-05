@@ -10,6 +10,6 @@ import Foundation
 
 public protocol IMSessionMemberAtDelegate: AnyObject {
     
-    func onSessionMemberAt(sessionMember: SessionMember, user: User)
+    func onSessionMemberAt(_ memberInfo: (User, SessionMember?))
     
 }

@@ -17,7 +17,6 @@ class IMSessionMemberCell: UITableViewCell {
     
     private let avatarView = UIImageView()
     private let nicknameView = UILabel()
-    private var user: User?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -49,20 +48,12 @@ class IMSessionMemberCell: UITableViewCell {
         self.nicknameView.font = UIFont.systemFont(ofSize: 16)
     }
     
-    func setData(sessionMember: SessionMember) {
-        IMCoreManager.shared.userModule.queryUser(id: sessionMember.userId)
-            .subscribe(onNext: { [weak self] user in
-                self?.showAvatar(user: user, sessionMember: sessionMember)
-            }).disposed(by: self.disposeBag)
-    }
-    
-    private func showAvatar(user: User, sessionMember: SessionMember) {
-        self.user = user
-        self.avatarView.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 10)
-        if (sessionMember.noteName != nil && !sessionMember.noteName!.isEmpty ) {
-            self.showNickname(nickname: sessionMember.noteName!)
+    func setData(memberInfo: (User, SessionMember?)) {
+        self.avatarView.renderImageByUrlWithCorner(url: memberInfo.0.avatar ?? "", radius: 10)
+        if (memberInfo.1 != nil && memberInfo.1!.noteName != nil && !memberInfo.1!.noteName!.isEmpty ) {
+            self.showNickname(nickname: memberInfo.1!.noteName!)
         } else {
-            self.showNickname(nickname: user.nickname)
+            self.showNickname(nickname: memberInfo.0.nickname)
         }
     }
     
@@ -70,10 +61,6 @@ class IMSessionMemberCell: UITableViewCell {
         if (nickname != nil) {
             self.nicknameView.text = nickname
         }
-    }
-    
-    func getUser() -> User? {
-        return self.user
     }
     
     required init?(coder: NSCoder) {

@@ -13,6 +13,7 @@ import RxSwift
 class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     
     private var disposeBag = DisposeBag()
+    private weak var delegate: IMMsgCellOperator?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,71 +29,33 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     }
     
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
+        self.delegate = delegate
         if isReply {
             self.snp.remakeConstraints { make in
                 make.edges.equalToSuperview()
             }
         }
-        if (message.data != nil && message.data!.length > 0) {
-            self.renderAtMsg(message.data!)
-        } else if (message.atUsers != nil) {
-            let atUsers = message.atUsers!.split(separator: "#")
-            if (atUsers.isEmpty) {
-                self.renderAtMsg(message.content!)
-            } else {
-                self.renderAtMsgAndUserInfo(message, atUsers)
-            }
-        } else {
-            self.text = message.content
+        guard var content = message.content else {
+            return
         }
+        if (message.atUsers != nil && message.atUsers!.length > 0) {
+            content = self.replaceIdToNickname(content, message.atUsers!)
+        }
+        render(content)
     }
     
-    private func renderAtMsgAndUserInfo(_ message: Message, _ atUsers: [Substring]) {
-        var uIds = Set<Int64>()
-        for atUser in atUsers {
-            if let id = Int64(atUser) {
-                uIds.insert(id)
+    private func replaceIdToNickname(_ content: String, _ atUser: String) -> String {
+        let content = AtStringUtils.replaceAtUIdsToNickname(content, atUser) { [weak self] id in
+            if let member = self?.delegate?.syncGetSessionMemberInfo(id) {
+                return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
             }
+            return ""
         }
-        if (uIds.isEmpty) {
-            self.text = message.content
-        } else {
-            IMCoreManager.shared.userModule.queryUsers(ids: uIds)
-                .flatMap({ it -> Observable<String> in
-                    guard let content = message.content else {
-                        return Observable.just("")
-                    }
-                    var userMap = [String: User]()
-                    for (k, v) in it {
-                        userMap["\(k)"] = v
-                    }
-                    guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
-                        return Observable.just(content)
-                    }
-                    let data = NSMutableString(string: content)
-                    let allRange = NSRange(content.startIndex..<content.endIndex, in: content)
-                    regex.matches(in: content, options: [], range: allRange).forEach { matchResult in
-                        if let idRange = Range.init(matchResult.range, in: content) {
-                            let id = String(content[idRange])
-                            if let user = userMap[id] {
-                                let dataString = String(data)
-                                let dataRange = NSRange(dataString.startIndex..<dataString.endIndex, in: dataString)
-                                data.replaceOccurrences(of: id, with: user.nickname, options: .caseInsensitive, range: dataRange)
-                            }
-                        }
-                    }
-                    let msgData = String(data)
-                    return Observable.just(msgData)
-                })
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] data in
-                    self?.renderAtMsg(data)
-                }).disposed(by: self.disposeBag)
-        }
+        return content
     }
     
     
-    private func renderAtMsg(_ data: String) {
+    private func render(_ data: String) {
         guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
             return
         }

@@ -12,6 +12,9 @@ open class IMUIManager: NSObject {
     
     public static let shared = IMUIManager()
     
+    public var allUser = User(id: -1)
+    public var allSessionMember = SessionMember(userId: -1)
+    
     private var msgCellProviders = [Int:IMBaseMessageCellProvider]()
     private var sessionCellProviders = [Int:IMBaseSessionCellProvider]()
     private var bottomFunctionProviders = [IMBaseFunctionCellProvider]()
@@ -23,6 +26,7 @@ open class IMUIManager: NSObject {
     
     private override init() {
         super.init()
+        
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMUnSupportMsgProcessor())
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMTextMsgProcessor())
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMImageMsgProcessor())
@@ -57,6 +61,7 @@ open class IMUIManager: NSObject {
         self.registerMessageOperator(IMMsgMultiSelectOperator())
         self.registerMessageOperator(IMMsgEditOperator())
         
+        self.allUser.nickname = "All"
     }
     
     public func registerMsgCellProviders(_ provider: IMBaseMessageCellProvider) {
@@ -107,6 +112,14 @@ open class IMUIManager: NSObject {
     public func getMessageOperators(_ message: Message) -> [IMMessageOperator] {
         return msgOperators.filter { p in
             return p.supportMessage(message)
+        }
+    }
+    
+    public func nicknameForSessionMember(_ user: User, _ sessionMember: SessionMember?) -> String {
+        if (sessionMember != nil && sessionMember!.noteName != nil && !sessionMember!.noteName!.isEmpty) {
+            return sessionMember!.noteName!
+        } else {
+            return user.nickname
         }
     }
     

@@ -62,6 +62,7 @@
 		A033FB132B92F8A10053045E /* IMMsgEditOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB122B92F8A10053045E /* IMMsgEditOperator.swift */; };
 		A033FB152B931CB80053045E /* ReeditMsgVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB142B931CB80053045E /* ReeditMsgVo.swift */; };
 		A033FB172B933EA20053045E /* IMReadStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB162B933EA20053045E /* IMReadStatusView.swift */; };
+		A033FB1B2B96C9F50053045E /* AtStringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB1A2B96C9F40053045E /* AtStringUtils.swift */; };
 		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A050072F2B08BC9700526713 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072E2B08BC9700526713 /* AppUtils.swift */; };
 		A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */; };
@@ -358,6 +359,7 @@
 		A033FB122B92F8A10053045E /* IMMsgEditOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgEditOperator.swift; sourceTree = "<group>"; };
 		A033FB142B931CB80053045E /* ReeditMsgVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReeditMsgVo.swift; sourceTree = "<group>"; };
 		A033FB162B933EA20053045E /* IMReadStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMReadStatusView.swift; sourceTree = "<group>"; };
+		A033FB1A2B96C9F40053045E /* AtStringUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtStringUtils.swift; sourceTree = "<group>"; };
 		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A050072E2B08BC9700526713 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
 		A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallViewController.swift; sourceTree = "<group>"; };
@@ -738,6 +740,14 @@
 			path = sessionmember;
 			sourceTree = "<group>";
 		};
+		A033FB192B96C9DA0053045E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				A033FB1A2B96C9F40053045E /* AtStringUtils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		A045CF8B2A92561900654957 /* IMProvider */ = {
 			isa = PBXGroup;
 			children = (
@@ -1047,6 +1057,7 @@
 		A0D68ADE2A888678004D11A5 /* IMUI */ = {
 			isa = PBXGroup;
 			children = (
+				A033FB192B96C9DA0053045E /* Utils */,
 				A0D68B102A888678004D11A5 /* Protocol */,
 				A0D68AE32A888678004D11A5 /* Resources */,
 				A0D68AE52A888678004D11A5 /* Provider */,
@@ -1851,6 +1862,7 @@
 				A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */,
 				A0D68C092A888679004D11A5 /* SignalListener.swift in Sources */,
 				A033FA9F2B80AE8B0053045E /* IMSuperGroupCellProvider.swift in Sources */,
+				A033FB1B2B96C9F50053045E /* AtStringUtils.swift in Sources */,
 				A0D68BAE2A888679004D11A5 /* IMUnicodeEmojiPanelView.swift in Sources */,
 				A0FCA92A2B4986B700FC6E47 /* UpdateNoteNameVo.swift in Sources */,
 				A0D68B9C2A888679004D11A5 /* String+Ext.swift in Sources */,

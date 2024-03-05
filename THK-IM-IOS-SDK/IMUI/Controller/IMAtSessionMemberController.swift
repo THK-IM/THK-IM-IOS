@@ -15,17 +15,17 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
     private let titleView = UILabel()
     private let memberTableView = UITableView()
     private let sessionMemberIdentifier = "table_cell_session_member"
+    private var memberMap = [(User, SessionMember?)]()
     var session: Session? = nil
-    private var sessionMembers = [SessionMember]()
     weak var delegate: IMSessionMemberAtDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupUI()
-        self.initSessionMembers()
+        self.fetchSessionMembers()
     }
     
-    func setupUI() {
+    private func setupUI() {
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(self.titleView)
         self.titleView.snp.makeConstraints { make in
@@ -55,44 +55,68 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
         self.memberTableView.delegate = self
     }
     
-    func initSessionMembers() {
-        guard let session = self.session else {
-            return 
+    private func fetchSessionMembers() {
+        guard let sessionId = self.session?.id else {
+            return
         }
-        IMCoreManager.shared.messageModule.querySessionMembers(session.id)
-            .compose(RxTransformer.shared.io2Main())
-            .subscribe(onNext: { [weak self] sessionMembers in
-                self?.sessionMembers.append(contentsOf: sessionMembers)
-                self?.memberTableView.reloadData()
+        IMCoreManager.shared.messageModule.querySessionMembers(sessionId)
+            .flatMap { members in
+                var ids = Set<Int64>()
+                for m in members {
+                    ids.insert(m.userId)
+                }
+                return IMCoreManager.shared.userModule.queryUsers(ids: ids)
+                    .flatMap { userMap in
+                        var memberMap = [Int64: (User, SessionMember?)]()
+                        for (k, v) in userMap {
+                            var member: SessionMember? = nil
+                            for m in members {
+                                if (m.userId == k) {
+                                    member = m
+                                    break
+                                }
+                            }
+                            memberMap[k] = (v, member)
+                        }
+                        return Observable.just(memberMap)
+                    }
+            }.compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] map in
+                self?.updateSessionMember(map)
             }).disposed(by: self.disposeBag)
     }
+    
+    private func updateSessionMember(_ map: [Int64: (User, SessionMember?)]) {
+        self.memberMap.append(contentsOf: map.values)
+        if self.memberMap.count > 2 {
+            self.memberMap.append((IMUIManager.shared.allUser, IMUIManager.shared.allSessionMember))
+        }
+        self.memberTableView.reloadData()
+    }
+    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.sessionMembers.count
+        return self.memberMap.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let sessionMember = self.sessionMembers[indexPath.row]
+        let member = self.memberMap[indexPath.row]
         var viewCell = tableView.dequeueReusableCell(withIdentifier: sessionMemberIdentifier)
         if (viewCell == nil) {
             viewCell = IMSessionMemberCell(style: .default, reuseIdentifier: sessionMemberIdentifier)
         }
-        (viewCell! as! IMSessionMemberCell).setData(sessionMember: sessionMember)
+        (viewCell! as! IMSessionMemberCell).setData(memberInfo: member)
         return viewCell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: true)
-        if let cell = tableView.cellForRow(at: indexPath) as? IMSessionMemberCell {
-            if let user = cell.getUser() {
-                let sessionMember = self.sessionMembers[indexPath.row]
-                self.delegate?.onSessionMemberAt(sessionMember: sessionMember, user: user)
-            }
-        }
+        let member = self.memberMap[indexPath.row]
+        self.delegate?.onSessionMemberAt(member)
     }
     
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {

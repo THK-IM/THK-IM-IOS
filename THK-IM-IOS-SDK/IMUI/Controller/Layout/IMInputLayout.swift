@@ -24,6 +24,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     private static let maxTextInputHeight: CGFloat = 120.0
     private static let minTextInputHeight: CGFloat = 40.0
     private let iconSize = CGSize(width: 24.0, height: 24.0)
+    private let inputFont = UIFont.systemFont(ofSize: 16.0)
     
     private var textInputHeight = IMInputLayout.minTextInputHeight
     private var inputLayoutHeight: CGFloat {
@@ -77,7 +78,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         textView.delegate = self
         textView.isScrollEnabled = true
         textView.textColor = UIColor.init(hex: "#333333")
-        textView.font = UIFont.systemFont(ofSize: 16.0)
+        textView.font = inputFont
         textView.returnKeyType = .send
         textView.keyboardType = .default
         textView.backgroundColor = UIColor.init(hex: "#FFF8F8F8")
@@ -464,49 +465,30 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         if (text.length == 0) {
             return
         }
-        let msgContent = NSMutableString(string: text)
-        guard let regex = try? NSRegularExpression(pattern: "(?<=@)(.+?)(?=\\s)") else {
-            return
-        }
-        let allRange = NSRange(text.startIndex..<text.endIndex, in: text)
-        var atUIds = ""
-        regex.matches(in: text, options: [], range: allRange).forEach { [weak self] matchResult in
+        let (content, atUIds) = AtStringUtils.replaceAtNickNamesToUIds(text) { [weak self] nickname in
             guard let sf = self else {
-                return
+                return 0
             }
-            if let nickRange = Range.init(matchResult.range, in: text) {
-                let nickName = String(text[nickRange])
-                for (k, v) in sf.atMap {
-                    if (v == nickName) {
-                        if (!atUIds.isEmpty) {
-                            atUIds += "#"
-                        }
-                        atUIds += "\(k)"
-                        let dataString = String(msgContent)
-                        let dataRange = NSRange(dataString.startIndex..<dataString.endIndex, in: dataString)
-                        msgContent.replaceOccurrences(of:v, with: k, options: .caseInsensitive, range: dataRange)
-                    }
+            for (k, v) in sf.atMap {
+                if (v == nickname) {
+                    return Int64(k) ?? 0
                 }
             }
-        }
-        var atUsers: String? = nil
-        if (!atUIds.isEmpty) {
-            atUsers = atUIds
+            return 0
         }
         if let reeditMsg = self.reeditMsg  {
-            let content = IMReeditMsgData(sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId, edit: String(msgContent))
-            self.sender?.sendMessage(MsgType.Reedit.rawValue, content, nil, atUsers)
+            let content = IMReeditMsgData(sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId, edit: content)
+            self.sender?.sendMessage(MsgType.Reedit.rawValue, content, nil, nil)
             self.reeditMsg = nil
         } else {
-            self.sender?.sendMessage(MsgType.Text.rawValue, String(msgContent), text, atUsers)
+            self.sender?.sendMessage(MsgType.Text.rawValue, content, content, atUIds)
         }
         self.atRanges.removeAll()
         self.renderAtMsg("")
         self.textInputHeight = IMInputLayout.minTextInputHeight
         self.resetLayout(false)
     }
-    
-    
+
     @discardableResult func openKeyboard() -> Bool {
         return self.textView.becomeFirstResponder()
     }
@@ -525,12 +507,19 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         })
     }
     
+    private func addAtMap(_ user: User, _ sessionMember: SessionMember?) {
+        self.atMap["\(user.id)"] = IMUIManager.shared.nicknameForSessionMember(user, sessionMember)
+    }
+    
+    private func atNickname(_ id: Int64) -> String? {
+        return self.atMap["\(id)"]
+    }
+    
     func addAtSessionMember(user: User, sessionMember: SessionMember?) {
-        self.atMap["\(user.id)"] = user.nickname
-        if (sessionMember != nil && sessionMember!.noteName != nil && !sessionMember!.noteName!.isEmpty) {
-            self.atMap["\(sessionMember!.userId)"] = sessionMember!.noteName!
+        self.addAtMap(user, sessionMember)
+        guard let atNickname = self.atNickname(user.id) else {
+            return
         }
-        DDLogInfo("addAtSessionMember \(sessionMember ?? "nil") \(user)")
         guard let content = self.textView.text else {
             return
         }
@@ -542,13 +531,13 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         let offset = u16Content.substring(to: lastRange.location+lastRange.length).count
         if (lastInput == "@") {
             self.textView.text.insert(
-                contentsOf: "\(user.nickname) ",
+                contentsOf: "\(atNickname) ",
                 at: content.index(content.startIndex, offsetBy: offset)
             )
             self.renderAtMsg(self.textView.text)
         } else {
             self.textView.text.insert(
-                contentsOf: "@\(user.nickname) ",
+                contentsOf: "@\(atNickname) ",
                 at: content.index(content.startIndex, offsetBy: offset)
             )
             self.renderAtMsg(self.textView.text)
@@ -576,7 +565,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         )
         attributedStr.addAttribute(
             .font,
-            value: UIFont.systemFont(ofSize: 16.0),
+            value: inputFont,
             range: allRange
         )
         if (atRanges.count > 0) {
@@ -588,7 +577,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
                 )
                 attributedStr.addAttribute(
                     .font,
-                    value: UIFont.systemFont(ofSize: 16.0),
+                    value: inputFont,
                     range: atRange
                 )
             }
@@ -628,12 +617,21 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     func setReeditMessage(_ message: Message) {
         self.reeditMsg = message
-        if let content = message.content {
+        if var content = message.content {
+            if let atUser = message.atUsers {
+                content = AtStringUtils.replaceAtUIdsToNickname(content, atUser) { [weak self] id in
+                    if let member = self?.sender?.syncGetSessionMemberInfo(id) {
+                        self?.addAtMap(member.0, member.1)
+                        return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
+                    }
+                    return ""
+                }
+            }
             self.renderAtMsg(content)
-        }
-        if let sender = self.sender {
-            if !sender.isKeyboardShowing() {
-                sender.openKeyboard()
+            if let sender = self.sender {
+                if !sender.isKeyboardShowing() {
+                    sender.openKeyboard()
+                }
             }
         }
     }

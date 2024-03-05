@@ -670,6 +670,9 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     /// 同步获取用户信息
     func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)? {
+        if userId == -1 {
+            return (IMUIManager.shared.allUser, IMUIManager.shared.allSessionMember)
+        }
         return self.memberMap[userId]
     }
     
@@ -691,8 +694,8 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             }
     }
     
-    func onSessionMemberAt(sessionMember: SessionMember, user: User) {
-        self.inputLayout.addAtSessionMember(user: user, sessionMember: sessionMember)
+    func onSessionMemberAt(_ memberInfo: (User, SessionMember?)) {
+        self.inputLayout.addAtSessionMember(user: memberInfo.0, sessionMember: memberInfo.1)
     }
     
     ///  预览消息
