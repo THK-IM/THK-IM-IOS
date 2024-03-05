@@ -48,13 +48,13 @@ public class AtStringUtils {
         regex.matches(in: text, options: [], range: allRange).forEach { matchResult in
             if let idRange = Range.init(matchResult.range, in: text) {
                 let id = String(text[idRange])
-                for uIdStr in uIdStrs {
-                    if (id == uIdStr) {
-                        if let uId = Int64(uIdStr) {
-                            let nickname = finder(uId)
-                            let range = NSRange(String(replacement).startIndex..<String(replacement).endIndex, in: String(replacement))
-                            replacement.replaceOccurrences(of:String(uIdStr), with: nickname, options: .caseInsensitive, range: range)
-                        }
+                if uIdStrs.contains(where: { uIdStr in
+                    return id == uIdStr
+                }) {
+                    if let uId = Int64(id) {
+                        let nickname = finder(uId)
+                        let range = NSRange(String(replacement).startIndex..<String(replacement).endIndex, in: String(replacement))
+                        replacement.replaceOccurrences(of:String(id), with: nickname, options: .caseInsensitive, range: range)
                     }
                 }
             }

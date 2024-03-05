@@ -48,7 +48,7 @@ public final class User: TableCodable {
     public init(id: Int64, nickname: String = "") {
         self.id = id
         self.displayId = ""
-        self.nickname = ""
+        self.nickname = nickname
         self.avatar = nil
         self.sex = nil
         self.status = 0
