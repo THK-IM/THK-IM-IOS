@@ -671,7 +671,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     /// 同步获取用户信息
     func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)? {
         if userId == -1 {
-            return (IMUIManager.shared.allUser, IMUIManager.shared.allSessionMember)
+            return (User.all, nil)
         }
         return self.memberMap[userId]
     }

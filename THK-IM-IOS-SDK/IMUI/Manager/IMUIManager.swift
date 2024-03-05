@@ -12,9 +12,6 @@ open class IMUIManager: NSObject {
     
     public static let shared = IMUIManager()
     
-    public var allUser = User(id: -1)
-    public var allSessionMember = SessionMember(userId: -1)
-    
     private var msgCellProviders = [Int:IMBaseMessageCellProvider]()
     private var sessionCellProviders = [Int:IMBaseSessionCellProvider]()
     private var bottomFunctionProviders = [IMBaseFunctionCellProvider]()
@@ -61,7 +58,6 @@ open class IMUIManager: NSObject {
         self.registerMessageOperator(IMMsgMultiSelectOperator())
         self.registerMessageOperator(IMMsgEditOperator())
         
-        self.allUser.nickname = "All"
     }
     
     public func registerMsgCellProviders(_ provider: IMBaseMessageCellProvider) {

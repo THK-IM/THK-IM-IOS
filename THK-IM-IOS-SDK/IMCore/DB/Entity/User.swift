@@ -45,7 +45,7 @@ public final class User: TableCodable {
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    public init(id: Int64) {
+    public init(id: Int64, nickname: String = "") {
         self.id = id
         self.displayId = ""
         self.nickname = ""
@@ -70,4 +70,6 @@ public final class User: TableCodable {
         self.cTime = cTime
         self.mTime = mTime
     }
+    
+    public static let all = User(id: -1, nickname: "All")
 }

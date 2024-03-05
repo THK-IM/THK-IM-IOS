@@ -89,7 +89,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
     private func updateSessionMember(_ map: [Int64: (User, SessionMember?)]) {
         self.memberMap.append(contentsOf: map.values)
         if self.memberMap.count > 2 {
-            self.memberMap.append((IMUIManager.shared.allUser, IMUIManager.shared.allSessionMember))
+            self.memberMap.append((User.all, nil))
         }
         self.memberTableView.reloadData()
     }
