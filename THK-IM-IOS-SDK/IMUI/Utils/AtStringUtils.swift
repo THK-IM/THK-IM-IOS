@@ -44,13 +44,10 @@ public class AtStringUtils {
             return text
         }
         let allRange = NSRange(text.startIndex..<text.endIndex, in: text)
-        let uIdStrs = atUIds.split(separator: "#")
         regex.matches(in: text, options: [], range: allRange).forEach { matchResult in
             if let idRange = Range.init(matchResult.range, in: text) {
                 let id = String(text[idRange])
-                if uIdStrs.contains(where: { uIdStr in
-                    return id == uIdStr
-                }) {
+                if atUIds.contains(id) {
                     if let uId = Int64(id) {
                         let nickname = finder(uId)
                         let range = NSRange(String(replacement).startIndex..<String(replacement).endIndex, in: String(replacement))
