@@ -15,8 +15,9 @@ open class IMTextMsgProcessor : IMBaseMsgProcessor {
     
     open override func sessionDesc(msg: Message) -> String {
         if (msg.content != nil) {
+            var body = msg.content!
             if (msg.atUsers != nil && msg.atUsers!.length > 0) {
-                let content = AtStringUtils.replaceAtUIdsToNickname(msg.content!, msg.atUsers!, { id in
+                body = AtStringUtils.replaceAtUIdsToNickname(msg.content!, msg.atUsers!, { id in
                     if id == -1 {
                         return User.all.nickname
                     }
@@ -32,9 +33,12 @@ open class IMTextMsgProcessor : IMBaseMsgProcessor {
                     }
                     return ""
                 })
-                return super.sessionDesc(msg: msg) + content
             }
-            return super.sessionDesc(msg: msg) + String(msg.content!)
+            var editFlag = ""
+            if (msg.operateStatus & MsgOperateStatus.Update.rawValue > 0) {
+                editFlag = "[已编辑]"
+            }
+            return super.sessionDesc(msg: msg) + editFlag + body
         } else {
             return super.sessionDesc(msg: msg)
         }

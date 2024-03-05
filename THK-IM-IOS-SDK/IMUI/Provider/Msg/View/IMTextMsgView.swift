@@ -79,7 +79,7 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         }
         
         if (updated) {
-            let editStr = "已编辑"
+            let editStr = "[已编辑]"
             let editAttributedStr = NSMutableAttributedString(string: editStr)
             let editRange = NSRange(editStr.startIndex..<editStr.endIndex, in: editStr)
             editAttributedStr.addAttribute(
