@@ -42,18 +42,7 @@ public protocol IMMsgCellOperator: AnyObject {
     /// 选中
     func onSelected(message: Message, selected: Bool)
     
-    /// 已读消息
-    func readMessage(_ message: Message)
+    /// 获取发送者
+    func msgSender() -> IMMsgSender?
     
-    /// 设置输入框文字
-    func setEditText(text: String)
-    
-    /// 同步获取用户信息
-    func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)?
-    
-    /// 设置用户信息
-    func saveSessionMemberInfo(_ info: (User, SessionMember?))
-    
-    /// 异步获取用户信息
-    func asyncGetSessionMemberInfo(_ userId: Int64) -> Observable<(User, SessionMember?)>
 }

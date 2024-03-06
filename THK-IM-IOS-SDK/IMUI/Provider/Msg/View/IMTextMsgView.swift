@@ -47,7 +47,7 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     
     private func replaceIdToNickname(_ content: String, _ atUser: String) -> String {
         let content = AtStringUtils.replaceAtUIdsToNickname(content, atUser) { [weak self] id in
-            if let member = self?.delegate?.syncGetSessionMemberInfo(id) {
+            if let member = self?.delegate?.msgSender()?.syncGetSessionMemberInfo(id) {
                 return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
             }
             return ""

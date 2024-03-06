@@ -209,15 +209,20 @@ open class IMBaseMsgCell : IMBaseTableCell {
             guard let delegate = self.delegate else {
                 return
             }
-            if let info = delegate.syncGetSessionMemberInfo(fromUId!) {
+            guard let sender = delegate.msgSender() else {
+                IMCoreManager.shared.userModule
+                    .queryUser(id: fromUId!)
+                    .compose(RxTransformer.shared.io2Main())
+                    .subscribe(onNext: { [weak self] user in
+                        guard let sf = self else {
+                            return
+                        }
+                        sf.updateUserInfo(user: user, sessionMember: nil)
+                    }).disposed(by: disposeBag)
+                return 
+            }
+            if let info = sender.syncGetSessionMemberInfo(fromUId!) {
                 self.updateUserInfo(user: info.0, sessionMember: info.1)
-            } else {
-//                delegate.asyncGetSessionMemberInfo(fromUId!)
-//                .compose(RxTransformer.shared.io2Main())
-//                .subscribe(onNext: { [weak self] info in
-//                    self?.updateUserInfo(user: info.0, sessionMember: info.1)
-//                    self?.delegate?.saveSessionMemberInfo(info)
-//                }).disposed(by: disposeBag)
             }
         } else {
             self.cellWrapper.avatarView()?.isHidden = true
@@ -295,7 +300,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
         guard let session = self.session else {
             return
         }
-        if session.type == SessionType.MsgRecord.rawValue {
+        if session.type == SessionType.MsgRecord.rawValue || session.type == SessionType.SuperGroup.rawValue {
             return
         }
         Observable.just(session.id).flatMap { sessionId in
@@ -374,7 +379,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
             ) {
             return
         }
-        self.delegate?.readMessage(message!)
+        self.delegate?.msgSender()?.readMessage(message!)
         message!.operateStatus = message!.operateStatus | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ClientRead.rawValue
     }
     

@@ -491,31 +491,8 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         }
     }
     
-    
-    func readMessage(_ message: Message) {
-        self.sender?.readMessage(message)
-    }
-    
-    func setEditText(text: String) {
-        _ = self.sender?.openKeyboard()
-        self.sender?.addInputContent(text: text)
-    }
-    
-    
-    func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)? {
-        return sender?.syncGetSessionMemberInfo(userId)
-    }
-    
-    func saveSessionMemberInfo(_ info: (User, SessionMember?)) {
-        sender?.saveSessionMemberInfo(info)
-    }
-    
-    func asyncGetSessionMemberInfo(_ userId: Int64) -> RxSwift.Observable<(User, SessionMember?)> {
-        if let s = sender {
-            return s.asyncGetSessionMemberInfo(userId)
-        } else {
-            return Observable.error(CodeMessageError.Unknown)
-        }
+    func msgSender() -> IMMsgSender? {
+        return self.sender
     }
     
     func getSelectMessages() -> Set<Message> {

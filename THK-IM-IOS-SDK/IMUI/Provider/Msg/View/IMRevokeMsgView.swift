@@ -114,7 +114,10 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
             do {
                 let revokeData = try JSONDecoder().decode(IMRevokeMsgData.self, from: message!.data!.data(using: .utf8) ?? Data())
                 if (revokeData.type == MsgType.Text.rawValue && revokeData.content != nil ) {
-                    self.delegate?.setEditText(text: revokeData.content!)
+                    if let sender = self.delegate?.msgSender() {
+                        sender.addInputContent(text: revokeData.content!)
+                        sender.openKeyboard()
+                    }
                 }
             } catch {
                 DDLogError("\(error)")
