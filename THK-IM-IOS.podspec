@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "THK-IM-IOS"
-  spec.version      = "0.0.1"
+  spec.version      = "0.0.3"
   spec.summary      = "A short description of THK-IM-IOS."
 
   # This description is used to generate tags and improve search results.
@@ -100,22 +100,25 @@ Pod::Spec.new do |spec|
   spec.subspec 'IMCore' do |core|
     core.source_files = 'THK-IM-IOS-SDK/IMCore/**/*.swift',
     core.frameworks = 'UIKit', 'Foundation', 'AVFoundation', 'MobileCoreServices', 'AVFoundation', 'ImageIO'
-    core.dependency 'WCDB.swift', '2.0.1'
+    core.dependency 'WCDB.swift', '2.0.4'
     core.dependency 'RxSwift', '6.5.0'
     core.dependency 'RxCocoa', '6.5.0'
     core.dependency 'CocoaLumberjack/Swift', '3.8.2'
     core.dependency 'Starscream', '4.0.4'
     core.dependency 'Moya/RxSwift', '15.0'
-    core.dependency 'Kingfisher', '7.10.0'
   end
 
   spec.subspec 'IMUI' do |ui|
     ui.source_files = 'THK-IM-IOS-SDK/IMUI/**/*.swift'
-    ui.dependency "RxGesture", '4.0.4'
+    ui.resource = 'THK-IM-IOS-SDK/IMLive/Resources/*.xcassets'
+    ui.dependency 'Kingfisher', '7.10.0'
+    ui.dependency 'RxGesture', '4.0.4'
     ui.dependency 'SnapKit', '5.6.0'
     ui.dependency 'Alamofire', '5.8.1'
     ui.dependency 'BadgeSwift', '8.0'
     ui.dependency 'THK-IM-IOS/IMCore'
+    ui.dependency 'ProgressHUD'
+    ui.dependency 'JDStatusBarNotification'
   end
 
   spec.subspec 'IMPreviewer' do |previewer|
@@ -129,6 +132,12 @@ Pod::Spec.new do |spec|
     provider.dependency 'ZLPhotoBrowser', '4.4.6'
     provider.dependency 'YbridOpus', '0.8.0'
     provider.dependency 'YbridOgg', '0.8.0'
+  end
+
+  spec.subspec 'IMLive' do |live|
+    live.source_files = 'THK-IM-IOS-SDK/IMLive/**/*.swift'
+    live.resource = 'THK-IM-IOS-SDK/IMLive/Resources/*.xcassets'
+    live.dependency 'THK-IM-IOS/IMUI'
   end
 
 end

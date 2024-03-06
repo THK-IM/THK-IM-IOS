@@ -29,11 +29,11 @@ PODS:
   - RxSwift (6.5.0)
   - SnapKit (5.6.0)
   - Starscream (4.0.4)
-  - WCDB.swift (2.0.1):
-    - WCDB.swift/no-arc (= 2.0.1)
-    - WCDBOptimizedSQLCipher (~> 1.4.0)
-  - WCDB.swift/no-arc (2.0.1):
-    - WCDBOptimizedSQLCipher (~> 1.4.0)
+  - WCDB.swift (2.0.4):
+    - WCDB.swift/no-arc (= 2.0.4)
+    - WCDBOptimizedSQLCipher (~> 1.4.2)
+  - WCDB.swift/no-arc (2.0.4):
+    - WCDBOptimizedSQLCipher (~> 1.4.2)
   - WCDBOptimizedSQLCipher (1.4.2)
   - WebRTC-SDK (114.5735.08)
   - YbridOgg (0.8.0)
@@ -56,7 +56,7 @@ DEPENDENCIES:
   - RxSwift (= 6.5.0)
   - SnapKit (= 5.6.0)
   - Starscream (= 4.0.4)
-  - WCDB.swift (= 2.0.1)
+  - WCDB.swift (= 2.0.4)
   - WebRTC-SDK (= 114.5735.08)
   - YbridOgg (= 0.8.0)
   - YbridOpus (= 0.8.0)
@@ -100,13 +100,13 @@ SPEC CHECKSUMS:
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
-  WCDB.swift: 738cf27df8883c47ef732ea02c44e690da5bb66d
+  WCDB.swift: 28dd96180d913abadb3ea9cf99bd6e942262379a
   WCDBOptimizedSQLCipher: ef2be79fed278289a309ad0d4d707c55bf166d6d
   WebRTC-SDK: c24d2a6c9f571f2ed42297cb8ffba9557093142b
   YbridOgg: 4af27a7224f0876a7000e1893df8ba986dd4a014
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
   ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
 
-PODFILE CHECKSUM: 4f94c2878437a3de3f8fccbd269e26753561bb9f
+PODFILE CHECKSUM: 5418445ae5a98ca70dc60e4870e4d5605d7c8054
 
 COCOAPODS: 1.14.2

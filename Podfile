@@ -14,25 +14,35 @@ target 'THK-IM-IOS' do
     end
   end
 
-  # Pods for THK-IM-IOS
-  pod 'SnapKit', '5.6.0'
-  pod 'WCDB.swift', '2.0.1'
+  ## Pods for THK-IM-IOS/IMCore
+  pod 'WCDB.swift', '2.0.4'
   pod 'RxSwift', '6.5.0'
   pod 'RxCocoa', '6.5.0'
-  pod "RxGesture", '4.0.4'
   pod 'CocoaLumberjack/Swift', '3.8.2'
   pod 'Starscream', '4.0.4'
-  pod 'Alamofire', '5.8.1'
   pod 'Moya/RxSwift', '15.0'
+  
+  
+  ## Pods for THK-IM-IOS/IMUI
   pod 'Kingfisher', '7.10.0'
+  pod 'RxGesture', '4.0.4'
+  pod 'SnapKit', '5.6.0'
+  pod 'Alamofire', '5.8.1'
+  pod 'BadgeSwift', '8.0'
+  pod 'ProgressHUD'
+  pod 'JDStatusBarNotification'
+  
+  ## Pods for THK-IM-IOS/IMPreviewer
+  
+  ## Pods for THK-IM-IOS/IMProvider
   pod 'ZLPhotoBrowser', '4.4.6'
   pod 'YbridOpus', '0.8.0'
   pod 'YbridOgg', '0.8.0'
-  pod 'GDPerformanceView-Swift', '= 2.1.1'
-  pod 'BadgeSwift', '8.0'
+  
+  ## Pods for THK-IM-IOS/IMLive
   pod 'WebRTC-SDK', '114.5735.08'
-#  pod 'GoogleWebRTC'
-  pod 'ProgressHUD'
-  pod 'JDStatusBarNotification'
+  
+  ## Pods for App
+  pod 'GDPerformanceView-Swift', '= 2.1.1'
 
 end

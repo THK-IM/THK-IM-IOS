@@ -1,5 +1,5 @@
 //
-//  Data+Hexstring.swift
+//  Data+HexString.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/10/15.

@@ -743,6 +743,8 @@
 		A033FB192B96C9DA0053045E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				A0D68AE02A888678004D11A5 /* UIImageView+Cache.swift */,
+				A0EA42FC2A99A60200F64A90 /* ImageCacheManager.swift */,
 				A033FB1A2B96C9F40053045E /* AtStringUtils.swift */,
 			);
 			path = Utils;
@@ -775,7 +777,6 @@
 				A0D68ADF2A888678004D11A5 /* Extension */,
 				A0D68B5F2A888679004D11A5 /* Bubble.swift */,
 				A0D68B622A888679004D11A5 /* ImageCompress.swift */,
-				A0EA42FC2A99A60200F64A90 /* ImageCacheManager.swift */,
 				A0D68B602A888679004D11A5 /* RxTransform.swift */,
 				A0D68ABE2A888678004D11A5 /* CodeMessageError.swift */,
 				A0D68B632A888679004D11A5 /* GCDTool.swift */,
@@ -824,12 +825,12 @@
 			path = Group;
 			sourceTree = "<group>";
 		};
-		A0C431DB2A909C1600A84D4A /* Resource */ = {
+		A0C431DB2A909C1600A84D4A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				A0C431DC2A909C1600A84D4A /* Images.xcassets */,
 			);
-			path = Resource;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		A0C431EE2A909CCE00A84D4A /* Vo */ = {
@@ -998,7 +999,7 @@
 				A0978E642B7223E00047E6A2 /* View */,
 				A0D68AC72A888678004D11A5 /* API */,
 				A0D68AC12A888678004D11A5 /* Room */,
-				A0C431DB2A909C1600A84D4A /* Resource */,
+				A0C431DB2A909C1600A84D4A /* Resources */,
 				A0C431DE2A909C3000A84D4A /* IMLiveManager.swift */,
 				A0C431E32A909CB100A84D4A /* LiveDefines.swift */,
 				A02578C52AA4269B00A66CEF /* LiveApi.swift */,
@@ -1070,7 +1071,6 @@
 		A0D68ADF2A888678004D11A5 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68AE02A888678004D11A5 /* UIImageView+Cache.swift */,
 				A0D68B3A2A888679004D11A5 /* Date+TimeStamp.swift */,
 				A0D68B3B2A888679004D11A5 /* ObservableType+Compose.swift */,
 				A0D68B612A888679004D11A5 /* Data+ImageFormat.swift */,
