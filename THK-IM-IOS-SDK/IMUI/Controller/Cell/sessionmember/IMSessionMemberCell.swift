@@ -49,19 +49,11 @@ class IMSessionMemberCell: UITableViewCell {
     }
     
     func setData(memberInfo: (User, SessionMember?)) {
-        var nickname = "", avatar = ""
-        if (memberInfo.1 != nil && memberInfo.1!.noteName != nil && !memberInfo.1!.noteName!.isEmpty ) {
-            nickname = memberInfo.1!.noteName!
-        } else {
-            nickname = memberInfo.0.nickname
-        }
+        let nickname = IMUIManager.shared.nicknameForSessionMember(memberInfo.0, memberInfo.1)
         self.showNickname(nickname: nickname)
-        if (memberInfo.1 != nil && memberInfo.1!.noteAvatar != nil && !memberInfo.1!.noteAvatar!.isEmpty) {
-            avatar = memberInfo.1!.noteAvatar!
-        } else {
-            avatar = memberInfo.0.avatar ?? ""
+        if let avatar = IMUIManager.shared.avatarForSessionMember(memberInfo.0, memberInfo.1) {
+            self.avatarView.renderImageByUrlWithCorner(url: avatar, radius: 10)
         }
-        self.avatarView.renderImageByUrlWithCorner(url: avatar, radius: 10)
             
     }
     

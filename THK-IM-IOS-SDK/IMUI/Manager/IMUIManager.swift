@@ -119,6 +119,16 @@ open class IMUIManager: NSObject {
         }
     }
     
+    public func avatarForSessionMember(_ user: User, _ sessionMember: SessionMember?) -> String? {
+        var avatar : String? = nil
+        if (sessionMember != nil && sessionMember!.noteAvatar != nil && !sessionMember!.noteAvatar!.isEmpty) {
+            avatar = sessionMember!.noteAvatar!
+        } else {
+            avatar = user.avatar
+        }
+        return avatar
+    }
+    
     public func initConfig() {
         
     }
