@@ -101,7 +101,10 @@ class IMSessionChooseViewController: IMSessionViewController {
                 return Observable.just(recordBody)
             })
         }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
-            let title: String = (session.type == SessionType.Group.rawValue) ? "的群聊记录" : "的聊天记录"
+            let title: String = (
+                session.type == SessionType.Group.rawValue ||
+                session.type == SessionType.SuperGroup.rawValue
+            ) ? "的群聊记录" : "的聊天记录"
             recordBody.title = "\(recordBody.title)\(title)"
             return Observable.just(recordBody)
         })
