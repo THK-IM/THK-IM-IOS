@@ -58,7 +58,12 @@ public class AppUtils {
     }
     
     public static func getTimezone() -> String {
-        return "GMT+\(TimeZone.current.secondsFromGMT()/3600)"
+        let offset = TimeZone.current.secondsFromGMT()/3600
+        if offset >= 0 {
+            return "GMT+\(offset)"
+        } else {
+            return "GMT\(offset)"
+        }
     }
     
     public static func getDeviceName() -> String {
