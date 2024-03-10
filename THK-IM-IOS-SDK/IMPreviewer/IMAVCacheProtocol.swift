@@ -38,13 +38,17 @@ public class IMAVCacheProtocol: AVCacheProtocol {
         if url.hasPrefix(self.endpoint) {
             return [
                 APITokenInterceptor.tokenKey: self.token,
-                APITokenInterceptor.clientVersionKey: AppUtils.getVersion(),
+                APITokenInterceptor.deviceKey: AppUtils.getDeviceName(),
+                APITokenInterceptor.timezoneKey: AppUtils.getTimezone(),
+                APITokenInterceptor.languageKey: AppUtils.getLanguage(),
                 APITokenInterceptor.platformKey: "IOS",
             ]
         } else {
             return [
                 APITokenInterceptor.tokenKey: nil,
-                APITokenInterceptor.clientVersionKey: nil,
+                APITokenInterceptor.deviceKey: nil,
+                APITokenInterceptor.timezoneKey: nil,
+                APITokenInterceptor.languageKey: nil,
                 APITokenInterceptor.platformKey: nil,
             ]
         }

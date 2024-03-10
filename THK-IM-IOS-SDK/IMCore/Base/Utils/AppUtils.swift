@@ -1,5 +1,5 @@
 //
-//  NotifyUtils.swift
+//  AppUtils.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2023/11/18.
@@ -9,8 +9,11 @@
 import Foundation
 import AVFoundation
 import CocoaLumberjack
+import AdSupport
 
 public class AppUtils {
+    
+    private static var language = Locale.current.languageCode ?? "Unknown"
     
     public static func newMessageNotify() {
         let audioSession = AVAudioSession.sharedInstance()
@@ -52,6 +55,30 @@ public class AppUtils {
     public static func getVersion() -> String {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         return appVersion ?? "0.0.0"
+    }
+    
+    public static func getTimezone() -> String {
+        return "GMT+\(TimeZone.current.secondsFromGMT()/3600)"
+    }
+    
+    public static func getDeviceName() -> String {
+        return UIDevice.current.name
+    }
+    
+    public static func getLanguage() -> String {
+        return language
+    }
+    
+    public static func setLanguage(language: String) {
+        AppUtils.language = language
+    }
+    
+    public static func getAdvertisingId() -> String? {
+        if ASIdentifierManager.shared().isAdvertisingTrackingEnabled {
+            return ASIdentifierManager.shared().advertisingIdentifier.uuidString
+        } else {
+            return nil
+        }
     }
     
 }

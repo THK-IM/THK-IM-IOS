@@ -14,8 +14,11 @@ public class APITokenInterceptor: PluginType {
     private var token: String?
     
     static let tokenKey = "Authorization"
-    static let clientVersionKey = "Client-Version"
-    static let platformKey = "Client-Platform"
+    static let versionKey = "Version"
+    static let platformKey = "Platform"
+    static let timezoneKey = "TimeZone"
+    static let deviceKey = "Device"
+    static let languageKey = "Accept-Language"
     
     private var validEndpoints: Set<String>
     
@@ -36,16 +39,22 @@ public class APITokenInterceptor: PluginType {
         var newRequest = request
         let isValidEndpoint = isValidEndpoint(url: request.url?.absoluteString ?? "")
         if (isValidEndpoint) {
-            newRequest.setValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.clientVersionKey)
+            newRequest.setValue(AppUtils.getDeviceName(), forHTTPHeaderField: APITokenInterceptor.deviceKey)
+            newRequest.setValue(AppUtils.getTimezone(), forHTTPHeaderField: APITokenInterceptor.timezoneKey)
+            newRequest.setValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.versionKey)
+            newRequest.setValue(AppUtils.getLanguage(), forHTTPHeaderField: APITokenInterceptor.languageKey)
+            newRequest.setValue("IOS", forHTTPHeaderField: APITokenInterceptor.platformKey)
             if (token != nil) {
                 let value = "Bearer \(token!)"
                 newRequest.setValue(value, forHTTPHeaderField: APITokenInterceptor.tokenKey)
             }
-            newRequest.setValue("IOS", forHTTPHeaderField: APITokenInterceptor.platformKey)
         } else {
-            newRequest.headers.remove(name: APITokenInterceptor.clientVersionKey)
-            newRequest.headers.remove(name: APITokenInterceptor.tokenKey)
+            newRequest.headers.remove(name: APITokenInterceptor.deviceKey)
+            newRequest.headers.remove(name: APITokenInterceptor.timezoneKey)
             newRequest.headers.remove(name: APITokenInterceptor.platformKey)
+            newRequest.headers.remove(name: APITokenInterceptor.languageKey)
+            newRequest.headers.remove(name: APITokenInterceptor.versionKey)
+            newRequest.headers.remove(name: APITokenInterceptor.tokenKey)
         }
         return newRequest
     }

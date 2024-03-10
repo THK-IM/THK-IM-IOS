@@ -60,9 +60,11 @@ class DownloadTask: LoadTask {
                 newRequest.url = URL.init(string: location)
                 if location.hasPrefix(fileLoadModule.endpoint) {
                     if request.headers[APITokenInterceptor.tokenKey] == nil || request.headers[APITokenInterceptor.tokenKey] == "" {
-                        newRequest.addValue(fileLoadModule.token, forHTTPHeaderField: APITokenInterceptor.tokenKey)
-                        newRequest.addValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.clientVersionKey)
-                        newRequest.addValue("IOS", forHTTPHeaderField: APITokenInterceptor.platformKey)
+                        newRequest.setValue(AppUtils.getDeviceName(), forHTTPHeaderField: APITokenInterceptor.deviceKey)
+                        newRequest.setValue(AppUtils.getTimezone(), forHTTPHeaderField: APITokenInterceptor.timezoneKey)
+                        newRequest.setValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.versionKey)
+                        newRequest.setValue(AppUtils.getLanguage(), forHTTPHeaderField: APITokenInterceptor.languageKey)
+                        newRequest.setValue(fileLoadModule.token, forHTTPHeaderField: APITokenInterceptor.tokenKey)
                     }
                 } else {
                     newRequest.setValue(nil, forHTTPHeaderField: APITokenInterceptor.tokenKey)
@@ -77,7 +79,9 @@ class DownloadTask: LoadTask {
         if (!self.key.hasSuffix("http")) {
             realUrl = "\(fileLoadModule.endpoint)/session/object/download_url?\(downLoadParam)"            
             headers.add(name: APITokenInterceptor.tokenKey, value: fileLoadModule.token)
-            headers.add(name: APITokenInterceptor.clientVersionKey, value: AppUtils.getVersion())
+            headers.add(name: APITokenInterceptor.deviceKey, value: AppUtils.getDeviceName())
+            headers.add(name: APITokenInterceptor.timezoneKey, value: AppUtils.getTimezone())
+            headers.add(name: APITokenInterceptor.versionKey, value: AppUtils.getVersion())
             headers.add(name: APITokenInterceptor.platformKey, value: "IOS")
         }
         self.request = AF.download(

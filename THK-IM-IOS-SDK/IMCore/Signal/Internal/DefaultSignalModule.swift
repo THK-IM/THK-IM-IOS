@@ -45,9 +45,12 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
         self.onStateChange(SignalStatus.Connecting)
         var request = URLRequest(url: URL(string: self.webSocketUrl)!)
         request.timeoutInterval = connectTimeout
-        request.setValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.clientVersionKey)
-        request.setValue(token, forHTTPHeaderField: APITokenInterceptor.tokenKey)
+        request.setValue(AppUtils.getDeviceName(), forHTTPHeaderField: APITokenInterceptor.deviceKey)
+        request.setValue(AppUtils.getTimezone(), forHTTPHeaderField: APITokenInterceptor.timezoneKey)
+        request.setValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.versionKey)
+        request.setValue(AppUtils.getLanguage(), forHTTPHeaderField: APITokenInterceptor.languageKey)
         request.setValue("IOS", forHTTPHeaderField: APITokenInterceptor.platformKey)
+        request.setValue(token, forHTTPHeaderField: APITokenInterceptor.tokenKey)
         self.webSocketClient = WebSocket(request: request)
         self.webSocketClient?.delegate = self
         self.webSocketClient?.connect()
