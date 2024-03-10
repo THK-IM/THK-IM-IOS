@@ -21,6 +21,8 @@ public final class Session: TableCodable {
     public var name: String = ""
     // note_name
     public var noteName: String? = nil
+    // note_avatar
+    public var noteAvatar: String? = nil
     // session remark
     public var remark: String = ""
     // 禁言标记位 2^0 全员禁言 2^1 本人禁言
@@ -67,6 +69,7 @@ public final class Session: TableCodable {
         case entityId = "entity_id"
         case name = "name"
         case noteName = "note_name"
+        case noteAvatar = "note_avatar"
         case remark = "remark"
         case mute = "mute"
         case status = "status"
@@ -91,6 +94,7 @@ public final class Session: TableCodable {
         self.entityId = 0
         self.name = ""
         self.noteName = nil
+        self.noteAvatar = nil
         self.remark = ""
         self.mute = 0
         self.role = 0
@@ -115,6 +119,7 @@ public final class Session: TableCodable {
         self.entityId = 0
         self.name = ""
         self.noteName = nil
+        self.noteAvatar = nil
         self.remark = ""
         self.mute = 0
         self.role = 0
@@ -134,16 +139,18 @@ public final class Session: TableCodable {
     
     
     public init(
-        id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, noteName: String?, remark: String, mute: Int,
-        role: Int, status: Int, unreadCount: Int64, draft: String? = nil, lastMsg: String? = nil, topTimestamp: Int64,
-        extData: String? = nil, msgSyncTime: Int64, memberSyncTime: Int64, memberCount: Int, deleted: Int, cTime: Int64, mTime: Int64)
-    {
+        id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, noteName: String?, noteAvatar: String?,
+        remark: String, mute: Int, role: Int, status: Int, unreadCount: Int64, draft: String? = nil,
+        lastMsg: String? = nil, topTimestamp: Int64, extData: String? = nil, msgSyncTime: Int64, memberSyncTime: Int64,
+        memberCount: Int, deleted: Int, cTime: Int64, mTime: Int64
+    ) {
         self.id = id
         self.parentId = parentId
         self.type = type
         self.entityId = entityId
         self.name = name
         self.noteName = noteName
+        self.noteAvatar = noteAvatar
         self.remark = remark
         self.mute = mute
         self.role = role

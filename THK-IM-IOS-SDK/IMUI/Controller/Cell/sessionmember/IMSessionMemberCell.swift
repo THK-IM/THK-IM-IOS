@@ -49,12 +49,20 @@ class IMSessionMemberCell: UITableViewCell {
     }
     
     func setData(memberInfo: (User, SessionMember?)) {
-        self.avatarView.renderImageByUrlWithCorner(url: memberInfo.0.avatar ?? "", radius: 10)
+        var nickname = "", avatar = ""
         if (memberInfo.1 != nil && memberInfo.1!.noteName != nil && !memberInfo.1!.noteName!.isEmpty ) {
-            self.showNickname(nickname: memberInfo.1!.noteName!)
+            nickname = memberInfo.1!.noteName!
         } else {
-            self.showNickname(nickname: memberInfo.0.nickname)
+            nickname = memberInfo.0.nickname
         }
+        self.showNickname(nickname: nickname)
+        if (memberInfo.1 != nil && memberInfo.1!.noteAvatar != nil && !memberInfo.1!.noteAvatar!.isEmpty) {
+            avatar = memberInfo.1!.noteAvatar!
+        } else {
+            avatar = memberInfo.0.avatar ?? ""
+        }
+        self.avatarView.renderImageByUrlWithCorner(url: avatar, radius: 10)
+            
     }
     
     private func showNickname(nickname: String?) {

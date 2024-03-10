@@ -10,7 +10,7 @@ import Foundation
 import Moya
 
 enum ContactApi {
-    case updateNoteName(_ req: UpdateSessionVo)
+    case updateNoteName(_ req: UpdateNoteNameVo)
     case reviewFriendApply(_ req: ReviewFriendApplyVo)
     case applyFriend(_ req: ApplyFriendVo)
     case black(_ req: BlackVo)

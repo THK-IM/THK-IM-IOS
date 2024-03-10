@@ -14,6 +14,7 @@ public final class SessionMemberVo: Codable {
     public var mute: Int
     public var role: Int
     public var noteName: String?
+    public var noteAvatar: String?
     public var status: Int
     public var deleted: Int
     public var cTime: Int64
@@ -26,6 +27,7 @@ public final class SessionMemberVo: Codable {
         case status = "status"
         case mute = "mute"
         case noteName = "note_name"
+        case noteAvatar = "note_avatar"
         case deleted = "deleted"
         case cTime = "c_time"
         case mTime = "m_time"
@@ -34,7 +36,7 @@ public final class SessionMemberVo: Codable {
     func toSessionMember() -> SessionMember {
         return SessionMember(
             sessionId: sId, userId: uId, role: role, status: status, mute: mute, noteName: noteName,
-            extData: nil, deleted: deleted, cTime: cTime, mTime: mTime
+            noteAvatar: noteAvatar, extData: nil, deleted: deleted, cTime: cTime, mTime: mTime
         )
     }
 }

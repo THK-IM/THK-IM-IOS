@@ -110,7 +110,10 @@ public class DefaultIMApi: IMApi {
     }
 
     public func updateUserSession(_ uId: Int64, session: Session)-> Observable<Void> {
-        let req = UpdateSessionVo(uId: uId, sId: session.id, top: session.topTimestamp, status: session.status, parentId: session.parentId)
+        let req = UpdateSessionVo(
+            uId: uId, sId: session.id, top: session.topTimestamp, noteName: session.noteName,
+            noteAvatar: session.noteAvatar, status: session.status, parentId: session.parentId
+        )
         return userSessionApi.rx
             .request(.updateSession(req))
             .asObservable()

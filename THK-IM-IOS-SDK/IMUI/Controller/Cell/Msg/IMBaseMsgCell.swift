@@ -263,7 +263,13 @@ open class IMBaseMsgCell : IMBaseTableCell {
     
     private func updateUserInfo(user: User, sessionMember: SessionMember?) {
         self.cellWrapper.avatarView()?.isHidden = false
-        self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 20)
+        var avatar = ""
+        if (sessionMember != nil && sessionMember!.noteAvatar != nil && !sessionMember!.noteAvatar!.isEmpty) {
+            avatar = sessionMember!.noteAvatar!
+        } else {
+            avatar = user.avatar ?? ""
+        }
+        self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: avatar, radius: 10)
         self.cellWrapper.nickView()?.text = IMUIManager.shared.nicknameForSessionMember(user, sessionMember)
     }
     
