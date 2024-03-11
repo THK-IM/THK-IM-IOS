@@ -110,7 +110,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'IMUI' do |ui|
     ui.source_files = 'THK-IM-IOS-SDK/IMUI/**/*.swift'
-    ui.resource = 'THK-IM-IOS-SDK/IMUI/Resources/*.xcassets'
+    ui.resources = ['THK-IM-IOS-SDK/IMUI/Resources/*']
     ui.dependency 'Kingfisher', '7.10.0'
     ui.dependency 'RxGesture', '4.0.4'
     ui.dependency 'SnapKit', '5.6.0'
