@@ -73,12 +73,12 @@ open class IMCoreManager: SignalListener {
         }
     }
     
-    var commonModule: CommonModule
-    var userModule: UserModule
-    var contactModule: ContactModule
-    var groupModule: GroupModule
-    var messageModule: MessageModule
-    var customModule: CustomModule
+    public var commonModule: CommonModule
+    public var userModule: UserModule
+    public var contactModule: ContactModule
+    public var groupModule: GroupModule
+    public var messageModule: MessageModule
+    public var customModule: CustomModule
     
     private init() {
         self.commonModule = DefaultCommonModule()

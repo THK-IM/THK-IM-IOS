@@ -22,7 +22,7 @@ public class APITokenInterceptor: PluginType {
     
     private var validEndpoints: Set<String>
     
-    init(token: String? = nil) {
+    public init(token: String? = nil) {
         self.token = token
         self.validEndpoints = Set()
     }

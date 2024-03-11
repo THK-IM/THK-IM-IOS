@@ -9,6 +9,8 @@ import UIKit
 
 open class Bubble {
     
+    public init() {}
+    
     public func drawRectWithRoundedCorner(
         radius: CGFloat,
         borderWidth: CGFloat,

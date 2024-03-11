@@ -13,7 +13,7 @@ import ProgressHUD
 
 open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
-    let disposeBag = DisposeBag()
+    public let disposeBag = DisposeBag()
     
     override open func viewDidLoad() {
         if (hasTitlebar()) {

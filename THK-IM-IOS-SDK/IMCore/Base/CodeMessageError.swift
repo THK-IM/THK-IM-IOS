@@ -8,8 +8,8 @@
 import Foundation
 
 open class CodeMessageError: NSObject, Error, Codable {
-    let code: Int
-    let message: String
+    public let code: Int
+    public let message: String
     
     init(code: Int, message: String) {
         self.code = code
