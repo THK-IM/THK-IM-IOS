@@ -111,7 +111,7 @@ Pod::Spec.new do |spec|
   spec.subspec 'IMUI' do |ui|
     ui.source_files = 'THK-IM-IOS-SDK/IMUI/**/*.swift'
     # ui.resource = ['THK-IM-IOS-SDK/IMUI/Resources/*.xcassets']
-    ui.resource_bunldes = {
+    ui.resource_bundles = {
       'THKIMSDK' => ['THK-IM-IOS-SDK/IMUI/Resources/*.xcassets']
     }
     ui.dependency 'Kingfisher', '7.10.0'
