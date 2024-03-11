@@ -32,7 +32,12 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             }
             setRightItems(images: images, actions: actions)
             if (self.swipeBack()) {
-                let bundle = Bundle(for: type(of: self))
+                var bundle = Bundle(for: type(of: self))
+                if let path = bundle.path(forResource: "THKIMSDK", ofType: "Bundle") {
+                    if let b  = Bundle.init(path: path) {
+                        bundle = b
+                    }
+                }
                 let backImage = UIImage(named: "ic_titlebar_back", in: bundle, compatibleWith: nil)?.scaledToSize(CGSize(width: 24, height: 24))
                 let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
                 self.navigationItem.leftBarButtonItem = backItem
