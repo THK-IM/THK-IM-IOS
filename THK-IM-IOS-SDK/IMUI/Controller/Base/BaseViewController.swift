@@ -121,4 +121,12 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         return .portrait
     }
     
+    public func getTitleBarHeight() -> CGFloat {
+        var navigationBarHeight = 0.0
+        if self.navigationController != nil {
+            navigationBarHeight += navigationController!.navigationBar.frame.height
+        }
+        return navigationBarHeight + AppUtils.getStatusBarHeight()
+    }
+    
 }

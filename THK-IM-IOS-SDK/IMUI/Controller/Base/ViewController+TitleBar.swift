@@ -28,7 +28,6 @@ extension UIViewController {
         var i = 0
         for image in images {
             let item = UIBarButtonItem(image: image, style: .plain, target: self, action: actions[i])
-            item.tintColor = UIColor.init(hex: "e98f36")
             item.width = 24
             rightBarButtonItems.append(item)
             i+=1
