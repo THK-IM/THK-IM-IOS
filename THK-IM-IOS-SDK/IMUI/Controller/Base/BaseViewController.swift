@@ -87,6 +87,14 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         
     }
     
+    open func showError(_ err: Error) {
+        if let codeMessageErr = err as? CodeMessageError {
+            showToast(codeMessageErr.message)
+        } else {
+            showToast("未知错误")
+        }
+    }
+    
     
     @objc func addTapped() {
         onMenuClick(menu: "add")
