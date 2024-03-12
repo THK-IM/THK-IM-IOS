@@ -25,7 +25,7 @@ public class ForwardMessageVo: Codable {
     var forwardFromUIds: Set<Int64>? = nil
     var forwardClientIds: Set<Int64>? = nil
     
-    init(msg: Message, forwardSid: Int64, forwardFromUIds: Set<Int64>, forwardClientIds: Set<Int64>) {
+    public init(msg: Message, forwardSid: Int64, forwardFromUIds: Set<Int64>, forwardClientIds: Set<Int64>) {
         self.clientId = msg.id
         self.fUId = msg.fromUId
         self.sessionId = msg.sessionId

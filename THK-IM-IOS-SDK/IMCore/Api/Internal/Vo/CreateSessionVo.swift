@@ -15,7 +15,7 @@ public class CreateSessionVo: Codable {
     var name: String
     var remark: String
     
-    init(uId: Int64, type: Int, entityId: Int64, name: String, remark: String, members: Set<Int64>?) {
+    public init(uId: Int64, type: Int, entityId: Int64, name: String, remark: String, members: Set<Int64>?) {
         self.uId = uId
         self.type = type
         self.name = name

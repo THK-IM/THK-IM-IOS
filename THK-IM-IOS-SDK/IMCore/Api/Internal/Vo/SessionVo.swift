@@ -42,7 +42,7 @@ public class SessionVo: Codable {
         case mTime = "m_time"
     }
     
-    func toSession() -> Session {
+    public func toSession() -> Session {
         let session = Session(
             id: self.sessionId, parentId: self.parentId ?? 0, type: self.type, entityId: self.entityId, name: self.name,
             noteName: self.noteName, noteAvatar: self.noteAvatar, remark: self.remark, mute: self.mute, role: self.role,

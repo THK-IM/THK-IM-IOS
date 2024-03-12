@@ -14,7 +14,7 @@ public class ReeditMsgVo: Codable {
     var uId: Int64
     var content: String
     
-    init(sessionId: Int64, uId: Int64, msgId: Int64, content: String) {
+    public init(sessionId: Int64, uId: Int64, msgId: Int64, content: String) {
         self.sessionId = sessionId
         self.uId = uId
         self.msgId = msgId

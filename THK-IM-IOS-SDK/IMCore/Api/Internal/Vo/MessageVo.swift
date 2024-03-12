@@ -34,7 +34,7 @@ public class MessageVo: Codable {
         self.cTime = msg.cTime
     }
     
-    required init(from decoder: Decoder) throws {
+    required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.clientId = try container.decodeIfPresent(Int64.self, forKey: .clientId) ?? 0
         self.fUId = try container.decodeIfPresent(Int64.self, forKey: .fUId) ?? 0

@@ -13,7 +13,7 @@ public class ReadMsgVo: Codable {
     var msgIds: Set<Int64>
     var uId: Int64 = 0
     
-    init(sessionId: Int64, uId: Int64, msgIds: Set<Int64>) {
+    public init(sessionId: Int64, uId: Int64, msgIds: Set<Int64>) {
         self.sessionId = sessionId
         self.uId = uId
         self.msgIds = msgIds

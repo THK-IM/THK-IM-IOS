@@ -33,7 +33,20 @@ public class SessionMemberVo: Codable {
         case mTime = "m_time"
     }
     
-    func toSessionMember() -> SessionMember {
+    public init(sId: Int64, uId: Int64, mute: Int, role: Int, noteName: String? = nil, noteAvatar: String? = nil, status: Int, deleted: Int, cTime: Int64, mTime: Int64) {
+        self.sId = sId
+        self.uId = uId
+        self.mute = mute
+        self.role = role
+        self.noteName = noteName
+        self.noteAvatar = noteAvatar
+        self.status = status
+        self.deleted = deleted
+        self.cTime = cTime
+        self.mTime = mTime
+    }
+    
+    public func toSessionMember() -> SessionMember {
         return SessionMember(
             sessionId: sId, userId: uId, role: role, status: status, mute: mute, noteName: noteName,
             noteAvatar: noteAvatar, extData: nil, deleted: deleted, cTime: cTime, mTime: mTime

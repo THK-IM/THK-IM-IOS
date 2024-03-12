@@ -18,7 +18,7 @@ public class UpdateSessionVo: Codable {
     var status: Int?
     var parentId: Int64?
     
-    init(
+    public init(
         uId: Int64, sId: Int64, top: Int64? = nil, noteName: String? = nil, noteAvatar: String? = nil,
         status: Int? = nil, parentId: Int64? = nil
     ) {
