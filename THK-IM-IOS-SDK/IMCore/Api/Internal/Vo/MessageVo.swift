@@ -8,7 +8,7 @@
 import Foundation
 
 
-class MessageVo: Codable {
+public class MessageVo: Codable {
     var clientId: Int64 = 0
     var fUId: Int64 = 0
     var sessionId : Int64 = 0

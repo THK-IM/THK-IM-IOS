@@ -8,7 +8,7 @@
 
 import Foundation
 
-class UpdateSessionVo: Codable {
+public class UpdateSessionVo: Codable {
     
     var uId: Int64
     var sId: Int64

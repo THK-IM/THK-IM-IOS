@@ -8,7 +8,7 @@
 import Foundation
 
 
-class ListVo<T: Codable> : Codable {
+public class ListVo<T: Codable> : Codable {
     
     var data: Array<T>
     

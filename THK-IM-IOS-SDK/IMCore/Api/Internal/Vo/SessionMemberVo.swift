@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class SessionMemberVo: Codable {
+public class SessionMemberVo: Codable {
     public var sId: Int64
     public var uId: Int64
     public var mute: Int

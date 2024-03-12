@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ReeditMsgVo: Codable {
+public class ReeditMsgVo: Codable {
     var sessionId: Int64
     var msgId: Int64
     var uId: Int64

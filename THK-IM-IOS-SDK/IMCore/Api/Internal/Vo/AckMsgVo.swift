@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AckMsgVo: Codable {
+public class AckMsgVo: Codable {
     var sessionId: Int64 = 0
     var msgIds: Set<Int64>
     var uId: Int64 = 0

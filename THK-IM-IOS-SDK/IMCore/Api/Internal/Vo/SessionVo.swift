@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SessionVo: Codable {
+public class SessionVo: Codable {
     var sessionId: Int64
     var parentId: Int64?
     var type: Int

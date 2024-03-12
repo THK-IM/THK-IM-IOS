@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CreateSessionVo: Codable {
+public class CreateSessionVo: Codable {
     var uId: Int64 = 0
     var type: Int = 0
     var entityId : Int64

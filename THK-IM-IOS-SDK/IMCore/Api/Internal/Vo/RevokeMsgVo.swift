@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RevokeMsgVo: Codable {
+public class RevokeMsgVo: Codable {
     var sessionId: Int64
     var msgId: Int64
     var uId: Int64

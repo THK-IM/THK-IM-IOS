@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ReadMsgVo: Codable {
+public class ReadMsgVo: Codable {
     var sessionId: Int64 = 0
     var msgIds: Set<Int64>
     var uId: Int64 = 0

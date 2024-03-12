@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DeleteMsgVo: Codable {
+public class DeleteMsgVo: Codable {
     var sessionId: Int64 = 0
     var msgIds: Set<Int64>
     var uId: Int64 = 0
