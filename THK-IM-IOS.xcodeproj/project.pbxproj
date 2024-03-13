@@ -65,6 +65,7 @@
 		A033FB1B2B96C9F50053045E /* AtStringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A033FB1A2B96C9F40053045E /* AtStringUtils.swift */; };
 		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A050072F2B08BC9700526713 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072E2B08BC9700526713 /* AppUtils.swift */; };
+		A06A133E2BA1796F00CEFB4D /* IMUIResourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06A133D2BA1796F00CEFB4D /* IMUIResourceProvider.swift */; };
 		A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */; };
 		A0978E5D2B71CF7B0047E6A2 /* BeCallingLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5C2B71CF7B0047E6A2 /* BeCallingLayout.swift */; };
 		A0978E5F2B71CFDA0047E6A2 /* CallingLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5E2B71CFDA0047E6A2 /* CallingLayout.swift */; };
@@ -362,6 +363,7 @@
 		A033FB1A2B96C9F40053045E /* AtStringUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtStringUtils.swift; sourceTree = "<group>"; };
 		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A050072E2B08BC9700526713 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
+		A06A133D2BA1796F00CEFB4D /* IMUIResourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUIResourceProvider.swift; sourceTree = "<group>"; };
 		A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallViewController.swift; sourceTree = "<group>"; };
 		A0978E5C2B71CF7B0047E6A2 /* BeCallingLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeCallingLayout.swift; sourceTree = "<group>"; };
 		A0978E5E2B71CFDA0047E6A2 /* CallingLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallingLayout.swift; sourceTree = "<group>"; };
@@ -1211,6 +1213,7 @@
 				A025291B2ACC31E2001561A0 /* IMUIProtocolDefines.swift */,
 				A018CE002B00A00B00896B87 /* IMMessageOperator.swift */,
 				A0CA4E662B4AAAF50031DDDB /* IMPageRouter.swift */,
+				A06A133D2BA1796F00CEFB4D /* IMUIResourceProvider.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -1815,6 +1818,7 @@
 				A0B245812B502DDB00D48BE8 /* SessionMemberVo.swift in Sources */,
 				A0E8ED4A2AEDEE42004163BD /* Previewer.swift in Sources */,
 				A0D68BB72A888679004D11A5 /* IMMessageLayout.swift in Sources */,
+				A06A133E2BA1796F00CEFB4D /* IMUIResourceProvider.swift in Sources */,
 				A033FB082B8A1DBB0053045E /* IMRevokeMsgView.swift in Sources */,
 				A0D51DCA2B11BBDE00E21E75 /* IMSessionChooseViewController.swift in Sources */,
 				A0D51DD62B12FBC100E21E75 /* IMRecordMessageViewController.swift in Sources */,

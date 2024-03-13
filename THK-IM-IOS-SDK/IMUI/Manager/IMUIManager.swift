@@ -20,6 +20,7 @@ open class IMUIManager: NSObject {
     public var contentProvider: IMProvider? = nil
     public var contentPreviewer: IMPreviewer? = nil
     public var pageRouter: IMPageRouter? = nil
+    public var uiResourceProvider: IMUIResourceProvider? = nil
     
     private override init() {
         super.init()

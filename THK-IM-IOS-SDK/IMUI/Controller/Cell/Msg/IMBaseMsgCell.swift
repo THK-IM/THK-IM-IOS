@@ -262,11 +262,21 @@ open class IMBaseMsgCell : IMBaseTableCell {
     }
     
     private func updateUserInfo(user: User, sessionMember: SessionMember?) {
-        if let avatar = IMUIManager.shared.avatarForSessionMember(user, sessionMember) {
-            self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: avatar, radius: 10)
-            self.cellWrapper.avatarView()?.isHidden = false
-        }
         self.cellWrapper.nickView()?.text = IMUIManager.shared.nicknameForSessionMember(user, sessionMember)
+        if let avatar = IMUIManager.shared.avatarForSessionMember(user, sessionMember) {
+            if avatar.length > 0 {
+                self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: avatar, radius: 10)
+                self.cellWrapper.avatarView()?.isHidden = false
+                return
+            }
+        }
+        self.renderProviderAvatar(user: user)
+    }
+    
+    private func renderProviderAvatar(user: User) {
+        let image = IMUIManager.shared.uiResourceProvider?.avatar(user: user)
+        self.cellWrapper.avatarView()?.image = image
+        self.cellWrapper.avatarView()?.isHidden = false
     }
     
     private func updateUserBubble(image: UIImage?) {
