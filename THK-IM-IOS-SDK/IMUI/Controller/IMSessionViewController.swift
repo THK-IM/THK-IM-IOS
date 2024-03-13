@@ -11,36 +11,52 @@ import UIKit
 import CocoaLumberjack
 
 
-class IMSessionViewController : UIViewController, UITableViewDataSource, UITableViewDelegate, IMSessionCellOperator {
+open class IMSessionViewController : BaseViewController, UITableViewDataSource, UITableViewDelegate, IMSessionCellOperator {
     
+    private var containerView = UIView()
     private var sessionTableView = UITableView()
     private var sessions: Array<Session> = Array()
-    private let disposeBag = DisposeBag()
     private var isLoading = false
     private let lock = NSLock()
     private var isTop = false
     private var newSessions = [Session]()
     private var removeSessions = [Session]()
     
-    var parentId: Int64 = 0
+    public var parentId: Int64 = 0
     
     deinit {
         print("IMSessionViewController, de init")
     }
     
-    override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.addSubview(containerView)
+        self.containerView.backgroundColor = UIColor.init(hex: "#F8F8F8")
+        let top = getTitleBarHeight()
+        containerView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(top)
+            make.bottom.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+        }
+        containerView.clipsToBounds = true
         self.sessionTableView.separatorStyle = .none
         self.sessionTableView.rowHeight = UITableView.automaticDimension
         self.sessionTableView.estimatedRowHeight = 100
         self.sessionTableView.dataSource = self
         self.sessionTableView.delegate = self
-        self.view.addSubview(self.sessionTableView)
-        self.sessionTableView.frame = self.view.frame
+        self.sessionTableView.backgroundColor = .clear
+        self.containerView.addSubview(self.sessionTableView)
+        self.sessionTableView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
         self.loadSessions()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.isTop = true
         for s in newSessions {
@@ -53,7 +69,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         removeSessions.removeAll()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
+    open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         self.isTop = false
     }
@@ -160,7 +176,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         return sessions.count
     }
     
-    internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let h = self.sessionTableView.frame.height
         let distance = self.sessionTableView.contentSize.height - self.sessionTableView.contentOffset.y
         if (h > distance) {
@@ -192,11 +208,11 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         })
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sessions.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let session = self.sessions[indexPath.row]
         let provider = IMUIManager.shared.getSessionCellProvider(session.type)
         let identifier = provider.identifier()
@@ -209,26 +225,26 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
         return cell!
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let sessionCell = cell as! IMBaseSessionCell
         sessionCell.appear()
     }
     
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let sessionCell = cell as! IMBaseSessionCell
         sessionCell.disappear()
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let session = self.sessions[indexPath.row]
         self.openSession(session)
     }
     
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let session = self.sessions[indexPath.row]
         var topText = "置顶"
         var silenceText = "免打扰"
@@ -281,7 +297,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
     }
     
     
-    func updateSession(_ session: Session) {
+    public func updateSession(_ session: Session) {
         IMCoreManager.shared.messageModule
             .updateSession(session, true)
             .compose(RxTransformer.shared.io2Main())
@@ -292,7 +308,7 @@ class IMSessionViewController : UIViewController, UITableViewDataSource, UITable
             .disposed(by: self.disposeBag)
     }
     
-    func deleteSession(_ session: Session) {
+    public func deleteSession(_ session: Session) {
         IMCoreManager.shared.messageModule
             .deleteSession(session, true)
             .compose(RxTransformer.shared.io2Main())

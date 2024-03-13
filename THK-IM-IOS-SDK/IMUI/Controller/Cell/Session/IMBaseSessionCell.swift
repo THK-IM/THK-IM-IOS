@@ -13,7 +13,7 @@ import BadgeSwift
 
 open class IMBaseSessionCell : IMBaseTableCell {
     
-    lazy var unreadCountView: BadgeSwift = {
+    public lazy var unreadCountView: BadgeSwift = {
         let view = BadgeSwift()
         view.font = UIFont.systemFont(ofSize: 10)
         view.textColor = UIColor.white
@@ -22,26 +22,26 @@ open class IMBaseSessionCell : IMBaseTableCell {
         return view
     }()
     
-    lazy var avatarView: UIImageView = {
+    public lazy var avatarView: UIImageView = {
         let view = UIImageView()
         return view
     }()
     
-    lazy var nickView: UILabel = {
+    public lazy var nickView: UILabel = {
         let view = UILabel()
         view.font = UIFont.boldSystemFont(ofSize: 14)
         view.numberOfLines = 1
         return view
     }()
     
-    lazy var msgView: UILabel = {
+    public lazy var msgView: UILabel = {
         let view = UILabel()
         view.font = UIFont.systemFont(ofSize: 12)
         view.textColor = UIColor.gray
         return view
     }()
     
-    lazy var lastTimeView: UILabel = {
+    public lazy var lastTimeView: UILabel = {
         let view = UILabel()
         view.font = UIFont.systemFont(ofSize: 10)
         view.textColor = UIColor.gray
@@ -49,7 +49,7 @@ open class IMBaseSessionCell : IMBaseTableCell {
         return view
     }()
     
-    lazy var silenceView: UIImageView = {
+    public lazy var silenceView: UIImageView = {
         let view = UIImageView()
         return view
     }()
@@ -58,7 +58,7 @@ open class IMBaseSessionCell : IMBaseTableCell {
         DDLogDebug("BaseSessionCell deinit")
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         DDLogDebug("BaseSessionCell init")
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none

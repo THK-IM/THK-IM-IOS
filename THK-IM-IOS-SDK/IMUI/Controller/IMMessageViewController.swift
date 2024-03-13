@@ -15,9 +15,9 @@ import RxGesture
 import ImageIO
 import CoreServices
 
-class IMMessageViewController: BaseViewController {
+open class IMMessageViewController: BaseViewController {
     
-    var session: Session? = nil
+    public var session: Session? = nil
     private var containerView = UIView()
     private var messageLayout = IMMessageLayout()
     private var inputLayout = IMInputLayout()
@@ -31,7 +31,7 @@ class IMMessageViewController: BaseViewController {
         unregisterMsgEvent()
     }
     
-    override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.init(hex: "#F0F0F0")
         self.showSessionTitle()
@@ -56,15 +56,15 @@ class IMMessageViewController: BaseViewController {
         }
     }
     
-    override func hasAddMenu() -> Bool {
+    open override func hasAddMenu() -> Bool {
         return true
     }
     
-    override func hasSearchMenu() -> Bool {
+    open override func hasSearchMenu() -> Bool {
         return true
     }
     
-    override func menuImages(menu: String) -> UIImage? {
+    open override func menuImages(menu: String) -> UIImage? {
         if menu == "search" {
             return UIImage(named: "ic_titlebar_call")?.scaledToSize(CGSize.init(width: 24, height: 24))
         } else {
@@ -117,12 +117,12 @@ class IMMessageViewController: BaseViewController {
         }
     }
     
-    override func onMenuClick(menu: String) {
+    open override func onMenuClick(menu: String) {
         guard let session = self.session else {
             return
         }
         if (session.type == SessionType.Single.rawValue) {
-            if menu == "search" {
+            if menu == menuItemTagSearch {
                 IMUIManager.shared.pageRouter?.openLiveCall(controller: self, session: session)
             } else {
                 IMCoreManager.shared.userModule.queryUser(id: session.entityId)
@@ -134,7 +134,7 @@ class IMMessageViewController: BaseViewController {
         } else if (session.type == SessionType.Group.rawValue ||
                    session.type == SessionType.SuperGroup.rawValue
         ) {
-            if menu == "search" {
+            if menu == menuItemTagSearch {
             } else {
                 IMCoreManager.shared.groupModule.findById(id: session.entityId)
                     .compose(RxTransformer.shared.io2Main())
@@ -149,8 +149,9 @@ class IMMessageViewController: BaseViewController {
     
     private func setupView() {
         self.view.addSubview(containerView)
+        let top = getTitleBarHeight()
         containerView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(UIApplication.shared.windows[0].safeAreaInsets.top+getNavHeight())
+            make.top.equalToSuperview().offset(top)
             make.bottom.equalToSuperview()
             make.left.equalToSuperview()
             make.right.equalToSuperview()
@@ -222,14 +223,6 @@ class IMMessageViewController: BaseViewController {
             return 0
         }
         return window.safeAreaInsets.bottom
-    }
-    
-    private func getNavHeight() -> CGFloat {
-        var navHeight: CGFloat = 0
-        if (self.navigationController != nil) {
-            navHeight = self.navigationController!.navigationBar.frame.size.height
-        }
-        return navHeight
     }
     
     func registerKeyboardEvent() {
@@ -319,7 +312,7 @@ class IMMessageViewController: BaseViewController {
         SwiftEventBus.unregister(self)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         _ = inputLayout.endEditing(true)
     }
@@ -408,23 +401,23 @@ class IMMessageViewController: BaseViewController {
 
 extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberAtDelegate {
     
-    func viewController() -> UIViewController {
+    public func viewController() -> UIViewController {
         return self
     }
     
     /// 获取session信息
-    func getSession() -> Session? {
+    public func getSession() -> Session? {
         return self.session
     }
     
     /// 重发消息
-    func resendMessage(_ msg: Message) {
+    public func resendMessage(_ msg: Message) {
         IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).resend(msg)
     }
     
     
     /// 发送消息
-    func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable? = nil, _ atUser: String? = nil) {
+    public func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable? = nil, _ atUser: String? = nil) {
         guard let sessionId = self.session?.id else {
             return
         }
@@ -439,23 +432,23 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     }
     
     /// 发送输入框内容
-    func sendInputContent() {
+    public func sendInputContent() {
         return self.inputLayout.sendInputContent()
     }
     
     /// 输入框添加内容
-    func addInputContent(text: String) {
+    public func addInputContent(text: String) {
         self.inputLayout.addInputText(text)
     }
     
     /// 删除输入框内容
-    func deleteInputContent(count: Int) {
+    public func deleteInputContent(count: Int) {
         self.inputLayout.deleteInputContent(count)
     }
     
     
     /// 选择照片
-    func choosePhoto() {
+    public func choosePhoto() {
         guard let cp = IMUIManager.shared.contentProvider else {
             return
         }
@@ -483,7 +476,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     
     /// 相机拍照
-    func openCamera() {
+    public func openCamera() {
         guard let cp = IMUIManager.shared.contentProvider else {
             return
         }
@@ -510,46 +503,46 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     }
     
     /// 移动到最新消息
-    func moveToLatestMessage() {
+    public func moveToLatestMessage() {
         self.messageLayout.scrollToBottom()
     }
     
     /// 打开底部面本:position: 1表情 2更多
-    func showBottomPanel(_ type: Int) {
+    public func showBottomPanel(_ type: Int) {
         self.bottomPanelLayout.showBottomPanel(type)
     }
     
     /// 关闭底部面板
-    func closeBottomPanel() {
+    public func closeBottomPanel() {
         self.bottomPanelLayout.closeBottomPanel()
     }
     
     
     /// 顶起常驻视图（消息列表+底部输入框）
-    func moveUpAlwaysShowView(_ isKeyboardShow: Bool, _ height: CGFloat, _ duration: Double) {
+    public func moveUpAlwaysShowView(_ isKeyboardShow: Bool, _ height: CGFloat, _ duration: Double) {
         self.moveKeyboard(isKeyboardShow, height, duration)
     }
     
     /// 打开键盘
-    @discardableResult func openKeyboard() -> Bool {
+    @discardableResult public func openKeyboard() -> Bool {
         self.inputLayout.openKeyboard()
     }
     
     
     /// 键盘是否显示
-    func isKeyboardShowing() -> Bool {
+    public func isKeyboardShowing() -> Bool {
         return self.keyboardShow
     }
     
     
     /// 关闭键盘
-    @discardableResult func closeKeyboard() -> Bool {
+    @discardableResult public func closeKeyboard() -> Bool {
         self.inputLayout.closeKeyboard()
     }
     
     
     /// 打开/关闭多选消息视图
-    func setSelectMode(_ selected: Bool, message: Message?) {
+    public func setSelectMode(_ selected: Bool, message: Message?) {
         if (selected) {
             self.messageLayout.setSelectMode(selected, message: message)
             self.msgSelectedLayout.isHidden = false
@@ -560,7 +553,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     }
     
     /// 删除多选视图选中的消息
-    func deleteSelectedMessages() {
+    public func deleteSelectedMessages() {
         let messages = self.messageLayout.getSelectMessages()
         if (messages.count > 0 && session != nil) {
             IMCoreManager.shared.messageModule
@@ -575,13 +568,13 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     }
     
     /// 设置已读消息
-    func readMessage(_ message: Message) {
+    public func readMessage(_ message: Message) {
         IMCoreManager.shared.messageModule
             .sendMessage(message.sessionId, MsgType.Read.rawValue, nil, nil, nil, message.msgId, nil)
     }
     
     /// 弹出消息操作面板弹窗
-    func popupMessageOperatorPanel(_ view: UIView, _ message: Message) {
+    public func popupMessageOperatorPanel(_ view: UIView, _ message: Message) {
         let screenWidth = UIScreen.main.bounds.width
         let screenHeight = UIScreen.main.bounds.height
         let atFrame = view.convert(view.bounds, to: nil)
@@ -603,27 +596,27 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     }
     
     /// show loading
-    func showSenderLoading(text: String) {
+    public func showSenderLoading(text: String) {
         self.showLoading(text: text)
     }
     
     /// dismiss Loading
-    func dismissSenderLoading() {
+    public func dismissSenderLoading() {
         self.dismissLoading()
     }
     
     /// show message
-    func showSenderMessage(text: String, success: Bool) {
+    public func showSenderMessage(text: String, success: Bool) {
         self.showToast(text, success)
     }
     
     /// 发送消息到session forwardType 0单条转发, 1合并转发
-    func forwardMessageToSession(messages: Array<Message>, forwardType: Int) {
+    public func forwardMessageToSession(messages: Array<Message>, forwardType: Int) {
         IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: messages)
     }
     
     /// 转发选定的消息 forwardType 0单条转发, 1合并转发
-    func forwardSelectedMessages(forwardType: Int) {
+    public func forwardSelectedMessages(forwardType: Int) {
         let messages = self.messageLayout.getSelectMessages()
         if (messages.count > 0 && session != nil) {
             IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: Array(messages))
@@ -631,7 +624,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     }
     
     ///  打开at会话成员控制器
-    func openAtViewController() {
+    public func openAtViewController() {
         guard let session = self.session else {
             return
         }
@@ -649,27 +642,27 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     }
     
     ///  添加at会话
-    func addAtUser(user: User, sessionMember: SessionMember?) {
+    public func addAtUser(user: User, sessionMember: SessionMember?) {
         self.inputLayout.addAtSessionMember(user: user, sessionMember: sessionMember)
     }
     
     /// 回复消息
-    func replyMessage(msg: Message) {
+    public func replyMessage(msg: Message) {
         self.showReplyMessage(msg)
     }
     
     /// 关闭回复消息
-    func closeReplyMessage() {
+    public func closeReplyMessage() {
         self.dismissReplyMessage()
     }
     
     /// 重编辑消息
-    func reeditMessage(_ message: Message) {
+    public func reeditMessage(_ message: Message) {
         self.inputLayout.setReeditMessage(message)
     }
     
     /// 同步获取用户信息
-    func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)? {
+    public func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)? {
         if userId == -1 {
             return (User.all, nil)
         }
@@ -677,12 +670,12 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     }
     
     /// 设置用户信息
-    func saveSessionMemberInfo(_ info: (User, SessionMember?)) {
+    public func saveSessionMemberInfo(_ info: (User, SessionMember?)) {
         self.memberMap[info.0.id] = info
     }
     
     /// 异步获取用户信息
-    func asyncGetSessionMemberInfo(_ userId: Int64) -> Observable<(User, SessionMember?)> {
+    public func asyncGetSessionMemberInfo(_ userId: Int64) -> Observable<(User, SessionMember?)> {
         return IMCoreManager.shared.userModule.queryUser(id: userId)
             .flatMap { [weak self] user in
                 if let sessionId = self?.session?.id {
@@ -694,12 +687,12 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             }
     }
     
-    func onSessionMemberAt(_ memberInfo: (User, SessionMember?)) {
+    public func onSessionMemberAt(_ memberInfo: (User, SessionMember?)) {
         self.inputLayout.addAtSessionMember(user: memberInfo.0, sessionMember: memberInfo.1)
     }
     
     ///  预览消息
-    func previewMessage(_ msg: Message, _ position: Int,  _ originView: UIView) {
+    public func previewMessage(_ msg: Message, _ position: Int,  _ originView: UIView) {
         if msg.type == MsgType.Audio.rawValue {
             guard let cp = IMUIManager.shared.contentProvider else {
                 return

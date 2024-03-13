@@ -13,6 +13,9 @@ import ProgressHUD
 
 open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    public let menuItemTagAdd = "add"
+    public let menuItemTagSearch = "search"
+    
     public let disposeBag = DisposeBag()
     
     override open func viewDidLoad() {
@@ -23,11 +26,11 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             var images = [UIImage?]()
             var actions = [Selector?]()
             if hasAddMenu() {
-                images.append(menuImages(menu: "add"))
+                images.append(menuImages(menu: menuItemTagAdd))
                 actions.append(#selector(addTapped))
             }
             if hasSearchMenu() {
-                images.append(menuImages(menu: "search"))
+                images.append(menuImages(menu: menuItemTagSearch))
                 actions.append(#selector(searchTapped))
             }
             setRightItems(images: images, actions: actions)
@@ -72,9 +75,9 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
     open func menuImages(menu: String) -> UIImage? {
         var image: UIImage? = nil
-        if (menu == "add") {
+        if (menu == menuItemTagAdd) {
             image = UIImage(named: "ic_titlebar_add")
-        } else if (menu == "search") {
+        } else if (menu == menuItemTagSearch) {
             image = UIImage(named: "ic_titlebar_search")
         }
         if image == nil {
@@ -97,11 +100,11 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     @objc func addTapped() {
-        onMenuClick(menu: "add")
+        onMenuClick(menu: menuItemTagAdd)
     }
     
     @objc func searchTapped() {
-        onMenuClick(menu: "search")
+        onMenuClick(menu: menuItemTagSearch)
     }
     
     
@@ -127,6 +130,14 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             navigationBarHeight += navigationController!.navigationBar.frame.height
         }
         return navigationBarHeight + AppUtils.getStatusBarHeight()
+    }
+    
+    public func getNavHeight() -> CGFloat {
+        var navHeight: CGFloat = 0
+        if (self.navigationController != nil) {
+            navHeight = self.navigationController!.navigationBar.frame.size.height
+        }
+        return navHeight + UIApplication.shared.windows[0].safeAreaInsets.top
     }
     
 }

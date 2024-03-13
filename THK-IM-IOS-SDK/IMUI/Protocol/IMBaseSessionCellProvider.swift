@@ -10,11 +10,15 @@ import UIKit
 
 open class IMBaseSessionCellProvider {
     
+    public init() {
+        
+    }
+    
     open func sessionType() -> Int {
         return 0
     }
     
-    func identifier() -> String {
+    public func identifier() -> String {
         return "session_cell_\(self.sessionType())"
     }
     

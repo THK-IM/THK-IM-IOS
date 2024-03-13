@@ -14,7 +14,6 @@ class IMSessionChooseViewController: IMSessionViewController {
     
     var forwardType: Int?
     var messages: Array<Message>?
-    let disposeBag = DisposeBag()
     
     public static func popup(vc: UIViewController, forwardType: Int, messages: Array<Message>) {
         let choose = IMSessionChooseViewController()
