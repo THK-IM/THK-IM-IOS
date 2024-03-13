@@ -21,6 +21,7 @@ public class SessionVo: Codable {
     var status: Int
     var top: Int64?
     var extData: String?
+    var functionFlag: Int64
     var cTime: Int64
     var mTime: Int64
     
@@ -38,6 +39,7 @@ public class SessionVo: Codable {
         case status = "status"
         case top = "top"
         case extData = "ext_data"
+        case functionFlag = "function_flag"
         case cTime = "c_time"
         case mTime = "m_time"
     }
@@ -47,7 +49,7 @@ public class SessionVo: Codable {
             id: self.sessionId, parentId: self.parentId ?? 0, type: self.type, entityId: self.entityId, name: self.name,
             noteName: self.noteName, noteAvatar: self.noteAvatar, remark: self.remark, mute: self.mute, role: self.role,
             status: self.status, unreadCount: 0, topTimestamp: top ?? 0, extData: extData, msgSyncTime: 0,
-            memberSyncTime: 0, memberCount: 0, deleted: 0, cTime: cTime, mTime: mTime
+            memberSyncTime: 0, memberCount: 0, functionFlag: functionFlag, deleted: 0,cTime: cTime, mTime: mTime
         )
         return session
     }

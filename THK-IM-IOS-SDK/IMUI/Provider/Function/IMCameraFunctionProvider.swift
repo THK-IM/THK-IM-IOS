@@ -21,4 +21,8 @@ open class IMCameraFunctionProvider: IMBaseFunctionCellProvider {
     public func click(sender: IMMsgSender?) {
         sender?.openCamera()
     }
+    
+    public func support(session: Session) -> Bool {
+        return session.functionFlag & IMChatFunction.Image.rawValue > 0 || session.functionFlag & IMChatFunction.Video.rawValue > 0
+    }
 }

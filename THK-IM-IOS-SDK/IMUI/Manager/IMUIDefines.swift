@@ -26,3 +26,16 @@ public class IMFile {
         self.name = name
     }
 }
+
+/**
+ 功能，1基础功能 2语音 4 表情  8 图片 16视频  32转发 64已读
+ */
+public enum IMChatFunction: Int64 {
+    case BaseInput = 1, // 文本输入/删除/文本表情
+         Audio = 2,
+        Emoji = 4,      //
+        Image = 8,
+        Video = 16,
+        Forward = 32,
+        Read = 64
+}

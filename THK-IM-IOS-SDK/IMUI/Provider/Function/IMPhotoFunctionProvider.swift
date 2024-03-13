@@ -21,4 +21,8 @@ open class IMPhotoFunctionProvider: IMBaseFunctionCellProvider {
     public func click(sender: IMMsgSender?) {
         sender?.choosePhoto()
     }
+    
+    public func support(session: Session) -> Bool {
+        return session.functionFlag & IMChatFunction.Image.rawValue > 0 || session.functionFlag & IMChatFunction.Video.rawValue > 0
+    }
 }

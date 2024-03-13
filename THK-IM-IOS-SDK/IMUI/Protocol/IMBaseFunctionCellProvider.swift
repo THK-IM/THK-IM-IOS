@@ -15,4 +15,6 @@ public protocol IMBaseFunctionCellProvider: AnyObject {
     func icon() -> UIImage?
     
     func click(sender: IMMsgSender?)
+    
+    func support(session: Session) -> Bool
 }

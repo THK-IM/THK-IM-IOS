@@ -85,8 +85,11 @@ open class IMUIManager: NSObject {
         }
     }
     
-    public func getBottomFunctionProviders() -> Array<IMBaseFunctionCellProvider> {
-        return bottomFunctionProviders
+    public func getBottomFunctionProviders(session: Session) -> Array<IMBaseFunctionCellProvider> {
+        let ps = bottomFunctionProviders.filter { p in
+            return p.support(session: session)
+        }
+        return ps
     }
     
     public func registerPanelProvider(_ ps: IMBasePanelViewProvider...) {
@@ -95,8 +98,11 @@ open class IMUIManager: NSObject {
         }
     }
     
-    public func getPanelProviders() -> Array<IMBasePanelViewProvider> {
-        return panelProviders
+    public func getPanelProviders(session: Session) -> Array<IMBasePanelViewProvider> {
+        let ps = panelProviders.filter { p in
+            return p.support(session: session)
+        }
+        return ps
     }
     
     public func registerMessageOperator(_ msgOperator: IMMessageOperator) {

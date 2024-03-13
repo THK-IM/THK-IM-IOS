@@ -18,10 +18,10 @@ import CoreServices
 open class IMMessageViewController: BaseViewController {
     
     public var session: Session? = nil
-    private var containerView = UIView()
-    private var messageLayout = IMMessageLayout()
-    private var inputLayout = IMInputLayout()
-    private var bottomPanelLayout = IMBottomPanelLayout()
+    private let containerView = UIView()
+    private let messageLayout = IMMessageLayout()
+    private let inputLayout = IMInputLayout()
+    private let bottomPanelLayout = IMBottomPanelLayout()
     private var msgSelectedLayout = IMMessageSelectedLayout()
     private var keyboardShow = false
     private var memberMap = [Int64: (User, SessionMember?)]()
@@ -33,7 +33,6 @@ open class IMMessageViewController: BaseViewController {
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.init(hex: "#F0F0F0")
         self.showSessionTitle()
         self.setupView()
         self.registerMsgEvent()
@@ -158,9 +157,9 @@ open class IMMessageViewController: BaseViewController {
         }
         containerView.clipsToBounds = true
         
+        self.bottomPanelLayout.sender = self
         self.containerView.addSubview(self.bottomPanelLayout)
         self.bottomPanelLayout.backgroundColor = UIColor.init(hex: "#F0F0F0")
-        self.bottomPanelLayout.sender = self
         self.bottomPanelLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
@@ -175,19 +174,34 @@ open class IMMessageViewController: BaseViewController {
         self.inputLayout.sender = self
         self.inputLayout.backgroundColor = UIColor.init(hex: "#F0F0F0")
         self.containerView.addSubview(self.inputLayout)
-        self.inputLayout.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
+        var showInput = true
+        if let session = self.session {
+            showInput = session.functionFlag > 0
+        }
+        self.inputLayout.isHidden = !showInput
+        
+        if showInput {
+            self.inputLayout.snp.makeConstraints { [weak self] make in
+                guard let sf = self else {
+                    return
+                }
+                make.left.equalToSuperview()
+                make.right.equalToSuperview()
+                make.bottom.equalTo(sf.bottomPanelLayout.snp.top)
+                make.height.equalTo(sf.inputLayout.getLayoutHeight()) // 高度内部自己计算
             }
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.bottom.equalTo(sf.bottomPanelLayout.snp.top)
-            make.height.equalTo(sf.inputLayout.getLayoutHeight()) // 高度内部自己计算
+        } else {
+            self.inputLayout.snp.makeConstraints { make in
+                make.left.equalToSuperview()
+                make.right.equalToSuperview()
+                make.bottom.equalTo(0)
+                make.height.equalTo(48)
+            }
         }
         
         // 多选msg视图
-        self.containerView.addSubview(self.msgSelectedLayout)
         self.msgSelectedLayout.sender = self
+        self.containerView.addSubview(self.msgSelectedLayout)
         self.msgSelectedLayout.alpha = 1
         self.msgSelectedLayout.backgroundColor = UIColor.init(hex: "#F0F0F0")
         self.msgSelectedLayout.isHidden = true
@@ -202,11 +216,11 @@ open class IMMessageViewController: BaseViewController {
         }
         
         // 消息视图，在输入框之上，铺满alwaysShowView
+        self.messageLayout.sender = self
+        self.messageLayout.previewer = self
         self.containerView.addSubview(self.messageLayout)
         self.messageLayout.backgroundColor = UIColor.init(hex: "#F8F8F8")
         self.messageLayout.session = self.session
-        self.messageLayout.sender = self
-        self.messageLayout.previewer = self
         self.messageLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return

@@ -21,5 +21,9 @@ open class IMUnicodeEmojiPanelProvider: IMBasePanelViewProvider {
         return UIImage(named: "ic_msg_emoji")!
     }
     
+    open func support(session: Session) -> Bool {
+        return true
+    }
+    
 }
 

@@ -14,7 +14,7 @@ class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDat
     private let cellID = "function_cell_id"
     private let countOneRow = 4.0
     private let disposeBag = DisposeBag()
-    private let functions = IMUIManager.shared.getBottomFunctionProviders()
+    private var functions = Array<IMBaseFunctionCellProvider>()
     
     lazy var functionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -45,6 +45,10 @@ class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDat
     }
     
     private func setupView() {
+        if let session = self.sender?.getSession() {
+            let functions = IMUIManager.shared.getBottomFunctionProviders(session: session)
+            self.functions.append(contentsOf: functions)
+        }
         self.addSubview(self.functionView)
         self.functionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()

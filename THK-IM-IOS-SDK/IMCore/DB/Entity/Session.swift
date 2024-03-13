@@ -47,6 +47,8 @@ public final class Session: TableCodable {
     public var memberSyncTime: Int64 = 0
     // 成员数
     public var memberCount: Int = 0
+    // 功能
+    public var functionFlag: Int64 = 0
     // 删除标记
     public var deleted: Int = 0
     // 消息创建时间
@@ -82,6 +84,7 @@ public final class Session: TableCodable {
         case msgSyncTime = "msg_sync_time"
         case memberSyncTime = "member_sync_time"
         case memberCount = "member_count"
+        case functionFlag = "function_flag"
         case deleted = "deleted"
         case cTime = "c_time"
         case mTime = "m_time"
@@ -107,6 +110,7 @@ public final class Session: TableCodable {
         self.msgSyncTime = 0
         self.memberSyncTime = 0
         self.memberCount = 0
+        self.functionFlag = 0
         self.deleted = 0
         self.cTime = 0
         self.mTime = 0
@@ -132,6 +136,7 @@ public final class Session: TableCodable {
         self.msgSyncTime = 0
         self.memberSyncTime = 0
         self.memberCount = 0
+        self.functionFlag = 0
         self.deleted = 0
         self.cTime = 0
         self.mTime = 0
@@ -142,7 +147,7 @@ public final class Session: TableCodable {
         id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, noteName: String?, noteAvatar: String?,
         remark: String, mute: Int, role: Int, status: Int, unreadCount: Int64, draft: String? = nil,
         lastMsg: String? = nil, topTimestamp: Int64, extData: String? = nil, msgSyncTime: Int64, memberSyncTime: Int64,
-        memberCount: Int, deleted: Int, cTime: Int64, mTime: Int64
+        memberCount: Int, functionFlag: Int64, deleted: Int, cTime: Int64, mTime: Int64
     ) {
         self.id = id
         self.parentId = parentId
@@ -163,6 +168,7 @@ public final class Session: TableCodable {
         self.msgSyncTime = msgSyncTime
         self.memberSyncTime = memberSyncTime
         self.memberCount = memberCount
+        self.functionFlag = functionFlag
         self.deleted = deleted
         self.cTime = cTime
         self.mTime = mTime

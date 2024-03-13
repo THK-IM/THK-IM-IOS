@@ -16,6 +16,8 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     private let cellContentId = "emoji_panel_title_cell"
     private var selectIndex = IndexPath(row: 0, section: 0)
     
+    private var emojiPanels = Array<IMBasePanelViewProvider>()
+    
     weak var sender: IMMsgSender?
     private let disposeBag = DisposeBag()
     
@@ -95,6 +97,11 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     override func layoutSubviews() {
+        if let session = self.sender?.getSession() {
+            let emojiPanels = IMUIManager.shared.getPanelProviders(session: session)
+            self.emojiPanels.removeAll()
+            self.emojiPanels.append(contentsOf: emojiPanels)
+        }
         self.emojiContentView.snp.remakeConstraints { make in
             make.left.equalToSuperview()
             make.width.equalToSuperview()
@@ -123,7 +130,9 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().offset(-100)
         }
-        self.emojiTabView.selectItem(at: selectIndex, animated: false, scrollPosition: .centeredHorizontally)
+        if selectIndex.row < emojiPanels.count {
+            self.emojiTabView.selectItem(at: selectIndex, animated: false, scrollPosition: .centeredHorizontally)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -131,20 +140,20 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return IMUIManager.shared.getPanelProviders().count
+        return emojiPanels.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == self.emojiTabView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellTitleId, for: indexPath)
             let tabCell = cell as! IMEmojiPanelTitleCell
-            let provider = IMUIManager.shared.getPanelProviders()[indexPath.row]
+            let provider = emojiPanels[indexPath.row]
             tabCell.setProvider(provider)
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellContentId, for: indexPath)
             let tabCell = cell as! IMEmojiPanelContentCell
-            let provider = IMUIManager.shared.getPanelProviders()[indexPath.row]
+            let provider = emojiPanels[indexPath.row]
             tabCell.setProvider(sender, provider)
             return cell
         }
