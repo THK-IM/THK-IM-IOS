@@ -15,6 +15,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
     public let menuItemTagAdd = "add"
     public let menuItemTagSearch = "search"
+    public let menuSize = CGSize(width: 30, height: 30)
     
     public let disposeBag = DisposeBag()
     
@@ -86,7 +87,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         if image == nil {
             return image
         }
-        return image!.scaledToSize(CGSize(width: 24, height: 24))
+        return image!.scaledToSize(menuSize)
     }
     
     open func hasBadge(menu: String) -> Bool {

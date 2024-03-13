@@ -230,11 +230,18 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             lastTimelineMsgCTime = firstMsg.cTime
         }
         var newMessages = Array<Message>()
+        var index = 0
         for m in messages {
+            index += 1
             newMessages.append(m)
-            let msg = addTimelineMessage(m)
-            if (msg != nil) {
-                newMessages.append(msg!)
+            if index <= messages.count - 1 {
+                let olderMsg = messages[index]
+                if (abs(olderMsg.cTime - m.cTime) > timeLineInterval) {
+                    let msg = addTimelineMessage(m)
+                    if (msg != nil) {
+                        newMessages.append(msg!)
+                    }
+                }
             }
         }
         if let lastMsg = newMessages.last {

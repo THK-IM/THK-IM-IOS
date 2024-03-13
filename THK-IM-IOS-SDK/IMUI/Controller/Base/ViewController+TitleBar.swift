@@ -18,7 +18,7 @@ extension UIViewController {
         let titleView = UILabel(frame: CGRect.init(x: 0, y: -20, width: 150, height: 30))
         titleView.text = title
         titleView.textAlignment = .center
-        titleView.font = UIFont.systemFont(ofSize: 18)
+        titleView.font = UIFont.systemFont(ofSize: 20)
         titleView.textColor = UIColor.black
         self.navigationItem.titleView = titleView
         self.navigationItem.titleView?.contentMode = .center
@@ -30,15 +30,15 @@ extension UIViewController {
         for image in images {
             let item = UIBarButtonItem(title: titles[i], style: .plain, target: self, action: nil)
             let customButton = UIButton(type: .custom)
-            customButton.frame = CGRect(x: 0, y: 0, width: 48, height: 48)
+            customButton.frame = CGRect(x: 0, y: 0, width: 36, height: 36)
             if let action = actions[i] {
                 customButton.addTarget(self, action: action, for: .touchUpInside)
             }
             customButton.setImage(image, for: .normal)
-            let b = BadgeSwift(frame: CGRect(x: 24, y: 0, width: 24, height: 24))
+            let b = BadgeSwift(frame: CGRect(x: 16, y: 0, width: 18, height: 18))
             b.textColor = .white
             b.insets = CGSize(width: 0, height: 0)
-            b.font = UIFont.systemFont(ofSize: 12)
+            b.font = UIFont.systemFont(ofSize: 8)
             b.isHidden = true
             customButton.addSubview(b)
             item.customView = customButton
@@ -59,7 +59,7 @@ extension UIViewController {
         }
         if let rightBarButtonItems = self.navigationItem.rightBarButtonItems {
             for item in rightBarButtonItems {
-                if title == title {
+                if item.title == title {
                     item.customView?.subviews.forEach({ view in
                         if (view is BadgeSwift) {
                             if text == nil {
