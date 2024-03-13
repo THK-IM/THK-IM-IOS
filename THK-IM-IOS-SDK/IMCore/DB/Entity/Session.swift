@@ -60,7 +60,7 @@ public final class Session: TableCodable {
         public typealias Root = Session
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
             BindColumnConstraint(id, isPrimary: true)
-            BindMultiUnique(type, entityId, onConflict: ConflictAction.Replace)
+            BindIndex(type, entityId, namedWith: "session_entity_id", isUnique: false)
             BindIndex(parentId, mTime, namedWith: "session_parent_id_m_time_idx", isUnique: false)
         }
         case id = "id"
