@@ -25,15 +25,18 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             }
             var images = [UIImage?]()
             var actions = [Selector?]()
+            var titles = [String]()
             if hasAddMenu() {
+                titles.append(menuItemTagAdd)
                 images.append(menuImages(menu: menuItemTagAdd))
                 actions.append(#selector(addTapped))
             }
             if hasSearchMenu() {
+                titles.append(menuItemTagSearch)
                 images.append(menuImages(menu: menuItemTagSearch))
                 actions.append(#selector(searchTapped))
             }
-            setRightItems(images: images, actions: actions)
+            setRightItems(images: images, titles: titles, actions: actions)
             if (self.swipeBack()) {
                 let backImage = UIImage(named: "ic_titlebar_back")?.scaledToSize(CGSize(width: 24, height: 24))
                 let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
@@ -84,6 +87,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             return image
         }
         return image!.scaledToSize(CGSize(width: 24, height: 24))
+    }
+    
+    open func hasBadge(menu: String) -> Bool {
+        return false
     }
     
     open func onMenuClick(menu: String) {

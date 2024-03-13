@@ -14,8 +14,8 @@ public class SessionVo: Codable {
     var entityId : Int64
     var name: String
     var remark: String
-    var noteName: String
-    var noteAvatar: String
+    var noteName: String?
+    var noteAvatar: String?
     var mute: Int
     var role: Int
     var status: Int

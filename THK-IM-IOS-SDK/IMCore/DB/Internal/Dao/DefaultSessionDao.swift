@@ -122,5 +122,13 @@ open class DefaultSessionDao : SessionDao {
             orderBy: [Session.Properties.topTimestamp.order(Order.descending), Session.Properties.mTime.order(Order.descending)]
         )
     }
+    
+    public func findUnreadSessions(_ parentInd: Int64) throws -> Array<Session>? {
+        return try self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Session.Properties.parentId == parentInd &&
+            Session.Properties.unreadCount > 0
+        )
+    }
 }
 

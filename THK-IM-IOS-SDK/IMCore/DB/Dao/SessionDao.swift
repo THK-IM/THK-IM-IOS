@@ -72,7 +72,13 @@ public protocol SessionDao {
      */
     func findByParentId(_ parentId: Int64, _ count: Int, _ mTime: Int64) throws -> Array<Session>?
     
+    /**
+     * 根据类型查询所有session
+     */
+    func findAll(_ type: Int) throws -> Array<Session>?
     
-    
-   func findAll(_ type: Int) throws -> Array<Session>?
+    /**
+     * 查询所有未读session
+     */
+    func findUnreadSessions(_ parentInd: Int64) throws -> Array<Session>?
 }
