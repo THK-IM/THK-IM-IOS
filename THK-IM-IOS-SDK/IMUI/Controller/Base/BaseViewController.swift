@@ -13,6 +13,7 @@ import ProgressHUD
 
 open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    public let menuItemTagNews = "News"
     public let menuItemTagAdd = "add"
     public let menuItemTagSearch = "search"
     public let menuSize = CGSize(width: 30, height: 30)
@@ -27,6 +28,11 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             var images = [UIImage?]()
             var actions = [Selector?]()
             var titles = [String]()
+            if hasNewsMenu() {
+                titles.append(menuItemTagNews)
+                images.append(menuImages(menu: menuItemTagNews))
+                actions.append(#selector(newsTapped))
+            }
             if hasAddMenu() {
                 titles.append(menuItemTagAdd)
                 images.append(menuImages(menu: menuItemTagAdd))
@@ -69,6 +75,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         return nil
     }
     
+    open func hasNewsMenu() -> Bool {
+        return false
+    }
+    
     open func hasAddMenu() -> Bool {
         return false
     }
@@ -106,6 +116,9 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    @objc func newsTapped() {
+        onMenuClick(menu: menuItemTagNews)
+    }
     
     @objc func addTapped() {
         onMenuClick(menu: menuItemTagAdd)
