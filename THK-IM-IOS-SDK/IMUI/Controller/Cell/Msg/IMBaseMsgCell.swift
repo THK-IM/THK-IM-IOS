@@ -315,6 +315,9 @@ open class IMBaseMsgCell : IMBaseTableCell {
         if session.type == SessionType.MsgRecord.rawValue || session.type == SessionType.SuperGroup.rawValue {
             return
         }
+        if session.functionFlag & IMChatFunction.Read.rawValue == 0 {
+            return
+        }
         Observable.just(session.id).flatMap { sessionId in
             let count = IMCoreManager.shared.database.sessionMemberDao().findSessionMemberCount(sessionId)
             return Observable.just(count)
@@ -387,8 +390,15 @@ open class IMBaseMsgCell : IMBaseTableCell {
             return
         }
         if (message!.operateStatus & MsgOperateStatus.ClientRead.rawValue) > 0
-            && ((message!.operateStatus & MsgOperateStatus.ServerRead.rawValue) > 0 || session?.type == SessionType.SuperGroup.rawValue
+                && ((message!.operateStatus & MsgOperateStatus.ServerRead.rawValue) > 0
             ) {
+            return
+        }
+        if let session = self.session {
+            if session.type == SessionType.SuperGroup.rawValue || (session.functionFlag & IMChatFunction.Read.rawValue) == 0 {
+                return
+            }
+        } else {
             return
         }
         self.delegate?.msgSender()?.readMessage(message!)
