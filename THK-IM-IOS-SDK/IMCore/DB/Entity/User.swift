@@ -17,7 +17,7 @@ public final class User: TableCodable {
     // 用户头像
     public var avatar: String?
     // 用户性别
-    public var sex: Int? = SexType.Unknown.rawValue
+    public var sex: Int8? = SexType.Unknown.rawValue
     // 用户状态
     public var status: Int = 0
     // 自定义扩展数据 推荐使用json结构存储
@@ -57,7 +57,7 @@ public final class User: TableCodable {
         self.mTime = 0
     }
     
-    public init(id: Int64, displayId: String, nickname: String, avatar: String?, sex: Int?, status: Int,
+    public init(id: Int64, displayId: String, nickname: String, avatar: String?, sex: Int8?, status: Int,
                 extData: String? = nil, cTime: Int64, mTime: Int64)
     {
         self.id = id

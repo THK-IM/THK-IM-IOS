@@ -80,7 +80,7 @@ public enum MsgType : Int {
 /**
  * 性别
  */
-public enum SexType: Int {
+public enum SexType: Int8 {
     case Unknown = 0,
          Man = 1,
          Women = 2,

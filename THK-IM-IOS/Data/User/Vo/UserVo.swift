@@ -14,7 +14,7 @@ class UserVo: Codable {
     var displayId: String
     var nickname: String?
     var avatar: String?
-    var sex: Int?
+    var sex: Int8?
     var qrcode: String?
     var birthday: Int64?
     

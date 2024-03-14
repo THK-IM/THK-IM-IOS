@@ -13,7 +13,7 @@ class UserBasicInfoVo: Codable {
     var displayId: String
     var nickname: String?
     var avatar: String?
-    var sex: Int?
+    var sex: Int8?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
