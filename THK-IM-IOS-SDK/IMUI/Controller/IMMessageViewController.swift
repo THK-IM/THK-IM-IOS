@@ -109,13 +109,6 @@ open class IMMessageViewController: BaseViewController {
         self.messageLayout.refreshMessageUserInfo()
     }
     
-    open override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if self.isKeyboardShowing() {
-            _ = self.closeKeyboard()
-        }
-    }
-    
     open override func onMenuClick(menu: String) {
         guard let session = self.session else {
             return
@@ -336,6 +329,13 @@ open class IMMessageViewController: BaseViewController {
         _ = inputLayout.endEditing(true)
     }
     
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if self.isKeyboardShowing() {
+            _ = self.closeKeyboard()
+        }
+    }
+    
     open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         guard let session = self.session else {
@@ -344,9 +344,11 @@ open class IMMessageViewController: BaseViewController {
         if let content = self.inputLayout.getInputContent() {
             if content.length > 0 {
                 Observable.just(content).flatMap { draft in
-                    session.draft = draft
-                    try? IMCoreManager.shared.database.sessionDao().insertOrUpdate([session])
-                    SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                    try? IMCoreManager.shared.database.sessionDao().updateSessionDraft(session.id, content)
+                    if let session = try? IMCoreManager.shared.database.sessionDao().findById(session.id) {
+                        SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                    }
+                    return Observable.just(true)
                     return Observable.just(true)
                 }.compose(RxTransformer.shared.io2Main())
                     .subscribe { _ in

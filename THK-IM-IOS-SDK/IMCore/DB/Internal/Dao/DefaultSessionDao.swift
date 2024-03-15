@@ -73,6 +73,19 @@ open class DefaultSessionDao : SessionDao {
     
     
     /**
+     * 设置session草稿
+     */
+    public func updateSessionDraft(_ sessionId: Int64, _ draft: String?) throws {
+        try self.database?.update(
+            table: self.tableName,
+            on: Session.Properties.draft,
+            with: draft ?? "",
+            where: Session.Properties.id == sessionId
+        )
+    }
+    
+    
+    /**
      * 查询session消息同步时间
      */
     public func findMsgSyncTimeById(_ sessionId: Int64) -> Int64 {

@@ -44,6 +44,12 @@ public protocol SessionDao {
     
     
     /**
+     * 设置session草稿
+     */
+    func updateSessionDraft(_ sessionId: Int64, _ draft: String?) throws
+    
+    
+    /**
      * 查询session消息同步时间
      */
     func findMsgSyncTimeById(_ sessionId: Int64) -> Int64

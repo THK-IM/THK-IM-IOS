@@ -494,6 +494,20 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         if (text.length == 0) {
             return
         }
+        if let session = sender?.getSession() {
+            if let draft = session.draft  {
+                Observable.just(draft).flatMap { draft in
+                    try? IMCoreManager.shared.database.sessionDao().updateSessionDraft(session.id, nil)
+                    if let session = try? IMCoreManager.shared.database.sessionDao().findById(session.id) {
+                        SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                    }
+                    return Observable.just(true)
+                }.compose(RxTransformer.shared.io2Main())
+                    .subscribe { _ in
+                        
+                    }.disposed(by: self.disposeBag)
+            }
+        }
         let (content, atUIds) = AtStringUtils.replaceAtNickNamesToUIds(text) { [weak self] nickname in
             guard let sf = self else {
                 return 0
