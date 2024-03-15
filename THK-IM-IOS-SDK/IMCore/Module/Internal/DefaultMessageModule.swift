@@ -563,9 +563,9 @@ open class DefaultMessageModule : MessageModule {
                             s.mTime = msg.cTime
                             try IMCoreManager.shared.database.sessionDao().insertOrUpdate([s])
                             SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
-                            if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 ||
-                                msg.operateStatus & MsgOperateStatus.ServerRead.rawValue == 0) &&
-                                sf.getMsgProcessor(msg.type).needReprocess(msg: msg) == false {
+                            if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) &&
+                                (msg.operateStatus & MsgOperateStatus.ServerRead.rawValue == 0) &&
+                                (sf.getMsgProcessor(msg.type).needReprocess(msg: msg) == false) {
                                 sf.notifyNewMessage(s, msg)
                             }
                         }

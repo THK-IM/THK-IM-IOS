@@ -110,7 +110,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     let count = try IMCoreManager.shared.database.messageDao().getUnReadCount(session!.id)
                     if (session!.unreadCount != count || session!.mTime < msg.mTime) {
                         session!.unreadCount = count
-//                        session!.mTime = msg.mTime
+                        session!.mTime = msg.mTime
                         try IMCoreManager.shared.database.sessionDao().update([session!])
                         SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
                     }
