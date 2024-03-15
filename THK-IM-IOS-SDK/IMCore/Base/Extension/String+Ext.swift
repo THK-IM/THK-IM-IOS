@@ -10,11 +10,12 @@ import CommonCrypto
 import UIKit
 
 public extension String {
-    var length: Int {
+    
+    public var length: Int {
         return self.utf16.count
     }
     
-    static func getNumber(count: Int) -> String? {
+    static public func getNumber(count: Int) -> String? {
         if (count <= 0) {
             return nil
         } else if (count < 100) {
@@ -24,7 +25,7 @@ public extension String {
         }
     }
     
-    func sizeWith(_ font : UIFont , _ maxSize : CGSize) ->CGSize {
+    public func sizeWith(_ font : UIFont , _ maxSize : CGSize) ->CGSize {
         let options = NSStringDrawingOptions.usesLineFragmentOrigin
         var attributes : [NSAttributedString.Key : Any] = [:]
         attributes[NSAttributedString.Key.font] = font
@@ -37,7 +38,7 @@ public extension String {
         return textBouds.size
     }
     
-    func random(_ length: Int) -> String {
+    public func random(_ length: Int) -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         let count = UInt32(letters.count)
         var random = SystemRandomNumberGenerator()
@@ -50,7 +51,7 @@ public extension String {
         return randomString
     }
     
-    var sha256Hash: String {
+    public var sha256Hash: String {
         guard let data = data(using: .utf8) else {
             return self
         }
@@ -61,7 +62,7 @@ public extension String {
         return digest.map { String(format: "%02x", $0) }.joined()
     }
     
-    var sha1Hash: String {
+    public var sha1Hash: String {
         guard let data = data(using: .utf8) else {
             return self
         }

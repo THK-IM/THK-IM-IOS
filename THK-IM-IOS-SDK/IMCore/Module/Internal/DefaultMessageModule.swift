@@ -204,7 +204,10 @@ open class DefaultMessageModule : MessageModule {
         let uId = IMCoreManager.shared.uId
         IMCoreManager.shared.api.queryUserLatestSessions(uId, count, lastTime)
             .compose(RxTransformer.shared.io2Io())
-            .subscribe(onNext: { sessions in
+            .subscribe(onNext: { [weak self] sessions in
+                guard let sf = self else {
+                    return
+                }
                 var needDelSIds = Set<Int64>()
                 var needDelGroupIds = Set<Int64>()
                 var needDelSessions = [Session]()
@@ -234,18 +237,7 @@ open class DefaultMessageModule : MessageModule {
                     for new in needUpdateSessions {
                         let dbSession = try? IMCoreManager.shared.database.sessionDao().findById(new.id)
                         if dbSession != nil {
-                            dbSession!.parentId = new.parentId
-                            dbSession!.entityId = new.entityId
-                            dbSession!.name = new.name
-                            dbSession!.parentId = new.parentId
-                            dbSession!.noteName = new.noteName
-                            dbSession!.type = new.type
-                            dbSession!.remark = new.remark
-                            dbSession!.role = new.role
-                            dbSession!.status = new.status
-                            dbSession!.mute = new.mute
-                            dbSession!.extData = new.extData
-                            dbSession!.topTimestamp = new.topTimestamp
+                            dbSession!.mergeServerSession(new)
                             try? IMCoreManager.shared.database.sessionDao().update([dbSession!])
                         } else {
                             try? IMCoreManager.shared.database.sessionDao().insertOrUpdate([new])
@@ -253,11 +245,10 @@ open class DefaultMessageModule : MessageModule {
                     }
                 }
                 
-                
                 if (!sessions.isEmpty) {
-                    let success = self.setSessionLastSyncTime(sessions.last!.mTime)
+                    let success = sf.setSessionLastSyncTime(sessions.last!.mTime)
                     if (success && sessions.count >= count) {
-                        self.syncLatestSessionsFromServer()
+                        sf.syncLatestSessionsFromServer()
                     }
                 }
                 
@@ -572,8 +563,11 @@ open class DefaultMessageModule : MessageModule {
                             s.mTime = msg.cTime
                             try IMCoreManager.shared.database.sessionDao().insertOrUpdate([s])
                             SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
-                            
-                            sf.notifyNewMessage(s, msg)
+                            if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 ||
+                                msg.operateStatus & MsgOperateStatus.ServerRead.rawValue == 0) &&
+                                sf.getMsgProcessor(msg.type).needReprocess(msg: msg) == false {
+                                sf.notifyNewMessage(s, msg)
+                            }
                         }
                     } catch {
                         DDLogError("processSessionByMessage \(error)")

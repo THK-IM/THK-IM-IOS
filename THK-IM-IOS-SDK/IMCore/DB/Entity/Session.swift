@@ -174,6 +174,22 @@ public final class Session: TableCodable {
         self.mTime = mTime
     }
     
+    public func mergeServerSession(_ serverSession: Session) {
+        self.parentId = serverSession.parentId
+        self.entityId = serverSession.entityId
+        self.name = serverSession.name
+        self.parentId = serverSession.parentId
+        self.noteName = serverSession.noteName
+        self.functionFlag = serverSession.functionFlag
+        self.remark = serverSession.remark
+        self.type = serverSession.type
+        self.role = serverSession.role
+        self.status = serverSession.status
+        self.mute = serverSession.mute
+        self.extData = serverSession.extData
+        self.topTimestamp = serverSession.topTimestamp
+    }
+    
     public static func emptySession() -> Session {
         return Session(id: 0)
     }
