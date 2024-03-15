@@ -76,6 +76,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     lazy private var textView: IMTextView = {
         let textView = IMTextView()
         textView.delegate = self
+        textView.placeholder = "善语结善缘，恶人伤人心"
         textView.isScrollEnabled = true
         textView.textColor = UIColor.init(hex: "#333333")
         textView.font = inputFont
@@ -209,7 +210,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             guard let sf = self else {
                 return
             }
-            make.top.equalToSuperview()
+            make.bottom.equalTo(sf.textView.snp.top)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.height.equalTo(0)
@@ -223,10 +224,10 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     override func layoutSubviews() {
         self.addSubview(self.inputLayout)
-        self.inputLayout.snp.makeConstraints {  make in
+        self.inputLayout.snp.remakeConstraints {  make in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
             make.height.equalTo(inputLayoutHeight)
         }
         self.setupEvent()
@@ -384,8 +385,8 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         if self.isReplyMsgShow {
             replyHeight = 40
         }
-        self.replyView.snp.updateConstraints { make in
-            make.top.equalToSuperview()
+        self.replyView.snp.remakeConstraints { make in
+            make.bottom.equalTo(self.textView.snp.top)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.height.equalTo(replyHeight)
@@ -499,7 +500,15 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             }
             for (k, v) in sf.atMap {
                 if (v == nickname) {
-                    return Int64(k) ?? 0
+                    if Int64(k) != nil {
+                        return Int64(k)!
+                    }
+                }
+            }
+            if let sender = sf.sender {
+                let id = sender.syncGetSessionMemberUserIdByNickname(nickname)
+                if id != nil {
+                    return id!
                 }
             }
             return 0
@@ -515,6 +524,10 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         self.renderInputText("")
         self.textInputHeight = IMInputLayout.minTextInputHeight
         self.resetLayout(false)
+    }
+    
+    func getInputContent() ->String? {
+        return self.textView.text
     }
 
     @discardableResult func openKeyboard() -> Bool {

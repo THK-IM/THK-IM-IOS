@@ -62,19 +62,22 @@ class IMReplyView: UIView {
         self.addSubview(self.closeView)
         self.addSubview(self.replyUserView)
         self.addSubview(self.replyMsgView)
-        
-        self.closeView.rx.tapGesture().asObservable()
+    }
+    
+    func setMessage(_ msg: Message) {
+        self.message = msg
+        self.closeView.rx.tapGesture().when(.ended).asObservable()
             .subscribe(onNext: { [weak self] _ in
                 self?.sender?.closeReplyMessage()
             }).disposed(by: self.disposeBag)
     }
     
-    func setMessage(_ msg: Message) {
-        self.message = msg
-    }
+//    override func layoutSubviews() {
+//        requestLayout()
+//    }
     
     func requestLayout() {
-        if let msg = self.message  {
+        if let msg = self.message {
             self.lineView.snp.remakeConstraints { make in
                 make.top.equalToSuperview().offset(2)
                 make.bottom.equalToSuperview().offset(-2)
@@ -83,7 +86,7 @@ class IMReplyView: UIView {
             }
             self.closeView.snp.remakeConstraints { make in
                 make.right.equalToSuperview().offset(-12)
-                make.size.equalTo(20)
+                make.size.equalTo(30)
                 make.centerY.equalToSuperview()
             }
             self.replyUserView.snp.remakeConstraints { [weak self] make in
@@ -115,12 +118,16 @@ class IMReplyView: UIView {
                 make.height.equalToSuperview()
             }
             self.lineView.snp.remakeConstraints { make in
+                make.top.equalToSuperview().offset(0)
+                make.bottom.equalToSuperview().offset(-0)
                 make.height.equalToSuperview()
             }
             self.replyUserView.snp.remakeConstraints { make in
+                make.top.equalToSuperview().offset(0)
                 make.height.equalToSuperview()
             }
             self.replyMsgView.snp.remakeConstraints { make in
+                make.top.equalToSuperview().offset(0)
                 make.height.equalToSuperview()
             }
         }

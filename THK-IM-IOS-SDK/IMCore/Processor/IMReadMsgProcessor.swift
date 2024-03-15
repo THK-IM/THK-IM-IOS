@@ -77,10 +77,10 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     referMsg!.mTime = msg.cTime
                     try insertOrUpdateDb(referMsg!, true, false)
                     // 状态操作消息对用户不可见，默认状态即位本身已读
-                    msg.sendStatus = MsgSendStatus.Success.rawValue
-                    msg.operateStatus = MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
-                    // 已读消息入库，并ack
-                    try insertOrUpdateDb(msg, false, false)
+//                    msg.sendStatus = MsgSendStatus.Success.rawValue
+//                    msg.operateStatus = MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+//                    // 已读消息入库，并ack
+//                    try insertOrUpdateDb(msg, false, false)
                     if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                         IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                     }
@@ -129,12 +129,12 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     }
     
     private func readMessageToCache(_ msg: Message) {
-        guard let session = try? IMCoreManager.shared.database.sessionDao().findById(msg.sessionId) else {
-            return
-        }
-        if session.type == SessionType.SuperGroup.rawValue || (session.functionFlag & IMChatFunction.Read.rawValue) == 0 {
-            return
-        }
+//        guard let session = try? IMCoreManager.shared.database.sessionDao().findById(msg.sessionId) else {
+//            return
+//        }
+//        if session.type == SessionType.SuperGroup.rawValue || (session.functionFlag & IMChatFunction.Read.rawValue) == 0 {
+//            return
+//        }
         readLock.lock()
         if self.needReadDic[msg.sessionId] == nil {
             self.needReadDic[msg.sessionId] = Set()

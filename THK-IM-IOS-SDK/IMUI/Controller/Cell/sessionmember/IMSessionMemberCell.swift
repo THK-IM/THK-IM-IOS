@@ -53,8 +53,14 @@ class IMSessionMemberCell: UITableViewCell {
         self.showNickname(nickname: nickname)
         if let avatar = IMUIManager.shared.avatarForSessionMember(memberInfo.0, memberInfo.1) {
             self.avatarView.renderImageByUrlWithCorner(url: avatar, radius: 10)
+            return
         }
-            
+        self.renderProviderAvatar(user: memberInfo.0)
+    }
+    
+    private func renderProviderAvatar(user: User) {
+        let image = IMUIManager.shared.uiResourceProvider?.avatar(user: user)
+        self.avatarView.image = image
     }
     
     private func showNickname(nickname: String?) {

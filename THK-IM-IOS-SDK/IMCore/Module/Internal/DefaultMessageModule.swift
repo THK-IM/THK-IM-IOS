@@ -249,8 +249,11 @@ open class DefaultMessageModule : MessageModule {
                     let success = sf.setSessionLastSyncTime(sessions.last!.mTime)
                     if (success && sessions.count >= count) {
                         sf.syncLatestSessionsFromServer()
+                        return
                     }
                 }
+                // session 同步完了后开始同步超级群消息
+                sf.syncSuperGroupMessages()
                 
             })
             .disposed(by: disposeBag)
@@ -266,6 +269,11 @@ open class DefaultMessageModule : MessageModule {
                     return
                 }
                 do {
+                    for m in messages {
+                        if m.cTime <= session.mTime {
+                            m.operateStatus = m.operateStatus | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+                        }
+                    }
                     try sf.batchProcessMessages(messages, false)
                     if !messages.isEmpty {
                         let lastTime = messages.last?.cTime

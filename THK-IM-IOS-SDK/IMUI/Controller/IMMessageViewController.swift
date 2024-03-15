@@ -190,6 +190,7 @@ open class IMMessageViewController: BaseViewController {
                 make.bottom.equalTo(sf.bottomPanelLayout.snp.top)
                 make.height.equalTo(sf.inputLayout.getLayoutHeight()) // 高度内部自己计算
             }
+            
         } else {
             self.inputLayout.snp.makeConstraints { make in
                 make.left.equalToSuperview()
@@ -229,6 +230,10 @@ open class IMMessageViewController: BaseViewController {
             make.right.equalToSuperview()
             make.top.equalToSuperview()
             make.bottom.equalTo(sf.inputLayout.snp.top)
+        }
+        
+        if let draft = self.session?.draft {
+            self.inputLayout.addInputText(draft)
         }
     }
     
@@ -329,6 +334,27 @@ open class IMMessageViewController: BaseViewController {
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         _ = inputLayout.endEditing(true)
+    }
+    
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        guard let session = self.session else {
+            return
+        }
+        if let content = self.inputLayout.getInputContent() {
+            if content.length > 0 {
+                Observable.just(content).flatMap { draft in
+                    session.draft = draft
+                    try? IMCoreManager.shared.database.sessionDao().insertOrUpdate([session])
+                    SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                    return Observable.just(true)
+                }.compose(RxTransformer.shared.io2Main())
+                    .subscribe { _ in
+                        
+                    }.disposed(by: self.disposeBag)
+            }
+        }
+        
     }
     
     func moveKeyboard(_ isKeyboardShow: Bool, _ height: CGFloat, _ duration: Double) {
@@ -624,7 +650,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         let operators = IMUIManager.shared.getMessageOperators(message, session)
         let rowCount = 5
         let popupWidth = 300
-        let popupHeight = (operators.count/rowCount + operators.count%rowCount) * 60
+        let popupHeight = (operators.count/rowCount + operators.count%rowCount==0 ? 0 : 1) * 60
         var y = 0
         if (atFrame.origin.y <= 300 && (atFrame.origin.y + atFrame.size.height) >= (screenHeight - 300)) {
             y = (Int(screenHeight) - popupHeight) / 2
@@ -671,9 +697,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         guard let session = self.session else {
             return
         }
-        if (session.type != SessionType.Group.rawValue &&
-            session.type != SessionType.SuperGroup.rawValue
-        ) {
+        if (session.type == SessionType.Single.rawValue) {
             return
         }
         let atSessionMemberController = IMAtSessionMemberController()
@@ -710,6 +734,16 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             return (User.all, nil)
         }
         return self.memberMap[userId]
+    }
+    
+    /// 同步获取用户信息 用于@人 存入草稿再取出
+    public func syncGetSessionMemberUserIdByNickname(_ nickname: String) -> Int64? {
+        for (_, v) in self.memberMap {
+            if v.1?.noteName == nickname || v.0.nickname == nickname {
+                return v.0.id
+            }
+        }
+        return nil
     }
     
     /// 设置用户信息

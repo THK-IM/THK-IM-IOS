@@ -104,6 +104,9 @@ public protocol IMMsgSender : AnyObject {
     /// 同步获取用户信息
     func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)?
     
+    /// 同步获取用户id 用于@人 存入草稿再取出
+    func syncGetSessionMemberUserIdByNickname(_ nickname: String) -> Int64?
+    
     /// 设置用户信息
     func saveSessionMemberInfo(_ info: (User, SessionMember?))
     
