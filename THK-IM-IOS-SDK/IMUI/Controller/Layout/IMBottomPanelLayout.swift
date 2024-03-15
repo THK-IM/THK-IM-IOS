@@ -34,16 +34,16 @@ class IMBottomPanelLayout: UIView {
     }
     
     override func layoutSubviews() {
-        if self.subviews.contains(self.emojiPanelView) {
-            self.emojiPanelView.snp.remakeConstraints { make in
-                make.edges.equalToSuperview()
-            }
-        }
-        if self.subviews.contains(self.functionPanelView) {
-            self.functionPanelView.snp.remakeConstraints { make in
-                make.edges.equalToSuperview()
-            }
-        }
+//        if self.subviews.contains(self.emojiPanelView) {
+//            self.emojiPanelView.snp.remakeConstraints { make in
+//                make.edges.equalToSuperview()
+//            }
+//        }
+//        if self.subviews.contains(self.functionPanelView) {
+//            self.functionPanelView.snp.remakeConstraints { make in
+//                make.edges.equalToSuperview()
+//            }
+//        }
     }
     
     func getLayoutHeight() -> CGFloat {
@@ -62,6 +62,9 @@ class IMBottomPanelLayout: UIView {
                 if !self.subviews.contains(self.emojiPanelView) {
                     self.addSubview(self.emojiPanelView)
                 }
+                self.emojiPanelView.snp.remakeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
                 panelLayoutHeight = emojiHeight
             }
         } else {
@@ -72,6 +75,9 @@ class IMBottomPanelLayout: UIView {
                 self.functionPanelView.isHidden = false
                 if !self.subviews.contains(self.functionPanelView) {
                     self.addSubview(self.functionPanelView)
+                }
+                self.functionPanelView.snp.remakeConstraints { make in
+                    make.edges.equalToSuperview()
                 }
                 panelLayoutHeight = moreFunctionHeight
             }

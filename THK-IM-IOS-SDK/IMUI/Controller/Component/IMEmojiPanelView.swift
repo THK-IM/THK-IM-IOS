@@ -98,15 +98,15 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
         self.sendView.snp.remakeConstraints { make in
             make.size.equalTo(30)
             make.right.equalToSuperview().offset(-10)
-            make.top.equalToSuperview().offset(6)
+            make.top.equalToSuperview().offset(8)
         }
         self.delView.snp.remakeConstraints { make in
             make.size.equalTo(30)
             make.right.equalToSuperview().offset(-50)
-            make.top.equalToSuperview().offset(6)
+            make.top.equalToSuperview().offset(8)
         }
         self.emojiTabView.snp.remakeConstraints { make in
-            make.top.equalToSuperview().offset(6)
+            make.top.equalToSuperview().offset(4)
             make.height.equalTo(40)
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().offset(-100)

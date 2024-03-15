@@ -76,7 +76,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     lazy private var textView: IMTextView = {
         let textView = IMTextView()
         textView.delegate = self
-        textView.placeholder = "善语结善缘，恶人伤人心"
+        textView.placeholder = "说点什么"
         textView.isScrollEnabled = true
         textView.textColor = UIColor.init(hex: "#333333")
         textView.font = inputFont
@@ -192,7 +192,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             make.bottom.equalToSuperview().offset(-10)
             make.left.equalTo(sf.speakButton.snp.right).offset(spacing)
             make.right.equalTo(sf.emojiButton.snp.left).offset(-spacing)
-            make.height.equalTo(IMInputLayout.minTextInputHeight)
+            make.height.greaterThanOrEqualTo(IMInputLayout.minTextInputHeight)
         }
         
         self.speakView.snp.makeConstraints { [weak self] make in
@@ -220,6 +220,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.setupEvent()
     }
     
     override func layoutSubviews() {
@@ -230,7 +231,6 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             make.bottom.equalToSuperview()
             make.height.equalTo(inputLayoutHeight)
         }
-        self.setupEvent()
     }
     
     required init(coder: NSCoder) {
@@ -239,7 +239,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     private func setupEvent() {
         self.textView.backwardDelegate = self
-        self.speakButton.rx.tap
+        self.speakButton.rx.tapGesture().when(.ended)
             .subscribe(onNext: {[weak self]  event in
                 guard let sf = self else {
                     return
@@ -252,7 +252,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             })
             .disposed(by: disposeBag)
         
-        self.emojiButton.rx.tap
+        self.emojiButton.rx.tapGesture().when(.ended)
             .subscribe(onNext: { [weak self]  event in
                 guard let sf = self else {
                     return
@@ -269,7 +269,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             })
             .disposed(by: disposeBag)
         
-        self.moreButton.rx.tap
+        self.moreButton.rx.tapGesture().when(.ended)
             .subscribe(onNext: { [weak self]  event in
                 guard let sf = self else {
                     return
@@ -372,7 +372,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             guard let sf = self else {
                 return
             }
-            make.height.equalTo(sf.textInputHeight)
+            make.height.greaterThanOrEqualTo(max(sf.textInputHeight, IMInputLayout.minTextInputHeight))
         }
         self.inputLayout.snp.updateConstraints {[weak self]  (make) -> Void in
             guard let sf = self else {
@@ -431,7 +431,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     func addInputText(_ text: String) {
         self.textView.scrollRangeToVisible(NSRange.init(location: self.textView.text.count, length: 1))
-        self.textView.layoutManager.allowsNonContiguousLayout = false
+//        self.textView.layoutManager.allowsNonContiguousLayout = false
         var content = self.textView.text
         if content == nil {
             self.renderInputText(text)
