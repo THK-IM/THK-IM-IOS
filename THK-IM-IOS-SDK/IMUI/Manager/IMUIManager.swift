@@ -112,9 +112,9 @@ open class IMUIManager: NSObject {
         }
     }
     
-    public func getMessageOperators(_ message: Message) -> [IMMessageOperator] {
+    public func getMessageOperators(_ message: Message, _ session: Session) -> [IMMessageOperator] {
         return msgOperators.filter { p in
-            return p.supportMessage(message)
+            return p.supportMessage(message, session)
         }
     }
     

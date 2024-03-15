@@ -9,6 +9,7 @@
 import UIKit
 
 public class IMMsgForwardOperator: IMMessageOperator {
+    
     public func id() -> String {
         return "Forward"
     }
@@ -27,6 +28,14 @@ public class IMMsgForwardOperator: IMMessageOperator {
     
     public func supportMessage(_ message: Message) -> Bool {
         return message.type != MsgType.Revoke.rawValue
+    }
+    
+    
+    public func supportMessage(_ message: Message, _ session: Session) -> Bool {
+        if message.type == MsgType.Revoke.rawValue {
+            return false
+        }
+        return session.functionFlag & IMChatFunction.Forward.rawValue > 0
     }
     
 }

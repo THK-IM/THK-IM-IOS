@@ -466,7 +466,20 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         guard let cp = IMUIManager.shared.contentProvider else {
             return
         }
-        cp.pick(controller: self, formats: [IMFileFormat.Image, IMFileFormat.Video]) { [weak self] result, cancel in
+        guard let session = self.session else {
+            return
+        }
+        var formats = [IMFileFormat]()
+        if session.functionFlag & IMChatFunction.Image.rawValue > 0 {
+            formats.append(IMFileFormat.Image)
+        }
+        if session.functionFlag & IMChatFunction.Video.rawValue > 0 {
+            formats.append(IMFileFormat.Video)
+        }
+        if formats.count < 0 {
+            return
+        }
+        cp.pick(controller: self, formats: formats) { [weak self] result, cancel in
             guard let sf = self else {
                 return
             }
@@ -494,7 +507,20 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         guard let cp = IMUIManager.shared.contentProvider else {
             return
         }
-        cp.openCamera(controller: self, formats: [IMFileFormat.Image, IMFileFormat.Video]) { [weak self] result, cancel in
+        guard let session = self.session else {
+            return
+        }
+        var formats = [IMFileFormat]()
+        if session.functionFlag & IMChatFunction.Image.rawValue > 0 {
+            formats.append(IMFileFormat.Image)
+        }
+        if session.functionFlag & IMChatFunction.Video.rawValue > 0 {
+            formats.append(IMFileFormat.Video)
+        }
+        if formats.count < 0 {
+            return
+        }
+        cp.openCamera(controller: self, formats: formats) { [weak self] result, cancel in
             guard let sf = self else {
                 return
             }
@@ -589,10 +615,13 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     /// 弹出消息操作面板弹窗
     public func popupMessageOperatorPanel(_ view: UIView, _ message: Message) {
+        guard let session = self.session else {
+            return
+        }
         let screenWidth = UIScreen.main.bounds.width
         let screenHeight = UIScreen.main.bounds.height
         let atFrame = view.convert(view.bounds, to: nil)
-        let operators = IMUIManager.shared.getMessageOperators(message)
+        let operators = IMUIManager.shared.getMessageOperators(message, session)
         let rowCount = 5
         let popupWidth = 300
         let popupHeight = (operators.count/rowCount + operators.count%rowCount) * 60

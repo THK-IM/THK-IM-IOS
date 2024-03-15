@@ -9,6 +9,7 @@
 import UIKit
 
 public class IMMsgRevokeOperator: IMMessageOperator {
+    
     public func id() -> String {
         return "Revoke"
     }
@@ -29,8 +30,12 @@ public class IMMsgRevokeOperator: IMMessageOperator {
             })
     }
     
-    public func supportMessage(_ message: Message) -> Bool {
+    public func supportMessage(_ message: Message, _ session: Session) -> Bool {
         if message.type == MsgType.Revoke.rawValue {
+            return false
+        }
+        // 超过120s不允许撤回
+        if abs(message.cTime - IMCoreManager.shared.severTime) > 1000 * 120 {
             return false
         }
         return true

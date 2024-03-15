@@ -9,6 +9,7 @@
 import UIKit
 
 public class IMMsgReplyOperator: IMMessageOperator {
+    
     public func id() -> String {
         return "Reply"
     }
@@ -25,8 +26,9 @@ public class IMMsgReplyOperator: IMMessageOperator {
         sender.replyMessage(msg: message)
     }
     
-    public func supportMessage(_ message: Message) -> Bool {
+    public func supportMessage(_ message: Message, _ session: Session) -> Bool {
         return message.type != MsgType.Revoke.rawValue
     }
+    
     
 }

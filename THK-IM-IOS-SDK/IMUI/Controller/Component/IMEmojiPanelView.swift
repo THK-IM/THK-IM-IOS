@@ -83,25 +83,6 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
         super.init(frame: frame)
         self.addSubview(self.emojiTabContainer)
         self.addSubview(self.emojiContentView)
-        self.delView.rx.tapGesture()
-            .asObservable()
-            .subscribe(onNext: { [weak self] _ in
-                self?.sender?.deleteInputContent(count: 1)
-            }).disposed(by: self.disposeBag)
-        
-        self.sendView.rx.tapGesture()
-            .asObservable()
-            .subscribe(onNext: { [weak self] _ in
-                self?.sender?.sendInputContent()
-            }).disposed(by: self.disposeBag)
-    }
-    
-    override func layoutSubviews() {
-        if let session = self.sender?.getSession() {
-            let emojiPanels = IMUIManager.shared.getPanelProviders(session: session)
-            self.emojiPanels.removeAll()
-            self.emojiPanels.append(contentsOf: emojiPanels)
-        }
         self.emojiContentView.snp.remakeConstraints { make in
             make.left.equalToSuperview()
             make.width.equalToSuperview()
@@ -129,6 +110,27 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
             make.height.equalTo(40)
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().offset(-100)
+        }
+        self.delView.rx.tapGesture()
+            .asObservable()
+            .subscribe(onNext: { [weak self] _ in
+                self?.sender?.deleteInputContent(count: 1)
+            }).disposed(by: self.disposeBag)
+        
+        self.sendView.rx.tapGesture()
+            .asObservable()
+            .subscribe(onNext: { [weak self] _ in
+                self?.sender?.sendInputContent()
+            }).disposed(by: self.disposeBag)
+    }
+    
+    override func layoutSubviews() {
+        if self.emojiPanels.count == 0 {
+            if let session = self.sender?.getSession() {
+                let emojiPanels = IMUIManager.shared.getPanelProviders(session: session)
+                self.emojiPanels.append(contentsOf: emojiPanels)
+                self.emojiContentView.reloadData()
+            }
         }
         if selectIndex.row < emojiPanels.count {
             self.emojiTabView.selectItem(at: selectIndex, animated: false, scrollPosition: .centeredHorizontally)

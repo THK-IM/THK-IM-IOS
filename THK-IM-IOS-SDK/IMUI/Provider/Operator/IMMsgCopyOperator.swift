@@ -9,6 +9,7 @@
 import UIKit
 
 public class IMMsgCopyOperator: IMMessageOperator {
+    
     public func id() -> String {
         return "Copy"
     }
@@ -29,8 +30,9 @@ public class IMMsgCopyOperator: IMMessageOperator {
         // TODO other msgType
     }
     
-    public func supportMessage(_ message: Message) -> Bool {
+    public func supportMessage(_ message: Message, _ session: Session) -> Bool {
         return message.type == MsgType.Text.rawValue
     }
+    
     
 }

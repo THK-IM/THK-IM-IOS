@@ -109,4 +109,14 @@ class IMMessageSelectedLayout: UIView {
     func getLayoutHeight() -> CGFloat {
         return 60.0
     }
+    
+    override func layoutSubviews() {
+        if let session = self.sender?.getSession() {
+            if session.functionFlag & IMChatFunction.Forward.rawValue == 0 {
+                self.forwardButton.isHidden = true
+            } else {
+                self.forwardButton.isHidden = false
+            }
+        }
+    }
 }

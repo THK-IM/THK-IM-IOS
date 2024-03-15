@@ -482,6 +482,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     func setSelectMode(_ selected: Bool, message: Message? = nil) {
+        self.selectedMessages.removeAll()
         if self.messageTableView.isEditing != selected {
             if (selected) {
                 if (message != nil) {

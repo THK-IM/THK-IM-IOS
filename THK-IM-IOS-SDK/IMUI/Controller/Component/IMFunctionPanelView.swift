@@ -45,13 +45,20 @@ class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDat
     }
     
     private func setupView() {
-        if let session = self.sender?.getSession() {
-            let functions = IMUIManager.shared.getBottomFunctionProviders(session: session)
-            self.functions.append(contentsOf: functions)
-        }
         self.addSubview(self.functionView)
         self.functionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+    }
+    
+    
+    override func layoutSubviews() {
+        if self.functions.count == 0 {
+            if let session = self.sender?.getSession() {
+                let functions = IMUIManager.shared.getBottomFunctionProviders(session: session)
+                self.functions.append(contentsOf: functions)
+                self.functionView.reloadData()
+            }
         }
     }
     

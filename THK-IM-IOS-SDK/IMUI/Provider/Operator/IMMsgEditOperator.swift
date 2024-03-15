@@ -9,6 +9,7 @@
 import UIKit
 
 public class IMMsgEditOperator: IMMessageOperator {
+    
     public func id() -> String {
         return "Edit"
     }
@@ -27,7 +28,7 @@ public class IMMsgEditOperator: IMMessageOperator {
         }
     }
     
-    public func supportMessage(_ message: Message) -> Bool {
+    public func supportMessage(_ message: Message, _ session: Session) -> Bool {
         return message.type == MsgType.Text.rawValue && message.fromUId == IMCoreManager.shared.uId
     }
     

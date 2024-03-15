@@ -9,6 +9,7 @@
 import UIKit
 
 public class IMMsgMultiSelectOperator: IMMessageOperator {
+    
     public func id() -> String {
         return "MultiSelect"
     }
@@ -25,7 +26,7 @@ public class IMMsgMultiSelectOperator: IMMessageOperator {
         sender.setSelectMode(true, message: message)
     }
     
-    public func supportMessage(_ message: Message) -> Bool {
+    public func supportMessage(_ message: Message, _ session: Session) -> Bool {
         return true
     }
     
