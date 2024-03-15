@@ -119,6 +119,7 @@ Pod::Spec.new do |spec|
     ui.dependency 'THK-IM-IOS/IMCore'
     ui.dependency 'ProgressHUD'
     ui.dependency 'JDStatusBarNotification'
+    ui.dependency 'SwiftEntryKit'
   end
 
   spec.subspec 'IMPreviewer' do |previewer|

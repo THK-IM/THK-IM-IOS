@@ -31,6 +31,7 @@ target 'THK-IM-IOS' do
   pod 'BadgeSwift', '8.0'
   pod 'ProgressHUD'
   pod 'JDStatusBarNotification'
+  pod 'SwiftEntryKit'
   
   ## Pods for THK-IM-IOS/IMPreviewer
   

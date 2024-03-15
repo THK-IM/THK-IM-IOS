@@ -99,17 +99,18 @@ open class DefaultSessionDao : SessionDao {
     
     
     public func findById(_ sId: Int64) throws -> Session? {
-        return try self.database?.getObject(fromTable: self.tableName, where: Session.Properties.id == sId)
+        return try self.database?.getObject(fromTable: self.tableName, where: Session.Properties.id == sId && Session.Properties.deleted == 0)
     }
     
     public func findByEntityId(_ entityId: Int64, _ type: Int) throws -> Session? {
-        return try self.database?.getObject(fromTable: self.tableName, where: Session.Properties.entityId == entityId && Session.Properties.type == type)
+        return try self.database?.getObject(fromTable: self.tableName, where: Session.Properties.entityId == entityId && Session.Properties.type == type && Session.Properties.deleted == 0)
     }
     
     public func findByParentId(_ parentId: Int64, _ count: Int, _ mTime: Int64) throws -> Array<Session>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
-            where: Session.Properties.parentId == parentId && Session.Properties.id != parentId && Session.Properties.mTime < mTime,
+            where: Session.Properties.parentId == parentId && Session.Properties.id != parentId && Session.Properties.mTime < mTime
+            && Session.Properties.deleted == 0,
             orderBy: [Session.Properties.topTimestamp.order(Order.descending), Session.Properties.mTime.order(Order.descending)],
             limit: count
         )
@@ -118,7 +119,7 @@ open class DefaultSessionDao : SessionDao {
     public func findAll(_ type: Int) throws -> Array<Session>? {
         return try self.database?.getObjects(
             fromTable: self.tableName,
-            where: Session.Properties.type == type,
+            where: Session.Properties.type == type && Session.Properties.deleted == 0,
             orderBy: [Session.Properties.topTimestamp.order(Order.descending), Session.Properties.mTime.order(Order.descending)]
         )
     }
@@ -127,7 +128,7 @@ open class DefaultSessionDao : SessionDao {
         return try self.database?.getObjects(
             fromTable: self.tableName,
             where: Session.Properties.parentId == parentInd &&
-            Session.Properties.unreadCount > 0
+            Session.Properties.unreadCount > 0 && Session.Properties.deleted == 0
         )
     }
 }

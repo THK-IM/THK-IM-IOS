@@ -18,7 +18,7 @@ extension UIViewController {
         let titleView = UILabel(frame: CGRect.init(x: 0, y: -20, width: 150, height: 30))
         titleView.text = title
         titleView.textAlignment = .center
-        titleView.font = UIFont.systemFont(ofSize: 20)
+        titleView.font = UIFont.boldSystemFont(ofSize: 18)
         titleView.textColor = UIColor.black
         self.navigationItem.titleView = titleView
         self.navigationItem.titleView?.contentMode = .center

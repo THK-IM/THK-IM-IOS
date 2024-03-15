@@ -18,11 +18,12 @@ class IMTextMsgCell: IMBaseMsgCell {
         view.numberOfLines = 0
         view.font = UIFont.systemFont(ofSize: fontSize)
         view.padding = UIEdgeInsets.init(top: 4, left: 8, bottom: 4, right: 8)
-        view.textColor = UIColor.black
         if self.cellPosition() == IMMsgPosType.Mid.rawValue {
-            view.textAlignment = .center
+            view.textAlignment = .left
+            view.textColor = UIColor.white
         } else {
             view.textAlignment = .left
+            view.textColor = UIColor.black
         }
         return view
     }()

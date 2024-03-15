@@ -24,6 +24,7 @@ public class SessionVo: Codable {
     var functionFlag: Int64
     var cTime: Int64
     var mTime: Int64
+    var deleted: Int?
     
     enum CodingKeys: String, CodingKey {
         case sessionId = "s_id"
@@ -42,6 +43,7 @@ public class SessionVo: Codable {
         case functionFlag = "function_flag"
         case cTime = "c_time"
         case mTime = "m_time"
+        case deleted = "deleted"
     }
     
     public func toSession() -> Session {
@@ -49,7 +51,7 @@ public class SessionVo: Codable {
             id: self.sessionId, parentId: self.parentId ?? 0, type: self.type, entityId: self.entityId, name: self.name,
             noteName: self.noteName, noteAvatar: self.noteAvatar, remark: self.remark, mute: self.mute, role: self.role,
             status: self.status, unreadCount: 0, topTimestamp: top ?? 0, extData: extData, msgSyncTime: 0,
-            memberSyncTime: 0, memberCount: 0, functionFlag: functionFlag, deleted: 0,cTime: cTime, mTime: mTime
+            memberSyncTime: 0, memberCount: 0, functionFlag: functionFlag, deleted: self.deleted ?? 0, cTime: cTime, mTime: mTime
         )
         return session
     }

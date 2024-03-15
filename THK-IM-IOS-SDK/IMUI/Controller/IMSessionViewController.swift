@@ -74,7 +74,7 @@ open class IMSessionViewController : BaseViewController, UITableViewDataSource, 
         self.isTop = false
     }
     
-    func loadSessions() {
+    open func loadSessions() {
         if (isLoading) {
             return
         }
@@ -297,7 +297,7 @@ open class IMSessionViewController : BaseViewController, UITableViewDataSource, 
     }
     
     
-    public func updateSession(_ session: Session) {
+    open func updateSession(_ session: Session) {
         IMCoreManager.shared.messageModule
             .updateSession(session, true)
             .compose(RxTransformer.shared.io2Main())
@@ -308,7 +308,7 @@ open class IMSessionViewController : BaseViewController, UITableViewDataSource, 
             .disposed(by: self.disposeBag)
     }
     
-    public func deleteSession(_ session: Session) {
+    open func deleteSession(_ session: Session) {
         IMCoreManager.shared.messageModule
             .deleteSession(session, true)
             .compose(RxTransformer.shared.io2Main())
