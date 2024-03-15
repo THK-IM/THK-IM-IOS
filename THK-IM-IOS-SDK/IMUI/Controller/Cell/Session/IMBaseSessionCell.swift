@@ -146,6 +146,11 @@ open class IMBaseSessionCell : IMBaseTableCell {
         } else {
             silenceView.image = nil
         }
+        if (session.topTimestamp > 0) {
+            self.contentView.backgroundColor = UIColor.init(hex: "#EEEEEE")
+        } else {
+            self.contentView.backgroundColor = .clear
+        }
     }
     
     open func showSessionEntityInfo(_ session: Session) {

@@ -394,13 +394,6 @@ open class IMBaseMsgCell : IMBaseTableCell {
             ) {
             return
         }
-        if let session = self.session {
-            if session.type == SessionType.SuperGroup.rawValue || (session.functionFlag & IMChatFunction.Read.rawValue) == 0 {
-                return
-            }
-        } else {
-            return
-        }
         self.delegate?.msgSender()?.readMessage(message!)
         message!.operateStatus = message!.operateStatus | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ClientRead.rawValue
     }

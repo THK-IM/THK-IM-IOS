@@ -110,7 +110,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     let count = try IMCoreManager.shared.database.messageDao().getUnReadCount(session!.id)
                     if (session!.unreadCount != count || session!.mTime < msg.mTime) {
                         session!.unreadCount = count
-                        session!.mTime = msg.mTime
+//                        session!.mTime = msg.mTime
                         try IMCoreManager.shared.database.sessionDao().update([session!])
                         SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
                     }
@@ -131,8 +131,10 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     }
     
     private func readMessageToCache(_ msg: Message) {
-        let session = try? IMCoreManager.shared.database.sessionDao().findById(msg.sessionId)
-        if (SessionType.SuperGroup.rawValue == session?.type) {
+        guard let session = try? IMCoreManager.shared.database.sessionDao().findById(msg.sessionId) else {
+            return
+        }
+        if session.type == SessionType.SuperGroup.rawValue || (session.functionFlag & IMChatFunction.Read.rawValue) == 0 {
             return
         }
         readLock.lock()
