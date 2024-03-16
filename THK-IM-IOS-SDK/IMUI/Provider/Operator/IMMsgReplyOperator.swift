@@ -27,7 +27,7 @@ public class IMMsgReplyOperator: IMMessageOperator {
     }
     
     public func supportMessage(_ message: Message, _ session: Session) -> Bool {
-        return message.type != MsgType.Revoke.rawValue
+        return message.type != MsgType.Revoke.rawValue && message.fromUId != 0
     }
     
     
