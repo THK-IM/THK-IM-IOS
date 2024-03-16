@@ -18,13 +18,13 @@ import CoreServices
 open class IMMessageViewController: BaseViewController {
     
     public var session: Session? = nil
-    private let containerView = UIView()
-    private let messageLayout = IMMessageLayout()
-    private let inputLayout = IMInputLayout()
-    private let bottomPanelLayout = IMBottomPanelLayout()
-    private var msgSelectedLayout = IMMessageSelectedLayout()
-    private var keyboardShow = false
-    private var memberMap = [Int64: (User, SessionMember?)]()
+    public let containerView = UIView()
+    public let messageLayout = IMMessageLayout()
+    public let inputLayout = IMInputLayout()
+    public let bottomPanelLayout = IMBottomPanelLayout()
+    public var msgSelectedLayout = IMMessageSelectedLayout()
+    public var keyboardShow = false
+    public var memberMap = [Int64: (User, SessionMember?)]()
     
     deinit {
         DDLogDebug("IMMessageViewController, de init")

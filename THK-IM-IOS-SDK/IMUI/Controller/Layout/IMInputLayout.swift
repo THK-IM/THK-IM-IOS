@@ -13,7 +13,7 @@ import YbridOpus
 import AVFoundation
 import CoreAudio
 
-class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
+public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     weak var sender: IMMsgSender? = nil {
         didSet {
@@ -237,7 +237,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         }
     }
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {
             self.sendInputContent()
             return false
@@ -248,7 +248,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         return true
     }
     
-    func textViewDidChange(_ textView: UITextView) {
+    public func textViewDidChange(_ textView: UITextView) {
         if (textView.text.count == 0) {
             self.reeditMsg = nil
         }
@@ -379,7 +379,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         }
     }
     
-    override func endEditing(_ force: Bool) -> Bool {
+    public override func endEditing(_ force: Bool) -> Bool {
         if isKeyboardShow {
             return self.textView.endEditing(force)
         } else if isMorePanelShow || isEmojiPanelShow {

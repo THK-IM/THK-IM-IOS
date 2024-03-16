@@ -11,7 +11,7 @@ import RxSwift
 import RxGesture
 
 
-class IMMessageSelectedLayout: UIView {
+public class IMMessageSelectedLayout: UIView {
     
     weak var sender: IMMsgSender?
     private let disposeBag = DisposeBag()
@@ -110,7 +110,7 @@ class IMMessageSelectedLayout: UIView {
         return 60.0
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         if let session = self.sender?.getSession() {
             if session.functionFlag & IMChatFunction.Forward.rawValue == 0 {
                 self.forwardButton.isHidden = true

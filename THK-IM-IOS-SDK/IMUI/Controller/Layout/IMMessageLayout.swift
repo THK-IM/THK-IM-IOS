@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import CocoaLumberjack
 
-class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsgCellOperator {
+public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsgCellOperator {
     
     var mode: Int = 0 // 0 正常模式，1预览消息记录模式
     var session: Session? = nil
@@ -38,11 +38,11 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         fatalError("init(coder:) has not been implemented")
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let msg = self.messages[indexPath.row]
         let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
         let viewType = provider.viewType(msg)
@@ -60,40 +60,40 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         return cell!
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let messageCellView = cell as! IMBaseMsgCell
         messageCellView.delegate = self
         messageCellView.appear()
     }
     
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let sessionCell = cell as! IMBaseMsgCell
         sessionCell.disappear()
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+    public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .none
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         let msg = self.messages[indexPath.row]
         let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
         return provider.canSelected()
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DDLogInfo("didSelectRowAt \(indexPath.row)")
         let message = self.messages[indexPath.row]
         self.selectedMessages.insert(message)
     }
     
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         DDLogInfo("didDeselectRowAt \(indexPath.row)")
         let message = self.messages[indexPath.row]
         self.selectedMessages.remove(message)
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let msg = self.messages[indexPath.row]
         return self.msgCellHeight(msg)
     }
@@ -109,7 +109,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         return size.height + addHeight
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if (session?.type == SessionType.MsgRecord.rawValue) {
             return
         }
@@ -391,7 +391,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         return 0
     }
     
-    func onMsgReferContentClick(message: Message, view: UIView) {
+    public func onMsgReferContentClick(message: Message, view: UIView) {
         if let row = self.messages.firstIndex(of: message) {
             self.scrollToRow(row)
         } else {
@@ -421,11 +421,11 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         })
     }
     
-    func onMsgCellClick(message: Message, position: Int, view: UIView) {
+    public func onMsgCellClick(message: Message, position: Int, view: UIView) {
         self.previewer?.previewMessage(message, position, view)
     }
     
-    func onMsgSenderClick(message: Message, position: Int, view: UIView) {
+    public func onMsgSenderClick(message: Message, position: Int, view: UIView) {
         IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] user in
@@ -436,12 +436,11 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
             }).disposed(by: self.disposeBag)
     }
     
-    func onMsgSenderLongClick(message: Message, position: Int, view: UIView) {
+    public func onMsgSenderLongClick(message: Message, position: Int, view: UIView) {
         guard let session = self.session else {
             return
         }
-        if (session.type != SessionType.Group.rawValue &&
-            session.type != SessionType.SuperGroup.rawValue) {
+        if (session.type == SessionType.Single.rawValue) {
             return
         }
         IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
@@ -452,28 +451,28 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
     }
     
     
-    func onMsgCellLongClick(message: Message, position: Int, view: UIView) {
+    public func onMsgCellLongClick(message: Message, position: Int, view: UIView) {
         self.sender?.popupMessageOperatorPanel(view, message)
     }
     
-    func onMsgReadStatusClick(message: Message) {
+    public func onMsgReadStatusClick(message: Message) {
         /// TODO 跳转到已读用户列表页面
     }
     
     
-    func onMsgResendClick(message: Message) {
+    public func onMsgResendClick(message: Message) {
         self.sender?.resendMessage(message)
     }
     
-    func isSelectMode() -> Bool {
+    public func isSelectMode() -> Bool {
         return self.messageTableView.isEditing
     }
     
-    func isItemSelected(message: Message) -> Bool {
+    public func isItemSelected(message: Message) -> Bool {
         return self.selectedMessages.contains(message)
     }
     
-    func onSelected(message: Message, selected: Bool) {
+    public func onSelected(message: Message, selected: Bool) {
         if (selected) {
             self.selectedMessages.insert(message)
         } else {
@@ -499,7 +498,7 @@ class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsg
         }
     }
     
-    func msgSender() -> IMMsgSender? {
+    public func msgSender() -> IMMsgSender? {
         return self.sender
     }
     

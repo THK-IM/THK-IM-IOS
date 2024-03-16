@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class IMBottomPanelLayout: UIView {
+public class IMBottomPanelLayout: UIView {
     
     weak var sender: IMMsgSender? = nil
     private let emojiHeight = 336.0
@@ -31,19 +31,6 @@ class IMBottomPanelLayout: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-//        if self.subviews.contains(self.emojiPanelView) {
-//            self.emojiPanelView.snp.remakeConstraints { make in
-//                make.edges.equalToSuperview()
-//            }
-//        }
-//        if self.subviews.contains(self.functionPanelView) {
-//            self.functionPanelView.snp.remakeConstraints { make in
-//                make.edges.equalToSuperview()
-//            }
-//        }
     }
     
     func getLayoutHeight() -> CGFloat {
