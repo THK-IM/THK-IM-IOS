@@ -23,7 +23,8 @@ open class IMMessageViewController: BaseViewController {
     public let inputLayout = IMInputLayout()
     public let bottomPanelLayout = IMBottomPanelLayout()
     public var msgSelectedLayout = IMMessageSelectedLayout()
-    public let atTipView = UILabel()
+    public var atMsgTipsView = IMMsgLabelView()
+    public var newMsgTipsView = IMMsgLabelView()
     public var keyboardShow = false
     public var memberMap = [Int64: (User, SessionMember?)]()
     public var atMsgs = Array<Message>()
@@ -227,16 +228,20 @@ open class IMMessageViewController: BaseViewController {
         }
         
         // AT提醒
-        self.atTipView.isUserInteractionEnabled = true
-        self.atTipView.textColor = .blue
-        self.atTipView.font = UIFont.systemFont(ofSize: 16)
-        self.containerView.addSubview(self.atTipView)
-        self.atTipView.snp.makeConstraints { make in
-            make.right.equalToSuperview().offset(-10)
-            make.bottom.equalTo(self.inputLayout.snp.top).offset(-10)
-            make.height.equalTo(20)
+        self.atMsgTipsView.isUserInteractionEnabled = true
+        self.atMsgTipsView.textColor = UIColor.init(hex: "#1390f4")
+        self.atMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
+        self.atMsgTipsView.backgroundColor = UIColor.init(hex: "EEEEEE")
+        self.atMsgTipsView.layer.cornerRadius = 8
+        self.atMsgTipsView.layer.masksToBounds = true
+        self.atMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+        self.containerView.addSubview(self.atMsgTipsView)
+        self.atMsgTipsView.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-20)
+            make.bottom.equalTo(self.inputLayout.snp.top).offset(-20)
+            make.height.equalTo(30)
         }
-        self.atTipView.rx.tapGesture().when(.ended)
+        self.atMsgTipsView.rx.tapGesture().when(.ended)
             .subscribe { [weak self] _ in
                 self?.onAtTipsViewClick()
             }.disposed(by: self.disposeBag)
@@ -253,15 +258,35 @@ open class IMMessageViewController: BaseViewController {
                     }.disposed(by: self.disposeBag)
             }
         }
+        self.updateAtTipsView()
         
+        self.newMsgTipsView.isUserInteractionEnabled = true
+        self.newMsgTipsView.textColor = UIColor.init(hex: "#1390f4")
+        self.newMsgTipsView.text = "有新消息"+"⬇️"
+        self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
+        self.newMsgTipsView.backgroundColor = UIColor.init(hex: "EEEEEE")
+        self.newMsgTipsView.layer.cornerRadius = 8
+        self.newMsgTipsView.layer.masksToBounds = true
+        self.newMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+        self.containerView.addSubview(self.newMsgTipsView)
+        self.newMsgTipsView.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-20)
+            make.bottom.equalTo(self.inputLayout.snp.top).offset(-70)
+            make.height.equalTo(30)
+        }
+        self.newMsgTipsView.rx.tapGesture().when(.ended)
+            .subscribe { [weak self] _ in
+                self?.messageLayout.scrollToBottom()
+            }.disposed(by: self.disposeBag)
+        self.newMsgTipsView.isHidden = true
     }
     
     private func updateAtTipsView() {
         if self.atMsgs.count <= 0 {
-            self.atTipView.isHidden = true
+            self.atMsgTipsView.isHidden = true
         } else {
-            self.atTipView.text = "有\(self.atMsgs.count)条消息@我"
-            self.atTipView.isHidden = false
+            self.atMsgTipsView.text = "有\(self.atMsgs.count)条消息@我"
+            self.atMsgTipsView.isHidden = false
         }
     }
     
@@ -513,6 +538,11 @@ open class IMMessageViewController: BaseViewController {
 
 extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberAtDelegate {
     
+    /// 提示/关闭有新消息
+    public func showNewMsgTipsView(_ show: Bool) {
+        self.newMsgTipsView.isHidden = !show
+    }
+    
     public func viewController() -> UIViewController {
         return self
     }
@@ -721,7 +751,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         let atFrame = view.convert(view.bounds, to: nil)
         let operators = IMUIManager.shared.getMessageOperators(message, session)
         let rowCount = 5
-        let popupWidth = 300
+        let popupWidth = min(operators.count * 60, 300)
         let popupHeight = (operators.count/rowCount + operators.count%rowCount==0 ? 0 : 1) * 60
         var y = 0
         if (atFrame.origin.y <= 300 && (atFrame.origin.y + atFrame.size.height) >= (screenHeight - 300)) {

@@ -54,6 +54,10 @@ class IMReplyView: UIView {
         self.addSubview(self.closeView)
         self.addSubview(self.replyUserView)
         self.addSubview(self.replyMsgView)
+        self.closeView.rx.tapGesture().when(.ended).asObservable()
+            .subscribe(onNext: { [weak self] _ in
+                self?.sender?.closeReplyMessage()
+            }).disposed(by: self.disposeBag)
     }
     
     required init?(coder: NSCoder) {
@@ -62,10 +66,6 @@ class IMReplyView: UIView {
     
     func setMessage(_ msg: Message) {
         self.message = msg
-        self.closeView.rx.tapGesture().when(.ended).asObservable()
-            .subscribe(onNext: { [weak self] _ in
-                self?.sender?.closeReplyMessage()
-            }).disposed(by: self.disposeBag)
     }
     
     func resetLayout() {

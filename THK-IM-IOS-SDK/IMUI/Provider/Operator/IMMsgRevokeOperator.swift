@@ -34,6 +34,9 @@ public class IMMsgRevokeOperator: IMMessageOperator {
         if message.type == MsgType.Revoke.rawValue {
             return false
         }
+        if message.fromUId != IMCoreManager.shared.uId {
+            return false
+        }
         // 超过120s不允许撤回
         if abs(message.cTime - IMCoreManager.shared.severTime) > 1000 * 120 {
             return false

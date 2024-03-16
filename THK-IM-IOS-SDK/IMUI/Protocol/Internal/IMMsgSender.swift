@@ -11,6 +11,9 @@ import RxSwift
 
 public protocol IMMsgSender : AnyObject {
     
+    /// 提示有新消息
+    func showNewMsgTipsView(_ isHidden: Bool)
+    
     /// 获取视图控制器
     func viewController() -> UIViewController
     

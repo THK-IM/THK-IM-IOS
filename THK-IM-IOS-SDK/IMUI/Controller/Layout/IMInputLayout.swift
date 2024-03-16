@@ -428,41 +428,52 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     }
     
     func deleteInputContent(_ count: Int) {
+        self.textView.deleteBackward()
+    }
+    
+    private func deleteAtText(_ count: Int) -> Bool {
         guard let text = self.textView.text else {
-            return
+            return false
         }
         if text.count < count {
-            return
+            return false
+        }
+        var selectedRange = self.textView.selectedRange
+        if selectedRange.location == 0 && selectedRange.length == 0 {
+            return false
         }
         var deleted = false
-        var data = NSMutableString(string: self.textView.text)
-        var selectedRange = self.textView.selectedRange
-        selectedRange.location -= count+1
-        selectedRange.length += count
-        if (selectedRange.location < 0) {
-            selectedRange.location = 0
+        let data = NSMutableString(string: self.textView.text)
+        if selectedRange.length == 0 {
+            selectedRange.location -= count+1
+            selectedRange.length += count
         }
+        var delRange = NSRange(location: selectedRange.location, length: selectedRange.length)
         for atRange in self.atRanges {
             if (atRange.contains(selectedRange.location) || atRange.contains(selectedRange.location+selectedRange.length)) {
-                data.replaceCharacters(in: atRange, with: "")
+                let atStart = atRange.location
+                let atEnd = atRange.location + atRange.length
+                let delStart = delRange.location
+                let delEnd = delRange.location + delRange.length
+                let start = min(atStart, delStart)
+                let end = max(atEnd, delEnd)
+                delRange = NSRange(location: start, length: end-start)
                 deleted = true
             }
         }
-        
-        if (!deleted) {        
-            let endIndex = text.index(text.endIndex, offsetBy: -1)
-            self.textView.text.remove(at: endIndex)
-            data = NSMutableString(string: self.textView.text)
+        if deleted {
+            data.replaceCharacters(in: delRange, with: "")
+            self.renderInputText(String(data))
+            self.textViewDidChange(self.textView)
+            self.textView.scrollRectToVisible(
+                CGRect(x: 0,
+                       y: self.textView.contentSize.height-15,
+                       width: self.textView.contentSize.width,
+                       height: 10),
+                animated: true
+            )
         }
-        self.renderInputText(String(data))
-        self.textViewDidChange(self.textView)
-        self.textView.scrollRectToVisible(
-            CGRect(x: 0,
-                   y: self.textView.contentSize.height-15,
-                   width: self.textView.contentSize.width,
-                   height: 10),
-            animated: true
-        )
+        return deleted
     }
     
     func sendInputContent() {
@@ -574,6 +585,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             )
         }
         self.renderInputText(content)
+        self.textViewDidChange(self.textView)
     }
     
     private func renderInputText(_ data: String) {
@@ -621,17 +633,18 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     
     
     func onDeleted() -> Bool {
-        self.deleteInputContent(1)
-        return true
+        if self.deleteAtText(1) {
+            return true
+        }
+        return false
     }
     
     func showReplyMessage(_ msg: Message) {
         self.isReplyMsgShow = true
         self.replyView.setMessage(msg)
+        self.resetLayout()
         if !isKeyboardShow {
             self.openKeyboard()
-        } else {
-            self.resetLayout()
         }
     }
     

@@ -110,6 +110,9 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (abs(distanceFromBottom()) < 20) {
+            self.sender?.showNewMsgTipsView(false)
+        }
         if (session?.type == SessionType.MsgRecord.rawValue) {
             return
         }
@@ -320,7 +323,11 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
         }
         UIView.setAnimationsEnabled(true)
-        self.scrollToBottom(0.2)
+        if abs(distanceFromBottom()) < 200 {
+            self.scrollToBottom(0.2)
+        } else {
+            self.msgSender()?.showNewMsgTipsView(true)
+        }
     }
     
     func updateMessage(_ message: Message) {
@@ -541,6 +548,15 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     
     func getContentHeight() -> CGFloat {
         return self.messageTableView.contentSize.height
+    }
+    
+    func distanceFromBottom() -> CGFloat {
+        let contentHeight = self.messageTableView.contentSize.height
+        let scrollViewHeight = self.messageTableView.bounds.size.height
+        let scrollOffset = self.messageTableView.contentOffset.y
+        let bottomInset = self.messageTableView.contentInset.bottom
+        let distanceFromBottom = contentHeight + bottomInset - scrollViewHeight - scrollOffset
+        return distanceFromBottom
     }
     
     func layoutResize(_ height: CGFloat) {

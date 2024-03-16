@@ -45,6 +45,9 @@ class ExternalPageRouter: IMPageRouter {
         GroupViewController.open(controller, group, 1)
     }
     
+    func openMsgReadStatusPage(controller: UIViewController, session: Session, message: Message) {
+        
+    }
     
     
 }
