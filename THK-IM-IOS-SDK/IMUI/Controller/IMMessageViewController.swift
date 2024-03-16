@@ -172,25 +172,24 @@ open class IMMessageViewController: BaseViewController {
             showInput = session.functionFlag > 0
         }
         self.inputLayout.isHidden = !showInput
-        
+
         if showInput {
-            self.inputLayout.snp.makeConstraints { [weak self] make in
-                guard let sf = self else {
-                    return
+            self.inputLayout.resetLayout()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in
+                if let draft = self?.session?.draft {
+                    self?.inputLayout.addInputText(draft)
                 }
-                make.left.equalToSuperview()
-                make.right.equalToSuperview()
-                make.bottom.equalTo(sf.bottomPanelLayout.snp.top)
-                make.height.equalTo(sf.inputLayout.getLayoutHeight()) // 高度内部自己计算
+            })
+        }
+        
+        self.inputLayout.snp.makeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
             }
-            
-        } else {
-            self.inputLayout.snp.makeConstraints { make in
-                make.left.equalToSuperview()
-                make.right.equalToSuperview()
-                make.bottom.equalTo(0)
-                make.height.equalTo(48)
-            }
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalTo(sf.bottomPanelLayout.snp.top)
+            make.height.greaterThanOrEqualTo(sf.inputLayout.getLayoutHeight()) // 高度内部自己计算
         }
         
         // 多选msg视图
@@ -223,10 +222,6 @@ open class IMMessageViewController: BaseViewController {
             make.right.equalToSuperview()
             make.top.equalToSuperview()
             make.bottom.equalTo(sf.inputLayout.snp.top)
-        }
-        
-        if let draft = self.session?.draft {
-            self.inputLayout.addInputText(draft)
         }
     }
     
@@ -342,19 +337,17 @@ open class IMMessageViewController: BaseViewController {
             return
         }
         if let content = self.inputLayout.getInputContent() {
-            if content.length > 0 {
-                Observable.just(content).flatMap { draft in
-                    try? IMCoreManager.shared.database.sessionDao().updateSessionDraft(session.id, content)
-                    if let session = try? IMCoreManager.shared.database.sessionDao().findById(session.id) {
-                        SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
-                    }
-                    return Observable.just(true)
-                    return Observable.just(true)
-                }.compose(RxTransformer.shared.io2Main())
-                    .subscribe { _ in
-                        
-                    }.disposed(by: self.disposeBag)
-            }
+            Observable.just(content).flatMap { draft in
+                try? IMCoreManager.shared.database.sessionDao().updateSessionDraft(session.id, content)
+                if let session = try? IMCoreManager.shared.database.sessionDao().findById(session.id) {
+                    SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                }
+                return Observable.just(true)
+                return Observable.just(true)
+            }.compose(RxTransformer.shared.io2Main())
+                .subscribe { _ in
+                    
+                }.disposed(by: self.disposeBag)
         }
         
     }

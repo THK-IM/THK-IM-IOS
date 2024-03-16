@@ -36,7 +36,7 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             if (self.isSpeakViewShow) {
                 return IMInputLayout.minTextInputHeight + replyMsgHeight + 20.0
             }
-            return self.textInputHeight + replyMsgHeight + 20.0
+            return max(self.textInputHeight, IMInputLayout.minTextInputHeight) + replyMsgHeight + 20.0
         }
     }
     
@@ -124,113 +124,21 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     lazy private var inputLayout: UIView = {
         let inputLayout = UIView()
-        let spacing = 8
-        let buttonSize = 30
-        let bottom = (Int(IMInputLayout.minTextInputHeight)+20-buttonSize)/2
-        
         inputLayout.addSubview(self.textView)
         inputLayout.addSubview(self.speakView)
         inputLayout.addSubview(self.emojiButton)
         inputLayout.addSubview(self.moreButton)
         inputLayout.addSubview(self.replyView)
         inputLayout.addSubview(self.speakButton)
-        var showSpeaker = true
-        var showMoreButton = true
-        if let session = self.sender?.getSession() {
-            showSpeaker = session.functionFlag & IMChatFunction.Audio.rawValue > 0
-            let functions = IMUIManager.shared.getBottomFunctionProviders(session: session)
-            if functions.count == 0 {
-                showMoreButton = false
-            }
-        }
-        if !showSpeaker {
-            self.speakButton.snp.makeConstraints { make in
-                make.bottom.equalToSuperview().offset(0)
-                make.left.equalToSuperview().offset(0)
-                make.width.equalTo(0)
-                make.height.equalTo(0)
-            }
-        } else {
-            self.speakButton.snp.makeConstraints { make in
-                make.bottom.equalToSuperview().offset(-bottom)
-                make.left.equalToSuperview().offset(spacing)
-                make.width.equalTo(buttonSize)
-                make.height.equalTo(buttonSize)
-            }
-        }
         
-        if !showMoreButton {
-            self.moreButton.snp.makeConstraints {  make in
-                make.bottom.equalToSuperview().offset(0)
-                make.right.equalToSuperview().offset(0)
-                make.width.equalTo(0)
-                make.height.equalTo(0)
-            }
-        } else {
-            self.moreButton.snp.makeConstraints {  make in
-                make.bottom.equalToSuperview().offset(-bottom)
-                make.right.equalToSuperview().offset(-spacing)
-                make.width.equalTo(buttonSize)
-                make.height.equalTo(buttonSize)
-            }
-        }
-        
-        self.emojiButton.snp.makeConstraints{ [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.bottom.equalToSuperview().offset(-bottom)
-            make.right.equalTo(sf.moreButton.snp.left).offset(-spacing)
-            make.width.equalTo(buttonSize)
-            make.height.equalTo(buttonSize)
-        }
-        
-        self.textView.snp.makeConstraints {  [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.bottom.equalToSuperview().offset(-10)
-            make.left.equalTo(sf.speakButton.snp.right).offset(spacing)
-            make.right.equalTo(sf.emojiButton.snp.left).offset(-spacing)
-            make.height.greaterThanOrEqualTo(IMInputLayout.minTextInputHeight)
-        }
-        
-        self.speakView.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.bottom.equalToSuperview().offset(-10)
-            make.left.equalTo(sf.speakButton.snp.right).offset(spacing)
-            make.right.equalTo(sf.emojiButton.snp.left).offset(-spacing)
-            make.height.equalTo(IMInputLayout.minTextInputHeight)
-        }
-        self.speakView.isHidden = !self.isSpeakViewShow
-        
-        self.replyView.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.bottom.equalTo(sf.textView.snp.top)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.height.equalTo(0)
-        }
         return inputLayout
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupEvent()
-    }
-    
-    override func layoutSubviews() {
         self.addSubview(self.inputLayout)
-        self.inputLayout.snp.remakeConstraints {  make in
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(inputLayoutHeight)
-        }
+        self.setupEvent()
+        self.resetLayout()
     }
     
     required init(coder: NSCoder) {
@@ -365,21 +273,82 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
         }
     }
     
-    private func resetLayout(_ showLatestMsg: Bool = true) {
-        self.switchSpeakView()
-        self.switchEmojiView()
-        self.textView.snp.updateConstraints { [weak self](make) -> Void in
+    func resetLayout(_ showLatestMsg: Bool = true) {
+        let spacing = 8
+        let buttonSize = 30
+        let bottom = (Int(IMInputLayout.minTextInputHeight)+20-buttonSize)/2
+        
+        var showSpeaker = true
+        var showMoreButton = true
+        if let session = self.sender?.getSession() {
+            showSpeaker = session.functionFlag & IMChatFunction.Audio.rawValue > 0
+            let functions = IMUIManager.shared.getBottomFunctionProviders(session: session)
+            if functions.count == 0 {
+                showMoreButton = false
+            }
+        }
+        if !showSpeaker {
+            self.speakButton.snp.remakeConstraints { make in
+                make.bottom.equalToSuperview().offset(0)
+                make.left.equalToSuperview().offset(0)
+                make.width.equalTo(0)
+                make.height.equalTo(0)
+            }
+        } else {
+            self.speakButton.snp.remakeConstraints { make in
+                make.bottom.equalToSuperview().offset(-bottom)
+                make.left.equalToSuperview().offset(spacing)
+                make.width.equalTo(buttonSize)
+                make.height.equalTo(buttonSize)
+            }
+        }
+        
+        if !showMoreButton {
+            self.moreButton.snp.remakeConstraints {  make in
+                make.bottom.equalToSuperview().offset(0)
+                make.right.equalToSuperview().offset(0)
+                make.width.equalTo(0)
+                make.height.equalTo(0)
+            }
+        } else {
+            self.moreButton.snp.remakeConstraints {  make in
+                make.bottom.equalToSuperview().offset(-bottom)
+                make.right.equalToSuperview().offset(-spacing)
+                make.width.equalTo(buttonSize)
+                make.height.equalTo(buttonSize)
+            }
+        }
+        
+        self.emojiButton.snp.remakeConstraints{ [weak self] make in
             guard let sf = self else {
                 return
             }
-            make.height.greaterThanOrEqualTo(max(sf.textInputHeight, IMInputLayout.minTextInputHeight))
+            make.bottom.equalToSuperview().offset(-bottom)
+            make.right.equalTo(sf.moreButton.snp.left).offset(-spacing)
+            make.width.equalTo(buttonSize)
+            make.height.equalTo(buttonSize)
         }
-        self.inputLayout.snp.updateConstraints {[weak self]  (make) -> Void in
+        
+        self.textView.snp.remakeConstraints {  [weak self] make in
             guard let sf = self else {
                 return
             }
-            make.height.equalTo(sf.inputLayoutHeight)
+            make.bottom.equalToSuperview().offset(-10)
+            make.left.equalTo(sf.speakButton.snp.right).offset(spacing)
+            make.right.equalTo(sf.emojiButton.snp.left).offset(-spacing)           
+            make.height.equalTo(sf.textInputHeight)
         }
+        
+        self.speakView.snp.remakeConstraints { [weak self] make in
+            guard let sf = self else {
+                return
+            }
+            make.bottom.equalToSuperview().offset(-10)
+            make.left.equalTo(sf.speakButton.snp.right).offset(spacing)
+            make.right.equalTo(sf.emojiButton.snp.left).offset(-spacing)
+            make.height.equalTo(IMInputLayout.minTextInputHeight)
+        }
+        self.speakView.isHidden = !self.isSpeakViewShow
         
         var replyHeight = 0
         if self.isReplyMsgShow {
@@ -391,7 +360,17 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
             make.right.equalToSuperview()
             make.height.equalTo(replyHeight)
         }
-        self.replyView.requestLayout()
+        self.replyView.resetLayout()
+        
+        self.inputLayout.snp.remakeConstraints {  make in
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(inputLayoutHeight)
+        }
+        
+        self.switchSpeakView()
+        self.switchEmojiView()
         self.snp.updateConstraints { [weak self](make) -> Void in
             guard let sf = self else {
                 return
@@ -431,7 +410,6 @@ class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
     
     func addInputText(_ text: String) {
         self.textView.scrollRangeToVisible(NSRange.init(location: self.textView.text.count, length: 1))
-//        self.textView.layoutManager.allowsNonContiguousLayout = false
         var content = self.textView.text
         if content == nil {
             self.renderInputText(text)

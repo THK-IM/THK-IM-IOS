@@ -50,18 +50,14 @@ class IMReplyView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupUI() {
         self.addSubview(self.lineView)
         self.addSubview(self.closeView)
         self.addSubview(self.replyUserView)
         self.addSubview(self.replyMsgView)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     func setMessage(_ msg: Message) {
@@ -72,11 +68,7 @@ class IMReplyView: UIView {
             }).disposed(by: self.disposeBag)
     }
     
-//    override func layoutSubviews() {
-//        requestLayout()
-//    }
-    
-    func requestLayout() {
+    func resetLayout() {
         if let msg = self.message {
             self.lineView.snp.remakeConstraints { make in
                 make.top.equalToSuperview().offset(2)
@@ -147,6 +139,7 @@ class IMReplyView: UIView {
     
     func clearMessage() {
         self.message = nil
+        self.resetLayout()
     }
     
     func getReplyMessage() -> Message? {
