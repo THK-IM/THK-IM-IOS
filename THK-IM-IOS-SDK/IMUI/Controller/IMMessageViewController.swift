@@ -23,8 +23,10 @@ open class IMMessageViewController: BaseViewController {
     public let inputLayout = IMInputLayout()
     public let bottomPanelLayout = IMBottomPanelLayout()
     public var msgSelectedLayout = IMMessageSelectedLayout()
+    public let atTipView = UILabel()
     public var keyboardShow = false
     public var memberMap = [Int64: (User, SessionMember?)]()
+    public var atMsgs = Array<Message>()
     
     deinit {
         DDLogDebug("IMMessageViewController, de init")
@@ -223,6 +225,52 @@ open class IMMessageViewController: BaseViewController {
             make.top.equalToSuperview()
             make.bottom.equalTo(sf.inputLayout.snp.top)
         }
+        
+        // AT提醒
+        self.atTipView.isUserInteractionEnabled = true
+        self.atTipView.textColor = .blue
+        self.atTipView.font = UIFont.systemFont(ofSize: 16)
+        self.containerView.addSubview(self.atTipView)
+        self.atTipView.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-10)
+            make.bottom.equalTo(self.inputLayout.snp.top).offset(-10)
+            make.height.equalTo(20)
+        }
+        self.atTipView.rx.tapGesture().when(.ended)
+            .subscribe { [weak self] _ in
+                self?.onAtTipsViewClick()
+            }.disposed(by: self.disposeBag)
+        
+        if let session = self.session {
+            if session.unreadCount > 0 {
+                Observable.just("").flatMap { _ in
+                    let atMsgs = IMCoreManager.shared.database.messageDao().findSessionAtMeUnreadMessages(session.id)
+                    return Observable.just(atMsgs)
+                }.compose(RxTransformer.shared.io2Main())
+                    .subscribe { [weak self] msgs in
+                        self?.atMsgs.append(contentsOf: msgs)
+                        self?.updateAtTipsView()
+                    }.disposed(by: self.disposeBag)
+            }
+        }
+        
+    }
+    
+    private func updateAtTipsView() {
+        if self.atMsgs.count <= 0 {
+            self.atTipView.isHidden = true
+        } else {
+            self.atTipView.text = "有\(self.atMsgs.count)条消息@我"
+            self.atTipView.isHidden = false
+        }
+    }
+    
+    private func onAtTipsViewClick() {
+        if self.atMsgs.count > 0 {
+            let msg = self.atMsgs.remove(at: 0)
+            updateAtTipsView()
+            self.messageLayout.scrollToMsg(msg)
+        }
     }
     
     private func getSafeBottomHeight() -> CGFloat {
@@ -270,21 +318,51 @@ open class IMMessageViewController: BaseViewController {
             guard let msg = result?.object as? Message else {
                 return
             }
-            if msg.sessionId != self?.session?.id {
+            guard let sf = self else {
+                return
+            }
+            if msg.sessionId != sf.session?.id {
                 return
             }
             DDLogDebug("IMEvent: \(IMEvent.MsgNew.rawValue)")
-            self?.messageLayout.insertMessage(msg)
+            if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) && msg.isAtMe() {
+                var contained = false
+                sf.atMsgs.forEach { m in
+                    if m.msgId == msg.msgId {
+                        contained = true
+                    }
+                }
+                if !contained {
+                    sf.atMsgs.append(msg)
+                    sf.updateAtTipsView()
+                }
+            }
+            sf.messageLayout.insertMessage(msg)
         })
         SwiftEventBus.onMainThread(self, name: IMEvent.MsgUpdate.rawValue, handler: { [weak self ]result in
             guard let msg = result?.object as? Message else {
+                return
+            }
+            guard let sf = self else {
                 return
             }
             if msg.sessionId != self?.session?.id {
                 return
             }
             DDLogDebug("IMEvent: \(IMEvent.MsgUpdate.rawValue)")
-            self?.messageLayout.insertMessage(msg)
+            if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) && msg.isAtMe() {
+                var contained = false
+                sf.atMsgs.forEach { m in
+                    if m.msgId == msg.msgId {
+                        contained = true
+                    }
+                }
+                if !contained {
+                    sf.atMsgs.append(msg)
+                    sf.updateAtTipsView()
+                }
+            }
+            sf.messageLayout.insertMessage(msg)
         })
         
         SwiftEventBus.onMainThread(self, name: IMEvent.MsgDelete.rawValue, handler: { [weak self ]result in
@@ -342,7 +420,6 @@ open class IMMessageViewController: BaseViewController {
                 if let session = try? IMCoreManager.shared.database.sessionDao().findById(session.id) {
                     SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
                 }
-                return Observable.just(true)
                 return Observable.just(true)
             }.compose(RxTransformer.shared.io2Main())
                 .subscribe { _ in

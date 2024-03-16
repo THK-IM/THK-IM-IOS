@@ -17,4 +17,6 @@ public protocol IMPageRouter {
     func openGroupPage(controller: UIViewController, group: Group)
     
     func openLiveCall(controller: UIViewController, session: Session)
+    
+    func openMsgReadStatusPage(controller: UIViewController, session: Session, message: Message)
 }

@@ -100,6 +100,33 @@ public final class Message: TableCodable, Hashable {
         return uIds
     }
     
+    public func getAtUIds() -> Set<Int64> {
+        var uIds = Set<Int64>()
+        if let atUsers = self.atUsers {
+            let uIdStrs = atUsers.split(separator: "#")
+            for uIdStr in uIdStrs {
+                if let uId = Int64(uIdStr) {
+                    uIds.insert(uId)
+                }
+            }
+        }
+        return uIds
+    }
+    
+    public func isAtMe() -> Bool {
+        if let atUsers = self.atUsers {
+            let uIdStrs = atUsers.split(separator: "#")
+            for uIdStr in uIdStrs {
+                if let uId = Int64(uIdStr) {
+                    if uId == -1 || uId == IMCoreManager.shared.uId {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+    
     public func clone() -> Message {
         let message = Message(
             id: self.id, sessionId: self.sessionId, fromUId: self.fromUId, msgId: self.msgId,

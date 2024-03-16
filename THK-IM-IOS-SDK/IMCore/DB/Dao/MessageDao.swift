@@ -129,12 +129,17 @@ public protocol MessageDao {
     /**
      * 查询ctime之后的消息
      */
-    func queryBySidAndTypesAfterCTime(_ sessionId: Int64,  _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) -> Array<Message>
+    func findBySidAndTypesAfterCTime(_ sessionId: Int64,  _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) -> Array<Message>
     
     /**
      * 查询session的最后一条消息
      */
     func findLastMessageBySessionId(_ sessionId: Int64) throws -> Message?
+    
+    /**
+     * 查询session中At我的未读消息
+     */
+    func findSessionAtMeUnreadMessages(_ sessionId: Int64) -> Array<Message>
     
     
     func search(_ sessionId: Int64, _ type: Int, _ keyword: String, _ count: Int, _ offset: Int) -> Array<Message>

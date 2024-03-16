@@ -66,6 +66,7 @@
 		A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072C2B086CB200526713 /* SwiftEventBus.swift */; };
 		A050072F2B08BC9700526713 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A050072E2B08BC9700526713 /* AppUtils.swift */; };
 		A06A133E2BA1796F00CEFB4D /* IMUIResourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06A133D2BA1796F00CEFB4D /* IMUIResourceProvider.swift */; };
+		A06A13B42BA5B4F200CEFB4D /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06A13B32BA5B4F200CEFB4D /* Stack.swift */; };
 		A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */; };
 		A0978E5D2B71CF7B0047E6A2 /* BeCallingLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5C2B71CF7B0047E6A2 /* BeCallingLayout.swift */; };
 		A0978E5F2B71CFDA0047E6A2 /* CallingLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5E2B71CFDA0047E6A2 /* CallingLayout.swift */; };
@@ -364,6 +365,7 @@
 		A050072C2B086CB200526713 /* SwiftEventBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEventBus.swift; sourceTree = "<group>"; };
 		A050072E2B08BC9700526713 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
 		A06A133D2BA1796F00CEFB4D /* IMUIResourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUIResourceProvider.swift; sourceTree = "<group>"; };
+		A06A13B32BA5B4F200CEFB4D /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallViewController.swift; sourceTree = "<group>"; };
 		A0978E5C2B71CF7B0047E6A2 /* BeCallingLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeCallingLayout.swift; sourceTree = "<group>"; };
 		A0978E5E2B71CFDA0047E6A2 /* CallingLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallingLayout.swift; sourceTree = "<group>"; };
@@ -784,6 +786,7 @@
 				A0D68B632A888679004D11A5 /* GCDTool.swift */,
 				A0D68B642A888679004D11A5 /* MimeType.swift */,
 				A050072C2B086CB200526713 /* SwiftEventBus.swift */,
+				A06A13B32BA5B4F200CEFB4D /* Stack.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -1784,6 +1787,7 @@
 				A0D68B7E2A888679004D11A5 /* AckMsgVo.swift in Sources */,
 				A0D68BFC2A888679004D11A5 /* RxTransform.swift in Sources */,
 				A018CE062B00A46200896B87 /* IMMsgCopyOperator.swift in Sources */,
+				A06A13B42BA5B4F200CEFB4D /* Stack.swift in Sources */,
 				A0E82F602B5277F0008DC681 /* ContactTabViewController.swift in Sources */,
 				A0D68BD12A888679004D11A5 /* PreviewVideoCellView.swift in Sources */,
 				A0D68B812A888679004D11A5 /* CodeMessageError.swift in Sources */,

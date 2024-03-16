@@ -392,6 +392,10 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     public func onMsgReferContentClick(message: Message, view: UIView) {
+        self.scrollToMsg(message)
+    }
+    
+    func scrollToMsg(_ message: Message) {
         if let row = self.messages.firstIndex(of: message) {
             self.scrollToRow(row)
         } else {
@@ -456,7 +460,16 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     public func onMsgReadStatusClick(message: Message) {
-        /// TODO 跳转到已读用户列表页面
+        guard let controller = self.getViewController() else {
+            return
+        }
+        if let session = self.session {
+            IMUIManager.shared.pageRouter?.openMsgReadStatusPage(
+                controller: controller,
+                session: session,
+                message: message
+            )
+        }
     }
     
     

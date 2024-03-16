@@ -228,7 +228,7 @@ open class DefaultMessageDao : MessageDao {
         guard let time = msg?.cTime else {
             return []
         }
-        return self.queryBySidAndTypesAfterCTime(sessionId, msgId, types, time, count)
+        return self.findBySidAndTypesAfterCTime(sessionId, msgId, types, time, count)
     }
     
     public func findByTimeRange(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int, _ excludeMsgId: [Int64]) -> Array<Message> {
@@ -283,7 +283,7 @@ open class DefaultMessageDao : MessageDao {
     }
     
     // 查询ctime之后的消息
-    public func queryBySidAndTypesAfterCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) -> Array<Message> {
+    public func findBySidAndTypesAfterCTime(_ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int) -> Array<Message> {
         let message: Array<Message>? = try? self.database?.getObjects(
             fromTable: self.tableName,
             where: Message.Properties.sessionId == sessionId &&
@@ -304,6 +304,26 @@ open class DefaultMessageDao : MessageDao {
             orderBy: [Message.Properties.cTime.order(Order.descending)],
             offset: 0
         )
+    }
+    
+    
+    public func findSessionAtMeUnreadMessages(_ sessionId: Int64) -> Array<Message> {
+        var atMeMsgs = Array<Message>()
+        if let unreadMessages: Array<Message> = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId &&
+            Message.Properties.type >= 0 &&
+            Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0,
+            orderBy: [Message.Properties.cTime.order(Order.ascending)],
+            offset: 0
+        ) {
+            for m in unreadMessages {
+                if m.isAtMe() {
+                    atMeMsgs.append(m)
+                }
+            }
+        }
+        return atMeMsgs
     }
     
     
