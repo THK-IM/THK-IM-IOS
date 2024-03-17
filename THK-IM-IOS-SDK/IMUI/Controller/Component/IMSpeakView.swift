@@ -7,6 +7,7 @@
 
 import UIKit
 import CocoaLumberjack
+import AVFoundation
 
 class IMSpeakView: UILabel {
     
@@ -14,6 +15,12 @@ class IMSpeakView: UILabel {
     
     private var hasTouchOutside = false
     private var recordingDb: Double = 0.0
+    private let imageVolume1 = UIImage(named: "ic_volume_1")
+    private let imageVolume2 = UIImage(named: "ic_volume_2")
+    private let imageVolume3 = UIImage(named: "ic_volume_3")
+    private let imageVolume4 = UIImage(named: "ic_volume_4")
+    private let imageVolume5 = UIImage(named: "ic_volume_5")
+    
     
     private lazy var rootView: UIView = {
         var root = self.superview
@@ -23,15 +30,12 @@ class IMSpeakView: UILabel {
         return root!
     }()
     
-    private lazy var recordingDB: UILabel = {
-        let db = UILabel()
-        db.font = UIFont.systemFont(ofSize: 16.0)
-        db.textColor = UIColor.white
-        db.textAlignment = .center
+    private lazy var recordingDBView: UIImageView = {
+        let db = UIImageView()
         return db
     }()
     
-    private lazy var recordingTips: UILabel = {
+    private lazy var recordingTipsView: UILabel = {
         let tips = UILabel()
         tips.font = UIFont.systemFont(ofSize: 16.0)
         tips.textColor = UIColor.white
@@ -41,20 +45,19 @@ class IMSpeakView: UILabel {
     
     private lazy var recordingPopup: UIView = {
         let popup = UIView()
-        popup.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        popup.addSubview(self.recordingDB)
-        self.recordingDB.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+        popup.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        popup.layer.cornerRadius = 20
+        popup.layer.masksToBounds = true
+        popup.addSubview(self.recordingDBView)
+        self.recordingDBView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(30)
+            make.centerX.equalToSuperview()
+            make.size.equalTo(60)
         }
         
-        popup.addSubview(self.recordingTips)
-        self.recordingTips.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.top.equalTo(sf.recordingDB)
+        popup.addSubview(self.recordingTipsView) 
+        self.recordingTipsView.snp.makeConstraints { make in
+            make.height.equalTo(30)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.bottom.equalToSuperview()
@@ -79,14 +82,24 @@ class IMSpeakView: UILabel {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.checkLocation(touches, with: event)
-        let started = self.startRecordAudio()
-        if started {
-            self.startUI()
-            showTipsPopup()
-            layoutRecording()
-        } else {
-            // TODO toast失败
+        AVAudioSession.sharedInstance().requestRecordPermission { [weak self] success in
+            guard let sf = self else {
+                return
+            }
+            if success {
+                let started = sf.startRecordAudio()
+                if started {
+                    sf.startUI()
+                    sf.showTipsPopup()
+                    sf.layoutRecording()
+                } else {
+                    sf.sender?.showSenderLoading(text: "没有麦克风权限")
+                }
+            } else {
+                sf.sender?.showSenderLoading(text: "没有麦克风权限")
+            }
         }
+        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -117,7 +130,7 @@ class IMSpeakView: UILabel {
         self.rootView.insertSubview(self.recordingPopup, at: 2)
         self.recordingPopup.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalTo(200)
+            make.size.equalTo(160)
         }
     }
     
@@ -132,17 +145,29 @@ class IMSpeakView: UILabel {
                 return
             }
             if (sf.hasTouchOutside) {
-                sf.recordingTips.text = "松手取消"
+                sf.recordingTipsView.text = "松手取消"
             } else {
-                sf.recordingTips.text = "松手发送"
+                sf.recordingTipsView.text = "松手发送"
             }
-            sf.recordingDB.text = "分贝: \(sf.recordingDb)"
+            if sf.recordingDb <= 25 {
+                sf.recordingDBView.image = nil
+            } else if sf.recordingDb <= 45 {
+                sf.recordingDBView.image = sf.imageVolume1
+            } else if sf.recordingDb <= 50 {
+                sf.recordingDBView.image = sf.imageVolume2
+            } else if sf.recordingDb <= 60 {
+                sf.recordingDBView.image = sf.imageVolume3
+            } else if sf.recordingDb <= 70 {
+                sf.recordingDBView.image = sf.imageVolume4
+            } else {
+                sf.recordingDBView.image = sf.imageVolume5
+            }
         }
     }
     
     private func startUI() {
         self.text = "松开 结束"
-        self.backgroundColor = UIColor.gray
+        self.backgroundColor = UIColor.init(hex: "CCCCCC")
     }
     
     private func resetUI() {
