@@ -113,14 +113,6 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
             make.right.equalToSuperview().offset(-20)
             make.height.equalTo(40)
         }
-        
-        self.controllerLayout.addSubview(self.playButton)
-        self.playButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(10)
-            make.centerY.equalToSuperview()
-            make.size.equalTo(30)
-        }
-        
         self.controllerLayout.addSubview(self.timeLabel)
         self.timeLabel.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-10)
@@ -136,7 +128,7 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
             }
             make.centerY.equalToSuperview()
             make.height.equalTo(10)
-            make.left.equalTo(sf.playButton.snp.right).offset(6)
+            make.left.equalToSuperview().offset(6)
             make.right.equalTo(sf.timeLabel.snp.left).offset(-6)
         }
         
@@ -146,6 +138,13 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         }
         
         self.bringSubviewToFront(self.controllerLayout)
+        
+        self.addSubview(self.playButton)
+        self.playButton.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(60)
+        }
+        
     }
     
     private func setupTimer() {
@@ -214,6 +213,14 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         let playerLayer = AVPlayerLayer.init(player: self.player)
         playerLayer.videoGravity = .resizeAspect
         playerLayer.frame = self.bounds
+        self.player.volume = 1.0
+        try? AVAudioSession.sharedInstance().setCategory(.playback, options: [
+            .defaultToSpeaker,
+            .allowAirPlay,
+            .allowBluetooth,
+            .allowBluetoothA2DP
+        ])
+        try? AVAudioSession.sharedInstance().setActive(true)
         self.playView.layer.addSublayer(playerLayer)
     }
     
@@ -229,13 +236,15 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
     }
     
     public func play() {
+        self.playButton.isHidden = true
         self.setupTimer()
         self.resume()
     }
     
     public func pause() {
-        self.player.pause()
         self.playButton.isSelected = false
+        self.playButton.isHidden = false
+        self.player.pause()
     }
     
     public func resume() {
@@ -294,7 +303,20 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
             self.pause()
         } else {
             self.resume()
+            DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: { [weak self] in
+                self?.hideController(true)
+            })
         }
+    }
+    
+    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        self.hideController(!self.playButton.isHidden)
+    }
+    
+    private func hideController(_ hide :Bool) {
+        self.playButton.isHidden = hide
+        self.controllerLayout.isHidden = hide
     }
     
     
