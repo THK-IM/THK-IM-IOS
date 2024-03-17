@@ -129,12 +129,6 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     }
     
     private func readMessageToCache(_ msg: Message) {
-//        guard let session = try? IMCoreManager.shared.database.sessionDao().findById(msg.sessionId) else {
-//            return
-//        }
-//        if session.type == SessionType.SuperGroup.rawValue || (session.functionFlag & IMChatFunction.Read.rawValue) == 0 {
-//            return
-//        }
         readLock.lock()
         if self.needReadDic[msg.sessionId] == nil {
             self.needReadDic[msg.sessionId] = Set()

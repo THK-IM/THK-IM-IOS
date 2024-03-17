@@ -598,10 +598,10 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             return
         }
         var formats = [IMFileFormat]()
-        if session.functionFlag & IMChatFunction.Image.rawValue > 0 {
+        if session.functionFlag & IMChatFunction.Image.rawValue != 0 {
             formats.append(IMFileFormat.Image)
         }
-        if session.functionFlag & IMChatFunction.Video.rawValue > 0 {
+        if session.functionFlag & IMChatFunction.Video.rawValue != 0 {
             formats.append(IMFileFormat.Video)
         }
         if formats.count < 0 {
@@ -647,10 +647,10 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             return
         }
         var formats = [IMFileFormat]()
-        if session.functionFlag & IMChatFunction.Image.rawValue > 0 {
+        if session.functionFlag & IMChatFunction.Image.rawValue != 0 {
             formats.append(IMFileFormat.Image)
         }
-        if session.functionFlag & IMChatFunction.Video.rawValue > 0 {
+        if session.functionFlag & IMChatFunction.Video.rawValue != 0 {
             formats.append(IMFileFormat.Video)
         }
         if formats.count < 0 {
