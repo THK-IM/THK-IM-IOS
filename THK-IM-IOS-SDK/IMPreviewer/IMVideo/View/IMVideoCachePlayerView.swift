@@ -75,6 +75,14 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         return b
     }()
     
+    private lazy var totalTimeLabel: UILabel = {
+        let l = UILabel()
+        l.font = UIFont.systemFont(ofSize: 14)
+        l.textAlignment = .right
+        l.textColor = UIColor.white
+        return l
+    }()
+    
     private lazy var controllerLayout: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
@@ -113,12 +121,20 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
             make.right.equalToSuperview().offset(-20)
             make.height.equalTo(40)
         }
-        self.controllerLayout.addSubview(self.timeLabel)
-        self.timeLabel.snp.makeConstraints { make in
+        
+        self.controllerLayout.addSubview(self.totalTimeLabel)
+        self.totalTimeLabel.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-10)
             make.centerY.equalToSuperview()
             make.height.equalTo(20)
             make.width.greaterThanOrEqualTo(40)
+        }
+        self.controllerLayout.addSubview(self.timeLabel)
+        self.timeLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(10)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(20)
+            make.width.equalTo(self.totalTimeLabel)
         }
         
         self.controllerLayout.addSubview(self.progressView)
@@ -128,8 +144,8 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
             }
             make.centerY.equalToSuperview()
             make.height.equalTo(10)
-            make.left.equalToSuperview().offset(6)
-            make.right.equalTo(sf.timeLabel.snp.left).offset(-6)
+            make.left.equalTo(sf.timeLabel.snp.right).offset(6)
+            make.right.equalTo(sf.totalTimeLabel.snp.left).offset(-6)
         }
         
         self.addSubview(self.playView)
@@ -157,16 +173,9 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
                 guard let sf = self else {
                     return
                 }
-                let remain = max(0, sf.seconds - Int(t.seconds))
-                sf.timeLabel.text = DateUtils.secondToDuration(seconds: remain)
+                sf.timeLabel.text = DateUtils.secondToDuration(seconds: Int(t.seconds))
                 if !sf.isSliderDragging {
                     sf.progressView.value = Float(min(t.seconds/Double(sf.seconds), 1.0))
-                }
-                if (remain == 0) {
-                    let seekTime = CMTimeMakeWithSeconds(0, preferredTimescale: 60)
-                    self?.pause()
-                    self?.seekTo(time: seekTime)
-                    self?.playButton.isSelected = false
                 }
             }
         }
@@ -176,7 +185,8 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         self.seconds = seconds
         self.progressView.value = 0
         self.playButton.isSelected = false
-        self.timeLabel.text = DateUtils.secondToDuration(seconds: seconds)
+        self.totalTimeLabel.text = DateUtils.secondToDuration(seconds: seconds)
+        self.timeLabel.text = DateUtils.secondToDuration(seconds: 0)
     }
     
     public func initCover(_ path: String) {
