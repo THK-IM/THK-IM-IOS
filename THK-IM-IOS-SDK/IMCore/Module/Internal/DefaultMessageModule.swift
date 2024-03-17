@@ -515,10 +515,26 @@ open class DefaultMessageModule : MessageModule {
     }
     
     private func deleteLocalMessages(_ messages: Array<Message>) -> Observable<Void> {
-        return Observable.create({observer -> Disposable in
+        return Observable.create({ [weak self] observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.messageDao().delete(messages)
                 SwiftEventBus.post(IMEvent.BatchMsgDelete.rawValue, sender: messages)
+                var sessionIds = Set<Int64>()
+                for m in messages {
+                    sessionIds.insert(m.sessionId)
+                }
+                for sessionId in sessionIds {
+                    if let lastMsg = try? IMCoreManager.shared.database.messageDao().findLastMessageBySessionId(sessionId) {
+                        self?.processSessionByMessage(lastMsg, true)
+                    } else {
+                        if let session = try IMCoreManager.shared.database.sessionDao().findById(sessionId) {
+                            session.unreadCount = 0
+                            session.lastMsg = ""
+                            try? IMCoreManager.shared.database.sessionDao().update([session])
+                            SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                        }
+                    }
+                }
             } catch {
                 observer.onError(error)
             }
@@ -541,10 +557,10 @@ open class DefaultMessageModule : MessageModule {
         return self.deleteLocalMessages(messages)
     }
     
-    public func processSessionByMessage(_ msg: Message) {
+    public func processSessionByMessage(_ msg: Message, _ forceNotify: Bool = false) {
         // id为0的session不展现给用户
         if (msg.sessionId == 0) {
-            return 
+            return
         }
         self.getSession(msg.sessionId)
             .compose(RxTransformer.shared.io2Io())
@@ -555,14 +571,14 @@ open class DefaultMessageModule : MessageModule {
                             return
                         }
                         let unReadCount = try IMCoreManager.shared.database.messageDao().getUnReadCount(msg.sessionId)
-                        if (s.mTime < msg.mTime || s.unreadCount != unReadCount) {
+                        if (s.mTime < msg.mTime || s.unreadCount != unReadCount || forceNotify) {
                             let processor = self?.getMsgProcessor(msg.type)
                             var statusText = ""
                             if (msg.sendStatus == MsgSendStatus.Sending.rawValue || 
                                 msg.sendStatus == MsgSendStatus.Init.rawValue ||
                                 msg.sendStatus == MsgSendStatus.Uploading.rawValue
                             ) {
-                                statusText = "⬅️"
+                                statusText = "➡️"
                             } else if (msg.sendStatus == MsgSendStatus.Failed.rawValue) {
                                 statusText = "❗"
                             }

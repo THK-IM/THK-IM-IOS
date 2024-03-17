@@ -260,7 +260,7 @@ open class IMBaseMsgProcessor {
             SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
         }
         if notify && notifySession {
-            IMCoreManager.shared.messageModule.processSessionByMessage(msg)
+            IMCoreManager.shared.messageModule.processSessionByMessage(msg, false)
         }
     }
     

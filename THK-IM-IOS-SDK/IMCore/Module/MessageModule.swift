@@ -109,7 +109,7 @@ public protocol MessageModule : BaseModule {
     /**
      * 处理session
      */
-    func processSessionByMessage(_ msg: Message)
+    func processSessionByMessage(_ msg: Message, _ forceNotify: Bool)
     
     
     /**

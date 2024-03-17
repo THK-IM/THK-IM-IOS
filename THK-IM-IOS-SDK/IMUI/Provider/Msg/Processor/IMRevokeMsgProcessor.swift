@@ -79,7 +79,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
             if (existed) {
                 try IMCoreManager.shared.database.messageDao().insertOrIgnore([msg])
                 SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
-                IMCoreManager.shared.messageModule.processSessionByMessage(msg)
+                IMCoreManager.shared.messageModule.processSessionByMessage(msg, false)
             }
             return Observable.just(msg)
         }

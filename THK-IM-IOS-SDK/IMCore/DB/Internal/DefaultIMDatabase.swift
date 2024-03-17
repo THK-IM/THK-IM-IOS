@@ -83,7 +83,7 @@ class DefaultIMDatabase: IMDatabase {
                 try messageDaoImp.resetSendStatusFailed()
                 for m in sendingMessage {
                     m.sendStatus = MsgSendStatus.Failed.rawValue
-                    IMCoreManager.shared.messageModule.processSessionByMessage(m)
+                    IMCoreManager.shared.messageModule.processSessionByMessage(m, false)
                 }
             } catch {
                 DDLogError("resetSendStatusFailed: \(error)")
