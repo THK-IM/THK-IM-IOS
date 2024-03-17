@@ -149,7 +149,7 @@ class IMSpeakView: UILabel {
             } else {
                 sf.recordingTipsView.text = "松手发送"
             }
-            if sf.recordingDb <= 25 {
+            if sf.recordingDb <= 40 {
                 sf.recordingDBView.image = nil
             } else if sf.recordingDb <= 45 {
                 sf.recordingDBView.image = sf.imageVolume1

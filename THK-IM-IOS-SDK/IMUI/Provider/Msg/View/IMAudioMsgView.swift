@@ -14,6 +14,12 @@ import RxSwift
 
 class IMAudioMsgView: UIView, IMsgBodyView {
     
+    private lazy var audioMsgView : UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "ic_msg_audio")
+        return view
+    }()
+    
     private lazy var durationView : IMMsgLabelView = {
         let view = IMMsgLabelView()
         view.sizeToFit()
@@ -42,9 +48,16 @@ class IMAudioMsgView: UIView, IMsgBodyView {
     }
     
     private func setupUI() {
+        self.addSubview(audioMsgView)
+        self.audioMsgView.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(10)
+            make.centerY.equalToSuperview()
+            make.size.equalTo(20)
+        }
+        
         self.addSubview(durationView)
         self.durationView.snp.makeConstraints { make in
-            make.left.equalToSuperview()
+            make.left.equalTo(self.audioMsgView.snp.right)
             make.height.lessThanOrEqualToSuperview()
             make.centerY.equalToSuperview()
             make.width.lessThanOrEqualToSuperview()
