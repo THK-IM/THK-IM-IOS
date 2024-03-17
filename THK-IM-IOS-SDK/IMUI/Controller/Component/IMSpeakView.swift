@@ -93,10 +93,10 @@ class IMSpeakView: UILabel {
                     sf.showTipsPopup()
                     sf.layoutRecording()
                 } else {
-                    sf.sender?.showSenderLoading(text: "没有麦克风权限")
+                    sf.sender?.showSenderMessage(text: "没有麦克风权限", success: false)
                 }
             } else {
-                sf.sender?.showSenderLoading(text: "没有麦克风权限")
+                sf.sender?.showSenderMessage(text: "没有麦克风权限", success: false)
             }
         }
         

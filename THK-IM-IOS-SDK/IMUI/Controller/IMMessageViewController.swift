@@ -614,10 +614,18 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             do {
                 for r in result {
                     if (r.mimeType.starts(with: IMFileFormat.Image.rawValue)) {
+                        if session.functionFlag & IMChatFunction.Image.rawValue == 0 {
+                            sf.showSenderMessage(text: "会话不允许发送图片", success: false)
+                            return
+                        }
                         var ext = r.mimeType.replacingOccurrences(of: IMFileFormat.Image.rawValue, with: "")
                         ext = ext.replacingOccurrences(of: "/", with: "")
                         try sf.sendImage(r.data, ext: ext)
                     } else if (r.mimeType.starts(with: IMFileFormat.Video.rawValue)) {
+                        if session.functionFlag & IMChatFunction.Video.rawValue == 0 {
+                            sf.showSenderMessage(text: "会话不允许发送视频", success: false)
+                            return
+                        }
                         var ext = r.mimeType.replacingOccurrences(of: IMFileFormat.Video.rawValue, with: "")
                         ext = ext.replacingOccurrences(of: "/", with: "")
                         try sf.sendVideo(r.data, ext: ext)
@@ -768,7 +776,13 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     /// show loading
     public func showSenderLoading(text: String) {
-        self.showLoading(text: text)
+        if Thread.current.isMainThread {
+            self.showLoading(text: text)
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.showLoading(text: text)
+            }
+        }
     }
     
     /// dismiss Loading
@@ -778,7 +792,13 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     /// show message
     public func showSenderMessage(text: String, success: Bool) {
-        self.showToast(text, success)
+        if Thread.current.isMainThread {
+            self.showToast(text, success)
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.showToast(text, success)
+            }
+        }
     }
     
     /// 发送消息到session forwardType 0单条转发, 1合并转发
