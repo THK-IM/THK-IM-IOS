@@ -31,6 +31,8 @@ public protocol IMProvider: AnyObject  {
     func startPlayAudio(path: String, audioCallback: @escaping AudioCallback) -> Bool
 
     func stopPlayAudio()
+    
+    func currentPlayingPath() -> String?
 
     func isPlayingAudio() -> Bool
 }

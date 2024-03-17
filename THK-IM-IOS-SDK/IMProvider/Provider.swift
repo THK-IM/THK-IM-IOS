@@ -94,6 +94,10 @@ public class Provider: IMProvider {
         OggOpusAudioPlayer.shared.stopPlaying()
     }
     
+    public func currentPlayingPath() -> String? {
+        return OggOpusAudioPlayer.shared.currentPlayPath()
+    }
+    
     public func isPlayingAudio() -> Bool {
         return OggOpusAudioPlayer.shared.isPlaying()
     }

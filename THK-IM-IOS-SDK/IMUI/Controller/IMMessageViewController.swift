@@ -880,19 +880,34 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
                 do {
                     let data = try JSONDecoder().decode(
                         IMAudioMsgData.self,
-                        from: msg.data!.data(using: .utf8) ?? Data())
+                        from: msg.data!.data(using: .utf8) ?? Data()
+                    )
                     if (data.path != nil) {
                         let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(data.path!)
+                        if let currentPath = cp.currentPlayingPath()  {
+                            cp.stopPlayAudio()
+                            if currentPath == realPath {
+                                return
+                            }
+                        }
                         let success = cp.startPlayAudio(path: realPath) {
                             db, duration, path, stopped in
                         }
-                        if (!success) {
-                            
+                        if (success) {
+                            if msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 {
+                                self.readMessage(msg)
+                            }
+                        } else {
+                            showToast("播放失败")
                         }
+                    } else {
+                        showToast("加载语音中")
                     }
                 } catch {
-                    DDLogError("previewMessage audio \(error)")
+                    showToast("播放失败")
                 }
+            } else {
+                showToast("加载语音中")
             }
         } else if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
             var ay = [Message]()

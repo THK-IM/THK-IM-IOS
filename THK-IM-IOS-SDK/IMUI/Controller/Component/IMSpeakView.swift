@@ -149,9 +149,7 @@ class IMSpeakView: UILabel {
             } else {
                 sf.recordingTipsView.text = "松手发送"
             }
-            if sf.recordingDb <= 40 {
-                sf.recordingDBView.image = nil
-            } else if sf.recordingDb <= 45 {
+            if sf.recordingDb <= 45 {
                 sf.recordingDBView.image = sf.imageVolume1
             } else if sf.recordingDb <= 50 {
                 sf.recordingDBView.image = sf.imageVolume2
@@ -216,7 +214,7 @@ class IMSpeakView: UILabel {
     
     func sendAudioMsg(duration: Int, path: String) {
         DispatchQueue.main.async { [weak self] in
-            let audioData = IMAudioMsgData(path: path, duration: duration, played: true)
+            let audioData = IMAudioMsgData(path: path, duration: duration)
             self?.sender?.sendMessage(MsgType.Audio.rawValue, nil, audioData, nil)
         }
     }

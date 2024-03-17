@@ -395,7 +395,6 @@ open class IMBaseMsgCell : IMBaseTableCell {
             return
         }
         self.delegate?.msgSender()?.readMessage(message!)
-        message!.operateStatus = message!.operateStatus | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ClientRead.rawValue
     }
     
     open func highlightFlashing(_ times: Int) {

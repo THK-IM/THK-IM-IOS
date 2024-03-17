@@ -16,16 +16,6 @@ class IMAudioMsgCell: IMBaseMsgCell {
         return view
     }()
     
-    
-    private lazy var statusView: UIImageView = {
-        let view = UIImageView()
-        view.layer.masksToBounds = true
-        view.layer.cornerRadius = 4
-        view.layer.backgroundColor = UIColor.red.cgColor
-        return view
-    }()
-    
-    
     open override func msgView() -> IMsgBodyView {
         return self.view
     }
@@ -36,6 +26,10 @@ class IMAudioMsgCell: IMBaseMsgCell {
             return
         }
         self.view.setMessage(msg, session, delegate)
+    }
+    
+    open override func onMessageShow() {
+        // 语音消息 点击之后才显示已读
     }
     
 }

@@ -10,22 +10,15 @@ import Foundation
 public class IMAudioMsgData: Codable {
     var path: String?
     var duration: Int?
-    var played: Bool
     
     enum CodingKeys: String, CodingKey {
         case path = "path"
         case duration = "duration"
-        case played = "played"
     }
     
-    public init() {
-        self.played = false
-    }
-    
-    public init(path: String? = nil, duration: Int? = nil, played: Bool = false) {
+    public init(path: String? = nil, duration: Int? = nil) {
         self.path = path
         self.duration = duration
-        self.played = played
     }
 }
 

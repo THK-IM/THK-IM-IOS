@@ -78,6 +78,11 @@ class IMAudioMsgView: UIView, IMsgBodyView {
     
     
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
+        if (message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) {
+            self.statusView.isHidden = false
+        } else {
+            self.statusView.isHidden = true
+        }
         if (message.data != nil) {
             do {
                 let data = try JSONDecoder().decode(
@@ -85,11 +90,6 @@ class IMAudioMsgView: UIView, IMsgBodyView {
                     from: message.data!.data(using: .utf8) ?? Data())
                 if (data.duration != nil) {
                     self.durationView.text = DateUtils.secondToDuration(seconds: data.duration!)
-                }
-                if (!data.played) {
-                    self.statusView.isHidden = false
-                } else {
-                    self.statusView.isHidden = true
                 }
             } catch {
                 DDLogError("\(error)")
