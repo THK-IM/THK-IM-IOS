@@ -50,7 +50,7 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
             if let member = self?.delegate?.msgSender()?.syncGetSessionMemberInfo(id) {
                 return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
             }
-            return ""
+            return "\(id)"
         }
         return content
     }

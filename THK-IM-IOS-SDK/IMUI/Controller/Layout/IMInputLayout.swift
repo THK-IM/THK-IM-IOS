@@ -663,7 +663,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
                     self?.addAtMap(member.0, member.1)
                     return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
                 }
-                return ""
+                return "\(id)"
             }
             self.renderInputText(content)
             if let sender = self.sender {
