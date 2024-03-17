@@ -409,22 +409,17 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     }
     
     func addInputText(_ text: String) {
-        self.textView.scrollRangeToVisible(NSRange.init(location: self.textView.text.count, length: 1))
-        var content = self.textView.text
-        if content == nil {
-            self.renderInputText(text)
+        let data = NSMutableString(string: self.textView.text)
+        let selectedRange = self.textView.selectedRange
+        if data.length == 0 {
+            data.append(text)
         } else {
-            content!.append(contentsOf: text)
-            self.renderInputText(content!)
+            data.insert(text, at: (selectedRange.location+selectedRange.length))
         }
+        self.renderInputText(String(data))
         self.textViewDidChange(self.textView)
-        self.textView.scrollRectToVisible(
-            CGRect(x: 0,
-                   y: self.textView.contentSize.height-15,
-                   width: self.textView.contentSize.width,
-                   height: 10),
-            animated: true
-        )
+        let newRange = NSRange(location: (selectedRange.location+selectedRange.length + text.length), length: 0)
+        self.textView.selectedRange = newRange
     }
     
     func deleteInputContent(_ count: Int) {
