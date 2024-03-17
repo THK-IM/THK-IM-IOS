@@ -17,7 +17,7 @@ open class IMTextMsgProcessor : IMBaseMsgProcessor {
         if (msg.content != nil) {
             var body = msg.content!
             if (msg.atUsers != nil && msg.atUsers!.length > 0) {
-                body = AtStringUtils.replaceAtUIdsToNickname(msg.content!, msg.atUsers!, { id in
+                body = AtStringUtils.replaceAtUIdsToNickname(msg.content!, msg.getAtUIds(), { id in
                     if id == -1 {
                         return User.all.nickname
                     }

@@ -658,14 +658,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     func setReeditMessage(_ message: Message) {
         self.reeditMsg = message
         if var content = message.content {
-            if let atUser = message.atUsers {
-                content = AtStringUtils.replaceAtUIdsToNickname(content, atUser) { [weak self] id in
-                    if let member = self?.sender?.syncGetSessionMemberInfo(id) {
-                        self?.addAtMap(member.0, member.1)
-                        return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
-                    }
-                    return ""
+            content = AtStringUtils.replaceAtUIdsToNickname(content, message.getAtUIds()) { [weak self] id in
+                if let member = self?.sender?.syncGetSessionMemberInfo(id) {
+                    self?.addAtMap(member.0, member.1)
+                    return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
                 }
+                return ""
             }
             self.renderInputText(content)
             if let sender = self.sender {

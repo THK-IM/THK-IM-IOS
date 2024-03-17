@@ -40,13 +40,13 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         }
         let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0
         if (message.atUsers != nil && message.atUsers!.length > 0) {
-            content = self.replaceIdToNickname(content, message.atUsers!)
+            content = self.replaceIdToNickname(content, message.getAtUIds())
         }
         render(content, updated)
     }
     
-    private func replaceIdToNickname(_ content: String, _ atUser: String) -> String {
-        let content = AtStringUtils.replaceAtUIdsToNickname(content, atUser) { [weak self] id in
+    private func replaceIdToNickname(_ content: String, _ atUIds: Set<Int64>) -> String {
+        let content = AtStringUtils.replaceAtUIdsToNickname(content, atUIds) { [weak self] id in
             if let member = self?.delegate?.msgSender()?.syncGetSessionMemberInfo(id) {
                 return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
             }

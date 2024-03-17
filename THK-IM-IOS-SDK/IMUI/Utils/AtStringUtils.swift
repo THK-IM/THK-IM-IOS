@@ -31,14 +31,13 @@ public class AtStringUtils {
                     atUIds += "#"
                 }
                 atUIds += "\(id)"
-                let range = NSRange(String(replacement).startIndex..<String(replacement).endIndex, in: String(replacement))
-                replacement.replaceOccurrences(of:nickName, with: "\(id)", options: .caseInsensitive, range: range)
+                replacement.replaceOccurrences(of:nickName, with: "\(id)", options: .caseInsensitive, range: matchResult.range)
             }
         }
         return (String(replacement), atUIds.length == 0 ? nil : atUIds)
     }
 
-    public static func replaceAtUIdsToNickname(_ text: String, _ atUIds: String, _ finder: findNicknameById) -> String {
+    public static func replaceAtUIdsToNickname(_ text: String, _ atUIds: Set<Int64>, _ finder: findNicknameById) -> String {
         let replacement = NSMutableString(string: text)
         guard let regex = try? NSRegularExpression(pattern: atRegular) else {
             return text
@@ -46,12 +45,15 @@ public class AtStringUtils {
         let allRange = NSRange(text.startIndex..<text.endIndex, in: text)
         regex.matches(in: text, options: [], range: allRange).forEach { matchResult in
             if let idRange = Range.init(matchResult.range, in: text) {
-                let id = String(text[idRange])
-                if atUIds.contains(id) {
-                    if let uId = Int64(id) {
-                        let nickname = finder(uId)
-                        let range = NSRange(String(replacement).startIndex..<String(replacement).endIndex, in: String(replacement))
-                        replacement.replaceOccurrences(of:String(id), with: nickname, options: .caseInsensitive, range: range)
+                if let id = Int64(text[idRange]) {
+                    if atUIds.contains(id) {
+                        let nickname = finder(id)
+                        replacement.replaceOccurrences(
+                            of:String(id),
+                            with: nickname,
+                            options: .caseInsensitive,
+                            range: matchResult.range
+                        )
                     }
                 }
             }
