@@ -20,8 +20,8 @@ public class IMBottomPanelLayout: UIView {
     private var isMorePanelShow = false
     private var isKeyboardShow = false
     
-    private let emojiPanelView = IMEmojiPanelView()
-    private let functionPanelView = IMFunctionPanelView()
+    private let emojiPanelView = IMEmojiPanelView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 0))
+    private let functionPanelView = IMFunctionPanelView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 0))
     
     override init(frame: CGRect) {
         super.init(frame: frame)

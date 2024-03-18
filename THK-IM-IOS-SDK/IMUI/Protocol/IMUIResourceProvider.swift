@@ -13,4 +13,6 @@ public protocol IMUIResourceProvider {
     
     func avatar(user: User) -> UIImage?
     
+    func unicodeEmojis() -> [String]?
+    
 }
