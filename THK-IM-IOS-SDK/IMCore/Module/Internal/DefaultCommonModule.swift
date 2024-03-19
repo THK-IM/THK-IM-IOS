@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CocoaLumberjack
 
 open class DefaultCommonModule : CommonModule {
     
@@ -16,7 +17,11 @@ open class DefaultCommonModule : CommonModule {
     private var connId = ""
     private let lock = NSLock()
     
-    public func getSeverTime() -> Int64 {
+    public init() {
+        
+    }
+    
+    open func getSeverTime() -> Int64 {
         lock.lock()
         defer {lock.unlock()}
         if (timeMap[client] == nil || timeMap[server] == nil) {
@@ -26,11 +31,11 @@ open class DefaultCommonModule : CommonModule {
         }
     }
     
-    public func getConnId() -> String {
+    open func getConnId() -> String {
         return connId
     }
     
-    private func setSeverTime(_ time: Int64?) {
+    open func setSeverTime(_ time: Int64?) {
         lock.lock()
         defer {lock.unlock()}
         if time != nil {
@@ -39,7 +44,7 @@ open class DefaultCommonModule : CommonModule {
         }
     }
     
-    public func onSignalReceived(_ type: Int, _ body: String) {
+    open func onSignalReceived(_ type: Int, _ body: String) {
         if type == SignalType.SignalHeatBeat.rawValue {
             
         } else if type == SignalType.SignalSyncTime.rawValue {
@@ -47,11 +52,16 @@ open class DefaultCommonModule : CommonModule {
             self.setSeverTime(time)
         } else if type == SignalType.SignalConnId.rawValue {
             self.connId = body
-        } 
+        } else if type == SignalType.SignalKickOffUser.rawValue {
+            self.beKickOff()
+            DispatchQueue.global().async {
+                IMCoreManager.shared.shutDown()
+            }
+        }
     }
     
-    public func beKickOff() {
-        
+    open func beKickOff() {
+        DDLogInfo("beKickOff \(Thread.current.isMainThread)")
     }
     
     public func reset() {
