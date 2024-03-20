@@ -24,8 +24,19 @@ public class IMMsgCopyOperator: IMMessageOperator {
     
     public func onClick(sender: IMMsgSender, message: Message) {
         if message.type == MsgType.Text.rawValue {
-            UIPasteboard.general.string = message.data
-            sender.showSenderMessage(text: "Copied", success: true)
+            if message.atUsers != nil {
+                let content = AtStringUtils.replaceAtUIdsToNickname(message.content!, message.getAtUIds()) { id in
+                    if let member = sender.syncGetSessionMemberInfo(id) {
+                        return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
+                    }
+                    return "\(id)"
+                }
+                UIPasteboard.general.string = content
+                sender.showSenderMessage(text: "已复制", success: true)
+            } else {
+                UIPasteboard.general.string = message.content
+                sender.showSenderMessage(text: "已复制", success: true)
+            }
         }
         // TODO other msgType
     }
