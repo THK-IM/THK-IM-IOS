@@ -51,6 +51,13 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
                 self.navigationItem.leftBarButtonItem = backItem
             }
         }
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTouched))
+        tapGesture.cancelsTouchesInView = false  // 这样不会阻止其他控件接收 touch 事件
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func viewTouched() {
+        self.view.endEditing(true)
     }
     
     open override func viewWillAppear(_ animated: Bool) {
