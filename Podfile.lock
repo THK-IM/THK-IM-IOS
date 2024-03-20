@@ -4,6 +4,7 @@ PODS:
   - CocoaLumberjack/Core (3.8.2)
   - CocoaLumberjack/Swift (3.8.2):
     - CocoaLumberjack/Core
+  - CryptoSwift (1.8.1)
   - GDPerformanceView-Swift (2.1.1)
   - JDStatusBarNotification (2.1.2):
     - JDStatusBarNotification/ObjC (= 2.1.2)
@@ -47,6 +48,7 @@ DEPENDENCIES:
   - Alamofire (= 5.8.1)
   - BadgeSwift (= 8.0)
   - CocoaLumberjack/Swift (= 3.8.2)
+  - CryptoSwift (~> 1.8.1)
   - GDPerformanceView-Swift (= 2.1.1)
   - JDStatusBarNotification
   - Kingfisher (= 7.10.0)
@@ -69,6 +71,7 @@ SPEC REPOS:
     - Alamofire
     - BadgeSwift
     - CocoaLumberjack
+    - CryptoSwift
     - GDPerformanceView-Swift
     - JDStatusBarNotification
     - Kingfisher
@@ -92,6 +95,7 @@ SPEC CHECKSUMS:
   Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
   BadgeSwift: a81547ffde1f462bb5fc02e3fa3fdcbc1b888354
   CocoaLumberjack: f8d89a516e7710fdb2e9b8f1560b16ec6040eef0
+  CryptoSwift: b9c701d6f5011df23794dbf7f2e480a77835d83d
   GDPerformanceView-Swift: 22d964fe40b19e3d914dba2586237d064de8fd77
   JDStatusBarNotification: 36d0b50d9eca298f908017879e1027eb8c72a227
   Kingfisher: a18f05d3b6d37d8650ee4a3e61d57a28fc6207f6
@@ -111,6 +115,6 @@ SPEC CHECKSUMS:
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
   ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
 
-PODFILE CHECKSUM: 0aff544b56273bade2ac9c0c7b2cc2380b21eb2a
+PODFILE CHECKSUM: da6acd777704f54f55f1be566d8584151f332060
 
 COCOAPODS: 1.14.2

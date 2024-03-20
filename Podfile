@@ -21,6 +21,7 @@ target 'THK-IM-IOS' do
   pod 'CocoaLumberjack/Swift', '3.8.2'
   pod 'Starscream', '4.0.4'
   pod 'Moya/RxSwift', '15.0'
+  pod 'CryptoSwift', '~> 1.8.1'
   
   
   ## Pods for THK-IM-IOS/IMUI
