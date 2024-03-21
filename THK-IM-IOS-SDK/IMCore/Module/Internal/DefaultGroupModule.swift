@@ -11,11 +11,15 @@ import RxSwift
 
 open class DefaultGroupModule: GroupModule {
     
-    public func queryServerGroupById(id: Int64) -> RxSwift.Observable<Group?> {
+    public init() {
+        
+    }
+    
+    open func queryServerGroupById(id: Int64) -> RxSwift.Observable<Group?> {
         return Observable.just(Group(id: id))
     }
     
-    public func findById(id: Int64) -> RxSwift.Observable<Group?> {
+    open func findById(id: Int64) -> RxSwift.Observable<Group?> {
         return Observable.create({ observer -> Disposable in
             let group = IMCoreManager.shared.database.groupDao().findById(id)
             observer.onNext(group)
@@ -35,7 +39,7 @@ open class DefaultGroupModule: GroupModule {
         })
     }
     
-    public func queryAllGroups() -> RxSwift.Observable<Array<Group>> {
+    open func queryAllGroups() -> RxSwift.Observable<Array<Group>> {
         return Observable.create({ observer -> Disposable in
             let groups = IMCoreManager.shared.database.groupDao().findAll()
             observer.onNext(groups)
@@ -44,11 +48,11 @@ open class DefaultGroupModule: GroupModule {
         })
     }
     
-    public func onSignalReceived(_ type: Int, _ body: String) {
+    open func onSignalReceived(_ type: Int, _ body: String) {
         
     }
     
-    public func reset() {
+    open func reset() {
     }
     
     

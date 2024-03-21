@@ -14,7 +14,7 @@ open class DefaultUserModule : UserModule {
         
     }
     
-    public func reset() {
+    open func reset() {
         
     }
     

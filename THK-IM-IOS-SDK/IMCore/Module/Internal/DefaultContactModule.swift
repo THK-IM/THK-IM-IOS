@@ -12,11 +12,15 @@ import RxSwift
 
 open class DefaultContactModule: ContactModule {
     
-    public func syncContacts() {
+    public init() {
         
     }
     
-    public func queryAllContacts() -> RxSwift.Observable<Array<Contact>> {
+    open func syncContacts() {
+        
+    }
+    
+    open func queryAllContacts() -> RxSwift.Observable<Array<Contact>> {
         return Observable.create({ observer -> Disposable in
             let contacts = IMCoreManager.shared.database.contactDao().findAll()
             observer.onNext(contacts)
@@ -25,12 +29,12 @@ open class DefaultContactModule: ContactModule {
         })
     }
     
-    public func onSignalReceived(_ type: Int, _ body: String) {
+    open func onSignalReceived(_ type: Int, _ body: String) {
         
     }
     
     
-    public func reset() {
+    open func reset() {
     }
     
 }

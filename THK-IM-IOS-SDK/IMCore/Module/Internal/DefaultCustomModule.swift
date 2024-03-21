@@ -10,10 +10,17 @@ import Foundation
 
 open class DefaultCustomModule: CustomModule {
     
-    public func reset() {
+    public init() {
+        
     }
     
-    public func onSignalReceived(_ type: Int, _ body: String) {
+    open func reset() {
+        
+    }
+    
+    
+    
+    open func onSignalReceived(_ type: Int, _ body: String) {
         
     }
     

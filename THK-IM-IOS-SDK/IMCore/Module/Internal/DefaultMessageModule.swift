@@ -13,7 +13,6 @@ import AVFoundation
 
 open class DefaultMessageModule : MessageModule {
     
-    
     private var processorDic = [Int: IMBaseMsgProcessor]()
     private var disposeBag = DisposeBag()
     private var lastTimestamp : Int64 = 0
@@ -26,7 +25,7 @@ open class DefaultMessageModule : MessageModule {
     private let ackMessagePublishSubject = PublishSubject<Int>()
     private var needAckDic = [Int64: Set<Int64>]()
     
-    init() {
+    public init() {
         self.initAckMessagePublishSubject()
     }
     
@@ -64,42 +63,42 @@ open class DefaultMessageModule : MessageModule {
         return 100
     }
     
-    private func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
+    open func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
         let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
         UserDefaults.standard.setValue(time, forKey: key)
         return UserDefaults.standard.synchronize()
     }
     
-    private func getOfflineMsgLastSyncTime() -> Int64 {
+    open func getOfflineMsgLastSyncTime() -> Int64 {
         let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
         let value = UserDefaults.standard.object(forKey: key)
         let time = value == nil ? 0 : (value as! Int64 )
         return time
     }
     
-    private func setSessionLastSyncTime(_ time: Int64) -> Bool {
+    open func setSessionLastSyncTime(_ time: Int64) -> Bool {
         let key = "/\(IMCoreManager.shared.uId)/session_sync_time"
         UserDefaults.standard.setValue(time, forKey: key)
         return UserDefaults.standard.synchronize()
     }
     
-    private func getSessionLastSyncTime() -> Int64 {
+    open func getSessionLastSyncTime() -> Int64 {
         let key = "/\(IMCoreManager.shared.uId)/session_sync_time"
         let value = UserDefaults.standard.object(forKey: key)
         let time = value == nil ? 0 : (value as! Int64 )
         return time
     }
     
-    public func registerMsgProcessor(_ processor: IMBaseMsgProcessor) {
+    open func registerMsgProcessor(_ processor: IMBaseMsgProcessor) {
         processorDic[processor.messageType()] = processor
     }
     
-    public func getMsgProcessor(_ msgType: Int) -> IMBaseMsgProcessor {
+    open func getMsgProcessor(_ msgType: Int) -> IMBaseMsgProcessor {
         let processor = processorDic[msgType]
         return (processor != nil) ? (processor!) : processorDic[0]!
     }
     
-    private func batchProcessMessages(_ messages: Array<Message>, _ ack: Bool = true) throws {
+    open func batchProcessMessages(_ messages: Array<Message>, _ ack: Bool = true) throws {
         DDLogInfo("batchProcessMessages syncOfflineMessages: \(messages.count)")
         var sessionMsgs = [Int64: [Message]]()
         var unProcessMsgs = [Message]()
@@ -172,7 +171,7 @@ open class DefaultMessageModule : MessageModule {
         }
     }
     
-    public func syncOfflineMessages() {
+    open func syncOfflineMessages() {
         let lastTime = self.getOfflineMsgLastSyncTime()
         let count = getOfflineMsgCountPerRequest()
         let uId = IMCoreManager.shared.uId
@@ -198,7 +197,7 @@ open class DefaultMessageModule : MessageModule {
             .disposed(by: disposeBag)
     }
     
-    public func syncLatestSessionsFromServer() {
+    open func syncLatestSessionsFromServer() {
         let lastTime = self.getSessionLastSyncTime()
         let count = getSessionCountPerRequest()
         let uId = IMCoreManager.shared.uId
@@ -259,7 +258,7 @@ open class DefaultMessageModule : MessageModule {
             .disposed(by: disposeBag)
     }
     
-    private func syncSessionMessage(_ session: Session) {
+    open func syncSessionMessage(_ session: Session) {
         let count = getOfflineMsgCountPerRequest()
         IMCoreManager.shared.api.querySessionMessages(
             sId: session.id, cTime: session.msgSyncTime, offset: 0, count: count, asc: 1
@@ -294,7 +293,7 @@ open class DefaultMessageModule : MessageModule {
     /**
      * 同步超级群消息
      */
-    public func syncSuperGroupMessages() {
+    open func syncSuperGroupMessages() {
         Observable.just("")
             .flatMap({ (it) -> Observable<Array<Session>?> in
                 let sessions = try? IMCoreManager.shared.database.sessionDao().findAll(SessionType.SuperGroup.rawValue)
@@ -312,7 +311,7 @@ open class DefaultMessageModule : MessageModule {
             }).disposed(by: self.disposeBag)
     }
     
-    public func getSession(_ sessionId: Int64) -> Observable<Session> {
+    open func getSession(_ sessionId: Int64) -> Observable<Session> {
         return Observable.create({observer -> Disposable in
             do {
                 var session = try IMCoreManager.shared.database.sessionDao().findById(sessionId)
@@ -339,7 +338,7 @@ open class DefaultMessageModule : MessageModule {
     }
     
     
-    public func getSession(_ entityId: Int64, _ type: Int) -> Observable<Session> {
+    open func getSession(_ entityId: Int64, _ type: Int) -> Observable<Session> {
         return Observable.create({observer -> Disposable in
             do {
                 var session = try IMCoreManager.shared.database.sessionDao().findByEntityId(entityId, type)
@@ -365,7 +364,7 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    public func queryLocalSessions(_ parentId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
+    open func queryLocalSessions(_ parentId: Int64, _ count: Int, _ mTime: Int64) -> Observable<Array<Session>> {
         return Observable.create({observer -> Disposable in
             do {
                 let sessions = try IMCoreManager.shared.database.sessionDao().findByParentId(parentId, count, mTime)
@@ -383,7 +382,7 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    public func queryLocalMessages(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int, _ excludeMsgId: [Int64]) -> Observable<Array<Message>> {
+    open func queryLocalMessages(_ sessionId: Int64, _ startTime: Int64, _ endTime: Int64, _ count: Int, _ excludeMsgId: [Int64]) -> Observable<Array<Message>> {
         return Observable.create({observer -> Disposable in
             DDLogDebug("queryLocalMessages  start: \(Date().timeMilliStamp)")
             let messages = IMCoreManager.shared.database.messageDao().findByTimeRange(sessionId, startTime, endTime, count, excludeMsgId)
@@ -397,7 +396,7 @@ open class DefaultMessageModule : MessageModule {
     /**
      * 批量删除多条Session
      */
-    public func deleteSession(_ session: Session, _ deleteServer: Bool) -> Observable<Void> {
+    open func deleteSession(_ session: Session, _ deleteServer: Bool) -> Observable<Void> {
         if (deleteServer) {
             return self.deleteServerSession(session)
                 .concat(self.deleteLocalSession(session))
@@ -408,7 +407,7 @@ open class DefaultMessageModule : MessageModule {
     /**
      * 更新session
      */
-    public func updateSession(_ session: Session, _ updateSever: Bool) -> Observable<Void> {
+    open func updateSession(_ session: Session, _ updateSever: Bool) -> Observable<Void> {
         if (updateSever) {
             return self.updateServerSession(session)
                 .concat(self.updateLocalSession(session))
@@ -416,12 +415,12 @@ open class DefaultMessageModule : MessageModule {
         return self.updateLocalSession(session)
     }
     
-    public func onNewMessage(_ msg: Message) {
+    open func onNewMessage(_ msg: Message) {
         DDLogInfo("MessageModule onNewMessage \(Thread.current.isMainThread ? "main": "io") \(msg.msgId) \(msg.type) \(msg.content ?? "")")
         getMsgProcessor(msg.type).received(msg)
     }
     
-    public func generateNewMsgId() -> Int64 {
+    open func generateNewMsgId() -> Int64 {
         idLock.lock()
         defer {
             idLock.unlock()
@@ -436,17 +435,17 @@ open class DefaultMessageModule : MessageModule {
         return (current-epoch) << 22 + Int64(snowFlakeMachine << 12) + Int64(self.lastSequence)
     }
     
-    public func sendMessage(_ sessionId: Int64, _ type: Int, _ body: Codable?, _ data: Codable?, _ atUser: String? = nil,
+    open func sendMessage(_ sessionId: Int64, _ type: Int, _ body: Codable?, _ data: Codable?, _ atUser: String? = nil,
                             _ replyMsgId: Int64? = nil, _ sendResult: IMSendMsgResult? = nil){
         let processor = getMsgProcessor(type)
         processor.sendMessage(sessionId, body, data, atUser, replyMsgId, sendResult)
     }
     
-    public func sendMessageToServer(_ message: Message) -> Observable<Message> {
+    open func sendMessageToServer(_ message: Message) -> Observable<Message> {
         return IMCoreManager.shared.api.sendMessageToServer(msg: message)
     }
     
-    public func ackMessageToCache(_ msg: Message) {
+    open func ackMessageToCache(_ msg: Message) {
         ackLock.lock()
         if msg.msgId > 0 {
             if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
@@ -460,7 +459,7 @@ open class DefaultMessageModule : MessageModule {
         self.ackMessagePublishSubject.onNext(0)
     }
     
-    private func ackMessageSuccess(_ sessionId: Int64, _ msgIds: Set<Int64>) {
+    open func ackMessageSuccess(_ sessionId: Int64, _ msgIds: Set<Int64>) {
         ackLock.lock()
         do {
             try IMCoreManager.shared.database
@@ -479,14 +478,14 @@ open class DefaultMessageModule : MessageModule {
         ackLock.unlock()
     }
     
-    private func clearAckCache() {
+    open func clearAckCache() {
         ackLock.lock()
         needAckDic.removeAll()
         ackLock.unlock()
     }
     
     
-    private func ackServerMessage(_ sessionId: Int64, _ msgIds: Set<Int64>) {
+    open func ackServerMessage(_ sessionId: Int64, _ msgIds: Set<Int64>) {
         IMCoreManager.shared.api.ackMessages(IMCoreManager.shared.uId, sessionId, msgIds)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(
@@ -499,7 +498,7 @@ open class DefaultMessageModule : MessageModule {
             ).disposed(by: disposeBag)
     }
     
-    public func ackMessagesToServer() {
+    open func ackMessagesToServer() {
         ackLock.lock()
         for (k, v) in self.needAckDic {
             if v.count > 0 {
@@ -510,11 +509,11 @@ open class DefaultMessageModule : MessageModule {
         ackLock.unlock()
     }
     
-    private func deleteServerMessages(_ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
+    open func deleteServerMessages(_ sessionId: Int64, _ msgIds: Set<Int64>) -> Observable<Void> {
         return IMCoreManager.shared.api.deleteMessages(IMCoreManager.shared.uId, sessionId, msgIds)
     }
     
-    private func deleteLocalMessages(_ messages: Array<Message>) -> Observable<Void> {
+    open func deleteLocalMessages(_ messages: Array<Message>) -> Observable<Void> {
         return Observable.create({ [weak self] observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.messageDao().delete(messages)
@@ -543,7 +542,7 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    public func deleteMessages(_ sessionId: Int64, _ messages: Array<Message>, _ deleteServer: Bool) -> Observable<Void> {
+    open func deleteMessages(_ sessionId: Int64, _ messages: Array<Message>, _ deleteServer: Bool) -> Observable<Void> {
         if (deleteServer) {
             var ids = Set<Int64>()
             for message in messages {
@@ -557,7 +556,7 @@ open class DefaultMessageModule : MessageModule {
         return self.deleteLocalMessages(messages)
     }
     
-    public func processSessionByMessage(_ msg: Message, _ forceNotify: Bool = false) {
+    open func processSessionByMessage(_ msg: Message, _ forceNotify: Bool = false) {
         // id为0的session不展现给用户
         if (msg.sessionId == 0) {
             return
@@ -603,7 +602,7 @@ open class DefaultMessageModule : MessageModule {
             ).disposed(by: disposeBag)
     }
     
-    public func notifyNewMessage(_ session: Session, _ message: Message) {
+    open func notifyNewMessage(_ session: Session, _ message: Message) {
         if (message.type < 0 || message.fromUId == IMCoreManager.shared.uId) {
             return
         }
@@ -613,7 +612,7 @@ open class DefaultMessageModule : MessageModule {
         AppUtils.newMessageNotify()
     }
     
-    public func onSignalReceived(_ type: Int, _ body: String) {
+    open func onSignalReceived(_ type: Int, _ body: String) {
         do {
             let msgBean = try JSONDecoder().decode(
                 MessageVo.self,
@@ -626,7 +625,7 @@ open class DefaultMessageModule : MessageModule {
     }
     
     
-    private func deleteLocalSession(_ session: Session) -> Observable<Void> {
+    open func deleteLocalSession(_ session: Session) -> Observable<Void> {
         return Observable.create({observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.messageDao().deleteBySessionId(session.id)
@@ -640,11 +639,11 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    private func deleteServerSession(_ session: Session) -> Observable<Void> {
+    open func deleteServerSession(_ session: Session) -> Observable<Void> {
         return IMCoreManager.shared.api.deleteUserSession(IMCoreManager.shared.uId, session: session)
     }
     
-    private func updateLocalSession(_ session: Session) -> Observable<Void> {
+    open func updateLocalSession(_ session: Session) -> Observable<Void> {
         return Observable.create({ observer -> Disposable in
             do {
                 try IMCoreManager.shared.database.sessionDao().update([session])
@@ -657,12 +656,12 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    private func updateServerSession(_ session: Session) -> Observable<Void> {
+    open func updateServerSession(_ session: Session) -> Observable<Void> {
         return IMCoreManager.shared.api.updateUserSession(IMCoreManager.shared.uId, session: session)
     }
     
     
-    public func querySessionMembers(_ sessionId: Int64) -> RxSwift.Observable<Array<SessionMember>> {
+    open func querySessionMembers(_ sessionId: Int64) -> RxSwift.Observable<Array<SessionMember>> {
         let count = getSessionCountPerRequest()
         return Observable.create({ observer -> Disposable in
             let members = IMCoreManager.shared.database.sessionMemberDao().findBySessionId(sessionId)
@@ -678,7 +677,7 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    private func queryLastSessionMember(_ sessionId: Int64, _ count: Int) -> Observable<Array<SessionMember>> {
+    open func queryLastSessionMember(_ sessionId: Int64, _ count: Int) -> Observable<Array<SessionMember>> {
         return Observable.just(sessionId).flatMap({ sessionId -> Observable<Int64> in
             let mTime = IMCoreManager.shared.database.sessionDao().findMemberSyncTimeById(sessionId)
             return Observable.just(mTime)
@@ -711,7 +710,7 @@ open class DefaultMessageModule : MessageModule {
         })
     }
     
-    public func syncSessionMembers(_ sessionId: Int64) {
+    open func syncSessionMembers(_ sessionId: Int64) {
         self.queryLastSessionMember(sessionId, 100)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { _ in

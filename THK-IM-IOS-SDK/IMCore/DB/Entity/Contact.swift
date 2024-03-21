@@ -37,7 +37,7 @@ public final class Contact: TableCodable {
     
     public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
     
-    init(id: Int64, sessionId: Int64? = nil, noteName: String? = nil, relation: Int, extData: String? = nil, cTime: Int64, mTime: Int64) {
+    public init(id: Int64, sessionId: Int64? = nil, noteName: String? = nil, relation: Int, extData: String? = nil, cTime: Int64, mTime: Int64) {
         self.id = id
         self.sessionId = sessionId
         self.noteName = noteName
