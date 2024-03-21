@@ -27,4 +27,10 @@ public extension UIImageView {
         self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)), placeholder: placeHolderImage)
     }
     
+    func renderImageByPath(path: String, radius: CGFloat, placeHolderImage: UIImage? = nil) {
+        self.layer.cornerRadius = radius
+        self.clipsToBounds = true
+        self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)), placeholder: placeHolderImage)
+    }
+    
 }

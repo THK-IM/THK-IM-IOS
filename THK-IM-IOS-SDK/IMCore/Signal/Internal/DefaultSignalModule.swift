@@ -109,16 +109,21 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     }
     
     private func onTextMessage(_ message: String) {
-        DDLogError("DefaultSignalModule onTextMessage: \(message) ")
-        let signalData = message.data(using: String.Encoding.utf8)
-        if signalData != nil {
-            do {
-                let signal = try JSONDecoder().decode(Signal.self, from: signalData!)
-                lock.lock()
-                self.signalListener?.onNewSignal(signal.type, signal.body)
-                lock.unlock()
-            } catch {
-                DDLogError("DefaultSignalModule onTextMessage error: \(error)")
+        DispatchQueue.global().async { [weak self] in
+            guard let sf = self else {
+                return
+            }
+            DDLogError("DefaultSignalModule \(Thread.current.isMainThread ? "main, " :"io, ") onTextMessage: \(message) ")
+            let signalData = message.data(using: String.Encoding.utf8)
+            if signalData != nil {
+                do {
+                    let signal = try JSONDecoder().decode(Signal.self, from: signalData!)
+                    sf.lock.lock()
+                    sf.signalListener?.onNewSignal(signal.type, signal.body)
+                    sf.lock.unlock()
+                } catch {
+                    DDLogError("DefaultSignalModule onTextMessage error: \(error)")
+                }
             }
         }
     }

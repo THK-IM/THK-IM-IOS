@@ -16,6 +16,9 @@ import CocoaLumberjack
 public class Provider: IMProvider {
     
     public init(token: String) {
+    }
+    
+    public func openCamera(controller: UIViewController, formats: [IMFileFormat], imContentResult: @escaping IMContentResult) {
         ZLPhotoConfiguration.default()
             .cameraConfiguration
             .maxRecordDuration(300)
@@ -28,9 +31,6 @@ public class Provider: IMProvider {
             .allowEditImage(true)
             .allowEditVideo(true)
             .allowSelectOriginal(true)
-    }
-    
-    public func openCamera(controller: UIViewController, formats: [IMFileFormat], imContentResult: @escaping IMContentResult) {
         let camera = ZLCustomCamera()
         camera.takeDoneBlock = { [weak self] image, videoUrl in
             guard let sf = self else {
@@ -57,7 +57,18 @@ public class Provider: IMProvider {
     }
     
     public func pick(controller: UIViewController, formats: [IMFileFormat], imContentResult: @escaping IMContentResult) {
+        ZLPhotoConfiguration.default()
+            .cameraConfiguration
+            .maxRecordDuration(300)
+            .allowRecordVideo(true)
+            .allowSwitchCamera(true)
+            .showFlashSwitch(true)
         
+        ZLPhotoConfiguration.default()
+            .allowSelectGif(true)
+            .allowEditImage(true)
+            .allowEditVideo(true)
+            .allowSelectOriginal(true)
         let ps = ZLPhotoPreviewSheet()
         ps.selectImageBlock = { [weak self] results, isOriginal in
             guard let sf = self else {

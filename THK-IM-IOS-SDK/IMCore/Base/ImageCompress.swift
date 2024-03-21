@@ -15,9 +15,13 @@ public class ImageCompressor {
     public class Options {
         var maxSize: Int64 = 100 * 1024 // 文件最大大小（单位：字节）
         var quality: CGFloat = 0.6       // 压缩质量（0~1）
-        init(maxSize: Int64, quality: CGFloat) {
+        public init(maxSize: Int64, quality: CGFloat) {
             self.maxSize = maxSize
             self.quality = quality
+        }
+        
+        public init() {
+            
         }
     }
     

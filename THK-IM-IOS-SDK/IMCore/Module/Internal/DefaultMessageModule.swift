@@ -417,7 +417,7 @@ open class DefaultMessageModule : MessageModule {
     }
     
     public func onNewMessage(_ msg: Message) {
-        DDLogInfo("MessageModule onNewMessage \(msg.msgId) \(msg.type) \(msg.content ?? "")")
+        DDLogInfo("MessageModule onNewMessage \(Thread.current.isMainThread ? "main": "io") \(msg.msgId) \(msg.type) \(msg.content ?? "")")
         getMsgProcessor(msg.type).received(msg)
     }
     
