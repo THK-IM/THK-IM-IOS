@@ -12,6 +12,10 @@ public protocol ContactModule : BaseModule {
     
     func syncContacts()
     
+    func updateContact(_ contact: Contact) -> Observable<Void>
+    
+    func queryContactByUserId(_ id: Int64) -> Observable<Contact>
+    
     func queryAllContacts() -> Observable<Array<Contact>>
     
 }

@@ -13,7 +13,12 @@ open class SingleSessionCell: IMBaseSessionCell {
     override open func showSessionEntityInfo(_ session: Session) {
         IMCoreManager.shared.userModule.queryUser(id: session.entityId)
             .subscribe(onNext: { [weak self] user in
-                self?.avatarView.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 10)
+                if user.avatar == nil || user.avatar!.isEmpty {
+                    let image = IMUIManager.shared.uiResourceProvider?.avatar(user: user)
+                    self?.avatarView.image = image
+                } else {
+                    self?.avatarView.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 10)
+                }
                 self?.nickView.text = user.nickname
             }).disposed(by: self.disposeBag)
     }

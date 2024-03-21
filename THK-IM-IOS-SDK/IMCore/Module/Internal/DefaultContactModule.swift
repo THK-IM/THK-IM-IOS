@@ -20,6 +20,36 @@ open class DefaultContactModule: ContactModule {
         
     }
     
+    
+    public func updateContact(_ contact: Contact) -> RxSwift.Observable<Void> {
+        return Observable.create({ observer -> Disposable in
+            try? IMCoreManager.shared.database.contactDao().insertOrIgnore([contact])
+            observer.onCompleted()
+            return Disposables.create()
+        })
+    }
+    
+    
+    open func queryServerContactByUserId(_ id: Int64) -> Observable<Contact> {
+        let contact = Contact(id: id, relation: 0, cTime: 0, mTime: 0)
+        return Observable.just(contact)
+    }
+    
+    open func queryContactByUserId(_ id: Int64) -> Observable<Contact> {
+        return Observable.create({ observer -> Disposable in
+            let contact = IMCoreManager.shared.database.contactDao().findByUserId(id)
+            observer.onNext(contact)
+            observer.onCompleted()
+            return Disposables.create()
+        }).flatMap { contact in
+            if contact != nil {
+                return Observable.just(contact!)
+            } else {
+                return self.queryServerContactByUserId(id)
+            }
+        }
+    }
+    
     open func queryAllContacts() -> RxSwift.Observable<Array<Contact>> {
         return Observable.create({ observer -> Disposable in
             let contacts = IMCoreManager.shared.database.contactDao().findAll()

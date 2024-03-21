@@ -323,7 +323,7 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
         }
         UIView.setAnimationsEnabled(true)
-        if abs(distanceFromBottom()) < 200 || message.fromUId == IMCoreManager.shared.uId {
+        if distanceFromBottom() < 200 || message.fromUId == IMCoreManager.shared.uId {
             self.scrollToBottom(0.2)
         } else {
             self.msgSender()?.showNewMsgTipsView(true)

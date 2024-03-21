@@ -38,13 +38,13 @@ open class DefaultContactDao : ContactDao {
         return contacts ?? Array<Contact>()
     }
     
-    //    public func findByIds(_ ids: Set<Int64>) -> [Contact]? {
-    //        var contactIds = [Int64]()
-    //        for id in ids {
-    //            contactIds.append(id)
-    //        }
-    //        return try? self.database?.getObjects(fromTable: self.tableName, where: Contact.Properties.id.in(contactIds))
-    //    }
+    
+    public func findByUserId(_ contactId: Int64) -> Contact? {
+        return try? self.database?.getObject(
+            fromTable: self.tableName,
+            where: Contact.Properties.id == contactId
+        )
+    }
     
     
 }

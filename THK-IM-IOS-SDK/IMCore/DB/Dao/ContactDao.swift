@@ -16,4 +16,6 @@ public protocol ContactDao {
     
     func findAll() -> Array<Contact>
     
+    func findByUserId(_ contactId: Int64) -> Contact?
+    
 }
