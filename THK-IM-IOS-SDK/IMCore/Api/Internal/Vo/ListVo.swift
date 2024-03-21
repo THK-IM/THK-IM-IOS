@@ -10,7 +10,7 @@ import Foundation
 
 public class ListVo<T: Codable> : Codable {
     
-    var data: Array<T>
+    public var data: Array<T>
     
     public init(data: Array<T>) {
         self.data = data
