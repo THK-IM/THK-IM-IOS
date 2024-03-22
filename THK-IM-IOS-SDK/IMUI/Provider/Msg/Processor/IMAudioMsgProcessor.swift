@@ -184,7 +184,7 @@ open class IMAudioMsgProcessor : IMBaseMsgProcessor {
             }
             let fileName = body.name
             let localPath = IMCoreManager.shared.storageModule.allocSessionFilePath(
-                message.sessionId, fileName!, IMFileFormat.Image.rawValue)
+                message.sessionId, fileName!, IMFileFormat.Audio.rawValue)
             let loadListener = FileLoadListener(
                 {[weak self] progress, state, url, path, err in
                     SwiftEventBus.post(
