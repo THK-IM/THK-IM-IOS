@@ -82,24 +82,32 @@ class IMSpeakView: UILabel {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.checkLocation(touches, with: event)
-        AVAudioSession.sharedInstance().requestRecordPermission { [weak self] success in
-            guard let sf = self else {
-                return
+        let permission = AVAudioSession.sharedInstance().recordPermission
+        if permission == .granted {
+            self.startRecord()
+        } else if permission == .undetermined {
+            AVAudioSession.sharedInstance().requestRecordPermission {_ in
             }
-            if success {
-                let started = sf.startRecordAudio()
-                if started {
-                    sf.startUI()
-                    sf.showTipsPopup()
-                    sf.layoutRecording()
-                } else {
-                    sf.sender?.showSenderMessage(text: "没有麦克风权限", success: false)
+        } else {
+            self.sender?.showSenderMessage(text: "请开启录音权限", success: false)
+            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                if UIApplication.shared.canOpenURL(appSettings) {
+                    UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
                 }
-            } else {
-                sf.sender?.showSenderMessage(text: "没有麦克风权限", success: false)
             }
         }
         
+    }
+    
+    private func startRecord() {
+        let started = self.startRecordAudio()
+        if started {
+            self.startUI()
+            self.showTipsPopup()
+            self.layoutRecording()
+        } else {
+            self.sender?.showSenderMessage(text: "录音失败", success: false)
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
