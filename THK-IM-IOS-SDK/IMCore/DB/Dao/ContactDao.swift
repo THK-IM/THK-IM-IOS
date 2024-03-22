@@ -18,4 +18,6 @@ public protocol ContactDao {
     
     func findByUserId(_ contactId: Int64) -> Contact?
     
+    func findByRelation(_ relation: Int) -> Array<Contact>
+    
 }

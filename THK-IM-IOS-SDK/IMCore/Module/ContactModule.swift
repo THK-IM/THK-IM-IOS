@@ -18,4 +18,6 @@ public protocol ContactModule : BaseModule {
     
     func queryAllContacts() -> Observable<Array<Contact>>
     
+    func queryContactsByRelation(_ relation: Int) -> Observable<Array<Contact>>
+    
 }

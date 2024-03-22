@@ -59,6 +59,15 @@ open class DefaultContactModule: ContactModule {
         })
     }
     
+    open func queryContactsByRelation(_ relation: Int) -> Observable<Array<Contact>> {
+        return Observable.create({ observer -> Disposable in
+            let contacts = IMCoreManager.shared.database.contactDao().findByRelation(relation)
+            observer.onNext(contacts)
+            observer.onCompleted()
+            return Disposables.create()
+        })
+    }
+    
     open func onSignalReceived(_ type: Int, _ body: String) {
         
     }

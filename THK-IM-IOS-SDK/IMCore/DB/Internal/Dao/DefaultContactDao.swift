@@ -46,5 +46,14 @@ open class DefaultContactDao : ContactDao {
         )
     }
     
+    public func findByRelation(_ relation: Int) -> Array<Contact> {
+        let contacts: Array<Contact>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Contact.Properties.relation & relation != 0,
+            orderBy: [Contact.Properties.mTime.order(Order.descending)]
+        )
+        return contacts ?? Array<Contact>()
+    }
+    
     
 }
