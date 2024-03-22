@@ -60,6 +60,15 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
             return
         }
         IMCoreManager.shared.messageModule.querySessionMembers(sessionId)
+            .flatMap({ members in
+                var newMembers = [SessionMember]()
+                for m in members {
+                    if m.deleted == 0 {
+                        newMembers.append(m)
+                    }
+                }
+                return Observable.just(newMembers)
+            })
             .flatMap { members in
                 var ids = Set<Int64>()
                 for m in members {

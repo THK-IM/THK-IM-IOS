@@ -36,6 +36,13 @@ public enum SessionPrompt: Int {
         
 }
 
+public enum SessionRole: Int {
+    case member = 1,
+         admin = 2,
+         superAdmin = 3,
+         owner = 4
+}
+
 /**
  * 消息发送状态
  */

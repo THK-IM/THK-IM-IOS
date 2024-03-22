@@ -28,17 +28,12 @@ open class DefaultSessionMemberDao: SessionMemberDao {
     }
     
     public func delete(_ members: [SessionMember]) throws {
-        var sessionId: Int64 = 0
-        var memberIds = [Int64]()
-        for member in members {
-            sessionId = member.sessionId
-            memberIds.append(member.userId)
+        var deleteMembers = [SessionMember]()
+        for m in members {
+            m.deleted = 1
+            deleteMembers.append(m)
         }
-        try self.database?.delete(
-            fromTable: self.tableName,
-            where: SessionMember.Properties.sessionId == sessionId
-            && SessionMember.Properties.userId.in(memberIds)
-        )
+        try self.database?.insertOrReplace(deleteMembers, intoTable: self.tableName)
     }
     
     
@@ -47,15 +42,13 @@ open class DefaultSessionMemberDao: SessionMemberDao {
             fromTable: self.tableName,
             where: SessionMember.Properties.sessionId == sessionId
             && SessionMember.Properties.userId == userId
-            && SessionMember.Properties.deleted == 0
         )
     }
     
     public func findBySessionId(_ sessionId: Int64) -> Array<SessionMember> {
         let members: Array<SessionMember>? = try? self.database?.getObjects(
             fromTable: self.tableName,
-            where: SessionMember.Properties.sessionId == sessionId 
-            && SessionMember.Properties.deleted == 0
+            where: SessionMember.Properties.sessionId == sessionId
         )
         return members ?? Array<SessionMember>()
     }

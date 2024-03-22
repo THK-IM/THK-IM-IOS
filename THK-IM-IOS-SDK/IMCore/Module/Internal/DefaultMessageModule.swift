@@ -684,18 +684,8 @@ open class DefaultMessageModule : MessageModule {
         }).flatMap({ mTime -> Observable<Array<SessionMember>> in
             return IMCoreManager.shared.api.queryLatestSessionMembers(sessionId, mTime, nil, count)
                 .flatMap({ members -> Observable<Array<SessionMember>> in
-                    var inserts = Array<SessionMember>()
-                    var deletes = Array<SessionMember>()
-                    for m in members {
-                        if (m.deleted == 0) {
-                            inserts.append(m)
-                        } else {
-                            deletes.append(m)
-                        }
-                    }
                     let sessionMemberDao = IMCoreManager.shared.database.sessionMemberDao()
-                    try sessionMemberDao.delete(deletes)
-                    try sessionMemberDao.insertOrReplace(inserts)
+                    try sessionMemberDao.insertOrReplace(members)
                     if (!members.isEmpty) {
                         let lastMTime = members.last!.mTime
                         try IMCoreManager.shared.database.sessionDao().updateMemberSyncTime(sessionId, lastMTime)
