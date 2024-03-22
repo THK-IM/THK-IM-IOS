@@ -43,7 +43,7 @@ public class RxTransformer {
                     if let error = try? JSONDecoder().decode(CodeMessageError.self, from: response.data) {
                         return Observable.error(error)
                     } else {
-                        let error = CodeMessageError(code: response.statusCode, message: "请求失败，请稍后再试[\(response.statusCode)]")
+                        let error = CodeMessageError(code: response.statusCode, message: "server error: [\(response.statusCode)]")
                         return Observable.error(error)
                     }
                 }
@@ -60,8 +60,7 @@ public class RxTransformer {
                     if let error = try? JSONDecoder().decode(CodeMessageError.self, from: response.data) {
                         return Observable.error(error)
                     } else {
-                        let msg = String(data: response.data, encoding: .utf8) ?? ""
-                        let error = CodeMessageError(code: response.statusCode, message: msg)
+                        let error = CodeMessageError(code: response.statusCode, message: "server error: [\(response.statusCode)]")
                         return Observable.error(error)
                     }
                 }
