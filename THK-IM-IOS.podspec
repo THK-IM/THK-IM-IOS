@@ -106,6 +106,7 @@ Pod::Spec.new do |spec|
     core.dependency 'CocoaLumberjack/Swift', '3.8.2'
     core.dependency 'Starscream', '4.0.4'
     core.dependency 'Moya/RxSwift', '15.0'
+    core.dependency 'CryptoSwift', '~> 1.8.1'
   end
 
   spec.subspec 'IMUI' do |ui|
