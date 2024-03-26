@@ -66,12 +66,11 @@ class DefaultIMDatabase: IMDatabase {
     
     private func migrate(_ uId: Int64, _ debug: Bool) {
         if let oldDbFile = self.oldDbFile(uId, debug) {
-            self.database.filterMigration { info in
-                info.sourceDatabase = oldDbFile
+            self.database.addMigration(sourcePath: oldDbFile) { info in
                 info.sourceTable = info.table
-            }
-            while (!self.database.isMigrated()) {
-                try? self.database.stepMigration()
+                while (!self.database.isMigrated()) {
+                    try? self.database.stepMigration()
+                }
             }
         }
     }

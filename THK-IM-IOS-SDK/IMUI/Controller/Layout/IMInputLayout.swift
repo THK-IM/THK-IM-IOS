@@ -35,8 +35,8 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             }
             if (self.isSpeakViewShow) {
                 return IMInputLayout.minTextInputHeight + replyMsgHeight + 20.0
-            }
-            return max(self.textInputHeight, IMInputLayout.minTextInputHeight) + replyMsgHeight + 20.0
+            }            
+            return self.textInputHeight + replyMsgHeight + 20.0
         }
     }
     
