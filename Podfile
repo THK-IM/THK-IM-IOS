@@ -15,7 +15,7 @@ target 'THK-IM-IOS' do
   end
 
   ## Pods for THK-IM-IOS/IMCore
-  pod 'WCDB.swift', '2.0.4'
+  pod 'WCDB.swift', '2.1.1'
   pod 'RxSwift', '6.5.0'
   pod 'RxCocoa', '6.5.0'
   pod 'CocoaLumberjack/Swift', '3.8.2'

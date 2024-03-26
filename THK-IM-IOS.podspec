@@ -100,7 +100,7 @@ Pod::Spec.new do |spec|
   spec.subspec 'IMCore' do |core|
     core.source_files = 'THK-IM-IOS-SDK/IMCore/**/*.swift',
     core.frameworks = 'UIKit', 'Foundation', 'AVFoundation', 'MobileCoreServices', 'AVFoundation', 'ImageIO'
-    core.dependency 'WCDB.swift', '2.0.4'
+    core.dependency 'WCDB.swift', '2.1.1'
     core.dependency 'RxSwift', '6.5.0'
     core.dependency 'RxCocoa', '6.5.0'
     core.dependency 'CocoaLumberjack/Swift', '3.8.2'

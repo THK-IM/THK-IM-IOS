@@ -6,19 +6,14 @@ PODS:
     - CocoaLumberjack/Core
   - CryptoSwift (1.8.1)
   - GDPerformanceView-Swift (2.1.1)
-  - JDStatusBarNotification (2.1.2):
-    - JDStatusBarNotification/ObjC (= 2.1.2)
-    - JDStatusBarNotification/Swift (= 2.1.2)
-  - JDStatusBarNotification/ObjC (2.1.2)
-  - JDStatusBarNotification/Swift (2.1.2):
-    - JDStatusBarNotification/ObjC
+  - JDStatusBarNotification (2.2.1)
   - Kingfisher (7.10.0)
   - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
   - Moya/RxSwift (15.0.0):
     - Moya/Core
     - RxSwift (~> 6.0)
-  - ProgressHUD (14.1.0)
+  - ProgressHUD (14.1.1)
   - RxCocoa (6.5.0):
     - RxRelay (= 6.5.0)
     - RxSwift (= 6.5.0)
@@ -31,12 +26,9 @@ PODS:
   - SnapKit (5.6.0)
   - Starscream (4.0.4)
   - SwiftEntryKit (2.0.0)
-  - WCDB.swift (2.0.4):
-    - WCDB.swift/no-arc (= 2.0.4)
-    - WCDBOptimizedSQLCipher (~> 1.4.2)
-  - WCDB.swift/no-arc (2.0.4):
-    - WCDBOptimizedSQLCipher (~> 1.4.2)
-  - WCDBOptimizedSQLCipher (1.4.2)
+  - WCDB.swift (2.1.1):
+    - WCDBOptimizedSQLCipher (= 1.4.4)
+  - WCDBOptimizedSQLCipher (1.4.4)
   - WebRTC-SDK (114.5735.08)
   - YbridOgg (0.8.0)
   - YbridOpus (0.8.0)
@@ -60,7 +52,7 @@ DEPENDENCIES:
   - SnapKit (= 5.6.0)
   - Starscream (= 4.0.4)
   - SwiftEntryKit
-  - WCDB.swift (= 2.0.4)
+  - WCDB.swift (= 2.1.1)
   - WebRTC-SDK (= 114.5735.08)
   - YbridOgg (= 0.8.0)
   - YbridOpus (= 0.8.0)
@@ -97,10 +89,10 @@ SPEC CHECKSUMS:
   CocoaLumberjack: f8d89a516e7710fdb2e9b8f1560b16ec6040eef0
   CryptoSwift: b9c701d6f5011df23794dbf7f2e480a77835d83d
   GDPerformanceView-Swift: 22d964fe40b19e3d914dba2586237d064de8fd77
-  JDStatusBarNotification: 36d0b50d9eca298f908017879e1027eb8c72a227
+  JDStatusBarNotification: d43e8481174a2c5f195d16ce65c611f4a12bf507
   Kingfisher: a18f05d3b6d37d8650ee4a3e61d57a28fc6207f6
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
-  ProgressHUD: c4a55f108815c46a6bf082407d2f806840b7a869
+  ProgressHUD: abb9136ae23c85204236828562cb9a8ec98efb44
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
@@ -108,13 +100,13 @@ SPEC CHECKSUMS:
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   SwiftEntryKit: 61b5fa36f34a97dd8013e48a7345bc4c4720be9a
-  WCDB.swift: 28dd96180d913abadb3ea9cf99bd6e942262379a
-  WCDBOptimizedSQLCipher: ef2be79fed278289a309ad0d4d707c55bf166d6d
+  WCDB.swift: 2eb345ae28984eebd6479177d1ee8a0af52536f1
+  WCDBOptimizedSQLCipher: 7f03bb7c94ad164996f0fa87d0f76026f5ab0f92
   WebRTC-SDK: c24d2a6c9f571f2ed42297cb8ffba9557093142b
   YbridOgg: 4af27a7224f0876a7000e1893df8ba986dd4a014
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
   ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
 
-PODFILE CHECKSUM: da6acd777704f54f55f1be566d8584151f332060
+PODFILE CHECKSUM: 04795a7d3e16c8bb1d47a4726c94404613eb28ea
 
-COCOAPODS: 1.14.2
+COCOAPODS: 1.15.2
