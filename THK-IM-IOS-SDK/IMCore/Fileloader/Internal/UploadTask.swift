@@ -48,13 +48,22 @@ class UploadTask: LoadTask {
                 if response.data == nil {
                     sf.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError.init(CocoaError.coderValueNotFound))
                 }
-                do {
-                    let uploadParams = try JSONDecoder().decode(
+                var uploadParams: UploadParams? = nil
+                if let cipher = IMCoreManager.shared.crypto {
+                    var bodyStr = cipher.decrypt(String(data: response.data!, encoding: .utf8) ?? "")
+                    uploadParams = try? JSONDecoder().decode(
+                        UploadParams.self,
+                        from: bodyStr?.data(using: .utf8) ?? Data()
+                    )
+                } else {
+                    uploadParams = try? JSONDecoder().decode(
                         UploadParams.self,
                         from: response.data!
                     )
-                    sf.startUpload(params: uploadParams)
-                } catch {
+                }
+                if uploadParams != nil {
+                    sf.startUpload(params: uploadParams!)
+                } else {
                     sf.notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError.init(CocoaError.formatting))
                 }
                 break

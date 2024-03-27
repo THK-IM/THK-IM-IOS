@@ -80,6 +80,8 @@ open class IMCoreManager: SignalListener {
     public var messageModule: MessageModule
     public var customModule: CustomModule
     
+    public var crypto: Crypto?
+    
     private init() {
         self.commonModule = DefaultCommonModule()
         self.userModule = DefaultUserModule()

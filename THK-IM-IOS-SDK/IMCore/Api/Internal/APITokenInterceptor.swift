@@ -56,7 +56,39 @@ public class APITokenInterceptor: PluginType {
             newRequest.headers.remove(name: APITokenInterceptor.versionKey)
             newRequest.headers.remove(name: APITokenInterceptor.tokenKey)
         }
+        if let coder = IMCoreManager.shared.crypto {
+            if let requestBodyString = String(data: newRequest.httpBody ?? Data(), encoding: .utf8) {
+                if requestBodyString.count > 0 {
+                    if let encryptedString = coder.encrypt(requestBodyString) {
+                        newRequest.httpBody = encryptedString.data(using: .utf8)
+                    }
+                }
+            }
+        }
         return newRequest
+    }
+    
+    public func process(_ result: Result<Response, MoyaError>, target: TargetType) -> Result<Response, MoyaError> {
+        switch result {
+        case .success(let response):
+            if let coder = IMCoreManager.shared.crypto {
+                // 尝试解密response.data
+                if let responseText = String(data: response.data, encoding: .utf8) {
+                    let decryptedData = coder.decrypt(responseText)
+                        // 使用解密后的数据创建一个新的Response对象
+                    let newResponse = Response(statusCode: response.statusCode, data: decryptedData?.data(using: .utf8) ?? Data())
+                    return .success(newResponse)
+                } else {
+                    return .success(response)
+                }
+            } else {
+                return .success(response)
+            }
+            
+        case .failure:
+            // 如果原始结果是错误，直接返回这个错误
+            return result
+        }
     }
     
     func isValidEndpoint(url: String) -> Bool {

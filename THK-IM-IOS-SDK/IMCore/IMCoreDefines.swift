@@ -83,4 +83,9 @@ public enum IMMsgResourceType: String {
 
 public typealias IMSendMsgResult = (_ : Message, _: Error?) -> Void
 
+public protocol Crypto {
+    func encrypt(_ text: String) -> String?
+    func decrypt(_ cipherText: String) -> String?
+}
+
 

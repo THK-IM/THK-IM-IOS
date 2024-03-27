@@ -113,8 +113,11 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             guard let sf = self else {
                 return
             }
-            DDLogError("DefaultSignalModule \(Thread.current.isMainThread ? "main, " :"io, ") onTextMessage: \(message) ")
-            let signalData = message.data(using: String.Encoding.utf8)
+            var msg = message
+            if let cipher = IMCoreManager.shared.crypto {
+                msg = cipher.decrypt(message) ?? message
+            }
+            let signalData = msg.data(using: String.Encoding.utf8)
             if signalData != nil {
                 do {
                     let signal = try JSONDecoder().decode(Signal.self, from: signalData!)
@@ -152,8 +155,12 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     public func sendSignal(_ signal: String) {
         lock.lock()
         defer { lock.unlock() }
+        var msg = signal
+        if let cipher = IMCoreManager.shared.crypto {
+            msg = cipher.encrypt(signal) ?? signal
+        }
         if self.status == SignalStatus.Connected {
-            self.webSocketClient?.write(string: signal)
+            self.webSocketClient?.write(string: msg)
         }
     }
     
