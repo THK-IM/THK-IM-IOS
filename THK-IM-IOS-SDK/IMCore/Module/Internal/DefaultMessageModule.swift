@@ -556,6 +556,22 @@ open class DefaultMessageModule : MessageModule {
         return self.deleteLocalMessages(messages)
     }
     
+    open func deleteAllLocalSessionMessage(_ session: Session) -> Observable<Void> {
+        return Observable.create({ observer -> Disposable in
+            do {
+                try IMCoreManager.shared.database.messageDao().deleteBySessionId(session.id)
+                SwiftEventBus.post(IMEvent.SessionMessageClear.rawValue, sender: session)
+                session.unreadCount = 0
+                session.lastMsg = ""
+                SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+            } catch {
+                observer.onError(error)
+            }
+            observer.onCompleted()
+            return Disposables.create()
+        })
+    }
+    
     open func processSessionByMessage(_ msg: Message, _ forceNotify: Bool = false) {
         // id为0的session不展现给用户
         if (msg.sessionId == 0) {
@@ -661,20 +677,25 @@ open class DefaultMessageModule : MessageModule {
     }
     
     
-    open func querySessionMembers(_ sessionId: Int64) -> RxSwift.Observable<Array<SessionMember>> {
+    open func querySessionMembers(_ sessionId: Int64, _ forceServer: Bool = false) -> RxSwift.Observable<Array<SessionMember>> {
         let count = getSessionCountPerRequest()
-        return Observable.create({ observer -> Disposable in
-            let members = IMCoreManager.shared.database.sessionMemberDao().findBySessionId(sessionId)
-            observer.onNext(members)
-            observer.onCompleted()
-            return Disposables.create()
-        }).flatMap({ members -> Observable<Array<SessionMember>> in
-            if (members.count == 0) {
-                return self.queryLastSessionMember(sessionId, count)
-            } else {
-                return Observable.just(members)
-            }
-        })
+        if forceServer {
+            return self.queryLastSessionMember(sessionId, count)
+        } else {
+            return Observable.create({ observer -> Disposable in
+                let members = IMCoreManager.shared.database.sessionMemberDao().findBySessionId(sessionId)
+                observer.onNext(members)
+                observer.onCompleted()
+                return Disposables.create()
+            }).flatMap({ members -> Observable<Array<SessionMember>> in
+                if (members.count == 0) {
+                    return self.queryLastSessionMember(sessionId, count)
+                } else {
+                    return Observable.just(members)
+                }
+            })
+        }
+        
     }
     
     open func queryLastSessionMember(_ sessionId: Int64, _ count: Int) -> Observable<Array<SessionMember>> {

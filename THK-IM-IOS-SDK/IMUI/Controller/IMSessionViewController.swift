@@ -252,7 +252,7 @@ open class IMSessionViewController : BaseViewController, UITableViewDataSource, 
         if (session.topTimestamp > 0) {
             topText = "取消置顶"
         }
-        if (session.status & SessionStatus.Silence.rawValue > 0) {
+        if (session.status & SessionStatus.Silence.rawValue != 0) {
             silenceText = "取消静音"
         }
         let top = UIContextualAction(style: .normal, title: topText, handler: { [weak self] action, view, completionHandler in

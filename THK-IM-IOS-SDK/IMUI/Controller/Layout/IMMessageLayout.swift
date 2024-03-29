@@ -378,6 +378,11 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         self.messageTableView.deleteRows(at: deletePaths, with: .none)
     }
     
+    func clearMessage() {
+        self.messages.removeAll()
+        self.messageTableView.reloadData()
+    }
+    
     private func findPosition(_ message: Message) -> Int {
         let count = self.messages.count
         for i in 0 ..< count {

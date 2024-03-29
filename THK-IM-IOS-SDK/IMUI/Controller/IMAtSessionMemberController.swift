@@ -59,7 +59,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
         guard let sessionId = self.session?.id else {
             return
         }
-        IMCoreManager.shared.messageModule.querySessionMembers(sessionId)
+        IMCoreManager.shared.messageModule.querySessionMembers(sessionId, false)
             .flatMap({ members in
                 var newMembers = [SessionMember]()
                 for m in members {

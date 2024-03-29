@@ -143,8 +143,10 @@ open class IMBaseSessionCell : IMBaseTableCell {
         }
         if (session.status & SessionStatus.Silence.rawValue > 0) {
             silenceView.image = UIImage(named: "icon_msg_silence")
+            unreadCountView.badgeColor  = .lightGray
         } else {
             silenceView.image = nil
+            unreadCountView.badgeColor  = .red
         }
         if (session.topTimestamp > 0) {
             self.contentView.backgroundColor = UIColor.init(hex: "#EEEEEE")

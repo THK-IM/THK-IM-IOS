@@ -305,7 +305,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
             guard let sessionId = group?.sessionId else {
                 return
             }
-            IMCoreManager.shared.messageModule.querySessionMembers(sessionId)
+            IMCoreManager.shared.messageModule.querySessionMembers(sessionId, false)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] sessionMembers in
                     self?.members = sessionMembers

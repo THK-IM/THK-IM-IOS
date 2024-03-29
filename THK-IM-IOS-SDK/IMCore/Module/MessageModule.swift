@@ -107,6 +107,12 @@ public protocol MessageModule : BaseModule {
     
     
     /**
+     * 批量删除多条消息
+     */
+    func deleteAllLocalSessionMessage(_ session: Session) -> Observable<Void>
+    
+    
+    /**
      * 处理session
      */
     func processSessionByMessage(_ msg: Message, _ forceNotify: Bool)
@@ -121,7 +127,7 @@ public protocol MessageModule : BaseModule {
     /**
      * 查询session下成员列表
      */
-    func querySessionMembers(_ sessionId: Int64) -> Observable<Array<SessionMember>>
+    func querySessionMembers(_ sessionId: Int64, _ forceServer: Bool) -> Observable<Array<SessionMember>>
     
     
     /**

@@ -78,7 +78,7 @@ open class IMMessageViewController: BaseViewController {
         guard let sessionId = self.session?.id else {
             return
         }
-        IMCoreManager.shared.messageModule.querySessionMembers(sessionId)
+        IMCoreManager.shared.messageModule.querySessionMembers(sessionId, false)
             .flatMap { members in
                 var ids = Set<Int64>()
                 for m in members {
@@ -418,6 +418,18 @@ open class IMMessageViewController: BaseViewController {
             }
             self?.messageLayout.deleteMessages(deleteMessages)
         })
+        
+        SwiftEventBus.onMainThread(self, name: IMEvent.SessionMessageClear.rawValue, handler: { [weak self ]result in
+            guard let session = result?.object as? Session else {
+                return
+            }
+            guard let sId = self?.session?.id else {
+                return
+            }
+            self?.messageLayout.clearMessage()
+        })
+        
+        
     }
     
     func unregisterMsgEvent() {

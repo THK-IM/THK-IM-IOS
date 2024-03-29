@@ -113,6 +113,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             guard let sf = self else {
                 return
             }
+            DDLogDebug("DefaultSignalModule onTextMessage \(message)")
             var msg = message
             if let cipher = IMCoreManager.shared.crypto {
                 msg = cipher.decrypt(message) ?? message
@@ -156,6 +157,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
         lock.lock()
         defer { lock.unlock() }
         var msg = signal
+        DDLogDebug("DefaultSignalModule sendSignal \(msg)")
         if let cipher = IMCoreManager.shared.crypto {
             msg = cipher.encrypt(signal) ?? signal
         }
