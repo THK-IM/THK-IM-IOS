@@ -106,7 +106,8 @@ class UploadTask: LoadTask {
             }
             let p: Int = Int(100 * progress.completedUnitCount / progress.totalUnitCount)
             sf.notify(progress: p, state: FileLoadState.Ing.rawValue)
-        }.responseData(queue: DispatchQueue.global()) { [weak self] response in
+        }.validate(statusCode: 200..<300)
+        .responseData(queue: DispatchQueue.global()) { [weak self] response in
             guard let sf = self else {
                 return
             }
