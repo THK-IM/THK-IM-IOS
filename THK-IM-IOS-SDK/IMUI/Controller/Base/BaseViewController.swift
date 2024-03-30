@@ -56,7 +56,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         self.view.addGestureRecognizer(tapGesture)
     }
     
-    @objc func viewTouched() {
+    @objc open func viewTouched() {
         self.view.endEditing(true)
     }
     

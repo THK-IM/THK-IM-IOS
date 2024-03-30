@@ -47,7 +47,7 @@ public class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         // 设置转场前的初始状态
         animationView.transform = combinedTransform
         
-        toVC.view.alpha = 0.1
+        toVC.view.alpha = 1
         containerView.addSubview(toVC.view)
         // 执行转场动画
         UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {

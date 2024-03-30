@@ -142,6 +142,9 @@ open class IMMessageViewController: BaseViewController {
         }
     }
     
+    @objc open override func viewTouched() {
+    }
+    
     private func setupView() {
         self.view.addSubview(containerView)
         let top = getTitleBarHeight()
@@ -325,9 +328,7 @@ open class IMMessageViewController: BaseViewController {
         let animation = note.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey]
         let duration: Double = (animation as AnyObject).doubleValue
         let height = self.bottomPanelLayout.getLayoutHeight()
-        if height == 0 {
-            self.moveKeyboard(false, height, duration)
-        }
+        self.moveKeyboard(false, height, duration)
     }
     
     func registerMsgEvent() {
@@ -426,6 +427,9 @@ open class IMMessageViewController: BaseViewController {
             guard let sId = self?.session?.id else {
                 return
             }
+            if sId != session.id {
+                return
+            }
             self?.messageLayout.clearMessage()
         })
         
@@ -470,6 +474,9 @@ open class IMMessageViewController: BaseViewController {
     
     func moveKeyboard(_ isKeyboardShow: Bool, _ height: CGFloat, _ duration: Double) {
         self.inputLayout.onKeyboardChange(isKeyboardShow, duration, height)
+        if (height > 0) {
+            self.bottomPanelLayout.onKeyboardChange(isKeyboardShow, duration, height)
+        }
         self.bottomPanelLayout.snp.updateConstraints { make in
             let offset = height == 0 ? -UIApplication.shared.windows[0].safeAreaInsets.bottom : 0
             make.height.equalTo(height)
@@ -485,7 +492,10 @@ open class IMMessageViewController: BaseViewController {
                 sf.messageLayout.layoutResize(height)
             }
             sf.containerView.layoutIfNeeded()
-        }, completion: { _ in
+        }, completion: { [weak self] _ in
+            if height <= 0 {
+                self?.bottomPanelLayout.onKeyboardChange(isKeyboardShow, duration, height)
+            }
         })
     }
     

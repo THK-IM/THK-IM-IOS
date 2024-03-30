@@ -69,9 +69,10 @@ public class IMBottomPanelLayout: UIView {
                 panelLayoutHeight = moreFunctionHeight
             }
         }
-        self.sender?.moveUpAlwaysShowView(false, panelLayoutHeight, 0.25)
         if isKeyboardShow {
             _ = self.sender?.closeKeyboard()
+        } else {
+            self.sender?.moveUpAlwaysShowView(false, panelLayoutHeight, 0.25)
         }
     }
     
