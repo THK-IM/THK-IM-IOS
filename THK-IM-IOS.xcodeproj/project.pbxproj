@@ -255,6 +255,7 @@
 		A0EF35572B5C014E00940F54 /* IMSessionMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EF35562B5C014E00940F54 /* IMSessionMemberCell.swift */; };
 		A0EF35592B5C07F800940F54 /* BottomPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EF35582B5C07F800940F54 /* BottomPresentationController.swift */; };
 		A0EF355F2B5CEB4E00940F54 /* IMTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EF355E2B5CEB4E00940F54 /* IMTextView.swift */; };
+		A0F02D192BB9969F00D13914 /* CipherCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F02D182BB9969F00D13914 /* CipherCrypto.swift */; };
 		A0F031012B220B940058B05B /* DefaultContactModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031002B220B940058B05B /* DefaultContactModule.swift */; };
 		A0F031032B220C120058B05B /* DefaultGroupModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031022B220C120058B05B /* DefaultGroupModule.swift */; };
 		A0F031052B220C6C0058B05B /* DefaultCustomModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F031042B220C6C0058B05B /* DefaultCustomModule.swift */; };
@@ -557,6 +558,7 @@
 		A0EF35562B5C014E00940F54 /* IMSessionMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSessionMemberCell.swift; sourceTree = "<group>"; };
 		A0EF35582B5C07F800940F54 /* BottomPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomPresentationController.swift; sourceTree = "<group>"; };
 		A0EF355E2B5CEB4E00940F54 /* IMTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMTextView.swift; sourceTree = "<group>"; };
+		A0F02D182BB9969F00D13914 /* CipherCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CipherCrypto.swift; sourceTree = "<group>"; };
 		A0F031002B220B940058B05B /* DefaultContactModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultContactModule.swift; sourceTree = "<group>"; };
 		A0F031022B220C120058B05B /* DefaultGroupModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultGroupModule.swift; sourceTree = "<group>"; };
 		A0F031042B220C6C0058B05B /* DefaultCustomModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCustomModule.swift; sourceTree = "<group>"; };
@@ -1631,6 +1633,7 @@
 				A0FCA93F2B4A782E00FC6E47 /* IMGroupModule.swift */,
 				A0CA4E682B4AAB860031DDDB /* ExternalPageRouter.swift */,
 				A0978E692B73D1C70047E6A2 /* IMCustomModule.swift */,
+				A0F02D182BB9969F00D13914 /* CipherCrypto.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -2014,6 +2017,7 @@
 				A03082CF2AF66BD7001B8373 /* IMReeditMsgProcessor.swift in Sources */,
 				A0F031012B220B940058B05B /* DefaultContactModule.swift in Sources */,
 				A0978E5F2B71CFDA0047E6A2 /* CallingLayout.swift in Sources */,
+				A0F02D192BB9969F00D13914 /* CipherCrypto.swift in Sources */,
 				A0D68BBD2A888679004D11A5 /* IMEmojiPanelView.swift in Sources */,
 				A0D68B9F2A888679004D11A5 /* IMTimeLineMsgCellProvider.swift in Sources */,
 				A0D68B9B2A888679004D11A5 /* UIColor+HexString.swift in Sources */,

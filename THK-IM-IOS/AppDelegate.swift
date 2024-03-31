@@ -35,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func initIMConfig() {
         let debug = true
+        IMCoreManager.shared.crypto = CipherCrypto()
         IMCoreManager.shared.initApplication(debug)
         IMCoreManager.shared.userModule = IMUserModule()
         IMCoreManager.shared.contactModule = IMContactModule()

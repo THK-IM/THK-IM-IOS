@@ -34,13 +34,13 @@ extension UserApi: TargetType {
     var path: String {
         switch self {
         case .register:
-            return "/user/register"
+            return "/login/register"
         case .loginByToken:
-            return "/user/login/token"
+            return "/login/token"
         case let .queryUser(id):
-            return "/user/query/\(id)"
+            return "/user/\(id)"
         case .searchUserByDisplayId:
-            return "/user/query"
+            return "/user/search"
         }
     }
     
