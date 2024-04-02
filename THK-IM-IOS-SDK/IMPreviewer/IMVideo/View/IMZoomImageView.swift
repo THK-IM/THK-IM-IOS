@@ -19,7 +19,7 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
         return view
     }()
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.createZoomScrollView()
         self.minimumZoomScale = 1.0
@@ -39,7 +39,11 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
     }
     
     public func setImagePath(_ path: String) {
-        _zoomImageView.renderImageByPath(path: path)
+        if path.starts(with: "http") {
+            _zoomImageView.renderImageByUrlWithCorner(url: path, radius: 0)
+        } else {
+            _zoomImageView.renderImageByPath(path: path)
+        }
     }
     
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {

@@ -9,9 +9,9 @@ import UIKit
 
 public class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
-    var duration = 0.4
-    var origin: CGPoint?
-    var size: CGSize?
+    public var duration = 0.4
+    public var origin: CGPoint?
+    public var size: CGSize?
     
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return duration
