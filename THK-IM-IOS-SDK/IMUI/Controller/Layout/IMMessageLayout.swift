@@ -323,10 +323,12 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
         }
         UIView.setAnimationsEnabled(true)
-        if distanceFromBottom() < 200 || message.fromUId == IMCoreManager.shared.uId {
-            self.scrollToBottom(0.2)
-        } else {
-            self.msgSender()?.showNewMsgTipsView(true)
+        if message.operateStatus & MsgOperateStatus.ClientRead.rawValue != 0 {
+            if distanceFromBottom() < 200 || message.fromUId == IMCoreManager.shared.uId {
+                self.scrollToBottom(0.2)
+            } else {
+                self.msgSender()?.showNewMsgTipsView(true)
+            }
         }
     }
     
