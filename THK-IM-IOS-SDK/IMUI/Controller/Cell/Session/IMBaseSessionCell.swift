@@ -127,7 +127,7 @@ open class IMBaseSessionCell : IMBaseTableCell {
         DDLogDebug("IMSessionCellView disappear")
     }
     
-    func setSession(_ session: Session) {
+    public func setSession(_ session: Session) {
         self.showSessionEntityInfo(session)
         self.msgView.text = session.lastMsg
         let dateString = DateUtils.timeToMsgTime(ms: session.mTime, now: IMCoreManager.shared.severTime)

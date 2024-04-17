@@ -18,6 +18,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     public let menuItemTagAdd = "add"
     public let menuItemTagSearch = "search"
     public let menuSize = CGSize(width: 30, height: 30)
+    open var isNavigationBarHidden = false
     
     public let disposeBag = DisposeBag()
     
@@ -54,6 +55,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTouched))
         tapGesture.cancelsTouchesInView = false  // 这样不会阻止其他控件接收 touch 事件
         self.view.addGestureRecognizer(tapGesture)
+        self.navigationController?.isNavigationBarHidden = isNavigationBarHidden
     }
     
     @objc open func viewTouched() {
