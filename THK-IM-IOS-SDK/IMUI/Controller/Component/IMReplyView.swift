@@ -99,12 +99,21 @@ class IMReplyView: UIView {
                 make.right.equalTo(sf.closeView.snp.left).offset(-6)
                 make.bottom.equalToSuperview().offset(-2)
             }
-            IMCoreManager.shared.userModule.queryUser(id: msg.fromUId)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] user in
-                    self?.showContentView(user, msg)
-                })
-                .disposed(by: self.disposeBag)
+            if let member = sender?.syncGetSessionMemberInfo(msg.fromUId) {
+                if member.1?.noteName != nil &&  member.1!.noteName!.count > 0 {
+                    self.showContentView(member.1!.noteName!, msg)
+                } else {
+                    self.showContentView(member.0.nickname, msg)
+                }
+            } else {
+                IMCoreManager.shared.userModule.queryUser(id: msg.fromUId)
+                    .compose(RxTransformer.shared.io2Main())
+                    .subscribe(onNext: { [weak self] user in
+                        self?.showContentView(user.nickname, msg)
+                    })
+                    .disposed(by: self.disposeBag)
+            }
+            
         } else {
             self.closeView.snp.remakeConstraints { make in
                 make.height.equalToSuperview()
@@ -125,8 +134,8 @@ class IMReplyView: UIView {
         }
     }
     
-    private func showContentView(_ user: User, _ msg: Message) {
-        self.replyUserView.text = "\(user.nickname)"
+    private func showContentView(_ nickname: String, _ msg: Message) {
+        self.replyUserView.text = "\(nickname)"
         Observable.just("")
             .flatMap { it in
                 let sessionDesc = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).sessionDesc(msg: msg)
