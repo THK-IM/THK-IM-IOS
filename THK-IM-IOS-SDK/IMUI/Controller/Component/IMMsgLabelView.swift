@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class IMMsgLabelView : UILabel {
+open class IMMsgLabelView : UILabel {
     
     public var padding = UIEdgeInsets.zero
     

@@ -7,12 +7,12 @@
 
 import UIKit
 
-class IMMsgCellWrapper  {
+open class IMMsgCellWrapper  {
     
     // cellWrapper类型 单聊/群聊,不同的类型有细微差别，如单聊不显示昵称
     let type: Int
     
-    init(type: Int) {
+    public init(type: Int) {
         self.type = type
     }
     

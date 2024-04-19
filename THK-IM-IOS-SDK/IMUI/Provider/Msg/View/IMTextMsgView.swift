@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjack
 import RxSwift
 
-class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
+open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     
     private var disposeBag = DisposeBag()
     private weak var delegate: IMMsgCellOperator?
@@ -20,7 +20,7 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         self.setupUI()
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -28,7 +28,7 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         self.sizeToFit()
     }
     
-    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
+    public func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
         self.delegate = delegate
         if isReply {
             self.snp.remakeConstraints { make in
@@ -97,7 +97,7 @@ class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         self.attributedText = contentAttributedStr
     }
     
-    func contentView() -> UIView {
+    public func contentView() -> UIView {
         return self
     }
 }

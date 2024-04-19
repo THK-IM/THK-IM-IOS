@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-class IMMsgReplyView: UIView {
+open class IMMsgReplyView: UIView {
     
     weak var sender: IMMsgSender? = nil
     private let disposeBag = DisposeBag()
@@ -40,7 +40,7 @@ class IMMsgReplyView: UIView {
     
     private var replyMsgView = UIView()
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     

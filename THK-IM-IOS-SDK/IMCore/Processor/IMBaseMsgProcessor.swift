@@ -14,6 +14,10 @@ open class IMBaseMsgProcessor {
     open var disposeBag = DisposeBag()
     open var downloadUrls = [String]()
     
+    public init() {
+        
+    }
+    
     open func messageType() -> Int {
         return 0
     }

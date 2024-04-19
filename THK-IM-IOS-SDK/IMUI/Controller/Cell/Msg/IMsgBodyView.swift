@@ -20,6 +20,6 @@ public protocol IMsgBodyView : AnyObject {
 }
 
 extension IMsgBodyView {
-    func onViewDisappear() {}
-    func onViewAppear() {}
+    public func onViewDisappear() {}
+    public func onViewAppear() {}
 }

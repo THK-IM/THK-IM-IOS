@@ -8,7 +8,7 @@
 import UIKit
 import CocoaLumberjack
 
-class IMMsgRightCellWrapper: IMMsgCellWrapper {
+open class IMMsgRightCellWrapper: IMMsgCellWrapper {
     
     private let _avatarView = UIImageView()
     private var _nickView: UILabel? = nil
@@ -75,13 +75,13 @@ class IMMsgRightCellWrapper: IMMsgCellWrapper {
         return v
     }()
     
-    override func attach(_ contentView: UIView) {
+    open override func attach(_ contentView: UIView) {
         contentView.addSubview(_avatarView)
         contentView.addSubview(_stateStack)
         contentView.addSubview(_messageStack)
     }
     
-    override func layoutSubViews(_ isEditing: Bool) {
+    open override func layoutSubViews(_ isEditing: Bool) {
         let editingWidth = isEditing ? 0 : 44
         _avatarView.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(10)
@@ -102,31 +102,31 @@ class IMMsgRightCellWrapper: IMMsgCellWrapper {
     }
     
     
-    override func containerView() -> UIView {
+    open override func containerView() -> UIView {
         return self._containerView
     }
     
-    override func avatarView() -> UIImageView? {
+    open override func avatarView() -> UIImageView? {
         return self._avatarView
     }
     
-    override func nickView() -> UILabel? {
+    open override func nickView() -> UILabel? {
         return self._nickView
     }
     
-    override func statusView() -> UIView? {
+    open override func statusView() -> UIView? {
         return self._indicatorView
     }
     
-    override func resendButton() -> UIButton? {
+    open override func resendButton() -> UIButton? {
         return self._resendButton
     }
     
-    override func readStatusView() -> IMReadStatusView? {
+    open override func readStatusView() -> IMReadStatusView? {
         return self._readStatusView
     }
     
-    override func appear() {
+    open override func appear() {
         if (self._indicatorView.isHidden == false) {
             if (!self._indicatorView.isAnimating) {
                 self._indicatorView.startAnimating()
@@ -134,7 +134,7 @@ class IMMsgRightCellWrapper: IMMsgCellWrapper {
         }
     }
     
-    override func disAppear() {
+    open override func disAppear() {
         if (self._indicatorView.isAnimating) {
             self._indicatorView.stopAnimating()
         }

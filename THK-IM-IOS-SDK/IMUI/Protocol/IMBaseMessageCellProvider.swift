@@ -11,6 +11,10 @@ import CocoaLumberjack
 
 open class IMBaseMessageCellProvider {
     
+    public init() {
+        
+    }
+    
     open func getSelfId() -> Int64 {
         return IMCoreManager.shared.uId
     }

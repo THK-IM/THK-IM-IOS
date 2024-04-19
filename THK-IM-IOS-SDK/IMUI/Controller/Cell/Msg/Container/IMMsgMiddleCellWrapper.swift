@@ -7,7 +7,7 @@
 
 import UIKit
 
-class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
+open class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
     
     /// 包裹消息体的容器视图
     let _containerView: UIView = {
@@ -24,11 +24,11 @@ class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
         return v
     }()
     
-    override func attach(_ contentView: UIView) {
+    open override func attach(_ contentView: UIView) {
         contentView.addSubview(_messageStack)
     }
     
-    override func layoutSubViews(_ isEditing: Bool) {
+    open override func layoutSubViews(_ isEditing: Bool) {
         _messageStack.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview().offset(44)
@@ -38,7 +38,7 @@ class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
     }
     
     
-    override func containerView() -> UIView {
+    open override func containerView() -> UIView {
         return self._containerView
     }
     

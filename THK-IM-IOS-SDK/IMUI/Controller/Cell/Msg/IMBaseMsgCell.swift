@@ -15,15 +15,15 @@ import RxGesture
 
 open class IMBaseMsgCell : IMBaseTableCell {
     
-    weak var delegate: IMMsgCellOperator? = nil
-    var cellWrapper: IMMsgCellWrapper
-    var message: Message? = nil
-    var session: Session? = nil
-    var position: Int? = nil
-    var bubbleView = UIImageView()
-    var replyView = IMMsgReplyView()
+    open weak var delegate: IMMsgCellOperator? = nil
+    open var cellWrapper: IMMsgCellWrapper
+    open var message: Message? = nil
+    open var session: Session? = nil
+    open var position: Int? = nil
+    open var bubbleView = UIImageView()
+    open var replyView = IMMsgReplyView()
     
-    init(_ reuseIdentifier: String, _ wrapper: IMMsgCellWrapper) {
+    public init(_ reuseIdentifier: String, _ wrapper: IMMsgCellWrapper) {
         self.cellWrapper = wrapper
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         selectionStyle = .blue
@@ -199,7 +199,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
             make.top.equalToSuperview().offset(size.height > 0 ? size.height + 30 : 0) // 补齐回复人高度
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.height.equalToSuperview()
         }
     }
     
@@ -236,12 +236,12 @@ open class IMBaseMsgCell : IMBaseTableCell {
             var image: UIImage? = nil
             if (position == IMMsgPosType.Left.rawValue) {
                 image = Bubble().drawRectWithRoundedCorner(
-                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffdddddd"),
-                    borderColor: UIColor.init(hex: "ffdddddd"), width: 40, height: 40, pos: 1)
+                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "EEEEEE"),
+                    borderColor: UIColor.init(hex: "EEEEEE"), width: 40, height: 40, pos: 0)
             } else if (position == IMMsgPosType.Right.rawValue) {
                 image = Bubble().drawRectWithRoundedCorner(
                     radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffd1e3fe"),
-                    borderColor: UIColor.init(hex: "ffd1e3fe"), width: 40, height: 40, pos: 2)
+                    borderColor: UIColor.init(hex: "ffd1e3fe"), width: 40, height: 40, pos: 0)
             } else {
                 image = Bubble().drawRectWithRoundedCorner(
                     radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "40000000"),
