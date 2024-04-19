@@ -32,7 +32,7 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         guard let content = message.content else {
             return baseSize
         }
-        let maxWidth = self.cellMaxWidth() - 16
+        let maxWidth = self.cellMaxWidth() - 24
         let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0 ? "[已编辑]" : ""
         let size = self.textRenderSize(content + updated, UIFont.systemFont(ofSize: 16), maxWidth)
         return CGSize(width: size.width, height: max(size.height, 28) + 20)
