@@ -544,6 +544,58 @@ open class IMMessageViewController: BaseViewController {
         }
         return []
     }
+    
+    open func onMsgClick(_ msg: Message, _ position: Int, _ originView: UIView) {
+        if msg.type == MsgType.Audio.rawValue {
+            guard let cp = IMUIManager.shared.contentProvider else {
+                return
+            }
+            if (msg.data != nil) {
+                do {
+                    let data = try JSONDecoder().decode(
+                        IMAudioMsgData.self,
+                        from: msg.data!.data(using: .utf8) ?? Data()
+                    )
+                    if (data.path != nil) {
+                        let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(data.path!)
+                        if let currentPath = cp.currentPlayingPath()  {
+                            cp.stopPlayAudio()
+                            if currentPath == realPath {
+                                return
+                            }
+                        }
+                        let success = cp.startPlayAudio(path: realPath) {
+                            db, duration, path, stopped in
+                        }
+                        if (success) {
+                            if msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 {
+                                self.readMessage(msg)
+                            }
+                        } else {
+                            showToast("播放失败")
+                        }
+                    } else {
+                        showToast("加载语音中")
+                    }
+                } catch {
+                    showToast("播放失败")
+                }
+            } else {
+                showToast("加载语音中")
+            }
+        } else if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
+            var ay = [Message]()
+            ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, true, 5))
+            let current = msg
+            ay.append(current)
+            ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, false, 5))
+            IMUIManager.shared.contentPreviewer?.previewMessage(self, ay, originView, msg.msgId)
+        } else if msg.type == MsgType.Record.rawValue {
+            if (session != nil) {
+                IMUIManager.shared.contentPreviewer?.previewRecordMessage(self, session!, msg)
+            }
+        }
+    }
 }
 
 extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberAtDelegate {
@@ -902,55 +954,9 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     ///  预览消息
     public func previewMessage(_ msg: Message, _ position: Int,  _ originView: UIView) {
-        if msg.type == MsgType.Audio.rawValue {
-            guard let cp = IMUIManager.shared.contentProvider else {
-                return
-            }
-            if (msg.data != nil) {
-                do {
-                    let data = try JSONDecoder().decode(
-                        IMAudioMsgData.self,
-                        from: msg.data!.data(using: .utf8) ?? Data()
-                    )
-                    if (data.path != nil) {
-                        let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(data.path!)
-                        if let currentPath = cp.currentPlayingPath()  {
-                            cp.stopPlayAudio()
-                            if currentPath == realPath {
-                                return
-                            }
-                        }
-                        let success = cp.startPlayAudio(path: realPath) {
-                            db, duration, path, stopped in
-                        }
-                        if (success) {
-                            if msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 {
-                                self.readMessage(msg)
-                            }
-                        } else {
-                            showToast("播放失败")
-                        }
-                    } else {
-                        showToast("加载语音中")
-                    }
-                } catch {
-                    showToast("播放失败")
-                }
-            } else {
-                showToast("加载语音中")
-            }
-        } else if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
-            var ay = [Message]()
-            ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, true, 5))
-            let current = msg
-            ay.append(current)
-            ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, false, 5))
-            IMUIManager.shared.contentPreviewer?.previewMessage(self, ay, originView, msg.msgId)
-        } else if msg.type == MsgType.Record.rawValue {
-            if (session != nil) {
-                IMUIManager.shared.contentPreviewer?.previewRecordMessage(self, session!, msg)
-            }
-        }
+        self.onMsgClick(msg, position, originView)
     }
+    
+    
     
 }
