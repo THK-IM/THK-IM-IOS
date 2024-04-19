@@ -27,6 +27,9 @@ public class IMMsgReplyOperator: IMMessageOperator {
     }
     
     public func supportMessage(_ message: Message, _ session: Session) -> Bool {
+        if session.functionFlag & IMChatFunction.BaseInput.rawValue == 0 {
+            return false
+        }
         return message.type != MsgType.Revoke.rawValue && message.fromUId != 0
     }
     

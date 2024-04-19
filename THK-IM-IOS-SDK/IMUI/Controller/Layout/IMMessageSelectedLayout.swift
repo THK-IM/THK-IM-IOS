@@ -16,6 +16,7 @@ public class IMMessageSelectedLayout: UIView {
     weak var sender: IMMsgSender?
     private let disposeBag = DisposeBag()
     private let iconSize = CGSize(width: 32.0, height: 32.0)
+    var height = 60
     
     lazy private var contentView: UIStackView =  {
         let v = UIStackView()
@@ -73,8 +74,8 @@ public class IMMessageSelectedLayout: UIView {
     private func setupView() {
         self.addSubview(self.contentView)
         self.contentView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
-            make.bottom.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(height * 2 / 3)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
         }
@@ -106,8 +107,8 @@ public class IMMessageSelectedLayout: UIView {
             .disposed(by: disposeBag)
     }
     
-    func getLayoutHeight() -> CGFloat {
-        return 60.0
+    func getLayoutHeight() -> Int {
+        return self.height
     }
     
     public override func layoutSubviews() {

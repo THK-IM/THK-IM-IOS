@@ -16,12 +16,13 @@ class IMTextMsgCell: IMBaseMsgCell {
     private lazy var view: IMTextMsgView = {
         let view = IMTextMsgView()
         view.numberOfLines = 0
-        view.font = UIFont.systemFont(ofSize: fontSize)
         view.padding = UIEdgeInsets.init(top: 4, left: 8, bottom: 4, right: 8)
         if self.cellPosition() == IMMsgPosType.Mid.rawValue {
             view.textAlignment = .left
             view.textColor = UIColor.white
+            view.font = UIFont.systemFont(ofSize: fontSize-4)
         } else {
+            view.font = UIFont.systemFont(ofSize: fontSize)
             view.textAlignment = .left
             view.textColor = UIColor.black
         }

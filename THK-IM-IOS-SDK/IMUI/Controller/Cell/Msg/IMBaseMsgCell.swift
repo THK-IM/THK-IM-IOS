@@ -199,7 +199,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
             make.top.equalToSuperview().offset(size.height > 0 ? size.height + 30 : 0) // 补齐回复人高度
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.height.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -236,16 +236,16 @@ open class IMBaseMsgCell : IMBaseTableCell {
             var image: UIImage? = nil
             if (position == IMMsgPosType.Left.rawValue) {
                 image = Bubble().drawRectWithRoundedCorner(
-                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "EEEEEE"),
-                    borderColor: UIColor.init(hex: "EEEEEE"), width: 40, height: 40, pos: 0)
+                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "E5E5E5"),
+                    borderColor: UIColor.init(hex: "E5E5E5"), width: 40, height: 40, pos: 0)
             } else if (position == IMMsgPosType.Right.rawValue) {
                 image = Bubble().drawRectWithRoundedCorner(
                     radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffd1e3fe"),
                     borderColor: UIColor.init(hex: "ffd1e3fe"), width: 40, height: 40, pos: 0)
             } else {
                 image = Bubble().drawRectWithRoundedCorner(
-                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "40000000"),
-                    borderColor: UIColor.init(hex: "20000000"), width: 40, height: 24, pos: 0)
+                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "BBBBBB"),
+                    borderColor: UIColor.init(hex: "BBBBBB"), width: 40, height: 24, pos: 0)
             }
             updateUserBubble(image: image)
         } else {

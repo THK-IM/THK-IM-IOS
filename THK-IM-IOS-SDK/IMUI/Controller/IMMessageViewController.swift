@@ -158,7 +158,7 @@ open class IMMessageViewController: BaseViewController {
         
         self.bottomPanelLayout.sender = self
         self.containerView.addSubview(self.bottomPanelLayout)
-        self.bottomPanelLayout.backgroundColor = UIColor.init(hex: "#F0F0F0")
+        self.bottomPanelLayout.backgroundColor = .clear
         self.bottomPanelLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
@@ -202,7 +202,7 @@ open class IMMessageViewController: BaseViewController {
         self.msgSelectedLayout.sender = self
         self.containerView.addSubview(self.msgSelectedLayout)
         self.msgSelectedLayout.alpha = 1
-        self.msgSelectedLayout.backgroundColor = UIColor.init(hex: "#F0F0F0")
+        self.msgSelectedLayout.backgroundColor = self.view.backgroundColor
         self.msgSelectedLayout.isHidden = true
         self.msgSelectedLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -218,7 +218,7 @@ open class IMMessageViewController: BaseViewController {
         self.messageLayout.sender = self
         self.messageLayout.previewer = self
         self.containerView.addSubview(self.messageLayout)
-        self.messageLayout.backgroundColor = UIColor.init(hex: "#F8F8F8")
+        self.messageLayout.backgroundColor = .clear
         self.messageLayout.session = self.session
         self.messageLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -822,7 +822,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         let operators = IMUIManager.shared.getMessageOperators(message, session)
         let rowCount = 5
         let popupWidth = min(operators.count * 60, 300)
-        let popupHeight = (operators.count/rowCount + operators.count%rowCount==0 ? 0 : 1) * 60
+        let popupHeight = ((operators.count/rowCount) + (operators.count%rowCount==0 ? 0 : 1)) * 60
         var y = 0
         if (atFrame.origin.y <= 300 && (atFrame.origin.y + atFrame.size.height) >= (screenHeight - 300)) {
             y = (Int(screenHeight) - popupHeight) / 2
