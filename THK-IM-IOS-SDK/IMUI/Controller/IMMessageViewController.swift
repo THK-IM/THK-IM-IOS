@@ -621,14 +621,17 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     /// 发送消息
     public func sendMessage(_ type: Int, _ body: Codable?, _ data: Codable? = nil, _ atUser: String? = nil) {
-        guard let sessionId = self.session?.id else {
+        guard let session = self.session else {
+            return
+        }
+        if session.functionFlag & IMChatFunction.BaseInput.rawValue == 0 {
             return
         }
         var referMsgId :Int64? = nil
         if let replyMsg = self.inputLayout.getReplyMessage() {
             referMsgId = replyMsg.msgId
         }
-        IMCoreManager.shared.messageModule.sendMessage(sessionId, type, body, data, atUser, referMsgId, { _, _ in
+        IMCoreManager.shared.messageModule.sendMessage(session.id, type, body, data, atUser, referMsgId, { _, _ in
         })
         
         self.inputLayout.clearReplyMessage()

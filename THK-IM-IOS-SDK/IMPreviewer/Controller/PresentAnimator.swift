@@ -9,7 +9,7 @@ import UIKit
 
 public class PresentAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
-    public var duration = 0.4
+    public var duration = 0.25
     public var origin: CGPoint?
     public var size: CGSize?
     
