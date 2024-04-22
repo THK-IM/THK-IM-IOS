@@ -107,11 +107,11 @@ open class IMMsgReplyView: UIView {
         }
     }
     
-    func updateContent(_ user: User, _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) {
+    func updateContent(_ nickname: String, _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) {
         self.replyMsgView.subviews.forEach { v in
             v.removeFromSuperview()
         }
-        self.replyUserView.text = "\(user.nickname):"
+        self.replyUserView.text = "\(nickname):"
         
         if let view = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgView(msg, session, delegate) {
             self.replyMsgView.addSubview(view.contentView())

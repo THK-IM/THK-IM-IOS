@@ -168,18 +168,32 @@ open class IMBaseMsgCell : IMBaseTableCell {
         guard let msg = self.message?.referMsg else {
             return
         }
-        IMCoreManager.shared.userModule.queryUser(id: msg.fromUId)
-        .compose(RxTransformer.shared.io2Main())
-        .subscribe(onNext: { [weak self] user in
-            self?.showReplyMsg(user)
-        }).disposed(by: self.disposeBag)
+        guard let delegate = self.delegate else {
+            return
+        }
+        guard let sender = delegate.msgSender() else {
+            IMCoreManager.shared.userModule
+                .queryUser(id: msg.fromUId)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { [weak self] user in
+                    guard let sf = self else {
+                        return
+                    }
+                    self?.showReplyMsg(user.nickname)
+                }).disposed(by: disposeBag)
+            return
+        }
+        if let info = sender.syncGetSessionMemberInfo(msg.fromUId) {
+            let showNickname = IMUIManager.shared.nicknameForSessionMember(info.0, info.1)
+            self.showReplyMsg(showNickname)
+        }
     }
     
-    private func showReplyMsg(_ user: User) {
+    private func showReplyMsg(_ nickname: String) {
         guard let msg = self.message?.referMsg else {
             return
         }
-        self.replyView.updateContent(user, msg, self.session, self.delegate)
+        self.replyView.updateContent(nickname, msg, self.session, self.delegate)
     }
     
     open func initMsgContent() {

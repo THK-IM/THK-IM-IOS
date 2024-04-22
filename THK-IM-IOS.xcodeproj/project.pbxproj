@@ -731,21 +731,21 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		A033FB0F2B918B490053045E /* emoji */ = {
+		A033FB0F2B918B490053045E /* Emoji */ = {
 			isa = PBXGroup;
 			children = (
 				A0CC9F732AFC88F200801B25 /* IMEmojiPanelTitleCell.swift */,
 				A033FB102B918BF80053045E /* IMEmojiPanelContentCell.swift */,
 			);
-			path = emoji;
+			path = Emoji;
 			sourceTree = "<group>";
 		};
-		A033FB182B956F720053045E /* sessionmember */ = {
+		A033FB182B956F720053045E /* Sessionmember */ = {
 			isa = PBXGroup;
 			children = (
 				A0EF35562B5C014E00940F54 /* IMSessionMemberCell.swift */,
 			);
-			path = sessionmember;
+			path = Sessionmember;
 			sourceTree = "<group>";
 		};
 		A033FB192B96C9DA0053045E /* Utils */ = {
@@ -1230,8 +1230,8 @@
 			isa = PBXGroup;
 			children = (
 				A0D68B1A2A888678004D11A5 /* IMBaseTableCell.swift */,
-				A033FB182B956F720053045E /* sessionmember */,
-				A033FB0F2B918B490053045E /* emoji */,
+				A033FB182B956F720053045E /* Sessionmember */,
+				A033FB0F2B918B490053045E /* Emoji */,
 				A0CC9F722AFC83FC00801B25 /* Session */,
 				A0CC9F712AFC83D300801B25 /* Function */,
 				A0CC9F702AFC83C600801B25 /* Msg */,

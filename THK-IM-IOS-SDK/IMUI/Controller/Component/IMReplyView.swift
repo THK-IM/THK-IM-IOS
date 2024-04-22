@@ -100,7 +100,7 @@ class IMReplyView: UIView {
                 make.bottom.equalToSuperview().offset(-2)
             }
             if let member = sender?.syncGetSessionMemberInfo(msg.fromUId) {
-                if member.1?.noteName != nil &&  member.1!.noteName!.count > 0 {
+                if member.1?.noteName != nil && member.1!.noteName!.count > 0 {
                     self.showContentView(member.1!.noteName!, msg)
                 } else {
                     self.showContentView(member.0.nickname, msg)
