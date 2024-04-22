@@ -62,4 +62,8 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         return CGSize(width: maxWidth, height: size.height + 30)
     }
     
+    public override func msgTopForSession(_ message: Message, _ session: Session?) -> CGFloat {
+        return super.msgTopForSession(message, session) + 10
+    }
+    
 }
