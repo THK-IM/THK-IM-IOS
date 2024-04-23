@@ -19,7 +19,7 @@ target 'THK-IM-IOS' do
   pod 'RxSwift', '6.5.0'
   pod 'RxCocoa', '6.5.0'
   pod 'CocoaLumberjack/Swift', '3.8.2'
-  pod 'Starscream', '4.0.4'
+  pod 'Starscream', '4.0.6'
   pod 'Moya/RxSwift', '15.0'
   pod 'CryptoSwift', '~> 1.8.1'
   

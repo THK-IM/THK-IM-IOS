@@ -104,7 +104,7 @@ Pod::Spec.new do |spec|
     core.dependency 'RxSwift', '6.5.0'
     core.dependency 'RxCocoa', '6.5.0'
     core.dependency 'CocoaLumberjack/Swift', '3.8.2'
-    core.dependency 'Starscream', '4.0.4'
+    core.dependency 'Starscream', '4.0.6'
     core.dependency 'Moya/RxSwift', '15.0'
     core.dependency 'CryptoSwift', '~> 1.8.1'
   end

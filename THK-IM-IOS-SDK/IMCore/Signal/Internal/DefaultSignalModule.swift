@@ -12,6 +12,7 @@ import CocoaLumberjack
 
 public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     
+    
     private var token = ""
     private  var signalListener : SignalListener?
     private let reachabilityManager = NetworkReachabilityManager.init()
@@ -167,7 +168,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     }
     
     
-    public func didReceive(event: WebSocketEvent, client: WebSocket) {
+    public func didReceive(event: Starscream.WebSocketEvent, client: any Starscream.WebSocketClient) {
         switch event {
         case .connected:
             DDLogDebug("DefaultSignalModule: connected")
@@ -205,6 +206,10 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             break
         case .error(let error):
             DDLogDebug("DefaultSignalModule: error: \(error ?? CocoaError.error(.coderInvalidValue))")
+            onStateChange(SignalStatus.DisConnected)
+            break
+        case .peerClosed:
+            DDLogDebug("DefaultSignalModule: disconnected")
             onStateChange(SignalStatus.DisConnected)
             break
         }
