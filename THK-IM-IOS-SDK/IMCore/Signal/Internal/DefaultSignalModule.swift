@@ -209,7 +209,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             onStateChange(SignalStatus.DisConnected)
             break
         case .peerClosed:
-            DDLogDebug("DefaultSignalModule: disconnected")
+            DDLogDebug("DefaultSignalModule: peerClosed")
             onStateChange(SignalStatus.DisConnected)
             break
         }
