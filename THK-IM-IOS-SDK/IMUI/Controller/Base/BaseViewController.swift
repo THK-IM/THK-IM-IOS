@@ -47,7 +47,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             }
             setRightItems(images: images, titles: titles, actions: actions)
             if (self.swipeBack()) {
-                let backImage = UIImage(named: "ic_titlebar_back")?.scaledToSize(CGSize(width: 24, height: 24))
+                let backImage = UIImage(named: self.backIconName())?.withRenderingMode(.alwaysOriginal)
                 let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
                 self.navigationItem.leftBarButtonItem = backItem
             }
@@ -71,6 +71,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
     open func hasTitlebar() -> Bool {
         return true
+    }
+    
+    open func backIconName() -> String {
+        return "ic_titlebar_back"
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
