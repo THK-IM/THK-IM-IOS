@@ -48,7 +48,15 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             setRightItems(images: images, titles: titles, actions: actions)
             if (self.swipeBack()) {
                 let backImage = UIImage(named: self.backIconName())?.withRenderingMode(.alwaysOriginal)
-                let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
+                let customView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+                let button = UIButton(type: .system)
+                button.addTarget(self, action: #selector(self.backAction), for: .touchUpInside)
+                button.frame = CGRect(x: -20, y: 0, width: 40, height: 40) // 调整x值以增加或减少间隔
+                button.setImage(backImage, for: .normal)
+                customView.addSubview(button)
+                let backItem = UIBarButtonItem(customView: customView)
+//                let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
+//                backItem.width = -16
                 self.navigationItem.leftBarButtonItem = backItem
             }
         }
