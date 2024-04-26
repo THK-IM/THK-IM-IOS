@@ -217,12 +217,17 @@ open class IMBaseMsgCell : IMBaseTableCell {
     }
     
     open func initUser() {
+        self.initReplyMsg()
         let fromUId = self.message?.fromUId
         if (self.showAvatar() && fromUId != nil && self.cellWrapper.avatarView() != nil) {
             guard let delegate = self.delegate else {
                 return
             }
-            guard let sender = delegate.msgSender() else {
+            if let sender = delegate.msgSender() {
+                if let info = sender.syncGetSessionMemberInfo(fromUId!) {
+                    self.updateUserInfo(user: info.0, sessionMember: info.1)
+                }
+            } else {
                 IMCoreManager.shared.userModule
                     .queryUser(id: fromUId!)
                     .compose(RxTransformer.shared.io2Main())
@@ -232,15 +237,11 @@ open class IMBaseMsgCell : IMBaseTableCell {
                         }
                         sf.updateUserInfo(user: user, sessionMember: nil)
                     }).disposed(by: disposeBag)
-                return 
             }
-            if let info = sender.syncGetSessionMemberInfo(fromUId!) {
-                self.updateUserInfo(user: info.0, sessionMember: info.1)
-            }
+            
         } else {
             self.cellWrapper.avatarView()?.isHidden = true
         }
-        self.initReplyMsg()
     }
     
     open func initBubble() {
@@ -408,7 +409,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
             return
         }
         if (message!.operateStatus & MsgOperateStatus.ClientRead.rawValue) > 0
-                && ((message!.operateStatus & MsgOperateStatus.ServerRead.rawValue) > 0
+            && ((message!.operateStatus & MsgOperateStatus.ServerRead.rawValue) > 0
             ) {
             return
         }
