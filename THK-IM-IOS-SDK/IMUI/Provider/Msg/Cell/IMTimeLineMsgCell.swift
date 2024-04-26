@@ -12,7 +12,7 @@ class IMTimeLineMsgCell: IMBaseMsgCell {
     private lazy var view: IMTimeLineMsgView = {
         let view = IMTimeLineMsgView()
         if self.cellPosition() == IMMsgPosType.Mid.rawValue {
-            view.textColor = UIColor.white
+            view.textColor = UIColor.init(hex: "999999")
             view.textAlignment = .center
         } else {
             view.textColor = UIColor.black

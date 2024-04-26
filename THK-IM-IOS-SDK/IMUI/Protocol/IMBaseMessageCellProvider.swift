@@ -63,7 +63,8 @@ open class IMBaseMessageCellProvider {
     }
     
     open func cellMaxWidth() -> CGFloat {
-        return UIScreen.main.bounds.width-44-10-4-32// 头像宽度（44）、 头像距边框（10）、 头像距离消息宽度（4）、 消息距离边框距离36
+        return UIScreen.main.bounds.width - IMUIManager.shared.msgCellAvatarLeft - IMUIManager.shared.msgCellAvatarWidth 
+        - IMUIManager.shared.msgCellAvatarRight - IMUIManager.shared.msgCellPadding
     }
     
     open func canSelected() -> Bool {

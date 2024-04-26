@@ -283,7 +283,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
         self.cellWrapper.nickView()?.text = showNickname
         if let avatar = IMUIManager.shared.avatarForSessionMember(user, sessionMember) {
             if avatar.length > 0 {
-                self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: avatar, radius: 10)
+                self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: avatar, radius: CGFloat(IMUIManager.shared.msgCellAvatarWidth/2))
                 self.cellWrapper.avatarView()?.isHidden = false
                 return
             }

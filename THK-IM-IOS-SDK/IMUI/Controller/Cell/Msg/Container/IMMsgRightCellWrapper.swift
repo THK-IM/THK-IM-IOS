@@ -82,16 +82,16 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
     }
     
     open override func layoutSubViews(_ isEditing: Bool) {
-        let editingWidth = isEditing ? 0 : 44
+        let editingWidth = isEditing ? 0 : IMUIManager.shared.msgCellAvatarWidth
         _avatarView.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(10)
-            make.right.equalToSuperview().offset(-10)
+            make.right.equalToSuperview().offset(-IMUIManager.shared.msgCellAvatarLeft)
             make.size.equalTo(editingWidth)
         }
         _messageStack.snp.remakeConstraints { make in
-            make.right.equalTo(_avatarView.snp.left).offset(-4)
+            make.right.equalTo(_avatarView.snp.left).offset(-IMUIManager.shared.msgCellAvatarRight)
             make.top.equalToSuperview().offset(10)
-            make.left.greaterThanOrEqualToSuperview().offset(32)
+            make.left.greaterThanOrEqualToSuperview().offset(IMUIManager.shared.msgCellPadding)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
         _stateStack.snp.remakeConstraints { make in

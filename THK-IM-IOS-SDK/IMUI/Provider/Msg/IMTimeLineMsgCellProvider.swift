@@ -36,7 +36,7 @@ open class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
     
     
     open override func hasBubble() -> Bool {
-        return true
+        return false
     }
     
 }

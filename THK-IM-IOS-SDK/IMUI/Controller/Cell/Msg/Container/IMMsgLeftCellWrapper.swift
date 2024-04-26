@@ -31,7 +31,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
                 make.height.equalTo(14)
                 make.width.greaterThanOrEqualTo(20)
             }
-            _nickView?.textColor = UIColor.init(hex: "666666")
+            _nickView?.textColor = UIColor.init(hex: "999999")
             _nickView?.font = UIFont.systemFont(ofSize: 12)
             v.addArrangedSubview(_nickView!)
         }
@@ -83,16 +83,16 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     }
     
     open override func layoutSubViews(_ isEditing: Bool) {
-        let editingWidth = isEditing ? 0 : 44
+        let editingWidth = isEditing ? 0 : IMUIManager.shared.msgCellAvatarWidth
         _avatarView.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(10)
-            make.left.equalToSuperview().offset(10)
+            make.left.equalToSuperview().offset(IMUIManager.shared.msgCellAvatarLeft)
             make.size.equalTo(editingWidth)
         }
         _messageStack.snp.remakeConstraints { make in
-            make.left.equalTo(_avatarView.snp.right).offset(4)
+            make.left.equalTo(_avatarView.snp.right).offset(IMUIManager.shared.msgCellAvatarRight)
             make.top.equalToSuperview().offset(10)
-            make.right.lessThanOrEqualToSuperview().offset(-32)
+            make.right.lessThanOrEqualToSuperview().offset(-IMUIManager.shared.msgCellPadding)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
         _stateStack.snp.remakeConstraints { make in

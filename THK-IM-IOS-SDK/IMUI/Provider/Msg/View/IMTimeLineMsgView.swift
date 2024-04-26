@@ -23,8 +23,8 @@ class IMTimeLineMsgView: IMMsgLabelView, IMsgBodyView {
     private func setupUI() {
         self.sizeToFit()
         self.numberOfLines = 0
-        self.font = UIFont.systemFont(ofSize: 12)
-        self.textColor = UIColor.white
+        self.font = UIFont.systemFont(ofSize: 11)
+        self.textColor = UIColor.init(hex: "999999")
         self.textAlignment = .center
         self.padding = UIEdgeInsets(top: 2, left: 20, bottom: 2, right: 20)
     }
