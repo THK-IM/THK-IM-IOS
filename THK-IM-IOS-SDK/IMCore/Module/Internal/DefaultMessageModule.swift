@@ -64,26 +64,26 @@ open class DefaultMessageModule : MessageModule {
     }
     
     open func setOfflineMsgSyncTime(_ time: Int64) -> Bool {
-        let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
+        let key = "/\(IMCoreManager.shared.env)/\(IMCoreManager.shared.uId)/msg_sync_time"
         UserDefaults.standard.setValue(time, forKey: key)
         return UserDefaults.standard.synchronize()
     }
     
     open func getOfflineMsgLastSyncTime() -> Int64 {
-        let key = "/\(IMCoreManager.shared.uId)/msg_sync_time"
+        let key = "/\(IMCoreManager.shared.env)/\(IMCoreManager.shared.uId)/msg_sync_time"
         let value = UserDefaults.standard.object(forKey: key)
         let time = value == nil ? 0 : (value as! Int64 )
         return time
     }
     
     open func setSessionLastSyncTime(_ time: Int64) -> Bool {
-        let key = "/\(IMCoreManager.shared.uId)/session_sync_time"
+        let key = "/\(IMCoreManager.shared.env)/\(IMCoreManager.shared.uId)/session_sync_time"
         UserDefaults.standard.setValue(time, forKey: key)
         return UserDefaults.standard.synchronize()
     }
     
     open func getSessionLastSyncTime() -> Int64 {
-        let key = "/\(IMCoreManager.shared.uId)/session_sync_time"
+        let key = "/\(IMCoreManager.shared.env)/\(IMCoreManager.shared.uId)/session_sync_time"
         let value = UserDefaults.standard.object(forKey: key)
         let time = value == nil ? 0 : (value as! Int64 )
         return time

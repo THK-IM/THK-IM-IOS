@@ -10,7 +10,7 @@ import CocoaLumberjack
 import RxSwift
 
 open class IMCoreManager: SignalListener {
-    
+    public var env = "Debug"
     public static let shared = IMCoreManager()
     private var debug = false
     private var disposeBag = DisposeBag()
@@ -101,6 +101,9 @@ open class IMCoreManager: SignalListener {
     
     public func initApplication(_ debug: Bool = true) {
         self.debug = debug
+        if self.debug {
+            self.env = "Release"
+        }
         self.initIMLog()
         messageModule.registerMsgProcessor(IMReadMsgProcessor())
     }

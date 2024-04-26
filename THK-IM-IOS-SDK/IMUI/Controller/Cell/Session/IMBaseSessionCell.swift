@@ -18,7 +18,7 @@ open class IMBaseSessionCell : IMBaseTableCell {
         view.font = UIFont.systemFont(ofSize: 10)
         view.textColor = UIColor.white
         view.badgeColor = UIColor.red
-        view.cornerRadius = 6
+        view.cornerRadius = 8
         return view
     }()
     
