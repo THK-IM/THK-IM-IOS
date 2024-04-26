@@ -171,21 +171,20 @@ open class IMBaseMsgCell : IMBaseTableCell {
         guard let delegate = self.delegate else {
             return
         }
-        guard let sender = delegate.msgSender() else {
+        if let sender = delegate.msgSender() {
+            if let info = sender.syncGetSessionMemberInfo(msg.fromUId) {
+                let showNickname = IMUIManager.shared.nicknameForSessionMember(info.0, info.1)
+                self.showReplyMsg(showNickname)
+            }
+        } else {
             IMCoreManager.shared.userModule
                 .queryUser(id: msg.fromUId)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] user in
-                    guard let sf = self else {
-                        return
-                    }
                     self?.showReplyMsg(user.nickname)
+                }, onError: { err in
+                    DDLogError("initReplyMsg queryUser \(err)")
                 }).disposed(by: disposeBag)
-            return
-        }
-        if let info = sender.syncGetSessionMemberInfo(msg.fromUId) {
-            let showNickname = IMUIManager.shared.nicknameForSessionMember(info.0, info.1)
-            self.showReplyMsg(showNickname)
         }
     }
     
@@ -241,6 +240,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
         } else {
             self.cellWrapper.avatarView()?.isHidden = true
         }
+        self.initReplyMsg()
     }
     
     open func initBubble() {
