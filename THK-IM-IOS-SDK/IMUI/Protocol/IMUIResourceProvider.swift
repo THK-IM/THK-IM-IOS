@@ -15,7 +15,7 @@ public protocol IMUIResourceProvider {
     
     func unicodeEmojis() -> [String]?
     
-    func msgBubble(fromUId: Int64) -> UIImage?
+    func msgBubble(fromUId: Int64, session: Session?) -> UIImage?
     
     func tintColor() -> UIColor?
     
