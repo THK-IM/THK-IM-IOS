@@ -68,7 +68,7 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
             range.location -= 1
             contentAttributedStr.addAttribute(
                 .foregroundColor,
-                value: UIColor.init(hex: "#1390f4"),
+                value: IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4"),
                 range: range
             )
             contentAttributedStr.addAttribute(

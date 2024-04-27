@@ -363,7 +363,8 @@ open class IMBaseMsgCell : IMBaseTableCell {
         let realCount = max(count-1, 1)
         let progress = CGFloat(readUIds.count)/CGFloat(realCount)
         self.cellWrapper.readStatusView()?.isHidden = false
-        self.cellWrapper.readStatusView()?.updateStatus(UIColor.init(hex: "#17a121"), 4, progress)
+        let statusColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#17a121")
+        self.cellWrapper.readStatusView()?.updateStatus(statusColor, 4, progress)
     }
     
     open override func appear() {
@@ -430,7 +431,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
             return
         }
         if (times%2 == 0) {
-            self.backgroundColor = UIColor.init(hex: "#2008AAFF")
+            self.backgroundColor = IMUIManager.shared.uiResourceProvider?.tintColor()?.withAlphaComponent(0.12)
         } else {
             self.backgroundColor = UIColor.clear
         }

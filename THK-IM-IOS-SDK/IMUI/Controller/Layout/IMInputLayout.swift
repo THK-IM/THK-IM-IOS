@@ -613,7 +613,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             for atRange in atRanges {
                 attributedStr.addAttribute(
                     .foregroundColor,
-                    value: UIColor.init(hex: "#1390f4"),
+                    value: IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4"),
                     range: atRange
                 )
                 attributedStr.addAttribute(

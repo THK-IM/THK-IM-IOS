@@ -22,19 +22,18 @@ class IMReplyView: UIView {
         return view
     }()
     
-    lazy private var lineView: UIImageView = {
-        let view = UIImageView()
-        view.image = Bubble().drawRectWithRoundedCorner(
-            radius: 2, borderWidth: 0, backgroundColor: UIColor.init(hex: "#ff999999"),
-            borderColor: UIColor.init(hex: "#ff999999"), width: 4, height: 30, pos: 0)
+    lazy private var lineView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 2
+        view.backgroundColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
         return view
     }()
     
     lazy private var replyUserView: UILabel = {
         let view = UILabel()
-        view.textColor = UIColor.darkGray
+        view.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
         view.font = UIFont.systemFont(ofSize: 12)
-        view.textAlignment = .justified
+        view.textAlignment = .left
         view.numberOfLines = 1
         return view
     }()

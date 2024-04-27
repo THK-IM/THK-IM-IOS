@@ -29,13 +29,13 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(self.titleView)
         self.titleView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.height.equalTo(30)
         }
         self.titleView.text = "选择提醒的人"
-        self.titleView.font = UIFont.systemFont(ofSize: 18)
+        self.titleView.font = UIFont.boldSystemFont(ofSize: 18)
         self.titleView.textAlignment = .center
         self.titleView.textColor = UIColor.init(hex: "#333333")
         

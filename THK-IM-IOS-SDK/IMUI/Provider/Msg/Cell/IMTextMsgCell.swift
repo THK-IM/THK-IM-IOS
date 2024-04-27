@@ -24,7 +24,7 @@ class IMTextMsgCell: IMBaseMsgCell {
         } else {
             view.font = UIFont.systemFont(ofSize: fontSize)
             view.textAlignment = .left
-            view.textColor = UIColor.black
+            view.textColor = UIColor.init(hex: "0A0E10")
         }
         return view
     }()
