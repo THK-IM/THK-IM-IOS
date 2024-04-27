@@ -75,7 +75,6 @@ class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let boundSize: CGFloat = UIScreen.main.bounds.width / countOneRow
-        print("boundSize: \(boundSize)")
         return CGSize(width: boundSize, height: boundSize)
     }
     

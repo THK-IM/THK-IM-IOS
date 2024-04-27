@@ -35,16 +35,14 @@ public class IMMessageOperatorItemView: UIView {
         super.init(frame: frame)
         self.addSubview(self.iconView)
         self.iconView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.height.equalTo(24)
+            make.top.equalToSuperview().offset(0)
+            make.centerX.equalToSuperview()
+            make.size.equalTo(34)
         }
         self.addSubview(self.titleView)
         self.titleView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-8)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.centerX.equalToSuperview()
             make.height.equalTo(16)
         }
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped))

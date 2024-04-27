@@ -16,22 +16,24 @@ class IMFunctionCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.contentView.addSubview(labelView)
-        labelView.font = UIFont.systemFont(ofSize: 16)
+        labelView.font = UIFont.systemFont(ofSize: 12)
+        labelView.textColor = UIColor.init(hex: "333333")
         labelView.textAlignment = .center
         labelView.snp.makeConstraints { make in
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.centerX.equalToSuperview()
             make.height.equalTo(20)
-            make.bottom.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-10)
         }
         self.contentView.addSubview(iconView)
         
         iconView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalTo(35)
-            make.height.equalTo(35)
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview()
+            make.width.equalTo(60)
+            make.height.equalTo(60)
         }
+        iconView.layer.cornerRadius = 8
+        iconView.clipsToBounds = true
     }
     
     required init?(coder: NSCoder) {

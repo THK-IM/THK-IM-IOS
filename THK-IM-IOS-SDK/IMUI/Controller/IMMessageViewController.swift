@@ -216,7 +216,7 @@ open class IMMessageViewController: BaseViewController {
             // 多选msg视图
             self.msgSelectedLayout.sender = self
             self.containerView.addSubview(self.msgSelectedLayout)
-            self.msgSelectedLayout.backgroundColor = .clear
+            self.msgSelectedLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
             self.msgSelectedLayout.isHidden = true
             self.msgSelectedLayout.snp.makeConstraints { [weak self] make in
                 guard let sf = self else {
