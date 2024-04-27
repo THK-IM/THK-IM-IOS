@@ -15,4 +15,12 @@ public protocol IMUIResourceProvider {
     
     func unicodeEmojis() -> [String]?
     
+    func msgBubble(fromUId: Int64) -> UIImage?
+    
+    func tintColor() -> UIColor?
+    
+    func inputBgColor() -> UIColor?
+    
+    func inputLayoutBgColor() -> UIColor?
+    
 }

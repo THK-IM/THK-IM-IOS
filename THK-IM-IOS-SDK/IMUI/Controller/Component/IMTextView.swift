@@ -62,9 +62,9 @@ class IMTextView: UITextView {
         
         addSubview(placeholderLabel)
         NSLayoutConstraint.activate([
-            placeholderLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            placeholderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
-            placeholderLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 5)
+            placeholderLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            placeholderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            placeholderLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 10)
         ])
         placeholderLabel.isHidden = self.text.count > 0
     }

@@ -147,6 +147,7 @@ open class IMMessageViewController: BaseViewController {
     
     private func setupView() {
         self.view.addSubview(containerView)
+        containerView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
         let top = getTitleBarHeight()
         containerView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(top)
@@ -168,10 +169,10 @@ open class IMMessageViewController: BaseViewController {
             make.bottom.equalToSuperview().offset(-UIApplication.shared.windows[0].safeAreaInsets.bottom)
             make.height.equalTo(sf.bottomPanelLayout.getLayoutHeight()) // 高度内部自己计算
         }
-        
+       
         // 输入框等布局
         self.inputLayout.sender = self
-        self.inputLayout.backgroundColor = UIColor.init(hex: "#F0F0F0")
+        self.inputLayout.backgroundColor = .clear
         self.containerView.addSubview(self.inputLayout)
         var showInput = true
         if let session = self.session {
@@ -201,7 +202,7 @@ open class IMMessageViewController: BaseViewController {
         // 多选msg视图
         self.msgSelectedLayout.sender = self
         self.containerView.addSubview(self.msgSelectedLayout)
-        self.msgSelectedLayout.backgroundColor = UIColor.init(hex: "F0F0F0")
+        self.msgSelectedLayout.backgroundColor = .clear
         self.msgSelectedLayout.isHidden = true
         self.msgSelectedLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -217,7 +218,7 @@ open class IMMessageViewController: BaseViewController {
         self.messageLayout.sender = self
         self.messageLayout.previewer = self
         self.containerView.addSubview(self.messageLayout)
-        self.messageLayout.backgroundColor = .clear
+        self.messageLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
         self.messageLayout.session = self.session
         self.messageLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -233,7 +234,7 @@ open class IMMessageViewController: BaseViewController {
         self.atMsgTipsView.isUserInteractionEnabled = true
         self.atMsgTipsView.textColor = UIColor.init(hex: "#1390f4")
         self.atMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
-        self.atMsgTipsView.backgroundColor = UIColor.init(hex: "EEEEEE")
+        self.atMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
         self.atMsgTipsView.layer.cornerRadius = 8
         self.atMsgTipsView.layer.masksToBounds = true
         self.atMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
@@ -266,7 +267,7 @@ open class IMMessageViewController: BaseViewController {
         self.newMsgTipsView.textColor = UIColor.init(hex: "#1390f4")
         self.newMsgTipsView.text = "有新消息"+"⬇️"
         self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
-        self.newMsgTipsView.backgroundColor = UIColor.init(hex: "EEEEEE")
+        self.newMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
         self.newMsgTipsView.layer.cornerRadius = 8
         self.newMsgTipsView.layer.masksToBounds = true
         self.newMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)

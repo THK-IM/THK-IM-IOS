@@ -71,7 +71,8 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     
     lazy var emojiTabContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.init(hex: "#F5F5F5")
+//        view.backgroundColor = UIColor.init(hex: "#F5F5F5")
+        view.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
         view.addSubview(self.sendView)
         view.addSubview(self.delView)
         view.addSubview(self.emojiTabView)

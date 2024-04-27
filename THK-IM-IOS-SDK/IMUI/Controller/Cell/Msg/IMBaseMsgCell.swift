@@ -250,17 +250,26 @@ open class IMBaseMsgCell : IMBaseTableCell {
             let position = cellPosition()
             var image: UIImage? = nil
             if (position == IMMsgPosType.Left.rawValue) {
-                image = Bubble().drawRectWithRoundedCorner(
-                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "E5E5E5"),
-                    borderColor: UIColor.init(hex: "E5E5E5"), width: 40, height: 40, pos: 0)
+                image = IMUIManager.shared.uiResourceProvider?.msgBubble(fromUId: fromUId!)
+                if image == nil {
+                    image = Bubble().drawRectWithRoundedCorner(
+                        radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "E5E5E5"),
+                        borderColor: UIColor.init(hex: "E5E5E5"), width: 40, height: 40, pos: 0)
+                }
             } else if (position == IMMsgPosType.Right.rawValue) {
-                image = Bubble().drawRectWithRoundedCorner(
-                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffd1e3fe"),
-                    borderColor: UIColor.init(hex: "ffd1e3fe"), width: 40, height: 40, pos: 0)
+                image = IMUIManager.shared.uiResourceProvider?.msgBubble(fromUId: fromUId!)
+                if image == nil {
+                    image = Bubble().drawRectWithRoundedCorner(
+                        radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffd1e3fe"),
+                        borderColor: UIColor.init(hex: "ffd1e3fe"), width: 40, height: 40, pos: 0)
+                }
             } else {
-                image = Bubble().drawRectWithRoundedCorner(
-                    radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "BBBBBB"),
-                    borderColor: UIColor.init(hex: "BBBBBB"), width: 40, height: 24, pos: 0)
+                image = IMUIManager.shared.uiResourceProvider?.msgBubble(fromUId: fromUId!)
+                if image == nil {
+                    image = Bubble().drawRectWithRoundedCorner(
+                        radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "BBBBBB"),
+                        borderColor: UIColor.init(hex: "BBBBBB"), width: 40, height: 24, pos: 0)
+                }
             }
             updateUserBubble(image: image)
         } else {

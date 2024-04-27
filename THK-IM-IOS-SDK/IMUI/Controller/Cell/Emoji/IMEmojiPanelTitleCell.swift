@@ -20,12 +20,9 @@ class IMEmojiPanelTitleCell: UICollectionViewCell {
             make.width.equalTo(30)
             make.height.equalTo(30)
         }
-        let backgroundView = UIImageView(frame: frame)
-        backgroundView.image = Bubble().drawRectWithRoundedCorner(
-            radius: 4, borderWidth: 0,
-            backgroundColor: UIColor.init(hex: "#ffe0e0e0"), borderColor: UIColor.init(hex: "#ffe0e0e0"),
-            width: 20, height: 20
-        )
+        let backgroundView = UIView(frame: frame)
+        backgroundView.layer.cornerRadius = 6
+        backgroundView.layer.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()?.cgColor
         self.selectedBackgroundView = backgroundView
     }
     

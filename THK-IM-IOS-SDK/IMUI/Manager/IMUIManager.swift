@@ -22,10 +22,10 @@ open class IMUIManager: NSObject {
     public var pageRouter: IMPageRouter? = nil
     public var uiResourceProvider: IMUIResourceProvider? = nil
     
-    var msgCellAvatarWidth = 44.0
-    var msgCellAvatarLeft = 10.0
-    var msgCellAvatarRight = 4.0
-    var msgCellPadding = 32.0
+    public var msgCellAvatarWidth = 44.0
+    public var msgCellAvatarLeft = 10.0
+    public var msgCellAvatarRight = 4.0
+    public var msgCellPadding = 32.0
     
     private override init() {
         super.init()
