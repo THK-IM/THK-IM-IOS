@@ -123,9 +123,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             if signalData != nil {
                 do {
                     let signal = try JSONDecoder().decode(Signal.self, from: signalData!)
-                    sf.lock.lock()
                     sf.signalListener?.onNewSignal(signal.type, signal.body)
-                    sf.lock.unlock()
                 } catch {
                     DDLogError("DefaultSignalModule onTextMessage error: \(error)")
                 }
