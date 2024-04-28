@@ -123,7 +123,7 @@ open class IMMessageViewController: BaseViewController {
                 IMCoreManager.shared.userModule.queryUser(id: session.entityId)
                     .compose(RxTransformer.shared.io2Main())
                     .subscribe(onNext: { user in
-                        IMUIManager.shared.pageRouter?.openUserPage(controller: self, user: user)
+                        IMUIManager.shared.pageRouter?.openUserPage(controller: self, user: user, session: session)
                     }).disposed(by: self.disposeBag)
             }
         } else if (session.type == SessionType.Group.rawValue ||
@@ -135,7 +135,7 @@ open class IMMessageViewController: BaseViewController {
                     .compose(RxTransformer.shared.io2Main())
                     .subscribe(onNext: { group in
                         if let g = group  {
-                            IMUIManager.shared.pageRouter?.openGroupPage(controller: self, group: g)
+                            IMUIManager.shared.pageRouter?.openGroupPage(controller: self, group: g, session: session)
                         }
                     }).disposed(by: self.disposeBag)
             }

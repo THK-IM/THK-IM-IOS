@@ -445,14 +445,16 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     public func onMsgSenderClick(message: Message, position: Int, view: UIView) {
-        IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
-            .compose(RxTransformer.shared.io2Main())
-            .subscribe(onNext: { [weak self] user in
-                guard let vc = self?.getViewController() else {
-                    return 
-                }
-                IMUIManager.shared.pageRouter?.openUserPage(controller: vc, user: user)
-            }).disposed(by: self.disposeBag)
+        if let session = self.session {
+            IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { [weak self] user in
+                    guard let vc = self?.getViewController() else {
+                        return
+                    }
+                    IMUIManager.shared.pageRouter?.openUserPage(controller: vc, user: user, session: session)
+                }).disposed(by: self.disposeBag)
+        }
     }
     
     public func onMsgSenderLongClick(message: Message, position: Int, view: UIView) {
