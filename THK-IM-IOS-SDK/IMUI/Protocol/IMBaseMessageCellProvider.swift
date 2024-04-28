@@ -101,7 +101,7 @@ open class IMBaseMessageCellProvider {
     
     open func msgTopForSession(_ message: Message, _ session: Session?) -> CGFloat {
         if message.fromUId > 0 {
-            var top:CGFloat = 10
+            var top:CGFloat = 20
             if session?.type != SessionType.Single.rawValue {
                 top += 24
             }
