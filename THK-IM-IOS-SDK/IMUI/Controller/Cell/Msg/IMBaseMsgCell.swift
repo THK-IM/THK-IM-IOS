@@ -26,7 +26,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
     public init(_ reuseIdentifier: String, _ wrapper: IMMsgCellWrapper) {
         self.cellWrapper = wrapper
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .blue
+        self.tintColor = IMUIManager.shared.uiResourceProvider?.tintColor()
         cellWrapper.attach(contentView)
         cellWrapper.layoutSubViews(self.isEditing)
         let msgContainerView = cellWrapper.containerView()
@@ -153,7 +153,28 @@ open class IMBaseMsgCell : IMBaseTableCell {
     
     override open func layoutSubviews() {
         super.layoutSubviews()
+//        self.initChecked()
         self.cellWrapper.layoutSubViews(self.isEditing)
+    }
+    
+    private func initChecked() {
+        if let editControlClass = NSClassFromString("UITableViewCellEditControl") {
+            for subview in self.subviews {
+                if subview.isMember(of: editControlClass) {
+                    for v in subview.subviews {
+                        if v is UIImageView {
+                            if let imageView = (v as? UIImageView) {
+                                if self.isSelected {
+                                    imageView.image = UIImage.init(named: "ic_message_checked")
+                                } else {
+                                    imageView.image = UIImage.init(named: "ic_message_unchecked")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     
