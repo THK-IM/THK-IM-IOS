@@ -37,11 +37,11 @@ class ExternalPageRouter: IMPageRouter {
         controller.navigationController?.pushViewController(messageController, animated: true)
     }
     
-    func openUserPage(controller: UIViewController, user: User) {
+    func openUserPage(controller: UIViewController, user: User, session: Session) {
         ContactUserViewController.open(controller, user)
     }
     
-    func openGroupPage(controller: UIViewController, group: Group) {
+    func openGroupPage(controller: UIViewController, group: Group, session: Session) {
         GroupViewController.open(controller, group, 1)
     }
     

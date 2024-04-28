@@ -76,6 +76,7 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
     }()
     
     open override func attach(_ contentView: UIView) {
+        _avatarView.contentMode = .scaleAspectFill
         contentView.addSubview(_avatarView)
         contentView.addSubview(_stateStack)
         contentView.addSubview(_messageStack)
