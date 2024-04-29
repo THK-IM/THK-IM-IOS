@@ -11,7 +11,7 @@ import Foundation
 
 public class AtStringUtils {
     
-    public typealias findIdByNickname =  (_ nickname: String) -> Int64
+    public typealias findIdByNickname =  (_ nickname: String) -> Int64?
     public typealias findNicknameById =  (_ id: Int64) -> String
     
     public static let atRegular = "(?<=@)(.+?)(?=\\s)"
@@ -27,11 +27,13 @@ public class AtStringUtils {
             if let nickRange = Range.init(matchResult.range, in: text) {
                 let nickName = String(text[nickRange])
                 let id = finder(nickName)
-                if (!atUIds.isEmpty) {
-                    atUIds += "#"
+                if id != nil {
+                    if (!atUIds.isEmpty) {
+                        atUIds += "#"
+                    }
+                    atUIds += "\(id!)"
+                    replacement.replaceOccurrences(of:nickName, with: "\(id!)", options: .caseInsensitive, range: matchResult.range)
                 }
-                atUIds += "\(id)"
-                replacement.replaceOccurrences(of:nickName, with: "\(id)", options: .caseInsensitive, range: matchResult.range)
             }
         }
         return (String(replacement), atUIds.length == 0 ? nil : atUIds)

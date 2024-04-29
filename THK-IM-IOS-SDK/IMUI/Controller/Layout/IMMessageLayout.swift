@@ -464,11 +464,16 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         if (session.type == SessionType.Single.rawValue) {
             return
         }
-        IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
-            .compose(RxTransformer.shared.io2Main())
-            .subscribe(onNext: { [weak self] user in
-                self?.sender?.addAtUser(user: user, sessionMember: nil)
-            }).disposed(by: self.disposeBag)
+        if let memberInfo = self.sender?.syncGetSessionMemberInfo(message.fromUId) {
+            self.sender?.addAtUser(user: memberInfo.0, sessionMember: memberInfo.1)
+        } else {
+            IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { [weak self] user in
+                    self?.sender?.addAtUser(user: user, sessionMember: nil)
+                }).disposed(by: self.disposeBag)
+        }
+        
     }
     
     

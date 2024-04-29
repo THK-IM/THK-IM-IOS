@@ -496,7 +496,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         }
         let (content, atUIds) = AtStringUtils.replaceAtNickNamesToUIds(text) { [weak self] nickname in
             guard let sf = self else {
-                return 0
+                return nil
             }
             for (k, v) in sf.atMap {
                 if (v == nickname) {
@@ -511,7 +511,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
                     return id!
                 }
             }
-            return 0
+            return nil
         }
         if let reeditMsg = self.reeditMsg  {
             let content = IMReeditMsgData(sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId, edit: content)

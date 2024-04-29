@@ -21,6 +21,7 @@ class IMSessionMemberCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+        self.avatarView.contentMode = .scaleAspectFill
         self.setupUI()
     }
     
