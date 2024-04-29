@@ -20,9 +20,8 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
         view.sizeToFit()
         view.numberOfLines = 0
         view.font = UIFont.systemFont(ofSize: 12)
-        view.textColor = UIColor.init(hex: "aaaaaa")
+        view.textColor = UIColor.init(hex: "0A0E10")
         view.textAlignment = .center
-        view.textColor = UIColor.white
         return view
     }()
     
@@ -33,7 +32,7 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
         view.sizeToFit()
         view.numberOfLines = 1
         view.font = UIFont.systemFont(ofSize: 14)
-        view.textColor = UIColor.init(hex: "1988f0")
+        view.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "1988f0")
         view.text = "重新编辑"
         view.textAlignment = .center
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
