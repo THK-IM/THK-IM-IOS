@@ -660,7 +660,19 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     /// 输入框添加内容
     public func addInputContent(text: String) {
-        self.inputLayout.addInputText(text)
+        var uIds = Set<Int64>()
+        self.memberMap.forEach { (key: Int64, value: (User, SessionMember?)) in
+            uIds.insert(key)
+        }
+        var atMap = [Int64: (User, SessionMember?)]()
+        let atText = AtStringUtils.replaceAtUIdsToNickname(text, uIds) { [weak self] id in
+            guard let member = self?.memberMap[id] else {
+                return ""
+            }
+            atMap[member.0.id] = (member.0, member.1)
+            return member.1?.noteName ?? member.0.nickname
+        }
+        self.inputLayout.addInputText(atText, atMap)
     }
     
     /// 删除输入框内容

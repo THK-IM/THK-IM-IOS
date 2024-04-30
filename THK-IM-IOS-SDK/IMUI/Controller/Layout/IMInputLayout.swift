@@ -410,7 +410,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         self.resetLayout()
     }
     
-    func addInputText(_ text: String) {
+    func addInputText(_ text: String, _ atMap: [Int64: (User, SessionMember?)]? = nil) {
+        if atMap != nil {
+            for (k,v) in atMap! {
+                self.addAtMap(v.0, v.1)
+            }
+        }
         let data = NSMutableString(string: self.textView.text)
         let selectedRange = self.textView.selectedRange
         if data.length == 0 {
