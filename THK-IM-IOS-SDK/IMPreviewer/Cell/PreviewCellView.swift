@@ -12,6 +12,7 @@ import RxSwift
 
 open class PreviewCellView: UICollectionViewCell {
     
+    weak var delegate: PreviewDelegate? = nil
     var message: Message? = nil
     var disposeBag = DisposeBag()
     

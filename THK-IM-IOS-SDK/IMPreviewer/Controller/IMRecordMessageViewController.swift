@@ -74,7 +74,7 @@ class IMRecordMessageViewController: BaseViewController, IMMsgPreviewer {
     func previewMessage(_ msg: Message, _ position: Int, _ originView: UIView) {
         if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
             if let messages = self.recordMessages {
-                var mediaMessages = messages.filter { m in
+                let mediaMessages = messages.filter { m in
                     return m.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue
                 }
                 IMUIManager.shared.contentPreviewer?.previewMessage(self, mediaMessages, originView, false, msg.msgId)

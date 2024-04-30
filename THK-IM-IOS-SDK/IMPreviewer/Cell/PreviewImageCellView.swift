@@ -41,6 +41,11 @@ public class PreviewImageCellView : PreviewCellView {
         self.contentView.addSubview(progressView)
     }
     
+    override public func setMessage(_ message: Message) {
+        super.setMessage(message)
+        self.imageView.previewDelegate = delegate
+    }
+    
     public func showImage() {
         guard let message = self.message else {
             return

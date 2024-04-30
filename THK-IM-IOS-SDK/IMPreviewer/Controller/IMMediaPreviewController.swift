@@ -10,14 +10,18 @@ import UIKit
 import RxSwift
 
 public class IMMediaPreviewController: UIViewController,
-                              UICollectionViewDataSource,
-                              UICollectionViewDelegateFlowLayout,
-                              UICollectionViewDelegate,
-                              UIViewControllerTransitioningDelegate {
+                                       UICollectionViewDataSource,
+                                       UICollectionViewDelegateFlowLayout,
+                                       UICollectionViewDelegate,
+                                       UIViewControllerTransitioningDelegate,
+                                       PreviewDelegate {
+    
     var enterFrame: CGRect?
     var messages = [Message]()
     var defaultId = Int64(0)
     var loadMore = false
+    private var isLoadingOlder = false
+    private var isLoadingNewer = false
     private var currentId = Int64(0)
     private var startPoint: CGPoint?
     private var _offsetX = 0.0
@@ -143,36 +147,7 @@ public class IMMediaPreviewController: UIViewController,
         case .ended, .cancelled, .failed:
             if (scale < 0.7) {
                 scale = 0.7
-                self.view.backgroundColor = UIColor.black.withAlphaComponent(0.0)
-                UIView.animate(withDuration: 0.4, animations: { [weak self] in
-                    guard let sf = self else {
-                        return
-                    }
-                    if sf.defaultId != sf.currentId {
-                        return
-                    }
-                    guard let toFrame = sf.enterFrame else {
-                        return
-                    }
-                    let fromFrame = sf.view.frame
-                    let finalScale = toFrame.size.width/fromFrame.size.width
-                    let toX = toFrame.origin.x + toFrame.size.width/2
-                    let toY = toFrame.origin.y + toFrame.size.height/2
-                    let fromX = fromFrame.origin.x + fromFrame.size.width/2
-                    let fromY = fromFrame.origin.y + fromFrame.size.height/2
-                    let translationX = toX - fromX
-                    let translationY = toY - fromY
-                    let translationTransform = CGAffineTransform(
-                        translationX: translationX,
-                        y: translationY
-                    )
-                    let scaleTransform = CGAffineTransform(scaleX: finalScale, y: finalScale)
-                    let combinedTransform = scaleTransform.concatenating(translationTransform)
-                    sf._collectView.transform = combinedTransform
-                    sf.startPoint = nil
-                }, completion: { [weak self] _ in
-                    self?.dismiss(animated: false)
-                })
+                self.close()
             } else {
                 self.startPoint = nil
                 self.view.backgroundColor = UIColor.black
@@ -201,6 +176,7 @@ public class IMMediaPreviewController: UIViewController,
                 withReuseIdentifier: NSStringFromClass(PreviewImageCellView.self),
                 for: indexPath
             ) as! PreviewImageCellView
+            cell.delegate = self
             cell.setMessage(message)
             return cell
         } else {
@@ -208,6 +184,7 @@ public class IMMediaPreviewController: UIViewController,
                 withReuseIdentifier: NSStringFromClass(PreviewVideoCellView.self),
                 for: indexPath
             ) as! PreviewVideoCellView
+            cell.delegate = self
             cell.setMessage(message)
             return cell
         }
@@ -255,7 +232,17 @@ public class IMMediaPreviewController: UIViewController,
     
     private func loadMoreMessage(_ message: Message, _ older: Bool) {
         if !loadMore {
-            return 
+            return
+        }
+        if older {
+            if isLoadingOlder {
+                return
+            }
+            isLoadingOlder = true
+        } else {
+            if isLoadingNewer {
+                return
+            }
         }
         Observable.just(message)
             .map({ message in
@@ -272,6 +259,9 @@ public class IMMediaPreviewController: UIViewController,
                 guard let sf = self else {
                     return
                 }
+                if messages.count == 0 {
+                    return
+                }
                 var pos = 0
                 if (older) {
                     sf.messages.insert(contentsOf: messages.reversed() , at: 0)
@@ -284,8 +274,52 @@ public class IMMediaPreviewController: UIViewController,
                     paths.append(IndexPath.init(row: i, section: 0))
                 }
                 sf._collectView.insertItems(at: paths)
+            }, onCompleted: { [weak self] in
+                guard let sf = self else {
+                    return
+                }
+                if older {
+                    sf.isLoadingOlder = false
+                } else {
+                    sf.isLoadingNewer = false
+                }
+                
             })
             .disposed(by: self.disposeBag)
+    }
+    
+    
+    public func close() {
+        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.0)
+        UIView.animate(withDuration: 0.4, animations: { [weak self] in
+            guard let sf = self else {
+                return
+            }
+            if sf.defaultId != sf.currentId {
+                return
+            }
+            guard let toFrame = sf.enterFrame else {
+                return
+            }
+            let fromFrame = sf.view.frame
+            let finalScale = toFrame.size.width/fromFrame.size.width
+            let toX = toFrame.origin.x + toFrame.size.width/2
+            let toY = toFrame.origin.y + toFrame.size.height/2
+            let fromX = fromFrame.origin.x + fromFrame.size.width/2
+            let fromY = fromFrame.origin.y + fromFrame.size.height/2
+            let translationX = toX - fromX
+            let translationY = toY - fromY
+            let translationTransform = CGAffineTransform(
+                translationX: translationX,
+                y: translationY
+            )
+            let scaleTransform = CGAffineTransform(scaleX: finalScale, y: finalScale)
+            let combinedTransform = scaleTransform.concatenating(translationTransform)
+            sf._collectView.transform = combinedTransform
+            sf.startPoint = nil
+        }, completion: { [weak self] _ in
+            self?.dismiss(animated: false)
+        })
     }
     
 }

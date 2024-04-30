@@ -144,7 +144,7 @@ public final class Message: TableCodable, Hashable {
     
     
     public static func == (lhs: Message, rhs: Message) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.sessionId == rhs.sessionId && lhs.msgId == rhs.msgId
     }
     
     

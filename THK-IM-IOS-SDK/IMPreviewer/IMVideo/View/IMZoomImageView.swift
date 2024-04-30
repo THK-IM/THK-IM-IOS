@@ -10,12 +10,14 @@ import AVFoundation
 
 public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
     
+    weak var previewDelegate: PreviewDelegate? = nil
     lazy var _zoomImageView: UIImageView = {
         let view = UIImageView()
         view.isUserInteractionEnabled = true
         view.isMultipleTouchEnabled = true
         view.contentMode = .scaleAspectFit
         view.clipsToBounds = true
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
         return view
     }()
     
@@ -76,4 +78,12 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
         self._zoomImageView.layer.addSublayer(playLayer)
     }
     
+    @objc func imageTapped() {
+        print("imageTapped")
+        if self.zoomScale == 1.0 {
+            self.previewDelegate?.close()
+        } else {
+            self.zoomScale = 1.0
+        }
+    }
 }

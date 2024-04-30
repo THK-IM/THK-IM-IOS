@@ -37,6 +37,7 @@
 		A02578C62AA4269B00A66CEF /* LiveApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C52AA4269B00A66CEF /* LiveApi.swift */; };
 		A02578C82AA427BD00A66CEF /* DefaultLiveApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */; };
 		A02578CA2AA4398E00A66CEF /* TableName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02578C92AA4398E00A66CEF /* TableName.swift */; };
+		A027E3F52BE10E7F000FE77F /* PreviewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A027E3F42BE10E7F000FE77F /* PreviewDelegate.swift */; };
 		A03082CD2AF66AF1001B8373 /* IMReadMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082CC2AF66AF1001B8373 /* IMReadMsgProcessor.swift */; };
 		A03082CF2AF66BD7001B8373 /* IMReeditMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082CE2AF66BD7001B8373 /* IMReeditMsgProcessor.swift */; };
 		A03082D12AF66C31001B8373 /* IMRevokeMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03082D02AF66C31001B8373 /* IMRevokeMsgProcessor.swift */; };
@@ -338,6 +339,7 @@
 		A02578C52AA4269B00A66CEF /* LiveApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveApi.swift; sourceTree = "<group>"; };
 		A02578C72AA427BD00A66CEF /* DefaultLiveApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLiveApi.swift; sourceTree = "<group>"; };
 		A02578C92AA4398E00A66CEF /* TableName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableName.swift; sourceTree = "<group>"; };
+		A027E3F42BE10E7F000FE77F /* PreviewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewDelegate.swift; sourceTree = "<group>"; };
 		A03082CC2AF66AF1001B8373 /* IMReadMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMReadMsgProcessor.swift; sourceTree = "<group>"; };
 		A03082CE2AF66BD7001B8373 /* IMReeditMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMReeditMsgProcessor.swift; sourceTree = "<group>"; };
 		A03082D02AF66C31001B8373 /* IMRevokeMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgProcessor.swift; sourceTree = "<group>"; };
@@ -1267,6 +1269,7 @@
 				A0D68B232A888678004D11A5 /* IMMediaPreviewController.swift */,
 				A0D68B242A888678004D11A5 /* DismissAnimator.swift */,
 				A0D68B252A888678004D11A5 /* PresentAnimator.swift */,
+				A027E3F42BE10E7F000FE77F /* PreviewDelegate.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1842,6 +1845,7 @@
 				A0FCA9112B496E9F00FC6E47 /* DefaultGroupDao.swift in Sources */,
 				A02529202ADAE496001561A0 /* Double+DP.swift in Sources */,
 				A0D68BF92A888679004D11A5 /* FileLoadListener.swift in Sources */,
+				A027E3F52BE10E7F000FE77F /* PreviewDelegate.swift in Sources */,
 				A033FAFE2B8A11BA0053045E /* IMImageMsgView.swift in Sources */,
 				A0D68BEA2A888679004D11A5 /* IMVideoMsgProcessor.swift in Sources */,
 				A0C431F52A909CCE00A84D4A /* PublishStreamVo.swift in Sources */,
