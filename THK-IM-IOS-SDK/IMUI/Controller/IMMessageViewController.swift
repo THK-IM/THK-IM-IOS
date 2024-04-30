@@ -36,6 +36,7 @@ open class IMMessageViewController: BaseViewController {
     
     open override func viewDidLoad() {
         super.viewDidLoad()
+        self.memberMap[-1] = (User.all, nil)
         self.showSessionTitle()
         self.setupView()
         self.registerMsgEvent()
@@ -516,7 +517,7 @@ open class IMMessageViewController: BaseViewController {
     
     private func showReplyMessage(_ msg: Message) {
         self.inputLayout.showReplyMessage(msg)
-        self.messageLayout.scrollToBottom()
+//        self.messageLayout.scrollToBottom()
     }
     
     private func dismissReplyMessage() {
@@ -944,9 +945,6 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     /// 同步获取用户信息
     public func syncGetSessionMemberInfo(_ userId: Int64) -> (User, SessionMember?)? {
-        if userId == -1 {
-            return (User.all, nil)
-        }
         return self.memberMap[userId]
     }
     

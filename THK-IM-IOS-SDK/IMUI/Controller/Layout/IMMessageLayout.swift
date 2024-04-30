@@ -193,9 +193,9 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
                 return !(self?.messageTableView.isEditing ?? false)
             }
             delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
-//                if (gestureRecognizer.cancelsTouchesInView) {
-//                    return true
-//                }
+                if (otherGestureRecognizer.cancelsTouchesInView) {
+                    return true
+                }
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         })
