@@ -129,6 +129,10 @@ open class IMBaseSessionCell : IMBaseTableCell {
     
     public func setSession(_ session: Session) {
         self.showSessionEntityInfo(session)
+        self.updateSession(session)
+    }
+    
+    public func updateSession(_ session: Session) {
         self.msgView.text = session.lastMsg
         let dateString = DateUtils.timeToMsgTime(ms: session.mTime, now: IMCoreManager.shared.severTime)
         self.lastTimeView.text = dateString

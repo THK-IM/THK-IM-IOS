@@ -119,7 +119,11 @@ open class IMSessionViewController : BaseViewController, UITableViewDataSource, 
             let insertPos = findInsertPosition(session)
             if (oldPos == insertPos) {
                 self.sessions.insert(session, at: insertPos)
-                tableView.reloadRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
+                if let cell = tableView.cellForRow(at: IndexPath.init(row: insertPos, section: 0)) as? IMBaseSessionCell {
+                    cell.updateSession(session)
+                } else {
+                    tableView.reloadRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
+                }
             } else {
                 tableView.deleteRows(at: [IndexPath.init(row: oldPos, section: 0)], with: .none)
                 self.sessions.insert(session, at: insertPos)
