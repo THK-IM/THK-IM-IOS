@@ -55,8 +55,6 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
                 button.setImage(backImage, for: .normal)
                 customView.addSubview(button)
                 let backItem = UIBarButtonItem(customView: customView)
-//                let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backAction))
-//                backItem.width = -16
                 self.navigationItem.leftBarButtonItem = backItem
             }
         }

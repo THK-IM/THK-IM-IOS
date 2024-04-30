@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class IMRecordMessageViewController: UIViewController, IMMsgPreviewer {
+class IMRecordMessageViewController: BaseViewController, IMMsgPreviewer {
     
     var recordTitle: String? = nil
     var recordMessages: Array<Message>? = nil
@@ -19,6 +19,7 @@ class IMRecordMessageViewController: UIViewController, IMMsgPreviewer {
     private var messageLayout = IMMessageLayout()
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
         if let title = self.recordTitle {
             self.navigationItem.title = title
