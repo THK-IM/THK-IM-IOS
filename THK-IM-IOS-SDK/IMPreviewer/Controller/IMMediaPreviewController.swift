@@ -17,6 +17,7 @@ public class IMMediaPreviewController: UIViewController,
     var enterFrame: CGRect?
     var messages = [Message]()
     var defaultId = Int64(0)
+    var loadMore = false
     private var currentId = Int64(0)
     private var startPoint: CGPoint?
     private var _offsetX = 0.0
@@ -253,6 +254,9 @@ public class IMMediaPreviewController: UIViewController,
     
     
     private func loadMoreMessage(_ message: Message, _ older: Bool) {
+        if !loadMore {
+            return 
+        }
         Observable.just(message)
             .map({ message in
                 if (older) {

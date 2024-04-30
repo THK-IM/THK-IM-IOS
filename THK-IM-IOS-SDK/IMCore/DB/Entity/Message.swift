@@ -131,8 +131,8 @@ public final class Message: TableCodable, Hashable {
         let message = Message(
             id: self.id, sessionId: self.sessionId, fromUId: self.fromUId, msgId: self.msgId,
             type: self.type, content: self.content, data: self.data, sendStatus: self.sendStatus, 
-            operateStatus: self.operateStatus, rUsers: self.rUsers, referMsgId: self.referMsgId,
-            extData: self.extData, cTime: self.cTime, mTime: self.mTime
+            operateStatus: self.operateStatus, rUsers: self.rUsers, referMsgId: self.referMsgId, extData: self.extData, 
+            atUsers: self.atUsers, cTime: self.cTime, mTime: self.mTime
         )
         message.referMsg = self.referMsg
         return message

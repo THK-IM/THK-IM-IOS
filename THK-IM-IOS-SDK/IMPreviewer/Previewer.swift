@@ -18,10 +18,11 @@ public class Previewer : IMPreviewer {
         AVCacheManager.shared.delegate = IMAVCacheProtocol(token: token, endpoint: endpoint)
     }
     
-    public func previewMessage(_ controller: UIViewController, _ items: [Message], _ view: UIView, _ defaultId: Int64) {
+    public func previewMessage(_ controller: UIViewController, _ items: [Message], _ view: UIView, _ loadMore: Bool, _ defaultId: Int64) {
         controller.definesPresentationContext = true
         let mediaPreviewController = IMMediaPreviewController()
         mediaPreviewController.messages = items
+        mediaPreviewController.loadMore = loadMore
         let absoluteFrame = view.convert(view.bounds, to: nil)
         mediaPreviewController.enterFrame = absoluteFrame
         mediaPreviewController.defaultId = defaultId

@@ -169,10 +169,7 @@ open class IMMessageViewController: BaseViewController {
             self.containerView.addSubview(self.messageLayout)
             self.messageLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
             self.messageLayout.session = self.session
-            self.messageLayout.snp.makeConstraints { [weak self] make in
-                guard let sf = self else {
-                    return
-                }
+            self.messageLayout.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
             }
         } else {
@@ -605,7 +602,7 @@ open class IMMessageViewController: BaseViewController {
             let current = msg
             ay.append(current)
             ay.append(contentsOf: self.fetchMoreMessage(msg.msgId, msg.sessionId, false, 5))
-            IMUIManager.shared.contentPreviewer?.previewMessage(self, ay, originView, msg.msgId)
+            IMUIManager.shared.contentPreviewer?.previewMessage(self, ay, originView, true, msg.msgId)
         } else if msg.type == MsgType.Record.rawValue {
             if (session != nil) {
                 IMUIManager.shared.contentPreviewer?.previewRecordMessage(self, session!, msg)
@@ -896,14 +893,20 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     /// 发送消息到session forwardType 0单条转发, 1合并转发
     public func forwardMessageToSession(messages: Array<Message>, forwardType: Int) {
-        IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: messages)
+        let orderMessages = messages.sorted { m1, m2 in
+            return m1.cTime > m2.cTime
+        }
+        IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: orderMessages)
     }
     
     /// 转发选定的消息 forwardType 0单条转发, 1合并转发
     public func forwardSelectedMessages(forwardType: Int) {
         let messages = self.messageLayout.getSelectMessages()
-        if (messages.count > 0 && session != nil) {
-            IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: Array(messages))
+        let orderMessages = messages.sorted { m1, m2 in
+            return m1.cTime > m2.cTime
+        }
+        if (orderMessages.count > 0 && session != nil) {
+            IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: orderMessages)
         }
     }
     

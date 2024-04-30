@@ -30,7 +30,10 @@ class IMRecordMessageViewController: BaseViewController, IMMsgPreviewer {
         self.messageLayout.previewer = self
         self.view.addSubview(messageLayout)
         if let messages = self.recordMessages {
-            self.messageLayout.addMessages(messages)
+            let orderMessages = messages.sorted { m1, m2 in
+                return m1.cTime > m2.cTime
+            }
+            self.messageLayout.addMessages(orderMessages)
         }
         self.initEvent()
         messageLayout.snp.makeConstraints { make in
@@ -70,7 +73,12 @@ class IMRecordMessageViewController: BaseViewController, IMMsgPreviewer {
     
     func previewMessage(_ msg: Message, _ position: Int, _ originView: UIView) {
         if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
-            IMUIManager.shared.contentPreviewer?.previewMessage(self, [msg], originView, msg.msgId)
+            if let messages = self.recordMessages {
+                var mediaMessages = messages.filter { m in
+                    return m.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue
+                }
+                IMUIManager.shared.contentPreviewer?.previewMessage(self, mediaMessages, originView, false, msg.msgId)
+            }
         } else if (msg.type == MsgType.Record.rawValue) {
             IMUIManager.shared.contentPreviewer?.previewRecordMessage(self, originSession! , msg)
         }
