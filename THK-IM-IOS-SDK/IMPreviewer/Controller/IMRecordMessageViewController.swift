@@ -20,7 +20,7 @@ class IMRecordMessageViewController: BaseViewController, IMMsgPreviewer {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.white
+        self.view.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
         if let title = self.recordTitle {
             self.navigationItem.title = title
         }
