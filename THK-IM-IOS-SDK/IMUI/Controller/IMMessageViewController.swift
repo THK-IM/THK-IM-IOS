@@ -246,7 +246,7 @@ open class IMMessageViewController: BaseViewController {
             
             // AT提醒
             self.atMsgTipsView.isUserInteractionEnabled = true
-            self.atMsgTipsView.textColor = UIColor.init(hex: "#1390f4")
+            self.atMsgTipsView.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
             self.atMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
             self.atMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
             self.atMsgTipsView.layer.cornerRadius = 8
@@ -278,7 +278,7 @@ open class IMMessageViewController: BaseViewController {
             self.updateAtTipsView()
             
             self.newMsgTipsView.isUserInteractionEnabled = true
-            self.newMsgTipsView.textColor = UIColor.init(hex: "#1390f4")
+            self.newMsgTipsView.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
             self.newMsgTipsView.text = "有新消息"+"⬇️"
             self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
             self.newMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
