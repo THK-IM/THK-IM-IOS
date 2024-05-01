@@ -337,7 +337,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
             return
         }
         switch message.sendStatus {
-        case MsgSendStatus.Init.rawValue, MsgSendStatus.Sending.rawValue:
+        case MsgSendStatus.Init.rawValue, MsgSendStatus.Uploading.rawValue, MsgSendStatus.Sending.rawValue:
             self.cellWrapper.statusView()?.isHidden = false
             self.cellWrapper.resendButton()?.isHidden = true
             self.cellWrapper.readStatusView()?.isHidden = true
