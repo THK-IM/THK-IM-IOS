@@ -145,7 +145,6 @@ open class IMBaseMsgCell : IMBaseTableCell {
     }
     
     open func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
-        self.disposeBag = DisposeBag()
         self.message = messages[position]
         self.position = position
         self.session = session

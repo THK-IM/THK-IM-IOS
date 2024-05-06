@@ -11,7 +11,7 @@ import RxSwift
 
 open class IMBaseTableCell : UITableViewCell {
     
-    public var disposeBag = DisposeBag()
+    public let disposeBag = DisposeBag()
     
     open func appear() {
         

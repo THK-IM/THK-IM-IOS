@@ -129,7 +129,6 @@ open class IMBaseSessionCell : IMBaseTableCell {
     }
     
     public func setSession(_ session: Session) {
-        self.disposeBag = DisposeBag()
         self.showSessionEntityInfo(session)
         self.updateSession(session)
     }
