@@ -94,3 +94,11 @@ public enum SexType: Int8 {
          Machine = 3,
          Ai = 4
 }
+
+/**
+ * 用户状态
+ */
+public enum UserStatus: Int {
+    case Normal = 0,
+        Deleted = 1
+}
