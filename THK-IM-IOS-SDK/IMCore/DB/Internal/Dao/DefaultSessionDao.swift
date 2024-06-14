@@ -144,5 +144,12 @@ open class DefaultSessionDao : SessionDao {
             Session.Properties.unreadCount > 0 && Session.Properties.deleted == 0
         )
     }
+    
+    public func findAll() throws -> Array<Session>? {
+        return try self.database?.getObjects(
+            fromTable: self.tableName,
+            orderBy: [Session.Properties.topTimestamp.order(Order.descending), Session.Properties.mTime.order(Order.descending)]
+        )
+    }
 }
 

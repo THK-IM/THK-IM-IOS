@@ -896,7 +896,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         let orderMessages = messages.sorted { m1, m2 in
             return m1.cTime > m2.cTime
         }
-        IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: orderMessages)
+        IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: orderMessages, sender: self)
     }
     
     /// 转发选定的消息 forwardType 0单条转发, 1合并转发
@@ -906,7 +906,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             return m1.cTime > m2.cTime
         }
         if (orderMessages.count > 0 && session != nil) {
-            IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: orderMessages)
+            IMSessionChooseViewController.popup(vc: self, forwardType: forwardType, messages: orderMessages, sender: self)
         }
     }
     

@@ -16,10 +16,14 @@ open class IMRecordMsgProcessor : IMBaseMsgProcessor {
     }
     
     override open func received(_ msg: Message) {
-        super.received(msg)
         if let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: msg.content?.data(using: .utf8) ?? Data()) {
+            for m in recordBody.messages {
+                m.operateStatus = MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
+                m.sendStatus = MsgSendStatus.Success.rawValue
+            }
             try? IMCoreManager.shared.database.messageDao().insertOrIgnore(recordBody.messages)
         }
+        super.received(msg)
     }
     
     override open func reprocessingObservable(_ message: Message) -> Observable<Message>? {

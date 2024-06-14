@@ -38,9 +38,6 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
                     IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                 }
             }).disposed(by: self.disposeBag)
-        
-        
-        
     }
     
     open func getNickname(msg: Message) -> Observable<String> {

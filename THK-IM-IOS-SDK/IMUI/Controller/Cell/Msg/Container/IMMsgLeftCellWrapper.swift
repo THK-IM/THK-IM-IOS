@@ -55,6 +55,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     
     lazy var _indicatorView: UIActivityIndicatorView = {
         let v = UIActivityIndicatorView()
+        v.isHidden = true
         v.style = .medium
         v.tintColor = UIColor.init(hex: "999999")
         return v

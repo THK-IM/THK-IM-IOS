@@ -14,11 +14,13 @@ class IMSessionChooseViewController: IMSessionViewController {
     
     var forwardType: Int?
     var messages: Array<Message>?
+    weak var sender: IMMsgSender?
     
-    public static func popup(vc: UIViewController, forwardType: Int, messages: Array<Message>) {
+    public static func popup(vc: UIViewController, forwardType: Int, messages: Array<Message>, sender: IMMsgSender) {
         let choose = IMSessionChooseViewController()
         choose.forwardType = forwardType
         choose.messages = messages
+        choose.sender = sender
         let transition = CATransition.init()
         transition.duration = 0.4
         transition.type = .moveIn
@@ -74,39 +76,81 @@ class IMSessionChooseViewController: IMSessionViewController {
     }
     
     private func buildRecordBody(messages: Array<Message>, session: Session) -> Observable<IMRecordMsgBody> {
-        var uIds = Set<Int64>()
-        for m in messages {
-            uIds.insert(m.fromUId)
-        }
-        return IMCoreManager.shared.userModule.queryUsers(ids: uIds).flatMap({ (userMap) -> Observable<IMRecordMsgBody> in
-            var content = ""
-            var i = 0
-            for m in messages {
-                let userName = userMap[m.fromUId]?.nickname ?? "XX"
-                let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).sessionDesc(msg: m)
-                content = "\(content)\(userName):\(subContent)"
-                i += 1
-                if (i <= messages.count - 1) {
-                    content += "\n"
+        let recordBody = IMRecordMsgBody(title: "", messages: messages, content: "")
+        return Observable.just(recordBody)
+            .flatMap({ [weak self] (recordBody) -> Observable<IMRecordMsgBody> in
+                var content = ""
+                var i = 0
+                for m in messages {
+                    var userName = "XX"
+                    let member = self?.sender?.syncGetSessionMemberInfo(m.fromUId)
+                    if (member != nil) {
+                        if (member?.0 != nil) {
+                            userName = member?.0.nickname ?? "XX"
+                        }
+                        if (member?.1 != nil && member?.1?.noteName != "") {
+                            userName = member?.1?.noteName ?? "XX"
+                        }
+                    }
+                    let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).sessionDesc(msg: m)
+                    content = "\(content)\(userName):\(subContent)"
+                    i += 1
+                    if (i <= messages.count - 1) {
+                        content += "\n"
+                    }
                 }
-            }
-            let recordBody = IMRecordMsgBody(title: "", messages: messages, content: content)
-            
-            return Observable.just(recordBody)
-        }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
-            let selfId = IMCoreManager.shared.uId
-            return IMCoreManager.shared.userModule.queryUser(id: selfId).flatMap({ (user) ->  Observable<IMRecordMsgBody> in
-                recordBody.title = user.nickname
+                recordBody.content = content
+                return Observable.just(recordBody)
+            }).flatMap({ [weak self] (recordBody) -> Observable<IMRecordMsgBody> in
+                var userName = "XX"
+                let member = self?.sender?.syncGetSessionMemberInfo(IMCoreManager.shared.uId)
+                if (member != nil) {
+                    if (member?.0 != nil) {
+                        userName = member?.0.nickname ?? "XX"
+                    }
+                    if (member?.1 != nil && member?.1?.noteName != "") {
+                        userName = member?.1?.noteName ?? "XX"
+                    }
+                }
+                let selfId = IMCoreManager.shared.uId
+                recordBody.title = userName
+                return Observable.just(recordBody)
+            }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
+                let title: String = (
+                    session.type == SessionType.Group.rawValue ||
+                    session.type == SessionType.SuperGroup.rawValue
+                ) ? "的群聊记录" : "的聊天记录"
+                recordBody.title = "\(recordBody.title)\(title)"
                 return Observable.just(recordBody)
             })
-        }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
-            let title: String = (
-                session.type == SessionType.Group.rawValue ||
-                session.type == SessionType.SuperGroup.rawValue
-            ) ? "的群聊记录" : "的聊天记录"
-            recordBody.title = "\(recordBody.title)\(title)"
-            return Observable.just(recordBody)
-        })
+//        return IMCoreManager.shared.userModule.queryUsers(ids: uIds).flatMap({ (userMap) -> Observable<IMRecordMsgBody> in
+//            var content = ""
+//            var i = 0
+//            for m in messages {
+//                let userName = userMap[m.fromUId]?.nickname ?? "XX"
+//                let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).sessionDesc(msg: m)
+//                content = "\(content)\(userName):\(subContent)"
+//                i += 1
+//                if (i <= messages.count - 1) {
+//                    content += "\n"
+//                }
+//            }
+//            
+//            return Observable.just(recordBody)
+//        }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
+//            let selfId = IMCoreManager.shared.uId
+//            return IMCoreManager.shared.userModule.queryUser(id: selfId).flatMap({ (user) ->  Observable<IMRecordMsgBody> in
+//                recordBody.title = user.nickname
+//                return Observable.just(recordBody)
+//            })
+//        }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
+//            let title: String = (
+//                session.type == SessionType.Group.rawValue ||
+//                session.type == SessionType.SuperGroup.rawValue
+//            ) ? "的群聊记录" : "的聊天记录"
+//            recordBody.title = "\(recordBody.title)\(title)"
+//            return Observable.just(recordBody)
+//        })
     }
     
     
