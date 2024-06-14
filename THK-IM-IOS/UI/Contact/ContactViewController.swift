@@ -111,7 +111,9 @@ class ContactViewController: BaseViewController, UITableViewDelegate, UITableVie
             IMCoreManager.shared.messageModule.getSession(contact.id, SessionType.Single.rawValue)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { session in
-                    IMUIManager.shared.pageRouter?.openSession(controller: self, session: session)
+                    if (session.id > 0) {
+                        IMUIManager.shared.pageRouter?.openSession(controller: self, session: session)
+                    }
                 }).disposed(by: self.disposeBag)
         } else if (mode == 1) {
             let chooseOn = selectIds.contains(contact.id)

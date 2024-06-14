@@ -330,7 +330,9 @@ open class DefaultMessageModule : MessageModule {
             } else {
                 return IMCoreManager.shared.api.queryUserSession(IMCoreManager.shared.uId, sessionId)
                     .flatMap({ session in
-                        try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
+                        if (session.id > 0) {
+                            try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
+                        }
                         return Observable.just(session)
                     })
             }
@@ -357,7 +359,9 @@ open class DefaultMessageModule : MessageModule {
             } else {
                 return IMCoreManager.shared.api.queryUserSession(IMCoreManager.shared.uId, entityId, type)
                     .flatMap({ session in
-                        try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
+                        if (session.id > 0) {
+                            try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
+                        }
                         return Observable.just(session)
                     })
             }
@@ -583,6 +587,9 @@ open class DefaultMessageModule : MessageModule {
                 onNext: { [weak self] s in
                     do {
                         guard let sf = self else {
+                            return
+                        }
+                        if (s.id <= 0) {
                             return
                         }
                         let unReadCount = try IMCoreManager.shared.database.messageDao().getUnReadCount(msg.sessionId)

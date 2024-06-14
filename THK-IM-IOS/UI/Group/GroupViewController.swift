@@ -377,7 +377,9 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
                 guard let sf = self else {
                     return
                 }
-                IMUIManager.shared.pageRouter?.openSession(controller: sf, session: session)
+                if (session.id > 0) {
+                    IMUIManager.shared.pageRouter?.openSession(controller: sf, session: session)
+                }
             }).disposed(by: self.disposeBag)
         
     }
