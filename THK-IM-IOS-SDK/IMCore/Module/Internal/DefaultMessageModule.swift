@@ -685,14 +685,13 @@ open class DefaultMessageModule : MessageModule {
     
     
     open func querySessionMembers(_ sessionId: Int64, _ forceServer: Bool = false) -> RxSwift.Observable<Array<SessionMember>> {
-        let count = getSessionCountPerRequest()
+        let count = getSessionMemberCountPerRequest()
         if forceServer {
             return self.queryLastSessionMember(sessionId, count)
         } else {
             return Observable.create({ observer -> Disposable in
                 let members = IMCoreManager.shared.database.sessionMemberDao().findBySessionId(sessionId)
                 observer.onNext(members)
-//                observer.onCompleted()
                 return Disposables.create()
             }).flatMap({ members -> Observable<Array<SessionMember>> in
                 if (members.count == 0) {
@@ -719,7 +718,7 @@ open class DefaultMessageModule : MessageModule {
                         try IMCoreManager.shared.database.sessionDao().updateMemberSyncTime(sessionId, lastMTime)
                     }
                     if (members.count >= count) {
-                        return self.querySessionMembers(sessionId)
+                        return self.queryLastSessionMember(sessionId, count)
                     } else {
                         let sessionMembers = sessionMemberDao.findBySessionId(sessionId)
                         return Observable.just(sessionMembers)

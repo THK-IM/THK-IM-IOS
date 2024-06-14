@@ -28,6 +28,7 @@ open class IMMessageViewController: BaseViewController {
     public var keyboardShow = false
     public var memberMap = [Int64: (User, SessionMember?)]()
     public var atMsgs = Array<Message>()
+    public var showInput = true
     
     deinit {
         DDLogDebug("IMMessageViewController, de init")
@@ -41,8 +42,8 @@ open class IMMessageViewController: BaseViewController {
         self.setupView()
         self.registerMsgEvent()
         self.registerKeyboardEvent()
-        self.messageLayout.loadMessages()
         self.fetchSessionMembers()
+        self.initTipsView()
     }
     
     private func showSessionTitle() {
@@ -79,7 +80,7 @@ open class IMMessageViewController: BaseViewController {
         guard let sessionId = self.session?.id else {
             return
         }
-        IMCoreManager.shared.messageModule.querySessionMembers(sessionId, false)
+        IMCoreManager.shared.messageModule.querySessionMembers(sessionId, true)
             .flatMap { members in
                 var ids = Set<Int64>()
                 for m in members {
@@ -103,6 +104,7 @@ open class IMMessageViewController: BaseViewController {
             }.compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] map in
                 self?.updateSessionMember(map)
+                self?.messageLayout.loadMessages()
             }).disposed(by: self.disposeBag)
     }
     
@@ -147,11 +149,10 @@ open class IMMessageViewController: BaseViewController {
     }
     
     private func setupView() { 
-        var showInput = true
+        self.view.addSubview(containerView)
         if let session = self.session {
             showInput = session.functionFlag > 0
         }
-        self.view.addSubview(containerView)
         containerView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
         let top = getTitleBarHeight()
         containerView.snp.makeConstraints { make in
@@ -163,14 +164,37 @@ open class IMMessageViewController: BaseViewController {
         containerView.clipsToBounds = true
         
         if !showInput {
+            let bottom = getSafeBottomHeight()
+            // 多选msg视图
+            self.msgSelectedLayout.sender = self
+            self.msgSelectedLayout.height += Int(bottom)
+            self.containerView.addSubview(self.msgSelectedLayout)
+            self.msgSelectedLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
+            self.msgSelectedLayout.isHidden = true
+            self.msgSelectedLayout.snp.makeConstraints { [weak self] make in
+                guard let sf = self else {
+                    return
+                }
+                make.left.equalToSuperview()
+                make.right.equalToSuperview()
+                make.bottom.equalToSuperview()
+                make.height.equalTo(0)
+            }
+            
             // 消息视图，在输入框之上，铺满alwaysShowView
             self.messageLayout.sender = self
             self.messageLayout.previewer = self
             self.containerView.addSubview(self.messageLayout)
             self.messageLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
             self.messageLayout.session = self.session
-            self.messageLayout.snp.makeConstraints { make in
-                make.edges.equalToSuperview()
+            self.messageLayout.snp.makeConstraints { [weak self] make in
+                guard let sf = self else {
+                    return
+                }
+                make.left.equalToSuperview()
+                make.right.equalToSuperview()
+                make.top.equalToSuperview()
+                make.bottom.equalTo(sf.msgSelectedLayout.snp.top)
             }
         } else {
             self.bottomPanelLayout.sender = self
@@ -190,16 +214,13 @@ open class IMMessageViewController: BaseViewController {
             self.inputLayout.sender = self
             self.inputLayout.backgroundColor = .clear
             self.containerView.addSubview(self.inputLayout)
-            self.inputLayout.isHidden = !showInput
 
-            if showInput {
-                self.inputLayout.resetLayout()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in
-                    if let draft = self?.session?.draft {
-                        self?.inputLayout.addInputText(draft)
-                    }
-                })
-            }
+            self.inputLayout.resetLayout()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in
+                if let draft = self?.session?.draft {
+                    self?.inputLayout.addInputText(draft)
+                }
+            })
             
             self.inputLayout.snp.makeConstraints { [weak self] make in
                 guard let sf = self else {
@@ -241,60 +262,63 @@ open class IMMessageViewController: BaseViewController {
                 make.top.equalToSuperview()
                 make.bottom.equalTo(sf.inputLayout.snp.top)
             }
-            
-            // AT提醒
-            self.atMsgTipsView.isUserInteractionEnabled = true
-            self.atMsgTipsView.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
-            self.atMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
-            self.atMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
-            self.atMsgTipsView.layer.cornerRadius = 8
-            self.atMsgTipsView.layer.masksToBounds = true
-            self.atMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
-            self.containerView.addSubview(self.atMsgTipsView)
-            self.atMsgTipsView.snp.makeConstraints { make in
-                make.right.equalToSuperview().offset(-20)
-                make.bottom.equalTo(self.inputLayout.snp.top).offset(-20)
-                make.height.equalTo(30)
-            }
-            self.atMsgTipsView.rx.tapGesture().when(.ended)
-                .subscribe { [weak self] _ in
-                    self?.onAtTipsViewClick()
-                }.disposed(by: self.disposeBag)
-            
-            if let session = self.session {
-                if session.unreadCount > 0 {
-                    Observable.just("").flatMap { _ in
-                        let atMsgs = IMCoreManager.shared.database.messageDao().findSessionAtMeUnreadMessages(session.id)
-                        return Observable.just(atMsgs)
-                    }.compose(RxTransformer.shared.io2Main())
-                        .subscribe { [weak self] msgs in
-                            self?.atMsgs.append(contentsOf: msgs)
-                            self?.updateAtTipsView()
-                        }.disposed(by: self.disposeBag)
-                }
-            }
-            self.updateAtTipsView()
-            
-            self.newMsgTipsView.isUserInteractionEnabled = true
-            self.newMsgTipsView.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
-            self.newMsgTipsView.text = "有新消息"+"⬇️"
-            self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
-            self.newMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
-            self.newMsgTipsView.layer.cornerRadius = 8
-            self.newMsgTipsView.layer.masksToBounds = true
-            self.newMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
-            self.containerView.addSubview(self.newMsgTipsView)
-            self.newMsgTipsView.snp.makeConstraints { make in
-                make.right.equalToSuperview().offset(-20)
-                make.bottom.equalTo(self.inputLayout.snp.top).offset(-70)
-                make.height.equalTo(30)
-            }
-            self.newMsgTipsView.rx.tapGesture().when(.ended)
-                .subscribe { [weak self] _ in
-                    self?.messageLayout.scrollToBottom()
-                }.disposed(by: self.disposeBag)
-            self.newMsgTipsView.isHidden = true
         }
+    }
+    
+    open func initTipsView() {
+        self.newMsgTipsView.isUserInteractionEnabled = true
+        self.newMsgTipsView.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
+        self.newMsgTipsView.text = "有新消息"+"⬇️"
+        self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
+        self.newMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
+        self.newMsgTipsView.layer.cornerRadius = 8
+        self.newMsgTipsView.layer.masksToBounds = true
+        self.newMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+        self.containerView.addSubview(self.newMsgTipsView)
+        self.newMsgTipsView.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-20)
+            make.top.equalTo(self.messageLayout.snp.top).offset(20)
+            make.height.equalTo(30)
+        }
+        self.newMsgTipsView.rx.tapGesture().when(.ended)
+            .subscribe { [weak self] _ in
+                self?.messageLayout.scrollToBottom()
+            }.disposed(by: self.disposeBag)
+        self.newMsgTipsView.isHidden = true
+        
+        // AT提醒
+        self.atMsgTipsView.isUserInteractionEnabled = true
+        self.atMsgTipsView.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
+        self.atMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
+        self.atMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
+        self.atMsgTipsView.layer.cornerRadius = 8
+        self.atMsgTipsView.layer.masksToBounds = true
+        self.atMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+        self.containerView.addSubview(self.atMsgTipsView)
+        self.atMsgTipsView.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-20)
+            make.top.equalTo(self.messageLayout.snp.top).offset(60)
+            make.height.equalTo(30)
+        }
+        self.atMsgTipsView.rx.tapGesture().when(.ended)
+            .subscribe { [weak self] _ in
+                self?.onAtTipsViewClick()
+            }.disposed(by: self.disposeBag)
+        
+        if let session = self.session {
+            if session.unreadCount > 0 {
+                Observable.just("").flatMap { _ in
+                    let atMsgs = IMCoreManager.shared.database.messageDao().findSessionAtMeUnreadMessages(session.id)
+                    return Observable.just(atMsgs)
+                }.compose(RxTransformer.shared.io2Main())
+                    .subscribe { [weak self] msgs in
+                        self?.atMsgs.append(contentsOf: msgs)
+                        self?.updateAtTipsView()
+                    }.disposed(by: self.disposeBag)
+            }
+        }
+        self.updateAtTipsView()
+        
     }
     
     private func updateAtTipsView() {
@@ -812,9 +836,25 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         if (selected) {
             self.messageLayout.setSelectMode(selected, message: message)
             self.msgSelectedLayout.isHidden = false
+            if (!showInput) {
+                self.msgSelectedLayout.snp.updateConstraints { [weak self] make in
+                    guard let sf = self else {
+                        return
+                    }
+                    make.height.equalTo(sf.msgSelectedLayout.getLayoutHeight())
+                }
+            }
         } else {
             self.messageLayout.setSelectMode(selected)
             self.msgSelectedLayout.isHidden = true
+            if (!showInput) {
+                self.msgSelectedLayout.snp.updateConstraints { [weak self] make in
+                    guard let sf = self else {
+                        return
+                    }
+                    make.height.equalTo(0)
+                }
+            }
         }
     }
     
