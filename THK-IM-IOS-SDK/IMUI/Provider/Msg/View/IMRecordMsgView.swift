@@ -19,7 +19,7 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         let view = UILabel()
         view.sizeToFit()
         view.numberOfLines = 0
-        view.font = UIFont.systemFont(ofSize: 14)
+        view.font = UIFont.boldSystemFont(ofSize: 14)
         view.textColor = UIColor.init(hex: "222222")
         view.textAlignment = .left
         return view
@@ -30,14 +30,14 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         view.sizeToFit()
         view.numberOfLines = 0
         view.font = UIFont.systemFont(ofSize: 12)
-        view.textColor = UIColor.init(hex: "444444")
+        view.textColor = UIColor.init(hex: "666666")
         view.textAlignment = .left
         return view
     }()
     
     private lazy var lineView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.init(hex: "666666")
+        view.backgroundColor = UIColor.init(hex: "999999")
         return view
     }()
     
@@ -77,20 +77,19 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         let size = isReply ? provider.replyMsgViewSize(message, session) : provider.viewSize(message, session)
         self.removeConstraints(self.constraints)
         
-        var padding = 0
+        var padding = 4
         if isReply {
             self.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
             }
-            self.recordTitleView.textColor = .darkGray
-            self.recordTitleView.font = UIFont.systemFont(ofSize: 12)
-            self.recordContentView.textColor = .darkGray
-            self.recordContentView.font = UIFont.systemFont(ofSize: 12)
-            self.descView.textColor = .darkGray
-            self.descView.font = UIFont.systemFont(ofSize: 12)
-            self.lineView.backgroundColor = .darkGray
+//            self.recordTitleView.textColor = .darkGray
+//            self.recordTitleView.font = UIFont.boldSystemFont(ofSize: 12)
+//            self.recordContentView.textColor = .darkGray
+//            self.recordContentView.font = UIFont.systemFont(ofSize: 12)
+//            self.descView.textColor = .darkGray
+//            self.descView.font = UIFont.systemFont(ofSize: 12)
+//            self.lineView.backgroundColor = .darkGray
         } else {
-            padding = 4
             self.snp.makeConstraints { make in
                 make.height.equalTo(size.height)
                 make.width.equalTo(size.width)
@@ -115,7 +114,7 @@ class IMRecordMsgView: UIView, IMsgBodyView {
             guard let sf = self else {
                 return
             }
-            make.bottom.equalTo(sf.descView.snp.top)
+            make.bottom.equalTo(sf.descView.snp.top).offset(-4)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
             make.height.equalTo(1).priority(.required)
