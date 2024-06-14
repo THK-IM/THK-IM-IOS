@@ -13,7 +13,7 @@ open class IMTextMsgProcessor : IMBaseMsgProcessor {
         return MsgType.Text.rawValue
     }
     
-    open override func sessionDesc(msg: Message) -> String {
+    open override func msgDesc(msg: Message) -> String {
         if (msg.content != nil) {
             var body = msg.content!
             if (msg.atUsers != nil && msg.atUsers!.length > 0) {
@@ -38,9 +38,8 @@ open class IMTextMsgProcessor : IMBaseMsgProcessor {
             if (msg.operateStatus & MsgOperateStatus.Update.rawValue > 0) {
                 editFlag = "[已编辑]"
             }
-            return super.sessionDesc(msg: msg) + editFlag + body
-        } else {
-            return super.sessionDesc(msg: msg)
+            return editFlag + body
         }
+        return "[文本消息]"
     }
 }

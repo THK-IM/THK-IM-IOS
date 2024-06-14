@@ -196,6 +196,10 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
         return true
     }
     
+    override open func msgDesc(msg: Message) -> String {
+        return "[已读消息]"
+    }
+    
     override public func reset() {
         super.reset()
         self.clearReadMessagesCache()

@@ -275,13 +275,17 @@ open class IMBaseMsgProcessor {
         return false
     }
     
+    open func msgDesc(msg: Message) -> String {
+        return ""
+    }
+    
     /**
      * 该消息在session上的描述
      */
     open func sessionDesc(msg: Message) -> String {
         var desc = ""
         guard let atUsers = msg.atUsers else {
-            return desc
+            return desc + msgDesc(msg: msg)
         }
         let uIds = atUsers.split(separator: "#")
         for id in uIds {
@@ -292,7 +296,7 @@ open class IMBaseMsgProcessor {
                 break
             }
         }
-        return desc
+        return desc + msgDesc(msg: msg)
     }
     
     open func reset() {

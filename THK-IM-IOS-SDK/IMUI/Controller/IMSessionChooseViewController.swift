@@ -92,7 +92,7 @@ class IMSessionChooseViewController: IMSessionViewController {
                             userName = member?.1?.noteName ?? "XX"
                         }
                     }
-                    let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).sessionDesc(msg: m)
+                    let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).msgDesc(msg: m)
                     content = "\(content)\(userName):\(subContent)"
                     i += 1
                     if (i <= messages.count - 1) {

@@ -80,4 +80,8 @@ public class IMReeditMsgProcessor: IMBaseMsgProcessor {
         return true
     }
     
+    open override func msgDesc(msg: Message) -> String {
+        return "[重编辑消息]"
+    }
+    
 }

@@ -66,8 +66,7 @@ open class IMRecordMsgProcessor : IMBaseMsgProcessor {
         return true
     }
     
-    
-    override open func sessionDesc(msg: Message) -> String {
-        return super.sessionDesc(msg: msg) + "[会话记录]"
+    override open func msgDesc(msg: Message) -> String {
+        return "[会话记录]"
     }
 }

@@ -15,8 +15,8 @@ open class IMImageMsgProcessor : IMBaseMsgProcessor {
         return MsgType.Image.rawValue
     }
     
-    open override func sessionDesc(msg: Message) -> String {
-        return super.sessionDesc(msg: msg) + "[图片]"
+    open override func msgDesc(msg: Message) -> String {
+        return "[图片消息]"
     }
     
     open override func reprocessingObservable(_ message: Message) -> Observable<Message>? {

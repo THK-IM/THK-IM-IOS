@@ -15,8 +15,8 @@ open class IMAudioMsgProcessor : IMBaseMsgProcessor {
         return MsgType.Audio.rawValue
     }
     
-    open override func sessionDesc(msg: Message) -> String {
-        return super.sessionDesc(msg: msg) + "[语音]"
+    open override func msgDesc(msg: Message) -> String {
+        return "[语音消息]"
     }
     
     open override func reprocessingObservable(_ message: Message) -> Observable<Message>? {

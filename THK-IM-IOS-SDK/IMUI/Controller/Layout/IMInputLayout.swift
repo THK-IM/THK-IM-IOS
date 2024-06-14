@@ -499,7 +499,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
                     }.disposed(by: self.disposeBag)
             }
         }
-        let (content, atUIds) = AtStringUtils.replaceAtNickNamesToUIds(text) { [weak self] nickname in
+        let (_, atUIds) = AtStringUtils.replaceAtNickNamesToUIds(text) { [weak self] nickname in
             guard let sf = self else {
                 return nil
             }
@@ -519,11 +519,11 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             return nil
         }
         if let reeditMsg = self.reeditMsg  {
-            let content = IMReeditMsgData(sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId, edit: content)
+            let content = IMReeditMsgData(sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId, edit: text)
             self.sender?.sendMessage(MsgType.Reedit.rawValue, content, nil, nil)
             self.reeditMsg = nil
         } else {
-            self.sender?.sendMessage(MsgType.Text.rawValue, content, nil, atUIds)
+            self.sender?.sendMessage(MsgType.Text.rawValue, text, nil, atUIds)
         }
         self.atRanges.removeAll()
         self.renderInputText("")
