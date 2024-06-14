@@ -319,7 +319,7 @@ open class DefaultMessageModule : MessageModule {
                     session = Session.emptySession()
                 }
                 observer.onNext(session!)
-                observer.onCompleted()
+//                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
@@ -346,7 +346,7 @@ open class DefaultMessageModule : MessageModule {
                     session = Session.emptySession()
                 }
                 observer.onNext(session!)
-                observer.onCompleted()
+//                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
@@ -373,7 +373,7 @@ open class DefaultMessageModule : MessageModule {
                 } else {
                     observer.onNext(Array())
                 }
-                observer.onCompleted()
+//                observer.onCompleted()
             } catch {
                 observer.onError(error)
                 DDLogError("\(error)")
@@ -388,7 +388,7 @@ open class DefaultMessageModule : MessageModule {
             let messages = IMCoreManager.shared.database.messageDao().findByTimeRange(sessionId, startTime, endTime, count, excludeMsgId)
             DDLogDebug("queryLocalMessages  end: \(Date().timeMilliStamp)")
             observer.onNext(messages)
-            observer.onCompleted()
+//            observer.onCompleted()
             return Disposables.create()
         })
     }
@@ -685,7 +685,7 @@ open class DefaultMessageModule : MessageModule {
             return Observable.create({ observer -> Disposable in
                 let members = IMCoreManager.shared.database.sessionMemberDao().findBySessionId(sessionId)
                 observer.onNext(members)
-                observer.onCompleted()
+//                observer.onCompleted()
                 return Disposables.create()
             }).flatMap({ members -> Observable<Array<SessionMember>> in
                 if (members.count == 0) {
