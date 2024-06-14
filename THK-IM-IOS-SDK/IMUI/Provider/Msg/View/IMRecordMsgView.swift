@@ -120,6 +120,15 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         self.recordTitleView.text = recordBody.title
         self.recordContentView.text = recordBody.content
         self.descView.text = "聊天记录"
+        
+        if (isReply) {
+            self.recordTitleView.font = UIFont.boldSystemFont(ofSize: 12)
+            self.recordTitleView.textColor = UIColor.init(hex: "ff999999")
+            self.recordContentView.font = UIFont.boldSystemFont(ofSize: 12)
+            self.recordContentView.textColor = UIColor.init(hex: "ff999999")
+            self.descView.font = UIFont.boldSystemFont(ofSize: 12)
+            self.descView.textColor = UIColor.init(hex: "ff999999")
+        }
     }
     
     func contentView() -> UIView {
