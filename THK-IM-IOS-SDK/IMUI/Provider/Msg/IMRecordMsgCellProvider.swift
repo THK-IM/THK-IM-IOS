@@ -36,8 +36,9 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
             return super.viewSize(message, session)
         }
         let maxWidth = self.cellMaxWidth() - 24
-        let size = self.textRenderSize(recordBody.content, UIFont.systemFont(ofSize: 12), maxWidth)
-        return CGSize(width: max(size.width + 20, 120), height: size.height + 28 + 20)
+        let contentText = recordBody.title + "\n" + recordBody.content
+        let size = self.textRenderSize(contentText, UIFont.systemFont(ofSize: 12), maxWidth)
+        return CGSize(width: max(size.width + 24, 120), height: size.height + 20 + 26)
     }
     
     open override func hasBubble() -> Bool {
@@ -58,8 +59,9 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
             return super.viewSize(message, session)
         }
         let maxWidth = self.cellMaxWidth() - 24 - 20
-        let size = self.textRenderSize(recordBody.content, UIFont.systemFont(ofSize: 12), maxWidth)
-        return CGSize(width: max(size.width + 20, 120), height: size.height + 28 + 20)
+        let contentText = recordBody.title + "\n" + recordBody.content
+        let size = self.textRenderSize(contentText, UIFont.systemFont(ofSize: 12), maxWidth)
+        return CGSize(width: max(size.width + 24, 120), height: size.height + 20 + 26)
     }
     
     public override func msgTopForSession(_ message: Message, _ session: Session?) -> CGFloat {

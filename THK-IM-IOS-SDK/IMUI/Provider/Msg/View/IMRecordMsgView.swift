@@ -77,35 +77,22 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         let size = isReply ? provider.replyMsgViewSize(message, session) : provider.viewSize(message, session)
         self.removeConstraints(self.constraints)
         
-        var padding = 4
-        if isReply {
-            self.snp.makeConstraints { make in
-                make.edges.equalToSuperview()
-            }
-//            self.recordTitleView.textColor = .darkGray
-//            self.recordTitleView.font = UIFont.boldSystemFont(ofSize: 12)
-//            self.recordContentView.textColor = .darkGray
-//            self.recordContentView.font = UIFont.systemFont(ofSize: 12)
-//            self.descView.textColor = .darkGray
-//            self.descView.font = UIFont.systemFont(ofSize: 12)
-//            self.lineView.backgroundColor = .darkGray
-        } else {
-            self.snp.makeConstraints { make in
-                make.height.equalTo(size.height)
-                make.width.equalTo(size.width)
-            }
+        let padding = 4
+        self.snp.makeConstraints { make in
+            make.height.equalTo(size.height)
+            make.width.equalTo(size.width)
         }
         
         self.recordTitleView.snp.makeConstraints { make in
-            make.height.equalTo(14).priority(.required)
             make.top.equalToSuperview().offset(padding)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
+            make.height.equalTo(16)
         }
         
         self.descView.snp.makeConstraints { make in
             make.height.equalTo(14).priority(.required)
-            make.bottom.equalToSuperview().offset(-2)
+            make.bottom.equalToSuperview().offset(-padding)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
         }
@@ -114,10 +101,10 @@ class IMRecordMsgView: UIView, IMsgBodyView {
             guard let sf = self else {
                 return
             }
-            make.bottom.equalTo(sf.descView.snp.top).offset(-4)
+            make.bottom.equalTo(sf.descView.snp.top).offset(-padding)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
-            make.height.equalTo(1).priority(.required)
+            make.height.equalTo(1)
         }
         
         self.recordContentView.snp.makeConstraints { [weak self] make in

@@ -94,6 +94,9 @@ class IMSessionChooseViewController: IMSessionViewController {
                     }
                     let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).msgDesc(msg: m)
                     content = "\(content)\(userName):\(subContent)"
+                    if i > 5 {
+                        break
+                    }
                     i += 1
                     if (i <= messages.count - 1) {
                         content += "\n"
