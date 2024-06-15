@@ -261,7 +261,7 @@ open class DefaultMessageModule : MessageModule {
     open func syncSessionMessage(_ session: Session) {
         let count = getOfflineMsgCountPerRequest()
         IMCoreManager.shared.api.querySessionMessages(
-            sId: session.id, cTime: session.msgSyncTime, offset: 0, count: count, asc: 1
+            sId: session.id, cTime: session.msgSyncTime + 1, offset: 0, count: count, asc: 1
         ).compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { [weak self] messages in
                 guard let sf = self else {
