@@ -567,6 +567,7 @@ open class DefaultMessageModule : MessageModule {
                 SwiftEventBus.post(IMEvent.SessionMessageClear.rawValue, sender: session)
                 session.unreadCount = 0
                 session.lastMsg = ""
+                try IMCoreManager.shared.database.sessionDao().insertOrUpdate([session])
                 SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
             } catch {
                 observer.onError(error)
