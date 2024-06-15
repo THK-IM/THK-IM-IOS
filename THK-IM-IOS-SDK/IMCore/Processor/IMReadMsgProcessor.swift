@@ -56,7 +56,6 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     referMsg!.operateStatus = MsgOperateStatus.ServerRead.rawValue | 
                                                 MsgOperateStatus.ClientRead.rawValue |
                                                 MsgOperateStatus.Ack.rawValue
-                    referMsg!.mTime = msg.cTime
                     try insertOrUpdateDb(referMsg!, true, false)
                     let session = try IMCoreManager.shared.database.sessionDao().findById(msg.sessionId)
                     if (session != nil) {
@@ -74,13 +73,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     } else {
                         referMsg!.rUsers = "\(msg.fromUId)"
                     }
-                    referMsg!.mTime = msg.cTime
                     try insertOrUpdateDb(referMsg!, true, false)
-                    // 状态操作消息对用户不可见，默认状态即位本身已读
-//                    msg.sendStatus = MsgSendStatus.Success.rawValue
-//                    msg.operateStatus = MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
-//                    // 已读消息入库，并ack
-//                    try insertOrUpdateDb(msg, false, false)
                     if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                         IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                     }
@@ -107,7 +100,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                 let session = try IMCoreManager.shared.database.sessionDao().findById(msg.sessionId)
                 if (session != nil) {
                     let count = try IMCoreManager.shared.database.messageDao().getUnReadCount(session!.id)
-                    if (session!.unreadCount != count || session!.mTime < msg.mTime) {
+                    if (session!.unreadCount != count) {
                         session!.unreadCount = count
                         try IMCoreManager.shared.database.sessionDao().update([session!])
                         SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)

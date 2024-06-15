@@ -608,7 +608,9 @@ open class DefaultMessageModule : MessageModule {
                             }
                             s.lastMsg = statusText + (processor?.sessionDesc(msg: msg) ?? "")
                             s.unreadCount = unReadCount
-                            s.mTime = msg.cTime
+                            if s.mTime < msg.cTime {
+                                s.mTime = msg.cTime
+                            }
                             try IMCoreManager.shared.database.sessionDao().insertOrUpdate([s])
                             SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
                             if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) &&
