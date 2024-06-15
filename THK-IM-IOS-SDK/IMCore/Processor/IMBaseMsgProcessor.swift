@@ -158,6 +158,7 @@ open class IMBaseMsgProcessor {
     }
     
     open func resend(_ msg: Message, _ sendResult: IMSendMsgResult? = nil) {
+        msg.cTime = IMCoreManager.shared.severTime
         send(msg, true, sendResult)
     }
     
