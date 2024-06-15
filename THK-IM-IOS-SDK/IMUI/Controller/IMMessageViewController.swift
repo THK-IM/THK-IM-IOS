@@ -171,10 +171,7 @@ open class IMMessageViewController: BaseViewController {
             self.containerView.addSubview(self.msgSelectedLayout)
             self.msgSelectedLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
             self.msgSelectedLayout.isHidden = true
-            self.msgSelectedLayout.snp.makeConstraints { [weak self] make in
-                guard let sf = self else {
-                    return
-                }
+            self.msgSelectedLayout.snp.makeConstraints { make in
                 make.left.equalToSuperview()
                 make.right.equalToSuperview()
                 make.bottom.equalToSuperview()
