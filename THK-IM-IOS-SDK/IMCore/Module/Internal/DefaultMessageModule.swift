@@ -533,6 +533,7 @@ open class DefaultMessageModule : MessageModule {
                         if let session = try IMCoreManager.shared.database.sessionDao().findById(sessionId) {
                             session.unreadCount = 0
                             session.lastMsg = ""
+                            session.msgSyncTime = IMCoreManager.shared.severTime
                             try? IMCoreManager.shared.database.sessionDao().update([session])
                             SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
                         }
