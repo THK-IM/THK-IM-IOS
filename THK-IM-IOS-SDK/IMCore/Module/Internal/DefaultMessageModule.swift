@@ -595,7 +595,7 @@ open class DefaultMessageModule : MessageModule {
                             return
                         }
                         let unReadCount = try IMCoreManager.shared.database.messageDao().getUnReadCount(msg.sessionId)
-                        if (s.mTime < msg.mTime || s.unreadCount != unReadCount || forceNotify) {
+                        if (s.mTime <= msg.mTime || s.unreadCount != unReadCount || forceNotify || s.lastMsg == nil || ((s.lastMsg?.isEmpty) != nil)) {
                             let processor = self?.getMsgProcessor(msg.type)
                             var statusText = ""
                             if (msg.sendStatus == MsgSendStatus.Sending.rawValue || 
