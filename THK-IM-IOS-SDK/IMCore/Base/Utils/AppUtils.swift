@@ -13,7 +13,13 @@ import AdSupport
 
 public class AppUtils {
     
-    private static var language = Locale.current.languageCode ?? "Unknown"
+    private static var language = getDeviceLanguage()
+    
+    private static func getDeviceLanguage() -> String {
+        let languages: [String]? = UserDefaults.standard.object(forKey: "AppleLanguages") as? [String]? ?? nil
+        let currentLanguage = languages?.first
+        return currentLanguage ?? "en"
+    }
     
     public static func newMessageNotify() {
         let audioSession = AVAudioSession.sharedInstance()
