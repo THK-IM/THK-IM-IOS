@@ -22,7 +22,7 @@
 		A018CE0E2B00A4BB00896B87 /* IMMsgMultiSelectOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CE0D2B00A4BB00896B87 /* IMMsgMultiSelectOperator.swift */; };
 		A018CE102B00ADE400896B87 /* IMMessageOperatorItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CE0F2B00ADE400896B87 /* IMMessageOperatorItemView.swift */; };
 		A024BA212C216CED009030D2 /* ic_msg_camera.svg in Resources */ = {isa = PBXBuildFile; fileRef = A024BA202C216CED009030D2 /* ic_msg_camera.svg */; };
-		A024BA232C216D23009030D2 /* ic_msg_media.svg in Resources */ = {isa = PBXBuildFile; fileRef = A024BA222C216D23009030D2 /* ic_msg_media.svg */; };
+		A024BA252C21753F009030D2 /* ic_msg_media.svg in Resources */ = {isa = PBXBuildFile; fileRef = A024BA242C21753E009030D2 /* ic_msg_media.svg */; };
 		A02529072AC6CB05001561A0 /* DefaultFileLoadModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */; };
 		A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529082AC6CB82001561A0 /* DownloadTask.swift */; };
 		A025290B2AC6CBA6001561A0 /* UploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290A2AC6CBA6001561A0 /* UploadTask.swift */; };
@@ -360,7 +360,7 @@
 		A018CE0D2B00A4BB00896B87 /* IMMsgMultiSelectOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgMultiSelectOperator.swift; sourceTree = "<group>"; };
 		A018CE0F2B00ADE400896B87 /* IMMessageOperatorItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageOperatorItemView.swift; sourceTree = "<group>"; };
 		A024BA202C216CED009030D2 /* ic_msg_camera.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_camera.svg; sourceTree = "<group>"; };
-		A024BA222C216D23009030D2 /* ic_msg_media.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ic_msg_media.svg; path = "../../../../../../../Downloads/单聊 2/icon/ic_msg_media.svg"; sourceTree = "<group>"; };
+		A024BA242C21753E009030D2 /* ic_msg_media.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_media.svg; sourceTree = "<group>"; };
 		A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFileLoadModule.swift; sourceTree = "<group>"; };
 		A02529082AC6CB82001561A0 /* DownloadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTask.swift; sourceTree = "<group>"; };
 		A025290A2AC6CBA6001561A0 /* UploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTask.swift; sourceTree = "<group>"; };
@@ -1162,7 +1162,7 @@
 		A0D68AE32A888678004D11A5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A024BA222C216D23009030D2 /* ic_msg_media.svg */,
+				A024BA242C21753E009030D2 /* ic_msg_media.svg */,
 				A024BA202C216CED009030D2 /* ic_msg_camera.svg */,
 				A05899C82C215577003419B8 /* ic_all_avatar.svg */,
 				A05899E02C21557A003419B8 /* ic_close.svg */,
@@ -1823,7 +1823,6 @@
 				A0589A462C21557D003419B8 /* ic_msg_keyboard.svg in Resources */,
 				A0589A092C21557D003419B8 /* ic_volume_4.svg in Resources */,
 				A0589A362C21557D003419B8 /* ic_titlebar_back.svg in Resources */,
-				A024BA232C216D23009030D2 /* ic_msg_media.svg in Resources */,
 				A0589A232C21557D003419B8 /* ic_msg_opr_copy.svg in Resources */,
 				A0589A082C21557D003419B8 /* ic_msg_opr_cancel.svg in Resources */,
 				A0589A0C2C21557D003419B8 /* ic_msg_voice.svg in Resources */,
@@ -1851,6 +1850,7 @@
 				A0D68A9E2A88838A004D11A5 /* Main.storyboard in Resources */,
 				A0589A262C21557D003419B8 /* ic_volume_1.svg in Resources */,
 				A0589A4D2C21557D003419B8 /* ic_msg_opr_reply.svg in Resources */,
+				A024BA252C21753F009030D2 /* ic_msg_media.svg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
