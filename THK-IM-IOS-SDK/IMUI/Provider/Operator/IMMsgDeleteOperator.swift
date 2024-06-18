@@ -22,7 +22,7 @@ public class IMMsgDeleteOperator: IMMessageOperator {
     }
     
     public func icon() -> UIImage? {
-        return UIImage(named: "ic_msg_opr_delete")
+        return SVGImageUtils.loadSVG(named: "ic_msg_opr_delete")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

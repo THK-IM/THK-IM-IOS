@@ -32,7 +32,7 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
         self.durationLabel.padding = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
         self.addSubview(self.durationLabel)
         
-        self.playView.image = UIImage(named: "icon_video_play")
+        self.playView.image = SVGImageUtils.loadSVG(named: "icon_video_play")
         self.addSubview(self.playView)
     }
     

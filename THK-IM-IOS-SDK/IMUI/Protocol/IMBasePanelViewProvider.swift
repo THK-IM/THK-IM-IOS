@@ -10,7 +10,7 @@ import UIKit
 
 public protocol IMBasePanelViewProvider: AnyObject {
     
-    func icon(selected: Bool) -> UIImage
+    func icon(selected: Bool) -> UIImage?
     
     func contentView(sender: IMMsgSender?) -> UIView
     

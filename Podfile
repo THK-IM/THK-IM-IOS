@@ -30,6 +30,7 @@ target 'THK-IM-IOS' do
   pod 'SnapKit', '5.6.0'
   pod 'Alamofire', '5.8.1'
   pod 'BadgeSwift', '8.0'
+  pod 'SVGKit'
   pod 'ProgressHUD'
   pod 'JDStatusBarNotification'
   pod 'SwiftEntryKit'

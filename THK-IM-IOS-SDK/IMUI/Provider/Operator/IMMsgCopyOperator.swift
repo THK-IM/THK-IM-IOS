@@ -19,7 +19,7 @@ public class IMMsgCopyOperator: IMMessageOperator {
     }
     
     public func icon() -> UIImage? {
-        return UIImage(named: "ic_msg_opr_copy")
+        return SVGImageUtils.loadSVG(named: "ic_msg_opr_copy")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

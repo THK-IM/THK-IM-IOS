@@ -11,11 +11,11 @@ import UIKit
 
 public extension String {
     
-    public var length: Int {
+    var length: Int {
         return self.utf16.count
     }
     
-    static public func getNumber(count: Int) -> String? {
+    static func getNumber(count: Int) -> String? {
         if (count <= 0) {
             return nil
         } else if (count < 100) {
@@ -25,7 +25,7 @@ public extension String {
         }
     }
     
-    public func sizeWith(_ font : UIFont , _ maxSize : CGSize) ->CGSize {
+    func sizeWith(_ font : UIFont , _ maxSize : CGSize) ->CGSize {
         let options = NSStringDrawingOptions.usesLineFragmentOrigin
         var attributes : [NSAttributedString.Key : Any] = [:]
         attributes[NSAttributedString.Key.font] = font
@@ -38,7 +38,7 @@ public extension String {
         return textBouds.size
     }
     
-    public func random(_ length: Int) -> String {
+    func random(_ length: Int) -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         let count = UInt32(letters.count)
         var random = SystemRandomNumberGenerator()
@@ -51,7 +51,7 @@ public extension String {
         return randomString
     }
     
-    public var sha256Hash: String {
+    var sha256Hash: String {
         guard let data = data(using: .utf8) else {
             return self
         }
@@ -62,7 +62,7 @@ public extension String {
         return digest.map { String(format: "%02x", $0) }.joined()
     }
     
-    public var sha1Hash: String {
+    var sha1Hash: String {
         guard let data = data(using: .utf8) else {
             return self
         }

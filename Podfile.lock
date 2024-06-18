@@ -1,6 +1,8 @@
 PODS:
   - Alamofire (5.8.1)
   - BadgeSwift (8.0.0)
+  - CocoaLumberjack (3.8.2):
+    - CocoaLumberjack/Core (= 3.8.2)
   - CocoaLumberjack/Core (3.8.2)
   - CocoaLumberjack/Swift (3.8.2):
     - CocoaLumberjack/Core
@@ -25,6 +27,8 @@ PODS:
   - RxSwift (6.5.0)
   - SnapKit (5.6.0)
   - Starscream (4.0.6)
+  - SVGKit (3.0.0):
+    - CocoaLumberjack (~> 3.0)
   - SwiftEntryKit (2.0.0)
   - WCDB.swift (2.1.1):
     - WCDBOptimizedSQLCipher (= 1.4.4)
@@ -51,6 +55,7 @@ DEPENDENCIES:
   - RxSwift (= 6.5.0)
   - SnapKit (= 5.6.0)
   - Starscream (= 4.0.6)
+  - SVGKit
   - SwiftEntryKit
   - WCDB.swift (= 2.1.1)
   - WebRTC-SDK (= 114.5735.08)
@@ -75,6 +80,7 @@ SPEC REPOS:
     - RxSwift
     - SnapKit
     - Starscream
+    - SVGKit
     - SwiftEntryKit
     - WCDB.swift
     - WCDBOptimizedSQLCipher
@@ -99,6 +105,7 @@ SPEC CHECKSUMS:
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Starscream: fb2c4510bebf908c62bd383bcf05e673720e91fd
+  SVGKit: 1ad7513f8c74d9652f94ed64ddecda1a23864dea
   SwiftEntryKit: 61b5fa36f34a97dd8013e48a7345bc4c4720be9a
   WCDB.swift: 2eb345ae28984eebd6479177d1ee8a0af52536f1
   WCDBOptimizedSQLCipher: 7f03bb7c94ad164996f0fa87d0f76026f5ab0f92
@@ -107,6 +114,6 @@ SPEC CHECKSUMS:
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
   ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
 
-PODFILE CHECKSUM: 5b6f610eaa22149118bb6ce34164a5f8d8dcad2c
+PODFILE CHECKSUM: a614949db6df9276db8b26a2d4a95df5c2c58fd2
 
 COCOAPODS: 1.15.2

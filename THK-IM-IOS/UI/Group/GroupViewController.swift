@@ -143,7 +143,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
     }()
     private lazy var groupMemberArrowView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "ic_arrow_right")
+        view.image = UIImage.init(named: "ic_arrow_right")
         return view
     }()
     

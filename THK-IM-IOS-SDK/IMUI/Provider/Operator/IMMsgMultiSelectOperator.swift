@@ -19,7 +19,7 @@ public class IMMsgMultiSelectOperator: IMMessageOperator {
     }
     
     public func icon() -> UIImage? {
-        return UIImage(named: "ic_msg_opr_multi_select")
+        return SVGImageUtils.loadSVG(named: "ic_msg_opr_multi_select")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

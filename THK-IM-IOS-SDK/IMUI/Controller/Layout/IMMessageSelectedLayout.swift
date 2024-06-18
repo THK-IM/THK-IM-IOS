@@ -31,7 +31,7 @@ public class IMMessageSelectedLayout: UIView {
     
     lazy private var deleteButton: UIImageView = {
         let button = UIImageView()
-        let image = UIImage(named: "ic_msg_opr_delete")?.scaledToSize(iconSize)
+        let image = SVGImageUtils.loadSVG(named: "ic_msg_opr_delete")?.scaledToSize(iconSize)
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit
@@ -42,7 +42,7 @@ public class IMMessageSelectedLayout: UIView {
     
     lazy private var forwardButton: UIImageView = {
         let button = UIImageView()
-        let image = UIImage(named: "ic_msg_opr_forward")?.scaledToSize(iconSize)
+        let image = SVGImageUtils.loadSVG(named: "ic_msg_opr_forward")?.scaledToSize(iconSize)
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit
@@ -53,7 +53,7 @@ public class IMMessageSelectedLayout: UIView {
     
     lazy private var cancelButton: UIImageView = {
         let button = UIImageView()
-        let image = UIImage(named: "ic_msg_opr_cancel")?.scaledToSize(iconSize)
+        let image = SVGImageUtils.loadSVG(named: "ic_msg_opr_cancel")?.scaledToSize(iconSize)
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit

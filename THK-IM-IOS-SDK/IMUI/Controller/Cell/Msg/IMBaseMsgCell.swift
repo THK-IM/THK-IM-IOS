@@ -165,9 +165,9 @@ open class IMBaseMsgCell : IMBaseTableCell {
                         if v is UIImageView {
                             if let imageView = (v as? UIImageView) {
                                 if self.isSelected {
-                                    imageView.image = UIImage.init(named: "ic_message_checked")
+                                    imageView.image = SVGImageUtils.loadSVG(named: "ic_message_checked")
                                 } else {
-                                    imageView.image = UIImage.init(named: "ic_message_unchecked")
+                                    imageView.image = SVGImageUtils.loadSVG(named: "ic_message_unchecked")
                                 }
                             }
                         }

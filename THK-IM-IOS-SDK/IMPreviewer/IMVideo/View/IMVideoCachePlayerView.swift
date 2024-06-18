@@ -65,8 +65,8 @@ public class IMCacheVideoPlayerView: UIView, AVAssetResourceLoaderDelegate {
         let b = UIButton()
         b.contentHorizontalAlignment = .fill
         b.contentVerticalAlignment = .fill
-        b.setImage(UIImage(named: "icon_video_play"), for: UIControl.State.normal)
-        b.setImage(UIImage(named: "icon_video_pause"), for: UIControl.State.selected)
+        b.setImage(SVGImageUtils.loadSVG(named: "icon_video_play"), for: UIControl.State.normal)
+        b.setImage(SVGImageUtils.loadSVG(named: "icon_video_pause"), for: UIControl.State.selected)
         b.addTarget(
             self,
             action: #selector(self.playOrPauseClick(sender:)),

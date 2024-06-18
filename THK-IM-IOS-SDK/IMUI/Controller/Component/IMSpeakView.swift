@@ -15,11 +15,11 @@ class IMSpeakView: UILabel {
     
     private var hasTouchOutside = false
     private var recordingDb: Double = 0.0
-    private let imageVolume1 = UIImage(named: "ic_volume_1")
-    private let imageVolume2 = UIImage(named: "ic_volume_2")
-    private let imageVolume3 = UIImage(named: "ic_volume_3")
-    private let imageVolume4 = UIImage(named: "ic_volume_4")
-    private let imageVolume5 = UIImage(named: "ic_volume_5")
+    private let imageVolume1 = SVGImageUtils.loadSVG(named: "ic_volume_1")
+    private let imageVolume2 = SVGImageUtils.loadSVG(named: "ic_volume_2")
+    private let imageVolume3 = SVGImageUtils.loadSVG(named: "ic_volume_3")
+    private let imageVolume4 = SVGImageUtils.loadSVG(named: "ic_volume_4")
+    private let imageVolume5 = SVGImageUtils.loadSVG(named: "ic_volume_5")
     
     
     private lazy var rootView: UIView = {

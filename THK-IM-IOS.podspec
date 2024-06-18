@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "THK-IM-IOS"
-  spec.version      = "0.0.5"
+  spec.version      = "0.0.6"
   spec.summary      = "A short description of THK-IM-IOS."
 
   # This description is used to generate tags and improve search results.
@@ -111,7 +111,10 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'IMUI' do |ui|
     ui.source_files = 'THK-IM-IOS-SDK/IMUI/**/*.swift'
-    ui.resource = 'THK-IM-IOS-SDK/IMUI/Resources/*.xcassets'
+    # ui.resource = 'THK-IM-IOS-SDK/IMUI/Resources/*.xcassets'
+    ui.resource_bundles = {
+      'IMUI' => ['THK-IM-IOS-SDK/IMUI/Resources/*.svg']
+    }
     ui.dependency 'Kingfisher', '7.10.0'
     ui.dependency 'RxGesture', '4.0.4'
     ui.dependency 'SnapKit', '5.6.0'
@@ -119,6 +122,7 @@ Pod::Spec.new do |spec|
     ui.dependency 'BadgeSwift', '8.0'
     ui.dependency 'THK-IM-IOS/IMCore'
     ui.dependency 'ProgressHUD'
+    ui.dependency 'SVGKit'
     ui.dependency 'JDStatusBarNotification'
     ui.dependency 'SwiftEntryKit'
   end

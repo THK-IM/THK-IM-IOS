@@ -48,7 +48,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     lazy var _resendButton: UIButton = {
         let v = UIButton()
         v.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        let failedImage = UIImage(named: "ic_msg_failed")?.scaledToSize(CGSize(width: 20, height: 20))
+        let failedImage = SVGImageUtils.loadSVG(named: "ic_msg_failed")?.scaledToSize(CGSize(width: 20, height: 20))
         v.setImage(failedImage, for: .normal)
         return v
     }()

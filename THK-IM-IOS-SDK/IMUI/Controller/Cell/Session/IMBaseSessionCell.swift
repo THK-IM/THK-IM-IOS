@@ -147,7 +147,7 @@ open class IMBaseSessionCell : IMBaseTableCell {
             unreadCountView.isHidden = true
         }
         if (session.status & SessionStatus.Silence.rawValue > 0) {
-            silenceView.image = UIImage(named: "icon_msg_silence")
+            silenceView.image = SVGImageUtils.loadSVG(named: "icon_msg_silence")
             unreadCountView.badgeColor  = .lightGray
         } else {
             silenceView.image = nil

@@ -50,7 +50,7 @@ class UploadTask: LoadTask {
                 }
                 var uploadParams: UploadParams? = nil
                 if let cipher = IMCoreManager.shared.crypto {
-                    var bodyStr = cipher.decrypt(String(data: response.data!, encoding: .utf8) ?? "")
+                    let bodyStr = cipher.decrypt(String(data: response.data!, encoding: .utf8) ?? "")
                     uploadParams = try? JSONDecoder().decode(
                         UploadParams.self,
                         from: bodyStr?.data(using: .utf8) ?? Data()

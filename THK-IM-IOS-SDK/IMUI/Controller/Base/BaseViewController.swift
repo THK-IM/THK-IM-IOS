@@ -47,7 +47,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             }
             setRightItems(images: images, titles: titles, actions: actions)
             if (self.swipeBack()) {
-                let backImage = UIImage(named: self.backIconName())?.withRenderingMode(.alwaysOriginal)
+                let backImage = SVGImageUtils.loadSVG(named: self.backIconName())?.withRenderingMode(.alwaysOriginal)
                 let customView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
                 let button = UIButton(type: .system)
                 button.addTarget(self, action: #selector(self.backAction), for: .touchUpInside)
@@ -110,9 +110,9 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     open func menuImages(menu: String) -> UIImage? {
         var image: UIImage? = nil
         if (menu == menuItemTagAdd) {
-            image = UIImage(named: "ic_titlebar_add")
+            image = SVGImageUtils.loadSVG(named: "ic_titlebar_add")
         } else if (menu == menuItemTagSearch) {
-            image = UIImage(named: "ic_titlebar_search")
+            image = SVGImageUtils.loadSVG(named: "ic_titlebar_search")
         }
         if image == nil {
             return image

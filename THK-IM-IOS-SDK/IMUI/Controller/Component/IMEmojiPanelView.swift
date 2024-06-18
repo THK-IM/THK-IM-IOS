@@ -59,13 +59,13 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     
     lazy var sendView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "ic_emoji_send")
+        view.image = SVGImageUtils.loadSVG(named: "ic_emoji_send")
         return view
     }()
     
     lazy var delView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "ic_emoji_del")
+        view.image = SVGImageUtils.loadSVG(named: "ic_emoji_del")
         return view
     }()
     

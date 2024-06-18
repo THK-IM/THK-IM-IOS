@@ -17,8 +17,8 @@ open class IMUnicodeEmojiPanelProvider: IMBasePanelViewProvider {
     }
     
     
-    open func icon(selected: Bool) -> UIImage {
-        return UIImage(named: "ic_msg_emoji")!
+    open func icon(selected: Bool) -> UIImage? {
+        return SVGImageUtils.loadSVG(named: "ic_msg_emoji")
     }
     
     open func support(session: Session) -> Bool {

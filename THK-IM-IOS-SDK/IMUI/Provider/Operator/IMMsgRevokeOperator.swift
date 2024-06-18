@@ -19,7 +19,7 @@ public class IMMsgRevokeOperator: IMMessageOperator {
     }
     
     public func icon() -> UIImage? {
-        return UIImage(named: "ic_msg_opr_revoke")
+        return SVGImageUtils.loadSVG(named: "ic_msg_opr_revoke")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

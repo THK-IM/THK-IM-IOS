@@ -15,7 +15,7 @@ open class IMPhotoFunctionProvider: IMBaseFunctionCellProvider {
     }
     
     public func icon() -> UIImage? {
-        return UIImage.init(named: "ic_msg_media")
+        return SVGImageUtils.loadSVG(named: "ic_msg_media")
     }
     
     public func click(sender: IMMsgSender?) {

@@ -19,7 +19,7 @@ public class IMMsgReplyOperator: IMMessageOperator {
     }
     
     public func icon() -> UIImage? {
-        return UIImage(named: "ic_msg_opr_reply")
+        return SVGImageUtils.loadSVG(named: "ic_msg_opr_reply")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

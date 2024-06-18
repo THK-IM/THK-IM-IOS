@@ -19,7 +19,7 @@ public class IMMsgForwardOperator: IMMessageOperator {
     }
     
     public func icon() -> UIImage? {
-        return UIImage(named: "ic_msg_opr_forward")
+        return SVGImageUtils.loadSVG(named: "ic_msg_opr_forward")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

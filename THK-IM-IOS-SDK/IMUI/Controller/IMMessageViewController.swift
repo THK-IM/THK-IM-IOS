@@ -70,9 +70,9 @@ open class IMMessageViewController: BaseViewController {
     
     open override func menuImages(menu: String) -> UIImage? {
         if menu == "search" {
-            return UIImage(named: "ic_titlebar_call")?.scaledToSize(CGSize.init(width: 24, height: 24))
+            return SVGImageUtils.loadSVG(named: "ic_titlebar_call")?.scaledToSize(CGSize.init(width: 24, height: 24))
         } else {
-            return UIImage(named: "ic_titlebar_more")?.scaledToSize(CGSize.init(width: 24, height: 24))
+            return SVGImageUtils.loadSVG(named: "ic_titlebar_more")?.scaledToSize(CGSize.init(width: 24, height: 24))
         }
     }
     
@@ -846,9 +846,6 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             self.msgSelectedLayout.isHidden = true
             if (!showInput) {
                 self.msgSelectedLayout.snp.updateConstraints { [weak self] make in
-                    guard let sf = self else {
-                        return
-                    }
                     make.height.equalTo(0)
                 }
             }

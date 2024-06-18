@@ -17,7 +17,7 @@ class IMReplyView: UIView {
     
     lazy private var closeView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "ic_reply_close")
+        view.image = SVGImageUtils.loadSVG(named: "ic_reply_close")
         view.contentMode = .scaleAspectFill
         return view
     }()
