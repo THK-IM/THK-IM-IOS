@@ -13,9 +13,6 @@ import SVGKit
 public class SVGImageUtils {
     
     public static func loadSVG(named: String, bundleName: String = "IMUI") -> UIImage? {
-        if let image = UIImage(named: named) {
-            return image
-        }
         if let path = Bundle.main.path(forResource: named, ofType: "svg") {
             return SVGKImage(contentsOfFile: path)?.uiImage
         }

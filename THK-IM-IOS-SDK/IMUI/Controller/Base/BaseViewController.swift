@@ -47,7 +47,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             }
             setRightItems(images: images, titles: titles, actions: actions)
             if (self.swipeBack()) {
-                let backImage = SVGImageUtils.loadSVG(named: self.backIconName())?.withRenderingMode(.alwaysOriginal)
+                let backImage = backIcon()?.withRenderingMode(.alwaysOriginal)
                 let customView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
                 let button = UIButton(type: .system)
                 button.addTarget(self, action: #selector(self.backAction), for: .touchUpInside)
@@ -79,8 +79,8 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         return true
     }
     
-    open func backIconName() -> String {
-        return "ic_titlebar_back"
+    open func backIcon() -> UIImage? {
+        return SVGImageUtils.loadSVG(named: "ic_titlebar_back")
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
