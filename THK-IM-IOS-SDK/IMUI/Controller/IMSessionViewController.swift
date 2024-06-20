@@ -250,14 +250,14 @@ open class IMSessionViewController : BaseViewController, UITableViewDataSource, 
     
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let session = self.sessions[indexPath.row]
-        var topText = "置顶"
-        var silenceText = "免打扰"
-        let deleteText = "删除"
+        var topText = ResourceUtils.loadString("top", comment: "")
+        var silenceText = ResourceUtils.loadString("silence", comment: "")
+        let deleteText = ResourceUtils.loadString("delete", comment: "")
         if (session.topTimestamp > 0) {
-            topText = "取消置顶"
+            topText = ResourceUtils.loadString("cancel_top", comment: "")
         }
         if (session.status & SessionStatus.Silence.rawValue != 0) {
-            silenceText = "取消静音"
+            silenceText = ResourceUtils.loadString("cancel_silence", comment: "")
         }
         let top = UIContextualAction(style: .normal, title: topText, handler: { [weak self] action, view, completionHandler in
             guard let sf = self else {

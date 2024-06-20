@@ -15,11 +15,11 @@ public class IMMsgReplyOperator: IMMessageOperator {
     }
     
     public func title() -> String {
-        return "回复"
+        return ResourceUtils.loadString("reply", comment: "")
     }
     
     public func icon() -> UIImage? {
-        return SVGImageUtils.loadSVG(named: "ic_msg_opr_reply")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_reply")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

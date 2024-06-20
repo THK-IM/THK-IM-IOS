@@ -70,7 +70,7 @@ public class AppUtils {
     
     public static func getLanguage() -> String {
         let languages: [String]? = UserDefaults.standard.object(forKey: "AppleLanguages") as? [String]? ?? nil
-        return languages?.first ?? "en"
+        return languages?.first?.components(separatedBy: "-").first ?? "en"
     }
     
     public static func getAdvertisingId() -> String? {

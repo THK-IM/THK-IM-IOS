@@ -23,6 +23,8 @@
 		A018CE102B00ADE400896B87 /* IMMessageOperatorItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CE0F2B00ADE400896B87 /* IMMessageOperatorItemView.swift */; };
 		A024BA212C216CED009030D2 /* ic_msg_camera.svg in Resources */ = {isa = PBXBuildFile; fileRef = A024BA202C216CED009030D2 /* ic_msg_camera.svg */; };
 		A024BA252C21753F009030D2 /* ic_msg_media.svg in Resources */ = {isa = PBXBuildFile; fileRef = A024BA242C21753E009030D2 /* ic_msg_media.svg */; };
+		A024BA532C2404E6009030D2 /* LanguageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A024BA522C2404E6009030D2 /* LanguageUtils.swift */; };
+		A024BA622C2427CE009030D2 /* IMUI.strings in Resources */ = {isa = PBXBuildFile; fileRef = A024BA562C2406FB009030D2 /* IMUI.strings */; };
 		A02529072AC6CB05001561A0 /* DefaultFileLoadModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */; };
 		A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529082AC6CB82001561A0 /* DownloadTask.swift */; };
 		A025290B2AC6CBA6001561A0 /* UploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A025290A2AC6CBA6001561A0 /* UploadTask.swift */; };
@@ -103,7 +105,7 @@
 		A0589A4B2C21557D003419B8 /* ic_msg_delete.svg in Resources */ = {isa = PBXBuildFile; fileRef = A0589A022C21557C003419B8 /* ic_msg_delete.svg */; };
 		A0589A4C2C21557D003419B8 /* ic_msg_more.svg in Resources */ = {isa = PBXBuildFile; fileRef = A0589A032C21557C003419B8 /* ic_msg_more.svg */; };
 		A0589A4D2C21557D003419B8 /* ic_msg_opr_reply.svg in Resources */ = {isa = PBXBuildFile; fileRef = A0589A042C21557D003419B8 /* ic_msg_opr_reply.svg */; };
-		A0589A4F2C21569E003419B8 /* SVGImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0589A4E2C21569E003419B8 /* SVGImageUtils.swift */; };
+		A0589A4F2C21569E003419B8 /* ResourceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0589A4E2C21569E003419B8 /* ResourceUtils.swift */; };
 		A06A133E2BA1796F00CEFB4D /* IMUIResourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06A133D2BA1796F00CEFB4D /* IMUIResourceProvider.swift */; };
 		A06A13B42BA5B4F200CEFB4D /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06A13B32BA5B4F200CEFB4D /* Stack.swift */; };
 		A06A13F32BA9DE1800CEFB4D /* AESPK7Coder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06A13F22BA9DE1800CEFB4D /* AESPK7Coder.swift */; };
@@ -361,6 +363,17 @@
 		A018CE0F2B00ADE400896B87 /* IMMessageOperatorItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageOperatorItemView.swift; sourceTree = "<group>"; };
 		A024BA202C216CED009030D2 /* ic_msg_camera.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_camera.svg; sourceTree = "<group>"; };
 		A024BA242C21753E009030D2 /* ic_msg_media.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_media.svg; sourceTree = "<group>"; };
+		A024BA522C2404E6009030D2 /* LanguageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageUtils.swift; sourceTree = "<group>"; };
+		A024BA552C2406FB009030D2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/IMUI.strings; sourceTree = "<group>"; };
+		A024BA572C24071C009030D2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
+		A024BA582C24071C009030D2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		A024BA592C24071C009030D2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/IMUI.strings; sourceTree = "<group>"; };
+		A024BA5A2C240728009030D2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		A024BA5B2C240728009030D2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		A024BA5C2C240728009030D2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/IMUI.strings"; sourceTree = "<group>"; };
+		A024BA5D2C240734009030D2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		A024BA5E2C240734009030D2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		A024BA5F2C240734009030D2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/IMUI.strings"; sourceTree = "<group>"; };
 		A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFileLoadModule.swift; sourceTree = "<group>"; };
 		A02529082AC6CB82001561A0 /* DownloadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTask.swift; sourceTree = "<group>"; };
 		A025290A2AC6CBA6001561A0 /* UploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTask.swift; sourceTree = "<group>"; };
@@ -441,7 +454,7 @@
 		A0589A022C21557C003419B8 /* ic_msg_delete.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_delete.svg; sourceTree = "<group>"; };
 		A0589A032C21557C003419B8 /* ic_msg_more.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_more.svg; sourceTree = "<group>"; };
 		A0589A042C21557D003419B8 /* ic_msg_opr_reply.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_opr_reply.svg; sourceTree = "<group>"; };
-		A0589A4E2C21569E003419B8 /* SVGImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVGImageUtils.swift; sourceTree = "<group>"; };
+		A0589A4E2C21569E003419B8 /* ResourceUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceUtils.swift; sourceTree = "<group>"; };
 		A06A133D2BA1796F00CEFB4D /* IMUIResourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUIResourceProvider.swift; sourceTree = "<group>"; };
 		A06A13B32BA5B4F200CEFB4D /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		A06A13F22BA9DE1800CEFB4D /* AESPK7Coder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AESPK7Coder.swift; sourceTree = "<group>"; };
@@ -745,6 +758,7 @@
 		A02529102AC903CA001561A0 /* Processor */ = {
 			isa = PBXGroup;
 			children = (
+				A03082CC2AF66AF1001B8373 /* IMReadMsgProcessor.swift */,
 				A03082CE2AF66BD7001B8373 /* IMReeditMsgProcessor.swift */,
 				A03082D02AF66C31001B8373 /* IMRevokeMsgProcessor.swift */,
 				A0D68B532A888679004D11A5 /* IMUnSupportMsgProcessor.swift */,
@@ -828,7 +842,8 @@
 				A0D68AE02A888678004D11A5 /* UIImageView+Cache.swift */,
 				A0EA42FC2A99A60200F64A90 /* ImageCacheManager.swift */,
 				A033FB1A2B96C9F40053045E /* AtStringUtils.swift */,
-				A0589A4E2C21569E003419B8 /* SVGImageUtils.swift */,
+				A0589A4E2C21569E003419B8 /* ResourceUtils.swift */,
+				A024BA522C2404E6009030D2 /* LanguageUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1199,6 +1214,7 @@
 				A0589A012C21557C003419B8 /* icon_msg_silence.svg */,
 				A05899DC2C215579003419B8 /* icon_video_pause.svg */,
 				A05899F62C21557B003419B8 /* icon_video_play.svg */,
+				A024BA562C2406FB009030D2 /* IMUI.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1463,7 +1479,6 @@
 			isa = PBXGroup;
 			children = (
 				A0D68B522A888679004D11A5 /* IMBaseMsgProcessor.swift */,
-				A03082CC2AF66AF1001B8373 /* IMReadMsgProcessor.swift */,
 			);
 			path = Processor;
 			sourceTree = "<group>";
@@ -1795,6 +1810,9 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
+				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = A0D68A8A2A88838A004D11A5;
 			productRefGroup = A0D68A942A88838A004D11A5 /* Products */;
@@ -1851,6 +1869,7 @@
 				A0589A262C21557D003419B8 /* ic_volume_1.svg in Resources */,
 				A0589A4D2C21557D003419B8 /* ic_msg_opr_reply.svg in Resources */,
 				A024BA252C21753F009030D2 /* ic_msg_media.svg in Resources */,
+				A024BA622C2427CE009030D2 /* IMUI.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1952,7 +1971,7 @@
 				A033FAFC2B8A0E500053045E /* IMVideoMsgView.swift in Sources */,
 				A018CE012B00A00B00896B87 /* IMMessageOperator.swift in Sources */,
 				A0FCA8D32B484A5B00FC6E47 /* WelcomeViewController.swift in Sources */,
-				A0589A4F2C21569E003419B8 /* SVGImageUtils.swift in Sources */,
+				A0589A4F2C21569E003419B8 /* ResourceUtils.swift in Sources */,
 				A03082E12AF7BFEC001B8373 /* UpdateSessionVo.swift in Sources */,
 				A0E8ED482AEDED23004163BD /* IMPreviewer.swift in Sources */,
 				A0D68BA92A888679004D11A5 /* IMUnSupportMsgCellProvider.swift in Sources */,
@@ -1985,6 +2004,7 @@
 				A033FAFE2B8A11BA0053045E /* IMImageMsgView.swift in Sources */,
 				A0D68BEA2A888679004D11A5 /* IMVideoMsgProcessor.swift in Sources */,
 				A0C431F52A909CCE00A84D4A /* PublishStreamVo.swift in Sources */,
+				A024BA532C2404E6009030D2 /* LanguageUtils.swift in Sources */,
 				A0FCA8DA2B48E66000FC6E47 /* DataRepository.swift in Sources */,
 				A0EF35522B5BFA7700940F54 /* IMAtSessionMemberController.swift in Sources */,
 				A0D68BE72A888679004D11A5 /* MessageModule.swift in Sources */,
@@ -2201,10 +2221,24 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		A024BA562C2406FB009030D2 /* IMUI.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A024BA552C2406FB009030D2 /* en */,
+				A024BA592C24071C009030D2 /* ja */,
+				A024BA5C2C240728009030D2 /* zh-Hans */,
+				A024BA5F2C240734009030D2 /* zh-Hant */,
+			);
+			name = IMUI.strings;
+			sourceTree = "<group>";
+		};
 		A0D68A9C2A88838A004D11A5 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				A0D68A9D2A88838A004D11A5 /* Base */,
+				A024BA572C24071C009030D2 /* ja */,
+				A024BA5A2C240728009030D2 /* zh-Hans */,
+				A024BA5D2C240734009030D2 /* zh-Hant */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -2213,6 +2247,9 @@
 			isa = PBXVariantGroup;
 			children = (
 				A0D68AA22A88838C004D11A5 /* Base */,
+				A024BA582C24071C009030D2 /* ja */,
+				A024BA5B2C240728009030D2 /* zh-Hans */,
+				A024BA5E2C240734009030D2 /* zh-Hant */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -2224,6 +2261,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -2284,6 +2322,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";

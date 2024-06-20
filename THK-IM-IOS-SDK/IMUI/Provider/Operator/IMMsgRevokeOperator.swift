@@ -15,18 +15,23 @@ public class IMMsgRevokeOperator: IMMessageOperator {
     }
     
     public func title() -> String {
-        return "撤回"
+        return ResourceUtils.loadString("revoke", comment: "")
     }
     
     public func icon() -> UIImage? {
-        return SVGImageUtils.loadSVG(named: "ic_msg_opr_revoke")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_revoke")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {
+        weak var sender = sender
         IMCoreManager.shared.messageModule
             .getMsgProcessor(MsgType.Revoke.rawValue)
-            .send(message, false, { _,_ in 
-                
+            .send(message, false, { _ , err in
+                if err != nil {
+                    sender?.showSenderMessage(text: ResourceUtils.loadString("revoke_failed", comment: ""), success: false)
+                } else {
+                    sender?.showSenderMessage(text: ResourceUtils.loadString("revoke_success", comment: ""), success: false)
+                }
             })
     }
     

@@ -80,7 +80,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     open func backIcon() -> UIImage? {
-        return SVGImageUtils.loadSVG(named: "ic_titlebar_back")
+        return ResourceUtils.loadImage(named: "ic_titlebar_back")
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
@@ -110,9 +110,9 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     open func menuImages(menu: String) -> UIImage? {
         var image: UIImage? = nil
         if (menu == menuItemTagAdd) {
-            image = SVGImageUtils.loadSVG(named: "ic_titlebar_add")
+            image = ResourceUtils.loadImage(named: "ic_titlebar_add")
         } else if (menu == menuItemTagSearch) {
-            image = SVGImageUtils.loadSVG(named: "ic_titlebar_search")
+            image = ResourceUtils.loadImage(named: "ic_titlebar_search")
         }
         if image == nil {
             return image
@@ -132,7 +132,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         if let codeMessageErr = err as? CodeMessageError {
             showToast(codeMessageErr.message)
         } else {
-            showToast("未知错误")
+            showToast(err.localizedDescription)
         }
     }
     

@@ -119,7 +119,7 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         
         self.recordTitleView.text = recordBody.title
         self.recordContentView.text = recordBody.content
-        self.descView.text = "聊天记录"
+        self.descView.text = ResourceUtils.loadString("chat_record", comment: "")
         
         if (isReply) {
             self.recordTitleView.font = UIFont.boldSystemFont(ofSize: 12)

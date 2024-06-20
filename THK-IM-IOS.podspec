@@ -113,7 +113,7 @@ Pod::Spec.new do |spec|
     ui.source_files = 'THK-IM-IOS-SDK/IMUI/**/*.swift'
     # ui.resource = 'THK-IM-IOS-SDK/IMUI/Resources/*.xcassets'
     ui.resource_bundles = {
-      'IMUI' => ['THK-IM-IOS-SDK/IMUI/Resources/*.svg']
+      'IMUI' => ['THK-IM-IOS-SDK/IMUI/Resources/*'],
     }
     ui.dependency 'Kingfisher', '7.10.0'
     ui.dependency 'RxGesture', '4.0.4'

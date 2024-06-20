@@ -11,11 +11,11 @@ import UIKit
 open class IMPhotoFunctionProvider: IMBaseFunctionCellProvider {
     
     public func name() -> String {
-        return "照片"
+        return ResourceUtils.loadString("album", comment: "")
     }
     
     public func icon() -> UIImage? {
-        return SVGImageUtils.loadSVG(named: "ic_msg_media")
+        return ResourceUtils.loadImage(named: "ic_msg_media")
     }
     
     public func click(sender: IMMsgSender?) {

@@ -29,7 +29,7 @@ class IMUnSupportMsgView: IMMsgLabelView, IMsgBodyView {
     }
     
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
-        self.text = "当前版本不支持该消息类型，请更新"
+        self.text = ResourceUtils.loadString("not_support_msg_update_client", comment: "")
     }
     
     func contentView() -> UIView {

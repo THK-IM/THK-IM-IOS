@@ -15,11 +15,11 @@ public class IMMsgEditOperator: IMMessageOperator {
     }
     
     public func title() -> String {
-        return "编辑"
+        return ResourceUtils.loadString("edit", comment: "")
     }
     
     public func icon() -> UIImage? {
-        return SVGImageUtils.loadSVG(named: "ic_msg_opr_edit")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_edit")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

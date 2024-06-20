@@ -15,11 +15,11 @@ public class IMMsgCopyOperator: IMMessageOperator {
     }
     
     public func title() -> String {
-        return "复制"
+        return ResourceUtils.loadString("copy", comment: "")
     }
     
     public func icon() -> UIImage? {
-        return SVGImageUtils.loadSVG(named: "ic_msg_opr_copy")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_copy")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

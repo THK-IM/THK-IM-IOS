@@ -11,11 +11,11 @@ import UIKit
 open class IMCameraFunctionProvider: IMBaseFunctionCellProvider {
     
     public func name() -> String {
-        return "拍摄"
+        return ResourceUtils.loadString("camera", comment: "")
     }
     
     public func icon() -> UIImage? {
-        return SVGImageUtils.loadSVG(named: "ic_msg_camera")
+        return ResourceUtils.loadImage(named: "ic_msg_camera")
     }
     
     public func click(sender: IMMsgSender?) {

@@ -16,7 +16,7 @@ class IMAudioMsgView: UIView, IMsgBodyView {
     
     private lazy var audioMsgView : UIImageView = {
         let view = UIImageView()
-        view.image = SVGImageUtils.loadSVG(named: "ic_msg_audio")
+        view.image = ResourceUtils.loadImage(named: "ic_msg_audio")
         return view
     }()
     

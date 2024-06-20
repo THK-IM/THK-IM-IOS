@@ -31,7 +31,7 @@ class IMSessionChooseViewController: IMSessionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "选择一个聊天"
+        self.navigationItem.title = ResourceUtils.loadString("choose_one_session", comment: "")
     }
     
     override func openSession(_ session: Session) {
@@ -121,38 +121,10 @@ class IMSessionChooseViewController: IMSessionViewController {
                 let title: String = (
                     session.type == SessionType.Group.rawValue ||
                     session.type == SessionType.SuperGroup.rawValue
-                ) ? "的群聊记录" : "的聊天记录"
-                recordBody.title = "\(recordBody.title)\(title)"
+                ) ? ResourceUtils.loadString("someone_s_group_chat_record", comment: "") : ResourceUtils.loadString("someone_s_chat_record", comment: "")
+                recordBody.title = String.init(format: title, recordBody.title)
                 return Observable.just(recordBody)
             })
-//        return IMCoreManager.shared.userModule.queryUsers(ids: uIds).flatMap({ (userMap) -> Observable<IMRecordMsgBody> in
-//            var content = ""
-//            var i = 0
-//            for m in messages {
-//                let userName = userMap[m.fromUId]?.nickname ?? "XX"
-//                let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).sessionDesc(msg: m)
-//                content = "\(content)\(userName):\(subContent)"
-//                i += 1
-//                if (i <= messages.count - 1) {
-//                    content += "\n"
-//                }
-//            }
-//            
-//            return Observable.just(recordBody)
-//        }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
-//            let selfId = IMCoreManager.shared.uId
-//            return IMCoreManager.shared.userModule.queryUser(id: selfId).flatMap({ (user) ->  Observable<IMRecordMsgBody> in
-//                recordBody.title = user.nickname
-//                return Observable.just(recordBody)
-//            })
-//        }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
-//            let title: String = (
-//                session.type == SessionType.Group.rawValue ||
-//                session.type == SessionType.SuperGroup.rawValue
-//            ) ? "的群聊记录" : "的聊天记录"
-//            recordBody.title = "\(recordBody.title)\(title)"
-//            return Observable.just(recordBody)
-//        })
     }
     
     

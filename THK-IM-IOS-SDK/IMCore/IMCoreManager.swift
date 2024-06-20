@@ -105,7 +105,6 @@ open class IMCoreManager: SignalListener {
             self.env = "Release"
         }
         self.initIMLog()
-        messageModule.registerMsgProcessor(IMReadMsgProcessor())
     }
     
     public func initUser(_ uId :Int64) {

@@ -70,9 +70,9 @@ open class IMMessageViewController: BaseViewController {
     
     open override func menuImages(menu: String) -> UIImage? {
         if menu == "search" {
-            return SVGImageUtils.loadSVG(named: "ic_titlebar_call")?.scaledToSize(CGSize.init(width: 24, height: 24))
+            return ResourceUtils.loadImage(named: "ic_titlebar_call")?.scaledToSize(CGSize.init(width: 24, height: 24))
         } else {
-            return SVGImageUtils.loadSVG(named: "ic_titlebar_more")?.scaledToSize(CGSize.init(width: 24, height: 24))
+            return ResourceUtils.loadImage(named: "ic_titlebar_more")?.scaledToSize(CGSize.init(width: 24, height: 24))
         }
     }
     
@@ -265,7 +265,7 @@ open class IMMessageViewController: BaseViewController {
     open func initTipsView() {
         self.newMsgTipsView.isUserInteractionEnabled = true
         self.newMsgTipsView.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
-        self.newMsgTipsView.text = "有新消息"+"⬇️"
+        self.newMsgTipsView.text = ResourceUtils.loadString("new_message_tips", comment: "")
         self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
         self.newMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
         self.newMsgTipsView.layer.cornerRadius = 8
@@ -322,7 +322,7 @@ open class IMMessageViewController: BaseViewController {
         if self.atMsgs.count <= 0 {
             self.atMsgTipsView.isHidden = true
         } else {
-            self.atMsgTipsView.text = "有\(self.atMsgs.count)条消息@我"
+            self.atMsgTipsView.text = String.init(format: ResourceUtils.loadString("x_message_at_me", comment: ""), self.atMsgs.count)
             self.atMsgTipsView.isHidden = false
         }
     }
@@ -606,16 +606,12 @@ open class IMMessageViewController: BaseViewController {
                                 self.readMessage(msg)
                             }
                         } else {
-                            showToast("播放失败")
+                            showToast(ResourceUtils.loadString("play_failed", comment: ""))
                         }
-                    } else {
-                        showToast("加载语音中")
                     }
                 } catch {
-                    showToast("播放失败")
+                    showToast(ResourceUtils.loadString("play_failed", comment: ""))
                 }
-            } else {
-                showToast("加载语音中")
             }
         } else if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
             var ay = [Message]()
@@ -726,7 +722,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
                 for r in result {
                     if (r.mimeType.starts(with: IMFileFormat.Image.rawValue)) {
                         if session.functionFlag & IMChatFunction.Image.rawValue == 0 {
-                            sf.showSenderMessage(text: "会话不允许发送图片", success: false)
+                            sf.showSenderMessage(text: ResourceUtils.loadString("do_not_allow_send_image", comment: ""), success: false)
                             return
                         }
                         var ext = r.mimeType.replacingOccurrences(of: IMFileFormat.Image.rawValue, with: "")
@@ -734,7 +730,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
                         try sf.sendImage(r.data, ext: ext)
                     } else if (r.mimeType.starts(with: IMFileFormat.Video.rawValue)) {
                         if session.functionFlag & IMChatFunction.Video.rawValue == 0 {
-                            sf.showSenderMessage(text: "会话不允许发送视频", success: false)
+                            sf.showSenderMessage(text: ResourceUtils.loadString("do_not_allow_send_video", comment: ""), success: false)
                             return
                         }
                         var ext = r.mimeType.replacingOccurrences(of: IMFileFormat.Video.rawValue, with: "")

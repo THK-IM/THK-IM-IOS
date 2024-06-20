@@ -30,6 +30,7 @@ open class IMUIManager: NSObject {
     private override init() {
         super.init()
         
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMReadMsgProcessor())
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMUnSupportMsgProcessor())
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMTextMsgProcessor())
         IMCoreManager.shared.messageModule.registerMsgProcessor(IMImageMsgProcessor())

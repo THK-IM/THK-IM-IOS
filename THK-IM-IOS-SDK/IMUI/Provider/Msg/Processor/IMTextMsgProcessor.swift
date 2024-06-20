@@ -36,10 +36,10 @@ open class IMTextMsgProcessor : IMBaseMsgProcessor {
             }
             var editFlag = ""
             if (msg.operateStatus & MsgOperateStatus.Update.rawValue > 0) {
-                editFlag = "[已编辑]"
+                editFlag = ResourceUtils.loadString("edited", comment: "")
             }
             return editFlag + body
         }
-        return "[文本消息]"
+        return ResourceUtils.loadString("im_text_msg", comment: "")
     }
 }

@@ -18,11 +18,11 @@ public class IMMsgDeleteOperator: IMMessageOperator {
     }
     
     public func title() -> String {
-        return "删除"
+        return ResourceUtils.loadString("delete", comment: "")
     }
     
     public func icon() -> UIImage? {
-        return SVGImageUtils.loadSVG(named: "ic_msg_opr_delete")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_delete")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

@@ -34,7 +34,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
             make.right.equalToSuperview()
             make.height.equalTo(30)
         }
-        self.titleView.text = "选择提醒的人"
+        self.titleView.text = ResourceUtils.loadString("choose_at_people", comment: "")
         self.titleView.font = UIFont.boldSystemFont(ofSize: 18)
         self.titleView.textAlignment = .center
         self.titleView.textColor = UIColor.init(hex: "#333333")

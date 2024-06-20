@@ -15,11 +15,11 @@ public class IMMsgForwardOperator: IMMessageOperator {
     }
     
     public func title() -> String {
-        return "转发"
+        return ResourceUtils.loadString("forward", comment: "")
     }
     
     public func icon() -> UIImage? {
-        return SVGImageUtils.loadSVG(named: "ic_msg_opr_forward")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_forward")
     }
     
     public func onClick(sender: IMMsgSender, message: Message) {

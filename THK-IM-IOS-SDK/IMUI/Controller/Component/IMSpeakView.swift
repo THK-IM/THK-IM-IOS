@@ -15,11 +15,11 @@ class IMSpeakView: UILabel {
     
     private var hasTouchOutside = false
     private var recordingDb: Double = 0.0
-    private let imageVolume1 = SVGImageUtils.loadSVG(named: "ic_volume_1")
-    private let imageVolume2 = SVGImageUtils.loadSVG(named: "ic_volume_2")
-    private let imageVolume3 = SVGImageUtils.loadSVG(named: "ic_volume_3")
-    private let imageVolume4 = SVGImageUtils.loadSVG(named: "ic_volume_4")
-    private let imageVolume5 = SVGImageUtils.loadSVG(named: "ic_volume_5")
+    private let imageVolume1 = ResourceUtils.loadImage(named: "ic_volume_1")
+    private let imageVolume2 = ResourceUtils.loadImage(named: "ic_volume_2")
+    private let imageVolume3 = ResourceUtils.loadImage(named: "ic_volume_3")
+    private let imageVolume4 = ResourceUtils.loadImage(named: "ic_volume_4")
+    private let imageVolume5 = ResourceUtils.loadImage(named: "ic_volume_5")
     
     
     private lazy var rootView: UIView = {
@@ -70,7 +70,7 @@ class IMSpeakView: UILabel {
         self.font = UIFont.boldSystemFont(ofSize: 16.0)
         self.textAlignment = .center
         self.textColor = UIColor.black
-        self.text = "按住 说话"
+        self.text = ResourceUtils.loadString("press_for_record_voice", comment: "")
         self.backgroundColor = UIColor.white
         self.isUserInteractionEnabled = true
         self.isMultipleTouchEnabled = true
@@ -89,7 +89,10 @@ class IMSpeakView: UILabel {
             AVAudioSession.sharedInstance().requestRecordPermission {_ in
             }
         } else {
-            self.sender?.showSenderMessage(text: "请开启录音权限", success: false)
+            self.sender?.showSenderMessage(
+                text: ResourceUtils.loadString("please_open_record_permission", comment: ""),
+                success: false
+            )
             if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                 if UIApplication.shared.canOpenURL(appSettings) {
                     UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
@@ -106,7 +109,9 @@ class IMSpeakView: UILabel {
             self.showTipsPopup()
             self.layoutRecording()
         } else {
-            self.sender?.showSenderMessage(text: "录音失败", success: false)
+            self.sender?.showSenderMessage(
+                text: ResourceUtils.loadString("record_failed", comment: ""), success: false
+            )
         }
     }
     
@@ -153,9 +158,9 @@ class IMSpeakView: UILabel {
                 return
             }
             if (sf.hasTouchOutside) {
-                sf.recordingTipsView.text = "松手取消"
+                sf.recordingTipsView.text = ResourceUtils.loadString("release_to_cancel", comment: "")
             } else {
-                sf.recordingTipsView.text = "松手发送"
+                sf.recordingTipsView.text = ResourceUtils.loadString("release_to_send_voice", comment: "")
             }
             if sf.recordingDb <= 45 {
                 sf.recordingDBView.image = sf.imageVolume1
@@ -172,12 +177,12 @@ class IMSpeakView: UILabel {
     }
     
     private func startUI() {
-        self.text = "松开 结束"
+        self.text = ResourceUtils.loadString("release_to_cancel", comment: "")
         self.backgroundColor = UIColor.init(hex: "CCCCCC")
     }
     
     private func resetUI() {
-        self.text = "按住 说话"
+        self.text = ResourceUtils.loadString("press_for_record_voice", comment: "")
         self.backgroundColor = UIColor.white
         self.dismissTipsPopup()
     }

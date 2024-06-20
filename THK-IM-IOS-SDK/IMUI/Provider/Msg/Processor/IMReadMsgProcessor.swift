@@ -47,10 +47,8 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
             if (dbMsg != nil) {
                 return 
             }
-            DDLogInfo("ReadMsgProcessor received msg \(msg.id) \(msg.fromUId) \(msg.operateStatus)")
             let referMsg = try IMCoreManager.shared.database.messageDao().findByMsgId(msg.referMsgId!, msg.sessionId)
             if (referMsg != nil) {
-                DDLogInfo("ReadMsgProcessor received referMsg \(referMsg!.id) \(referMsg!.fromUId) \(referMsg!.operateStatus)")
                 if (msg.fromUId == IMCoreManager.shared.uId) {
                     // 自己发的已读消息，更新rMsgId的消息状态为服务端已读
                     referMsg!.operateStatus = MsgOperateStatus.ServerRead.rawValue | 
@@ -190,7 +188,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     }
     
     override open func msgDesc(msg: Message) -> String {
-        return "[已读消息]"
+        return ResourceUtils.loadString("im_msg_desc_read", comment: "")
     }
     
     override public func reset() {

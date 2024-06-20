@@ -62,7 +62,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     
     lazy private var speakButton: UIButton = {
         let voiceButton = UIButton()
-        let image = SVGImageUtils.loadSVG(named: "ic_msg_voice")?.scaledToSize(iconSize)
+        let image = ResourceUtils.loadImage(named: "ic_msg_voice")?.scaledToSize(iconSize)
         if image != nil {
             voiceButton.setImage(image!, for: .normal)
             voiceButton.contentHorizontalAlignment = .fill
@@ -76,7 +76,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     lazy private var textView: IMTextView = {
         let textView = IMTextView()
         textView.delegate = self
-        textView.placeholder = "说点什么.."
+        textView.placeholder = ResourceUtils.loadString("say_something", comment: "")
         textView.isScrollEnabled = true
         textView.textColor = UIColor.init(hex: "#333333")
         textView.font = inputFont
@@ -100,7 +100,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     
     lazy private var emojiButton: UIButton = {
         let emojiButton = UIButton()
-        let image = SVGImageUtils.loadSVG(named: "ic_msg_emoji")?.scaledToSize(iconSize)
+        let image = ResourceUtils.loadImage(named: "ic_msg_emoji")?.scaledToSize(iconSize)
         if image != nil {
             emojiButton.setImage(image!, for: .normal)
             emojiButton.contentHorizontalAlignment = .fill
@@ -113,7 +113,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     
     lazy private var moreButton: UIButton = {
         let moreButton = UIButton()
-        let image = SVGImageUtils.loadSVG(named: "ic_msg_more")?.scaledToSize(iconSize)
+        let image = ResourceUtils.loadImage(named: "ic_msg_more")?.scaledToSize(iconSize)
         if image != nil {
             moreButton.setImage(image!, for: .normal)
             moreButton.contentHorizontalAlignment = .fill
@@ -203,12 +203,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         }
         self.isEmojiImageShow = !self.isEmojiPanelShow
         if self.isEmojiImageShow {
-            let image = SVGImageUtils.loadSVG(named: "ic_msg_emoji")?.scaledToSize(iconSize)
+            let image = ResourceUtils.loadImage(named: "ic_msg_emoji")?.scaledToSize(iconSize)
             if image != nil {
                 self.emojiButton.setImage(image!, for: .normal)
             }
         } else {
-            let image = SVGImageUtils.loadSVG(named: "ic_msg_keyboard")?.scaledToSize(iconSize)
+            let image = ResourceUtils.loadImage(named: "ic_msg_keyboard")?.scaledToSize(iconSize)
             if image != nil {
                 self.emojiButton.setImage(image!, for: .normal)
             }
@@ -223,7 +223,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         if self.isSpeakImageShow {
             self.speakView.isHidden = false
             self.textView.isHidden = true
-            let image = SVGImageUtils.loadSVG(named: "ic_msg_keyboard")?.scaledToSize(iconSize)
+            let image = ResourceUtils.loadImage(named: "ic_msg_keyboard")?.scaledToSize(iconSize)
             if image != nil {
                 self.speakButton.setImage(image!, for: .normal)
             }
@@ -232,7 +232,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         } else {
             self.speakView.isHidden = true
             self.textView.isHidden = false
-            let image = SVGImageUtils.loadSVG(named: "ic_msg_voice")?.scaledToSize(iconSize)
+            let image = ResourceUtils.loadImage(named: "ic_msg_voice")?.scaledToSize(iconSize)
             if image != nil {
                 self.speakButton.setImage(image!, for: .normal)
             }

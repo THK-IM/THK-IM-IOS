@@ -33,7 +33,7 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
         view.numberOfLines = 1
         view.font = UIFont.systemFont(ofSize: 14)
         view.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "1988f0")
-        view.text = "重新编辑"
+        view.text = ResourceUtils.loadString("im_edit_again", comment: "")
         view.textAlignment = .center
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         tapGesture.cancelsTouchesInView = true
@@ -86,16 +86,24 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
             if (message.data != nil) {
                 do {
                     let revokeData = try JSONDecoder().decode(IMRevokeMsgData.self, from: message.data!.data(using: .utf8) ?? Data())
-                    self.textView.text = "\(revokeData.nick)撤回了一条消息"
+                    self.textView.text = String.init(
+                        format:ResourceUtils.loadString("im_revoke_msg", comment: ""),
+                        revokeData.nick
+                    )
                 } catch {
-                    self.textView.text = "对方撤回了一条消息"
-                    DDLogError("\(error)")
+                    self.textView.text = String.init(
+                        format:ResourceUtils.loadString("im_revoke_msg", comment: ""),
+                        ResourceUtils.loadString("other_side", comment: "")
+                    )
                 }
             } else {
-                self.textView.text = "对方撤回了一条消息"
+                self.textView.text = String.init(
+                    format:ResourceUtils.loadString("im_revoke_msg", comment: ""),
+                    ResourceUtils.loadString("other_side", comment: "")
+                )
             }
         } else {
-            self.textView.text = "你撤回了一条消息"
+            self.textView.text = ResourceUtils.loadString("you_revoke_a_message", comment: "")
             self.reeditView.isHidden = false
             self.reeditView.snp.updateConstraints { make in
                 make.right.equalToSuperview()
