@@ -845,7 +845,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             self.messageLayout.setSelectMode(selected)
             self.msgSelectedLayout.isHidden = true
             if (!showInput) {
-                self.msgSelectedLayout.snp.updateConstraints { [weak self] make in
+                self.msgSelectedLayout.snp.updateConstraints { make in
                     make.height.equalTo(0)
                 }
             }

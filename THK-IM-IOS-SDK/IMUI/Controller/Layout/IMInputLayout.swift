@@ -393,7 +393,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             return false
         }
     }
-
+    
     func onKeyboardChange(_ isShow: Bool, _ duration: Double, _ keyboardHeight: CGFloat) {
         self.isKeyboardShow = isShow
         if isShow {
@@ -412,7 +412,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     
     func addInputText(_ text: String, _ atMap: [Int64: (User, SessionMember?)]? = nil) {
         if atMap != nil {
-            for (k,v) in atMap! {
+            for (_, v) in atMap! {
                 self.addAtMap(v.0, v.1)
             }
         }
@@ -534,7 +534,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     func getInputContent() ->String? {
         return self.textView.text
     }
-
+    
     @discardableResult func openKeyboard() -> Bool {
         return self.textView.becomeFirstResponder()
     }
@@ -680,5 +680,5 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             }
         }
     }
-        
+    
 }

@@ -13,14 +13,6 @@ import AdSupport
 
 public class AppUtils {
     
-    private static var language = getDeviceLanguage()
-    
-    private static func getDeviceLanguage() -> String {
-        let languages: [String]? = UserDefaults.standard.object(forKey: "AppleLanguages") as? [String]? ?? nil
-        let currentLanguage = languages?.first
-        return currentLanguage ?? "en"
-    }
-    
     public static func newMessageNotify() {
         let audioSession = AVAudioSession.sharedInstance()
         do {
@@ -77,11 +69,8 @@ public class AppUtils {
     }
     
     public static func getLanguage() -> String {
-        return language
-    }
-    
-    public static func setLanguage(language: String) {
-        AppUtils.language = language
+        let languages: [String]? = UserDefaults.standard.object(forKey: "AppleLanguages") as? [String]? ?? nil
+        return languages?.first ?? "en"
     }
     
     public static func getAdvertisingId() -> String? {

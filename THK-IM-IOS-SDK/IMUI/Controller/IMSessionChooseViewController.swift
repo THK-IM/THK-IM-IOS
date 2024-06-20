@@ -115,7 +115,6 @@ class IMSessionChooseViewController: IMSessionViewController {
                         userName = member?.1?.noteName ?? "XX"
                     }
                 }
-                let selfId = IMCoreManager.shared.uId
                 recordBody.title = userName
                 return Observable.just(recordBody)
             }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
