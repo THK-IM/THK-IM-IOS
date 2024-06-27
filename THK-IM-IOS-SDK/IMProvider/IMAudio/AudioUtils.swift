@@ -17,6 +17,9 @@ public func calculateDecibel(from data: Data) -> Double {
     
     var totalAmplitude: Int64 = 0
     let numSamples = samples.count
+    if numSamples == 0 {
+        return 0.0
+    }
     
     for sample in samples {
         totalAmplitude += Int64(abs(sample))

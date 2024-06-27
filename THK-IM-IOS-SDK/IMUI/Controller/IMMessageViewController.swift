@@ -427,13 +427,20 @@ open class IMMessageViewController: BaseViewController {
             sf.messageLayout.insertMessage(msg)
         })
         
-        SwiftEventBus.onMainThread(self, name: IMEvent.MsgDelete.rawValue, handler: { [weak self ]result in
+        SwiftEventBus.onMainThread(self, name: IMEvent.MsgDelete.rawValue, handler: { [weak self ] result in
             guard let msg = result?.object as? Message else {
+                return
+            }
+            guard let sf = self else {
                 return
             }
             if msg.sessionId != self?.session?.id {
                 return
             }
+            sf.atMsgs.removeAll { atMsg in
+                return atMsg.msgId == msg.msgId
+            }
+            sf.updateAtTipsView()
             DDLogDebug("IMEvent: \(IMEvent.MsgUpdate.rawValue)")
             self?.messageLayout.deleteMessage(msg)
         })
