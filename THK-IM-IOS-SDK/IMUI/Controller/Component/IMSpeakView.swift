@@ -210,7 +210,15 @@ class IMSpeakView: UILabel {
             if stopped {
                 if (!sf.hasTouchOutside) {
                     // 发送
-                    sf.sendAudioMsg(duration: duration / 1000 + 1, path: path)
+                    if duration < 2000 {
+                        sf.sender?.showSenderMessage(
+                            text: ResourceUtils.loadString("record_duration_too_short", comment: ""), success: false
+                        )
+                        IMCoreManager.shared.storageModule.removeFile(path)
+                    } else {
+                        let d = duration / 1000
+                        sf.sendAudioMsg(duration: d, path: path)
+                    }
                 } else {
                     // 取消，删除文件
                     IMCoreManager.shared.storageModule.removeFile(path)
