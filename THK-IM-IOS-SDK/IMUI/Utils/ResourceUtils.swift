@@ -52,7 +52,7 @@ public class ResourceUtils {
     }
     
     
-    public static func loadString(_ key: String, tableName: String? = "IMUI", comment: String, bundle: Bundle = iMUIBundle()) -> String {
+    public static func loadString(_ key: String, tableName: String? = "IMUI", comment: String = "", bundle: Bundle = iMUIBundle()) -> String {
         let language = LanguageUtils.shared.userLanguage() ?? AppUtils.getLanguage()
         let subPath = bundle.path(forResource: language, ofType: ".lproj")
         if (subPath != nil) {
@@ -65,7 +65,7 @@ public class ResourceUtils {
         }
     }
     
-    public static func loadStringFromMain(_ key: String, tableName: String? = nil, comment: String, bundle: Bundle = Bundle.main) -> String {
+    public static func loadStringFromMain(_ key: String, tableName: String? = nil, comment: String = "", bundle: Bundle = Bundle.main) -> String {
         let language = LanguageUtils.shared.userLanguage() ?? AppUtils.getLanguage()
         let subPath = bundle.path(forResource: language, ofType: ".lproj")
         if (subPath != nil) {
