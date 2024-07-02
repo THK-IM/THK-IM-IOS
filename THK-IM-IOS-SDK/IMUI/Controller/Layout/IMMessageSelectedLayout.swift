@@ -113,7 +113,7 @@ public class IMMessageSelectedLayout: UIView {
     
     public override func layoutSubviews() {
         if let session = self.sender?.getSession() {
-            self.forwardButton.isHidden = !(IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Forward.rawValue) ?? false)
+            self.forwardButton.isHidden = !(IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.Forward.rawValue) ?? false)
         }
     }
 }

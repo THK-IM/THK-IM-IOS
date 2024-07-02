@@ -35,7 +35,7 @@ public class IMMsgForwardOperator: IMMessageOperator {
         if message.type == MsgType.Revoke.rawValue {
             return false
         }
-        return IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Forward.rawValue) ?? false
+        return IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.Forward.rawValue) ?? false
     }
     
 }

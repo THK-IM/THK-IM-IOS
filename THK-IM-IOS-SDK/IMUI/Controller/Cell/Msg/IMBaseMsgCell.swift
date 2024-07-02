@@ -364,7 +364,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
         if session.type == SessionType.MsgRecord.rawValue || session.type == SessionType.SuperGroup.rawValue {
             return
         }
-        let supportRead = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Read.rawValue) ?? false
+        let supportRead = IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.Read.rawValue) ?? false
         if !supportRead {
             return
         }

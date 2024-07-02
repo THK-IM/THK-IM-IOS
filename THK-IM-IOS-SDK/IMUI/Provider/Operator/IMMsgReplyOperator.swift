@@ -34,7 +34,7 @@ public class IMMsgReplyOperator: IMMessageOperator {
             return false
         }
         
-        return IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.BaseInput.rawValue) ?? false
+        return IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.BaseInput.rawValue) ?? false
     }
     
     

@@ -26,6 +26,6 @@ open class IMPhotoFunctionProvider: IMBaseFunctionCellProvider {
         guard let provider = IMUIManager.shared.uiResourceProvider else {
             return false
         }
-        return provider.supportFunction(functionFlag: IMChatFunction.Image.rawValue) || provider.supportFunction(functionFlag: IMChatFunction.Video.rawValue)
+        return provider.supportFunction(session, IMChatFunction.Image.rawValue) || provider.supportFunction(session,  IMChatFunction.Video.rawValue)
     }
 }

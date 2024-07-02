@@ -662,7 +662,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         guard let session = self.session else {
             return
         }
-        let supportBaseInput = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.BaseInput.rawValue) ?? false
+        let supportBaseInput = IMUIManager.shared.uiResourceProvider?.supportFunction(session,  IMChatFunction.BaseInput.rawValue) ?? false
         if (!supportBaseInput) {
             return
         }
@@ -716,12 +716,12 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             return
         }
         var formats = [IMFileFormat]()
-        let supportImage = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Image.rawValue) ?? false
+        let supportImage = IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.Image.rawValue) ?? false
         if (supportImage) {
             formats.append(IMFileFormat.Image)
         }
-        let supportVideo = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Video.rawValue) ?? false
-        if (supportImage) {
+        let supportVideo = IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.Video.rawValue) ?? false
+        if (supportVideo) {
             formats.append(IMFileFormat.Video)
         }
         if formats.count <= 0 {
@@ -767,12 +767,12 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             return
         }
         var formats = [IMFileFormat]()
-        let supportImage = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Image.rawValue) ?? false
+        let supportImage = IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.Image.rawValue) ?? false
         if (supportImage) {
             formats.append(IMFileFormat.Image)
         }
-        let supportVideo = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Video.rawValue) ?? false
-        if (supportImage) {
+        let supportVideo = IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.Video.rawValue) ?? false
+        if (supportVideo) {
             formats.append(IMFileFormat.Video)
         }
         if formats.count <= 0 {
