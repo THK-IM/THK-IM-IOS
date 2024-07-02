@@ -23,4 +23,6 @@ public protocol IMUIResourceProvider {
     
     func inputLayoutBgColor() -> UIColor?
     
+    func supportFunction(functionFlag: Int64) -> Bool
+    
 }

@@ -662,9 +662,11 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         guard let session = self.session else {
             return
         }
-        if session.functionFlag & IMChatFunction.BaseInput.rawValue == 0 {
+        let supportBaseInput = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.BaseInput.rawValue) ?? false
+        if (!supportBaseInput) {
             return
         }
+        
         var referMsgId :Int64? = nil
         if let replyMsg = self.inputLayout.getReplyMessage() {
             referMsgId = replyMsg.msgId
@@ -712,13 +714,15 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             return
         }
         var formats = [IMFileFormat]()
-        if session.functionFlag & IMChatFunction.Image.rawValue != 0 {
+        let supportImage = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Image.rawValue) ?? false
+        if (supportImage) {
             formats.append(IMFileFormat.Image)
         }
-        if session.functionFlag & IMChatFunction.Video.rawValue != 0 {
+        let supportVideo = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Video.rawValue) ?? false
+        if (supportImage) {
             formats.append(IMFileFormat.Video)
         }
-        if formats.count < 0 {
+        if formats.count <= 0 {
             return
         }
         cp.pick(controller: self, formats: formats) { [weak self] result, cancel in
@@ -728,7 +732,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             do {
                 for r in result {
                     if (r.mimeType.starts(with: IMFileFormat.Image.rawValue)) {
-                        if session.functionFlag & IMChatFunction.Image.rawValue == 0 {
+                        if !supportImage {
                             sf.showSenderMessage(text: ResourceUtils.loadString("do_not_allow_send_image", comment: ""), success: false)
                             return
                         }
@@ -736,7 +740,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
                         ext = ext.replacingOccurrences(of: "/", with: "")
                         try sf.sendImage(r.data, ext: ext)
                     } else if (r.mimeType.starts(with: IMFileFormat.Video.rawValue)) {
-                        if session.functionFlag & IMChatFunction.Video.rawValue == 0 {
+                        if !supportVideo {
                             sf.showSenderMessage(text: ResourceUtils.loadString("do_not_allow_send_video", comment: ""), success: false)
                             return
                         }
@@ -761,13 +765,15 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
             return
         }
         var formats = [IMFileFormat]()
-        if session.functionFlag & IMChatFunction.Image.rawValue != 0 {
+        let supportImage = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Image.rawValue) ?? false
+        if (supportImage) {
             formats.append(IMFileFormat.Image)
         }
-        if session.functionFlag & IMChatFunction.Video.rawValue != 0 {
+        let supportVideo = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Video.rawValue) ?? false
+        if (supportImage) {
             formats.append(IMFileFormat.Video)
         }
-        if formats.count < 0 {
+        if formats.count <= 0 {
             return
         }
         cp.openCamera(controller: self, formats: formats) { [weak self] result, cancel in

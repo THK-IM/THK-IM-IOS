@@ -37,5 +37,6 @@ public enum IMChatFunction: Int64 {
         Image = 8,
         Video = 16,
         Forward = 32,
-        Read = 64
+        Read = 64,
+        ALL = 127
 }

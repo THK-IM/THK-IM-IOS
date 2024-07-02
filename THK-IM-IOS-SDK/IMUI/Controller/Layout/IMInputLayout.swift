@@ -283,7 +283,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         var showSpeaker = true
         var showMoreButton = true
         if let session = self.sender?.getSession() {
-            showSpeaker = session.functionFlag & IMChatFunction.Audio.rawValue != 0
+            showSpeaker = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Audio.rawValue) ?? false
             let functions = IMUIManager.shared.getBottomFunctionProviders(session: session)
             if functions.count == 0 {
                 showMoreButton = false

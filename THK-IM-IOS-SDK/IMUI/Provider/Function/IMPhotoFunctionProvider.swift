@@ -23,6 +23,9 @@ open class IMPhotoFunctionProvider: IMBaseFunctionCellProvider {
     }
     
     public func support(session: Session) -> Bool {
-        return session.functionFlag & IMChatFunction.Image.rawValue != 0 || session.functionFlag & IMChatFunction.Video.rawValue != 0
+        guard let provider = IMUIManager.shared.uiResourceProvider else {
+            return false
+        }
+        return provider.supportFunction(functionFlag: IMChatFunction.Image.rawValue) || provider.supportFunction(functionFlag: IMChatFunction.Video.rawValue)
     }
 }

@@ -27,10 +27,14 @@ public class IMMsgReplyOperator: IMMessageOperator {
     }
     
     public func supportMessage(_ message: Message, _ session: Session) -> Bool {
-        if session.functionFlag & IMChatFunction.BaseInput.rawValue == 0 {
+        if message.type == MsgType.Revoke.rawValue {
             return false
         }
-        return message.type != MsgType.Revoke.rawValue && message.fromUId != 0
+        if message.fromUId == 0 {
+            return false
+        }
+        
+        return IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.BaseInput.rawValue) ?? false
     }
     
     

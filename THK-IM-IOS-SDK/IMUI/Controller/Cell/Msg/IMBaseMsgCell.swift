@@ -364,7 +364,8 @@ open class IMBaseMsgCell : IMBaseTableCell {
         if session.type == SessionType.MsgRecord.rawValue || session.type == SessionType.SuperGroup.rawValue {
             return
         }
-        if session.functionFlag & IMChatFunction.Read.rawValue == 0 {
+        let supportRead = IMUIManager.shared.uiResourceProvider?.supportFunction(functionFlag: IMChatFunction.Read.rawValue) ?? false
+        if !supportRead {
             return
         }
         Observable.just(session.id).flatMap { sessionId in
