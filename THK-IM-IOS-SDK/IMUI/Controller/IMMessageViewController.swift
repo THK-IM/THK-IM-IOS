@@ -671,9 +671,11 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         if let replyMsg = self.inputLayout.getReplyMessage() {
             referMsgId = replyMsg.msgId
         }
-        IMCoreManager.shared.messageModule.sendMessage(session.id, type, body, data, atUser, referMsgId, { _, _ in
+        IMCoreManager.shared.messageModule.sendMessage(session.id, type, body, data, atUser, referMsgId, { [weak self] _, err in
+            if err != nil {
+                self?.showError(err!)
+            }
         })
-        
         self.inputLayout.clearReplyMessage()
     }
     

@@ -147,8 +147,7 @@ open class IMBaseMsgProcessor {
      * 3、文件上传
      * 4、调用api发送消息到服务器
      */
-    open func sendMessage(_ sessionId: Int64, _ body: Codable?, _ data: Codable? , _ atUsers: String? = nil, _ rMsgId: Int64? = nil,
-                          _ sendResult: IMSendMsgResult? = nil) -> Void {
+    open func sendMessage(_ sessionId: Int64, _ body: Codable?, _ data: Codable? , _ atUsers: String? = nil, _ rMsgId: Int64? = nil, _ sendResult: IMSendMsgResult? = nil) -> Void {
         do {
             let originMsg = try self.buildSendMsg(sessionId, body, data, atUsers, rMsgId)
             self.send(originMsg, false, sendResult)
