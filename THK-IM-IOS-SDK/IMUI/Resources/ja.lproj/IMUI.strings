@@ -42,6 +42,6 @@
 "revoke_failed"="取り消しに失敗しました";
 "revoke_success"="正常に取り消しました";
 "new_message_tips"="新しいメッセージ⬇️";
-"x_message_at_me"="@me に %@ メッセージがあります";
+"x_message_at_me"="@me に %d メッセージがあります";
 "do_not_allow_send_video"="ビデオの送信を許可しない";
 "do_not_allow_send_image"="写真の送信を許可しない";
