@@ -166,6 +166,7 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { [weak self] value in
                     self?.addMessages(value)
+                    self?.isLoading = false
                 }, onCompleted: { [weak self] in
                     self?.isLoading = false
                 }).disposed(by: self.disposeBag)
