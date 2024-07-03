@@ -309,7 +309,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
     private func updateUserInfo(user: User, sessionMember: SessionMember?) {
         var showNickname = IMUIManager.shared.nicknameForSessionMember(user, sessionMember)
         if sessionMember?.deleted == 1 {
-            showNickname += "(已退出)"
+            showNickname += ResourceUtils.loadString("had_exited")
         }
         self.cellWrapper.nickView()?.text = showNickname
         if let avatar = IMUIManager.shared.avatarForSessionMember(user, sessionMember) {

@@ -45,3 +45,4 @@
 "x_message_at_me"="有%d条消息@我";
 "do_not_allow_send_video"="不允许发送视频";
 "do_not_allow_send_image"="不允许发送图片";
+"had_exited"="(已退出)";

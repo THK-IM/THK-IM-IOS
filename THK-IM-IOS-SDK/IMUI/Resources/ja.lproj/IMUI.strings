@@ -45,3 +45,4 @@
 "x_message_at_me"="@me に %d メッセージがあります";
 "do_not_allow_send_video"="ビデオの送信を許可しない";
 "do_not_allow_send_image"="写真の送信を許可しない";
+"had_exited"="(終了)";
