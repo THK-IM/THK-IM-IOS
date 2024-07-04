@@ -59,7 +59,7 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
     
     lazy var sendView: UIImageView = {
         let view = UIImageView()
-        view.image = ResourceUtils.loadImage(named: "ic_emoji_send")
+        view.image = ResourceUtils.loadImage(named: "ic_emoji_send")?.withTintColor(.black)
         return view
     }()
     

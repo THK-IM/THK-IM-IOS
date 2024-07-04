@@ -194,11 +194,17 @@ open class IMSessionViewController : BaseViewController, UITableViewDataSource, 
             guard let session = result?.object as? Session else {
                 return
             }
+            if self?.parentId == session.parentId || session.deleted == 1 {
+                return
+            }
             self?.onNewSession(session)
         })
         
         SwiftEventBus.onMainThread(self, name: IMEvent.SessionUpdate.rawValue, handler: { [weak self ] result in
             guard let session = result?.object as? Session else {
+                return
+            }
+            if self?.parentId == session.parentId || session.deleted == 1 {
                 return
             }
             self?.onSessionUpdate(session)

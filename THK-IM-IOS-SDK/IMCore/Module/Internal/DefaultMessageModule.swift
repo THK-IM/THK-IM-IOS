@@ -591,7 +591,7 @@ open class DefaultMessageModule : MessageModule {
                         guard let sf = self else {
                             return
                         }
-                        if (s.id <= 0) {
+                        if (s.id <= 0 || s.deleted == 1) {
                             return
                         }
                         let unReadCount = try IMCoreManager.shared.database.messageDao().getUnReadCount(msg.sessionId)
