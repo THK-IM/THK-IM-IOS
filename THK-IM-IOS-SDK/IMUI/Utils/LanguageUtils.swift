@@ -18,6 +18,15 @@ public class LanguageUtils: NSObject {
         return UserDefaults.standard.object(forKey: UWUserLanguageKey) as? String? ?? nil
     }
     
+    public func initLanguage() {
+        let language = self.userLanguage()
+        if (language == nil) {
+            UserDefaults.standard.setValue(nil, forKey: "AppleLanguages")
+        } else {
+            UserDefaults.standard.setValue([language], forKey: "AppleLanguages")
+        }
+    }
+    
     public func setUserLanguage(_ language: String?) -> Bool {
         UserDefaults.standard.setValue(language, forKey: UWUserLanguageKey)
         if (language == nil) {
