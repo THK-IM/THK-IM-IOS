@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08F4799AC88630CBD25DF832 /* Pods_THK_IM_IOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */; };
+		A00425FD2C36882A00977DB2 /* ic_titlebar_back.svg in Resources */ = {isa = PBXBuildFile; fileRef = A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */; };
 		A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF52AFF18EC00896B87 /* DateUtils.swift */; };
 		A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF72AFFA9A900896B87 /* MediaViewController.swift */; };
 		A018CDFA2B007E0C00896B87 /* AVCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF92B007E0C00896B87 /* AVCacheProtocol.swift */; };
@@ -92,7 +93,6 @@
 		A0589A2D2C21557D003419B8 /* ic_msg_emoji.svg in Resources */ = {isa = PBXBuildFile; fileRef = A05899E42C21557A003419B8 /* ic_msg_emoji.svg */; };
 		A0589A2E2C21557D003419B8 /* ic_msg_opr_multi_select.svg in Resources */ = {isa = PBXBuildFile; fileRef = A05899E52C21557A003419B8 /* ic_msg_opr_multi_select.svg */; };
 		A0589A2F2C21557D003419B8 /* ic_msg_opr_revoke.svg in Resources */ = {isa = PBXBuildFile; fileRef = A05899E62C21557A003419B8 /* ic_msg_opr_revoke.svg */; };
-		A0589A362C21557D003419B8 /* ic_titlebar_back.svg in Resources */ = {isa = PBXBuildFile; fileRef = A05899ED2C21557B003419B8 /* ic_titlebar_back.svg */; };
 		A0589A3D2C21557D003419B8 /* ic_titlebar_more.svg in Resources */ = {isa = PBXBuildFile; fileRef = A05899F42C21557B003419B8 /* ic_titlebar_more.svg */; };
 		A0589A3E2C21557D003419B8 /* ic_volume_5.svg in Resources */ = {isa = PBXBuildFile; fileRef = A05899F52C21557B003419B8 /* ic_volume_5.svg */; };
 		A0589A3F2C21557D003419B8 /* icon_video_play.svg in Resources */ = {isa = PBXBuildFile; fileRef = A05899F62C21557B003419B8 /* icon_video_play.svg */; };
@@ -347,6 +347,7 @@
 		00B256D621B64DD52DDF517D /* Pods-THK-IM-IOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.debug.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.debug.xcconfig"; sourceTree = "<group>"; };
 		12A71C20EF80882B33F43851 /* Pods-THK-IM-IOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.release.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.release.xcconfig"; sourceTree = "<group>"; };
 		34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_THK_IM_IOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_titlebar_back.svg; sourceTree = "<group>"; };
 		A018CDF52AFF18EC00896B87 /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		A018CDF72AFFA9A900896B87 /* MediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
 		A018CDF92B007E0C00896B87 /* AVCacheProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCacheProtocol.swift; sourceTree = "<group>"; };
@@ -440,7 +441,6 @@
 		A05899E42C21557A003419B8 /* ic_msg_emoji.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_emoji.svg; sourceTree = "<group>"; };
 		A05899E52C21557A003419B8 /* ic_msg_opr_multi_select.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_opr_multi_select.svg; sourceTree = "<group>"; };
 		A05899E62C21557A003419B8 /* ic_msg_opr_revoke.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_opr_revoke.svg; sourceTree = "<group>"; };
-		A05899ED2C21557B003419B8 /* ic_titlebar_back.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_titlebar_back.svg; sourceTree = "<group>"; };
 		A05899F42C21557B003419B8 /* ic_titlebar_more.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_titlebar_more.svg; sourceTree = "<group>"; };
 		A05899F52C21557B003419B8 /* ic_volume_5.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_volume_5.svg; sourceTree = "<group>"; };
 		A05899F62C21557B003419B8 /* icon_video_play.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = icon_video_play.svg; sourceTree = "<group>"; };
@@ -1175,6 +1175,7 @@
 		A0D68AE32A888678004D11A5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */,
 				A024BA242C21753E009030D2 /* ic_msg_media.svg */,
 				A024BA202C216CED009030D2 /* ic_msg_camera.svg */,
 				A05899C82C215577003419B8 /* ic_all_avatar.svg */,
@@ -1199,7 +1200,6 @@
 				A05899E62C21557A003419B8 /* ic_msg_opr_revoke.svg */,
 				A05899C32C215577003419B8 /* ic_msg_voice.svg */,
 				A05899FA2C21557C003419B8 /* ic_titlebar_add.svg */,
-				A05899ED2C21557B003419B8 /* ic_titlebar_back.svg */,
 				A05899FC2C21557C003419B8 /* ic_titlebar_call.svg */,
 				A05899F42C21557B003419B8 /* ic_titlebar_more.svg */,
 				A05899BD2C215576003419B8 /* ic_titlebar_search.svg */,
@@ -1828,6 +1828,7 @@
 			files = (
 				A0D68AA32A88838C004D11A5 /* LaunchScreen.storyboard in Resources */,
 				A0589A2D2C21557D003419B8 /* ic_msg_emoji.svg in Resources */,
+				A00425FD2C36882A00977DB2 /* ic_titlebar_back.svg in Resources */,
 				A0589A272C21557D003419B8 /* ic_msg_opr_delete.svg in Resources */,
 				A0589A4B2C21557D003419B8 /* ic_msg_delete.svg in Resources */,
 				A0589A112C21557D003419B8 /* ic_all_avatar.svg in Resources */,
@@ -1837,7 +1838,6 @@
 				A0589A412C21557D003419B8 /* ic_volume_3.svg in Resources */,
 				A0589A462C21557D003419B8 /* ic_msg_keyboard.svg in Resources */,
 				A0589A092C21557D003419B8 /* ic_volume_4.svg in Resources */,
-				A0589A362C21557D003419B8 /* ic_titlebar_back.svg in Resources */,
 				A0589A232C21557D003419B8 /* ic_msg_opr_copy.svg in Resources */,
 				A0589A082C21557D003419B8 /* ic_msg_opr_cancel.svg in Resources */,
 				A0589A0C2C21557D003419B8 /* ic_msg_voice.svg in Resources */,
