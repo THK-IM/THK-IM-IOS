@@ -133,6 +133,9 @@ public class OggOpusAudioPlayer {
     
     private func decodeAndPlay() -> Bool {
         do {
+            if (self._filePath == nil) {
+                return false
+            }
             _audioFile = FileHandle(forReadingAtPath: self._filePath!)
             if (_audioFile == nil) {
                 DDLogError("[\(LogTag)] _audioFile read error")
