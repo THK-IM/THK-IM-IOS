@@ -653,7 +653,11 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
     
     /// 重发消息
     public func resendMessage(_ msg: Message) {
-        IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).resend(msg)
+        IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).resend(msg, { [weak self] _, err in
+            if err != nil {
+                self?.showError(err!)
+            }
+        })
     }
     
     
