@@ -34,18 +34,18 @@ public class ResourceUtils {
     
     public static func loadImage(named: String, type: String = "svg", bundle: Bundle = iMUIBundle()) -> UIImage? {
         if (type == "svg") {
-            if let path = bundle.path(forResource: named, ofType: type) {
-                return SVGKImage(contentsOfFile: path)?.uiImage
+            if bundle.path(forResource: named, ofType: type) != nil {
+                return SVGKImage(named: named, in: bundle)?.uiImage
             }
-            if let path = Bundle.main.path(forResource: named, ofType: type) {
-                return SVGKImage(contentsOfFile: path)?.uiImage
+            if Bundle.main.path(forResource: named, ofType: type) != nil {
+                return SVGKImage(named: named, in: bundle)?.uiImage
             }
         } else {
-            if let path = bundle.path(forResource: named, ofType: type) {
-                return UIImage(contentsOfFile: path)
+            if bundle.path(forResource: named, ofType: type) != nil {
+                return UIImage(named: named, in: bundle, with: .nil)
             }
-            if let path = Bundle.main.path(forResource: named, ofType: type) {
-                return UIImage(contentsOfFile: path)
+            if Bundle.main.path(forResource: named, ofType: type) != nil {
+                return UIImage(named: named, in: Bundle.main, with: .nil)
             }
         }
         return UIImage(named: named)
