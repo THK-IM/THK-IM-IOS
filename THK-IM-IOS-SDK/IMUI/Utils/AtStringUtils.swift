@@ -32,7 +32,9 @@ public class AtStringUtils {
                         atUIds += "#"
                     }
                     atUIds += "\(id!)"
-                    replacement.replaceOccurrences(of:nickName, with: "\(id!)", options: .caseInsensitive, range: matchResult.range)
+                    if matchResult.range.location + matchResult.range.length <= replacement.length {
+                        replacement.replaceOccurrences(of:nickName, with: "\(id!)", options: .caseInsensitive, range: matchResult.range)
+                    }
                 }
             }
         }
