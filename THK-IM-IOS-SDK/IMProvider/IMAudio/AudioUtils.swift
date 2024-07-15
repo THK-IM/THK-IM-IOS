@@ -10,6 +10,9 @@ import AVFoundation
 import Accelerate
 
 public func calculateDecibel(from data: Data) -> Double {
+    if data.isEmpty {
+        return 0.0
+    }
     // 将 PCM 数据转换为 Int16 数组
     let samples = data.withUnsafeBytes {
         Array(UnsafeBufferPointer<Int16>(start: $0.baseAddress!.assumingMemoryBound(to: Int16.self), count: data.count/MemoryLayout<Int16>.size))
@@ -26,7 +29,7 @@ public func calculateDecibel(from data: Data) -> Double {
     }
     
     let averageAmplitude = Double(totalAmplitude) / Double(numSamples)
-    if averageAmplitude < 0 {
+    if averageAmplitude <= 0 {
         return 0.0
     }
     return 20 * log10(averageAmplitude)
