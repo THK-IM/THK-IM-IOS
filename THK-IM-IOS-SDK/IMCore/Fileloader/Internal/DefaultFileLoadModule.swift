@@ -145,7 +145,9 @@ public class DefaultFileLoadModule: FileLoadModule {
     }
     
     public func notifyListeners(progress: Int, state: Int, url: String, path: String, err: Error?) {
+        lock.lock()
         let downloadTaskTuple = downloadTaskMap[url]
+        lock.unlock()
         if (downloadTaskTuple != nil) {
             for listener in downloadTaskTuple!.1 {
                 if listener.notifyOnUiThread() {
@@ -162,8 +164,9 @@ public class DefaultFileLoadModule: FileLoadModule {
                 cancelDownload(url: url)
             }
         }
-        
+        lock.lock()
         let uploadTaskTuple = uploadTaskMap[path]
+        lock.unlock()
         if (uploadTaskTuple != nil) {
             for listener in uploadTaskTuple!.1 {
                 if listener.notifyOnUiThread() {
