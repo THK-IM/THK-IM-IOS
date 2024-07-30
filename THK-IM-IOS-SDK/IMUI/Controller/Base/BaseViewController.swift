@@ -63,17 +63,11 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         tapGesture.cancelsTouchesInView = false  // 这样不会阻止其他控件接收 touch 事件
         self.view.addGestureRecognizer(tapGesture)
         self.navigationController?.isNavigationBarHidden = isNavigationBarHidden
+        self.navigationController?.navigationBar.isHidden = !hasTitlebar()
     }
     
     @objc open func viewTouched() {
         self.view.endEditing(true)
-    }
-    
-    open override func viewWillAppear(_ animated: Bool) {
-        self.navigationItem.hidesBackButton = true
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        self.navigationController?.navigationBar.isHidden = !hasTitlebar()
-        super.viewWillAppear(animated)
     }
     
     open func hasTitlebar() -> Bool {
@@ -82,6 +76,13 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     
     open func backIcon() -> UIImage? {
         return ResourceUtils.loadImage(named: "ic_titlebar_back")
+    }
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        self.navigationController?.navigationBar.isHidden = !hasTitlebar()
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
