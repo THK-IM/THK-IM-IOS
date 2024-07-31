@@ -23,7 +23,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
         v.axis = .vertical
         v.alignment = .leading
         v.distribution = .fill
-        v.spacing = 4
+        v.spacing = 0
         
         if self.type != SessionType.Single.rawValue {
             _nickView = UILabel()
@@ -87,7 +87,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     open override func layoutSubViews(_ isEditing: Bool) {
         let editingWidth = isEditing ? 0 : IMUIManager.shared.msgCellAvatarWidth
         _avatarView.snp.remakeConstraints { make in
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview().offset(2)
             make.left.equalToSuperview().offset(IMUIManager.shared.msgCellAvatarLeft)
             make.size.equalTo(editingWidth)
         }
