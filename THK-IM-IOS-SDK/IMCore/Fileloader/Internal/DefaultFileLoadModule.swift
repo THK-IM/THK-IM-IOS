@@ -97,7 +97,6 @@ public class DefaultFileLoadModule: FileLoadModule {
     public func upload(path: String, message: Message, loadListener: FileLoadListener) {
         lock.lock()
         var taskTuple = uploadTaskMap[path]
-        lock.unlock()
         if (taskTuple == nil) {
             let uploadParam = self.buildUploadParam(path, message)
             let dTask = UploadTask(fileModule: self, path: path, param: uploadParam)
@@ -106,42 +105,43 @@ public class DefaultFileLoadModule: FileLoadModule {
         } else {
             taskTuple?.1.append(loadListener)
         }
+        lock.unlock()
     }
     
     public func cancelDownload(url: String) {
         lock.lock()
         var taskTuple = downloadTaskMap[url]
-        lock.unlock()
         if taskTuple != nil {
             taskTuple!.1.removeAll()
             taskTuple!.0.cancel()
             downloadTaskMap.removeValue(forKey: url)
         }
+        lock.unlock()
     }
     
     public func cancelDownloadListener(url: String, listener: FileLoadListener) {
         lock.lock()
         var taskTuple = downloadTaskMap[url]
-        lock.unlock()
         taskTuple?.1.removeAll(where: { $0 == listener })
+        lock.unlock()
     }
     
     public func cancelUpload(path: String) {
         lock.lock()
         var taskTuple = uploadTaskMap[path]
-        lock.unlock()
         if taskTuple != nil {
             taskTuple!.0.cancel()
             taskTuple!.1.removeAll()
             uploadTaskMap.removeValue(forKey: path)
         }
+        lock.unlock()
     }
     
     public func cancelUploadListener(path: String, listener: FileLoadListener) {
         lock.lock()
         var taskTuple = uploadTaskMap[path]
-        lock.unlock()
         taskTuple?.1.removeAll(where: { $0 == listener })
+        lock.unlock()
     }
     
     public func notifyListeners(progress: Int, state: Int, url: String, path: String, err: Error?) {
