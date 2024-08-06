@@ -20,6 +20,19 @@ open class DefaultContactModule: ContactModule {
         
     }
     
+    open func queryServerContactsByIds(_ ids: Array<Int64>) -> RxSwift.Observable<Array<Contact>> {
+        return Observable.create({ observer -> Disposable in
+            var contacts = Array<Contact>()
+            for id in ids {
+                let c = Contact(id: id, relation: 0, cTime: IMCoreManager.shared.severTime, mTime: IMCoreManager.shared.severTime)
+                contacts.append(c)
+            }
+            observer.onNext(contacts)
+            observer.onCompleted()
+            return Disposables.create()
+        })
+    }
+    
     
     public func updateContact(_ contact: Contact) -> RxSwift.Observable<Void> {
         return Observable.create({ observer -> Disposable in
@@ -49,6 +62,46 @@ open class DefaultContactModule: ContactModule {
             }
         }
     }
+    
+    
+    
+    public func queryContactsByUserIds(_ ids: Array<Int64>) -> RxSwift.Observable<Array<Contact>> {
+        return Observable.create({ observer -> Disposable in
+            let contacts = IMCoreManager.shared.database.contactDao().findByUserIds(ids)
+            observer.onNext(contacts)
+            observer.onCompleted()
+            return Disposables.create()
+        }).flatMap { contacts -> Observable<Array<Contact>> in
+            if (ids.count == contacts.count) {
+                return Observable.just(contacts)
+            }
+            var unknowUIds = [Int64]()
+            for id in ids {
+                var contain = false
+                for c in contacts {
+                    if (c.id == id) {
+                        contain = true
+                        break
+                    }
+                }
+                if !contain {
+                    unknowUIds.append(id)
+                }
+            }
+            if unknowUIds.isEmpty {
+                return Observable.just(contacts)
+            }
+            return self.queryServerContactsByIds(unknowUIds)
+                .flatMap { serverContacts -> Observable<Array<Contact>>  in
+                    try? IMCoreManager.shared.database.contactDao().insertOrReplace(serverContacts)
+                    var fullContacts = Array<Contact>()
+                    fullContacts.append(contentsOf: contacts)
+                    fullContacts.append(contentsOf: serverContacts)
+                    return Observable.just(fullContacts)
+                }
+        }
+    }
+    
     
     open func queryAllContacts() -> RxSwift.Observable<Array<Contact>> {
         return Observable.create({ observer -> Disposable in

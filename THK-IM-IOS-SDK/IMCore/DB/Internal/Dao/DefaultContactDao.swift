@@ -11,7 +11,6 @@ import WCDBSwift
 
 open class DefaultContactDao : ContactDao {
     
-    
     weak var database: Database?
     let tableName: String
     
@@ -44,6 +43,14 @@ open class DefaultContactDao : ContactDao {
             fromTable: self.tableName,
             where: Contact.Properties.id == contactId
         )
+    }
+    
+    public func findByUserIds(_ ids: Array<Int64>) -> Array<Contact> {
+        let contacts: Array<Contact>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Contact.Properties.id.in(ids)
+        )
+        return contacts ?? Array<Contact>()
     }
     
     public func findByRelation(_ relation: Int) -> Array<Contact> {

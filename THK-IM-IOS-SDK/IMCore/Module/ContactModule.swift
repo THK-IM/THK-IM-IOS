@@ -16,6 +16,8 @@ public protocol ContactModule : BaseModule {
     
     func queryContactByUserId(_ id: Int64) -> Observable<Contact>
     
+    func queryContactsByUserIds(_ ids: Array<Int64>) -> Observable<Array<Contact>>
+    
     func queryAllContacts() -> Observable<Array<Contact>>
     
     func queryContactsByRelation(_ relation: Int) -> Observable<Array<Contact>>
