@@ -382,8 +382,8 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    open func showLoading(text: String? = nil) {
-        ProgressHUD.animate(text, .horizontalBarScaling, interaction: false)
+    open func showLoading(text: String? = nil, _ interaction: Bool = false) {
+        ProgressHUD.animate(text, .horizontalBarScaling, interaction: interaction)
     }
     
     open func dismissLoading() {
