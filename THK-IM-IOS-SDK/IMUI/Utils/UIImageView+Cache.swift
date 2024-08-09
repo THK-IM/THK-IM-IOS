@@ -13,6 +13,7 @@ public extension UIImageView {
     
     func renderImageByPathWithCorner(path: String, radius: CGFloat, placeHolderImage: UIImage? = nil) {
         self.layer.cornerRadius = radius
+        self.layer.masksToBounds = true
         self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)), placeholder: placeHolderImage)
     }
     
@@ -31,6 +32,7 @@ public extension UIImageView {
     
     func renderImageByPath(path: String, radius: CGFloat, placeHolderImage: UIImage? = nil) {
         self.layer.cornerRadius = radius
+        self.layer.masksToBounds = true
         self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)), placeholder: placeHolderImage)
     }
     
