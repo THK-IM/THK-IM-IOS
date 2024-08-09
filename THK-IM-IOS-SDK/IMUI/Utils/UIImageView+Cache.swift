@@ -24,14 +24,17 @@ public extension UIImageView {
     }
     
     func renderImageByUrl(url: String, placeHolderImage: UIImage? = nil) {
+        self.layer.masksToBounds = true
         self.kf.setImage(with: URL(string: url), placeholder: placeHolderImage)
     }
     
     func renderImageByUrl(url: String, placeHolderImage: UIImage? = nil, _ completeHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)? = nil) {
+        self.layer.masksToBounds = true
         self.kf.setImage(with: URL(string: url), placeholder: placeHolderImage, completionHandler: completeHandler)
     }
     
     func renderImageByPath(path: String, placeHolderImage: UIImage? = nil) {
+        self.layer.masksToBounds = true
         self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)), placeholder: placeHolderImage)
     }
     
