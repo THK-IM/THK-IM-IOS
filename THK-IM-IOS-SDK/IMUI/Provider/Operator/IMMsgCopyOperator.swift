@@ -32,10 +32,10 @@ public class IMMsgCopyOperator: IMMessageOperator {
                     return "\(id)"
                 }
                 UIPasteboard.general.string = content
-                sender.showSenderMessage(text: "已复制", success: true)
+                sender.showSenderMessage(text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
             } else {
                 UIPasteboard.general.string = message.content
-                sender.showSenderMessage(text: "已复制", success: true)
+                sender.showSenderMessage(text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
             }
         }
         // TODO other msgType
