@@ -19,6 +19,11 @@ public extension UIImageView {
     
     func renderImageByUrlWithCorner(url: String, radius: CGFloat, placeHolderImage: UIImage? = nil) {
         self.layer.cornerRadius = radius
+        self.layer.masksToBounds = true
+        self.kf.setImage(with: URL(string: url), placeholder: placeHolderImage)
+    }
+    
+    func renderImageByUrl(url: String, placeHolderImage: UIImage? = nil) {
         self.kf.setImage(with: URL(string: url), placeholder: placeHolderImage)
     }
     
