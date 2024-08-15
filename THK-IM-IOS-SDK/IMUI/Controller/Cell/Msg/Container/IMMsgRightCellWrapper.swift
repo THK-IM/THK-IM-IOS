@@ -24,23 +24,32 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
         v.axis = .vertical
         v.alignment = .trailing
         v.distribution = .fill
-        v.spacing = 0
+        v.spacing = 2
         
         if self.type != SessionType.Single.rawValue {
             _nickView = UILabel()
+            _nickView?.textColor = UIColor.init(hex: "999999")
+            _nickView?.font = UIFont.systemFont(ofSize: 12)
+            v.addArrangedSubview(_nickView!)
             _nickView?.snp.makeConstraints { make in
                 make.height.equalTo(14)
                 make.width.greaterThanOrEqualTo(20)
             }
-            _nickView?.textColor = UIColor.init(hex: "666666")
-            _nickView?.font = UIFont.systemFont(ofSize: 12)
-            v.addArrangedSubview(_nickView!)
+            v.addArrangedSubview(_containerView)
+            _containerView.snp.makeConstraints { make in
+                make.height.greaterThanOrEqualTo(48)
+                make.width.greaterThanOrEqualTo(20)
+            }
+        } else {
+            v.addArrangedSubview(_containerView)
+            _containerView.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(8)
+                make.height.greaterThanOrEqualTo(48)
+                make.width.greaterThanOrEqualTo(20)
+            }
         }
-        v.addArrangedSubview(_containerView)
-        _containerView.snp.makeConstraints { make in
-            make.height.greaterThanOrEqualTo(48)
-            make.width.greaterThanOrEqualTo(20)
-        }
+        
+        
         return v
     }()
     
@@ -92,7 +101,7 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
         }
         _messageStack.snp.remakeConstraints { make in
             make.right.equalTo(_avatarView.snp.left).offset(-IMUIManager.shared.msgCellAvatarRight)
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview().offset(2)
             make.left.greaterThanOrEqualToSuperview().offset(IMUIManager.shared.msgCellPadding)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
