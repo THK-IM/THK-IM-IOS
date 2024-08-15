@@ -46,7 +46,7 @@ open class IMMessageViewController: BaseViewController {
         self.initTipsView()
     }
     
-    private func showSessionTitle() {
+    open func showSessionTitle() {
         guard let session = self.session else {
             return
         }

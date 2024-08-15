@@ -24,6 +24,11 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     public let disposeBag = DisposeBag()
     
     override open func viewDidLoad() {
+        super.viewDidLoad()
+        self.initNavigationBar()
+    }
+    
+    open func initNavigationBar() {
         if (hasTitlebar()) {
             if let title = title() {
                 setTitle(title: title)
@@ -49,10 +54,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             setRightItems(images: images, titles: titles, actions: actions)
             if (self.swipeBack()) {
                 let backImage = backIcon()?.withRenderingMode(.alwaysOriginal)
-                let customView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+                let customView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
                 let button = UIButton(type: .system)
                 button.addTarget(self, action: #selector(self.backAction), for: .touchUpInside)
-                button.frame = CGRect(x: -16, y: 0, width: 40, height: 40) // 调整x值以增加或减少间隔
+                button.frame = CGRect(x: -12, y: -6, width: 32, height: 32) // 调整x值以增加或减少间隔
                 button.setImage(backImage, for: .normal)
                 customView.addSubview(button)
                 let backItem = UIBarButtonItem(customView: customView)
@@ -337,7 +342,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         for image in images {
             let item = UIBarButtonItem(title: titles[i], style: .plain, target: self, action: nil)
             let customButton = UIButton(type: .custom)
-            customButton.frame = CGRect(x: 0, y: 0, width: 36, height: 36)
+            customButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
             if let action = actions[i] {
                 customButton.addTarget(self, action: action, for: .touchUpInside)
             }
