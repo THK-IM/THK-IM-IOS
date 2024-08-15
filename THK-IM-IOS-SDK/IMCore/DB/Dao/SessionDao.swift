@@ -50,6 +50,12 @@ public protocol SessionDao {
     
     
     /**
+     * 设置所有已读
+     */
+    func updateAllSessionReaded() throws
+    
+    
+    /**
      * 查询session消息同步时间
      */
     func findMsgSyncTimeById(_ sessionId: Int64) -> Int64

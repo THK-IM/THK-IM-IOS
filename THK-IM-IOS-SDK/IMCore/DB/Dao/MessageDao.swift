@@ -66,6 +66,12 @@ public protocol MessageDao {
      */
     func updateOperationStatus(_ sessionId: Int64, _ msgIds: [Int64], _ operateStatus: Int) throws
     
+    
+    /**
+     *  设置所有消息已读
+     */
+    func updateAllMsgReaded() throws
+    
     /**
      * 更新消息发送状态
      */

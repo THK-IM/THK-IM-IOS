@@ -84,6 +84,16 @@ open class DefaultSessionDao : SessionDao {
         )
     }
     
+    /**
+     * 设置所有已读
+     */
+    public func updateAllSessionReaded() throws {
+        try self.database?.update(
+            table: self.tableName,
+            on: Session.Properties.unreadCount,
+            with: 0
+        )
+    }
     
     /**
      * 查询session消息同步时间

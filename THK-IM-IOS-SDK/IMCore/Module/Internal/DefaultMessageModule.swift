@@ -739,5 +739,21 @@ open class DefaultMessageModule : MessageModule {
             }).disposed(by: self.disposeBag)
     }
     
+    /**
+     * 设置所有消息已读
+     */
+    open func setAllMessageRead() -> Observable<Void> {
+        return Observable.create({observer -> Disposable in
+            do {
+                try IMCoreManager.shared.database.messageDao().updateAllMsgReaded()
+                try IMCoreManager.shared.database.sessionDao().updateAllSessionReaded()
+            } catch {
+                observer.onError(error)
+            }
+            observer.onCompleted()
+            return Disposables.create()
+        })
+    }
+    
     
 }

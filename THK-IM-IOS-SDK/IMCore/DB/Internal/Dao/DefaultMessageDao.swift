@@ -50,6 +50,21 @@ open class DefaultMessageDao : MessageDao {
         try self.database?.exec(update)
     }
     
+    /**
+     *  设置所有消息已读
+     */
+    public func updateAllMsgReaded() throws {
+        let operateStatusColumn = Column(named: "opr_status")
+        let expression1 = Expression(with: operateStatusColumn)
+        let expression2 = Expression(with: MsgOperateStatus.ClientRead.rawValue)
+        let expression3 = expression1 | expression2
+        
+        let update = StatementUpdate().update(table:self.tableName)
+            .set(Message.Properties.operateStatus)
+            .to(expression3)
+        try self.database?.exec(update)
+    }
+    
     public func updateOperationStatus(_ sessionId: Int64, _ msgIds: [Int64], _ operateStatus: Int) throws {
         let operateStatusColumn = Column(named: "opr_status")
         let expression1 = Expression(with: operateStatusColumn)
