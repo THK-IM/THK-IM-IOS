@@ -725,6 +725,11 @@ open class DefaultMessageModule : MessageModule {
                         return self.queryLastSessionMember(sessionId, count)
                     } else {
                         let sessionMembers = sessionMemberDao.findBySessionId(sessionId)
+                        if let session = try? IMCoreManager.shared.database.sessionDao().findById(sessionId) {
+                            session.memberCount = sessionMembers.count
+                            try? IMCoreManager.shared.database.sessionDao().update([session])
+                            SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                        }
                         return Observable.just(sessionMembers)
                     }
                 })
