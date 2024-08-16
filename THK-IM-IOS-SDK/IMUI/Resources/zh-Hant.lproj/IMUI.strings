@@ -25,11 +25,14 @@
 "im_image_msg"="[圖片訊息]";
 "im_record_msg"="[會話記錄]";
 "im_reedit_msg"="[重編輯訊息]";
-"im_revoke_msg"="[%@撤回了一則訊息]";
+"im_revoke_msg"="[撤回訊息]";
+"x_revoke_a_msg"="%@撤回了一則訊息";
 "im_text_msg"="[文字訊息]";
 "edited"="[已編輯]";
 "im_un_support_msg"="[未知訊息]";
 "im_video_msg"="[視訊訊息]";
+"your_self"="你";
+"someone_at_me"="[有人@我]";
 "other_side"="對方";
 "not_support_msg_update_client"="不支援的訊息類型，請嘗試升級客戶端";
 "copy"="複製";

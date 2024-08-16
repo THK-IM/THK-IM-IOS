@@ -87,18 +87,18 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
                 do {
                     let revokeData = try JSONDecoder().decode(IMRevokeMsgData.self, from: message.data!.data(using: .utf8) ?? Data())
                     self.textView.text = String.init(
-                        format:ResourceUtils.loadString("im_revoke_msg", comment: ""),
+                        format:ResourceUtils.loadString("x_revoke_a_msg", comment: ""),
                         revokeData.nick
                     )
                 } catch {
                     self.textView.text = String.init(
-                        format:ResourceUtils.loadString("im_revoke_msg", comment: ""),
+                        format:ResourceUtils.loadString("x_revoke_a_msg", comment: ""),
                         ResourceUtils.loadString("other_side", comment: "")
                     )
                 }
             } else {
                 self.textView.text = String.init(
-                    format:ResourceUtils.loadString("im_revoke_msg", comment: ""),
+                    format:ResourceUtils.loadString("x_revoke_a_msg", comment: ""),
                     ResourceUtils.loadString("other_side", comment: "")
                 )
             }

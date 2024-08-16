@@ -606,7 +606,26 @@ open class DefaultMessageModule : MessageModule {
                             } else if (msg.sendStatus == MsgSendStatus.Failed.rawValue) {
                                 statusText = "❗"
                             }
-                            s.lastMsg = statusText + (processor?.sessionDesc(msg: msg) ?? "")
+                            var sender: String? = nil
+                            if s.type != SessionType.Single.rawValue {
+                                if msg.fromUId > 0 {
+                                    let sessionMember = try? IMCoreManager.shared.database.sessionMemberDao().findSessionMember(s.id, msg.fromUId)
+                                    if sessionMember != nil && sessionMember?.noteName != nil && sessionMember!.noteName!.count > 0 {
+                                        sender = sessionMember?.noteName!
+                                    }
+                                    if sender == nil {
+                                        let user = try? IMCoreManager.shared.database.userDao().findById(msg.fromUId)
+                                        if user != nil {
+                                            sender = user?.nickname
+                                        }
+                                    }
+                                }
+                            }
+                            var senderText = ""
+                            if sender != nil {
+                                senderText = "\(sender!):"
+                            }
+                            s.lastMsg = senderText + statusText + (processor?.sessionDesc(msg: msg) ?? "")
                             s.unreadCount = unReadCount
                             if s.mTime < msg.cTime {
                                 s.mTime = msg.cTime

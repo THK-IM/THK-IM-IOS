@@ -133,7 +133,7 @@ open class IMBaseSessionCell : IMBaseTableCell {
         self.updateSession(session)
     }
     
-    public func updateSession(_ session: Session) {
+    open func updateSession(_ session: Session) {
         self.msgView.text = session.lastMsg
         let dateString = DateUtils.timeToMsgTime(ms: session.mTime, now: IMCoreManager.shared.severTime)
         self.lastTimeView.text = dateString

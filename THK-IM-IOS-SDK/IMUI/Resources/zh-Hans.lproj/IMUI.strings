@@ -25,11 +25,14 @@
 "im_image_msg"="[图片消息]";
 "im_record_msg"="[会话记录]";
 "im_reedit_msg"="[重编辑消息]";
-"im_revoke_msg"="[%@撤回了一条消息]";
+"im_revoke_msg"="[撤回消息]";
+"x_revoke_a_msg"="%@撤回了一条消息";
 "im_text_msg"="[文本消息]";
 "edited"="[已编辑]";
 "im_un_support_msg"="[未知消息]";
 "im_video_msg"="[视频消息]";
+"your_self"="你";
+"someone_at_me"="[有人@我]";
 "other_side"="对方";
 "not_support_msg_update_client"="不支持的消息类型，请尝试升级客户端";
 "copy"="复制";

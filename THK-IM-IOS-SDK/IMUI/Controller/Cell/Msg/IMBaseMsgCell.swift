@@ -266,26 +266,26 @@ open class IMBaseMsgCell : IMBaseTableCell {
     }
     
     open func initBubble() {
-        let fromUId = self.message?.fromUId
-        if (self.hasBubble() && fromUId != nil) {
+        guard let message = self.message else { return }
+        if (self.hasBubble()) {
             let position = cellPosition()
             var image: UIImage? = nil
             if (position == IMMsgPosType.Left.rawValue) {
-                image = IMUIManager.shared.uiResourceProvider?.msgBubble(fromUId: fromUId!, session: self.session)
+                image = IMUIManager.shared.uiResourceProvider?.msgBubble(message: message, session: self.session)
                 if image == nil {
                     image = Bubble().drawRectWithRoundedCorner(
                         radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "E5E5E5"),
                         borderColor: UIColor.init(hex: "E5E5E5"), width: 40, height: 40, pos: 0)
                 }
             } else if (position == IMMsgPosType.Right.rawValue) {
-                image = IMUIManager.shared.uiResourceProvider?.msgBubble(fromUId: fromUId!, session: self.session)
+                image = IMUIManager.shared.uiResourceProvider?.msgBubble(message: message, session: self.session)
                 if image == nil {
                     image = Bubble().drawRectWithRoundedCorner(
                         radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffd1e3fe"),
                         borderColor: UIColor.init(hex: "ffd1e3fe"), width: 40, height: 40, pos: 0)
                 }
             } else {
-                image = IMUIManager.shared.uiResourceProvider?.msgBubble(fromUId: fromUId!, session: self.session)
+                image = IMUIManager.shared.uiResourceProvider?.msgBubble(message: message, session: self.session)
                 if image == nil {
                     image = Bubble().drawRectWithRoundedCorner(
                         radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "BBBBBB"),

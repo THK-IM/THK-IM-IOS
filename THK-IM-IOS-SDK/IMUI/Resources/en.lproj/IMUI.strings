@@ -25,11 +25,14 @@
 "im_image_msg"="[Image message]";
 "im_record_msg"="[Conversation record]";
 "im_reedit_msg"="[Re-edit message]";
-"im_revoke_msg"="[%@ withdrew a message]";
+"im_revoke_msg"="[revoke message]";
+"x_revoke_a_msg"="%@ withdrew a message";
 "im_text_msg"="[Text message]";
 "edited"="[Edited]";
 "im_un_support_msg"="[Unknown message]";
 "im_video_msg"="[Video message]";
+"your_self"="you";
+"someone_at_me"="[someone@me]";
 "other_side"="The other party";
 "not_support_msg_update_client"="Unsupported message type, please try to upgrade the client";
 "copy"="Copy";

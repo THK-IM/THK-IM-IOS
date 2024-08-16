@@ -291,7 +291,7 @@ open class IMBaseMsgProcessor {
         for id in uIds {
             if (id == "\(IMCoreManager.shared.uId)")  {
                 if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue) == 0 {
-                    desc += "[有人@我]"
+                    desc += ResourceUtils.loadString("someone_at_me")
                 }
                 break
             }

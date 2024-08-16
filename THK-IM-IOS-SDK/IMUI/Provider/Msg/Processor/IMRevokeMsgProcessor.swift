@@ -42,7 +42,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
     
     open func getNickname(msg: Message) -> Observable<String> {
         if msg.fromUId == IMCoreManager.shared.uId {
-            return Observable.just("你")
+            return Observable.just(ResourceUtils.loadString("your_self"))
         } else {
             return IMCoreManager.shared.userModule.queryUser(id: msg.fromUId)
                 .flatMap { info in
@@ -87,7 +87,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
     }
     
     open override func msgDesc(msg: Message) -> String {
-        return ResourceUtils.loadString("im_record_msg", comment: "")
+        return ResourceUtils.loadString("im_revoke_msg")
     }
     
 }
