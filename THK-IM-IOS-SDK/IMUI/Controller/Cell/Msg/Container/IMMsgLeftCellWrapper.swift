@@ -43,7 +43,6 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
         } else {
             v.addArrangedSubview(_containerView)
             _containerView.snp.makeConstraints { make in
-                make.top.equalToSuperview().offset(8)
                 make.height.greaterThanOrEqualTo(48)
                 make.width.greaterThanOrEqualTo(20)
             }
@@ -95,6 +94,10 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     
     open override func layoutSubViews(_ isEditing: Bool) {
         let editingWidth = isEditing ? 0 : IMUIManager.shared.msgCellAvatarWidth
+        var top = 10
+        if self.type != SessionType.Single.rawValue {
+            top = 2
+        }
         _avatarView.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(2)
             make.left.equalToSuperview().offset(IMUIManager.shared.msgCellAvatarLeft)
@@ -102,7 +105,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
         }
         _messageStack.snp.remakeConstraints { make in
             make.left.equalTo(_avatarView.snp.right).offset(IMUIManager.shared.msgCellAvatarRight)
-            make.top.equalToSuperview().offset(2)
+            make.top.equalToSuperview().offset(top)
             make.right.lessThanOrEqualToSuperview().offset(-IMUIManager.shared.msgCellPadding)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
