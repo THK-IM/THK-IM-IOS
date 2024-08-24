@@ -31,54 +31,45 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
     }
     
     override public func received(_ msg: Message) {
-        getIMRevokeMsg(msg: msg)
-            .compose(RxTransformer.shared.io2Io())
-            .subscribe(onNext: { newMsg in
-                if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
-                    IMCoreManager.shared.messageModule.ackMessageToCache(msg)
-                }
-            }).disposed(by: self.disposeBag)
-    }
-    
-    open func getNickname(msg: Message) -> Observable<String> {
-        if msg.fromUId == IMCoreManager.shared.uId {
-            return Observable.just(ResourceUtils.loadString("your_self"))
-        } else {
-            return IMCoreManager.shared.userModule.queryUser(id: msg.fromUId)
-                .flatMap { info in
-                    return Observable.just(info.nickname)
-                }
+        if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
+            IMCoreManager.shared.messageModule.ackMessageToCache(msg)
         }
     }
     
-    open func getIMRevokeMsg(msg: Message) -> Observable<Message> {
-        return getNickname(msg: msg).flatMap { nickname in
-            let data = IMRevokeMsgData(nick: nickname)
-            var existed = false
-            if (msg.referMsgId != nil) {
-                let dbMsg = try IMCoreManager.shared.database.messageDao()
-                    .findByMsgId(msg.referMsgId!, msg.sessionId)
-                if (dbMsg != nil) {
-                    existed = true
-                    try IMCoreManager.shared.database.messageDao().delete([dbMsg!])
-                    SwiftEventBus.post(IMEvent.MsgDelete.rawValue, sender: dbMsg)
-                    if (dbMsg?.fromUId == IMCoreManager.shared.uId) {
-                        data.content = dbMsg!.content
-                        data.data = dbMsg!.data
-                        data.type = dbMsg!.type
-                    }
+    public override func getSenderName(msg: Message) -> String {
+        if msg.fromUId == IMCoreManager.shared.uId {
+            return ResourceUtils.loadString("your_self")
+        } else {
+            return super.getSenderName(msg: msg) ?? "xxx"
+        }
+    }
+    
+    open func processRevokeMsg(msg: Message)  {
+        let senderName = self.getSenderName(msg: msg)
+        let data = IMRevokeMsgData(nick: senderName)
+        var existed = false
+        if (msg.referMsgId != nil) {
+            let dbMsg = try? IMCoreManager.shared.database.messageDao()
+                .findByMsgId(msg.referMsgId!, msg.sessionId)
+            if (dbMsg != nil) {
+                existed = true
+                try? IMCoreManager.shared.database.messageDao().delete([dbMsg!])
+                SwiftEventBus.post(IMEvent.MsgDelete.rawValue, sender: dbMsg)
+                if (dbMsg?.fromUId == IMCoreManager.shared.uId) {
+                    data.content = dbMsg!.content
+                    data.data = dbMsg!.data
+                    data.type = dbMsg!.type
                 }
             }
-            let revokeData = try JSONEncoder().encode(data)
+        }
+        if (existed) {
+            let revokeData = try? JSONEncoder().encode(data)
             msg.operateStatus = MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
             msg.sendStatus = MsgSendStatus.Success.rawValue
-            msg.data = String(data: revokeData, encoding: .utf8)
-            if (existed) {
-                try IMCoreManager.shared.database.messageDao().insertOrIgnore([msg])
-                SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
-                IMCoreManager.shared.messageModule.processSessionByMessage(msg, false)
-            }
-            return Observable.just(msg)
+            msg.data = String(data: revokeData ?? Data(), encoding: .utf8)
+            try? IMCoreManager.shared.database.messageDao().insertOrIgnore([msg])
+            SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
+            IMCoreManager.shared.messageModule.processSessionByMessage(msg, false)
         }
     }
     

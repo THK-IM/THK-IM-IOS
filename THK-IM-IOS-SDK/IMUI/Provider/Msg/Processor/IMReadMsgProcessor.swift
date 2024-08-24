@@ -49,11 +49,11 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
             }
             let referMsg = try IMCoreManager.shared.database.messageDao().findByMsgId(msg.referMsgId!, msg.sessionId)
             if (referMsg != nil) {
+                referMsg!.operateStatus = referMsg!.operateStatus | MsgOperateStatus.ServerRead.rawValue |
+                                            MsgOperateStatus.ClientRead.rawValue |
+                                            MsgOperateStatus.Ack.rawValue
                 if (msg.fromUId == IMCoreManager.shared.uId) {
                     // 自己发的已读消息，更新rMsgId的消息状态为服务端已读
-                    referMsg!.operateStatus = MsgOperateStatus.ServerRead.rawValue | 
-                                                MsgOperateStatus.ClientRead.rawValue |
-                                                MsgOperateStatus.Ack.rawValue
                     try insertOrUpdateDb(referMsg!, true, false)
                     let session = try IMCoreManager.shared.database.sessionDao().findById(msg.sessionId)
                     if (session != nil) {

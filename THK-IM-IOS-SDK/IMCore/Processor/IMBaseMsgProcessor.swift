@@ -279,6 +279,10 @@ open class IMBaseMsgProcessor {
         return ""
     }
     
+    open func atMeDesc(msg: Message) -> String {
+        return ResourceUtils.loadString("someone_at_me")
+    }
+    
     /**
      * 该消息在session上的描述
      */
@@ -291,7 +295,7 @@ open class IMBaseMsgProcessor {
         for id in uIds {
             if (id == "\(IMCoreManager.shared.uId)")  {
                 if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue) == 0 {
-                    desc += ResourceUtils.loadString("someone_at_me")
+                    desc += atMeDesc(msg: msg)
                 }
                 break
             }
@@ -302,6 +306,24 @@ open class IMBaseMsgProcessor {
     open func reset() {
         // 取消监听执行中的任务
         self.disposeBag = DisposeBag()
+    }
+    
+    /**
+     * 获取session下用户昵称
+     */
+    open func getSenderName(msg: Message)-> String? {
+        if msg.fromUId <= 0 {
+            return nil
+        }
+        var sender: String? = nil
+        let sessionMember = IMCoreManager.shared.database.sessionMemberDao()
+            .findSessionMember(msg.sessionId, msg.fromUId)
+        sender = sessionMember?.noteName
+        if (sender == nil || sender?.length == 0) {
+            let user = IMCoreManager.shared.database.userDao().findById(msg.fromUId)
+            sender = user?.nickname
+        }
+        return sender
     }
     
 }

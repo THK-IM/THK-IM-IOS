@@ -500,9 +500,11 @@ open class IMMessageViewController: BaseViewController {
         }
         if let content = self.inputLayout.getInputContent() {
             Observable.just(content).flatMap { draft in
-                try? IMCoreManager.shared.database.sessionDao().updateSessionDraft(session.id, content)
-                if let session = try? IMCoreManager.shared.database.sessionDao().findById(session.id) {
-                    SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                if (session.draft != draft) {
+                    try? IMCoreManager.shared.database.sessionDao().updateSessionDraft(session.id, draft)
+                    if let session = try? IMCoreManager.shared.database.sessionDao().findById(session.id) {
+                        SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                    }
                 }
                 return Observable.just(true)
             }.compose(RxTransformer.shared.io2Main())

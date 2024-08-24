@@ -609,13 +609,7 @@ open class DefaultMessageModule : MessageModule {
                             var sender: String? = nil
                             if s.type != SessionType.Single.rawValue {
                                 if msg.fromUId > 0 {
-                                    let sessionMember = IMCoreManager.shared.database.sessionMemberDao()
-                                        .findSessionMember(s.id, msg.fromUId)
-                                    sender = sessionMember?.noteName
-                                    if sender == nil {
-                                        let user = IMCoreManager.shared.database.userDao().findById(msg.fromUId)
-                                        sender = user?.nickname
-                                    }
+                                    sender = processor?.getSenderName(msg: msg)
                                 }
                             }
                             var senderText = ""
@@ -742,9 +736,11 @@ open class DefaultMessageModule : MessageModule {
                     } else {
                         let sessionMembers = sessionMemberDao.findBySessionId(sessionId)
                         if let session = try? IMCoreManager.shared.database.sessionDao().findById(sessionId) {
-                            session.memberCount = sessionMembers.count
-                            try? IMCoreManager.shared.database.sessionDao().update([session])
-                            SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                            if session.memberCount != sessionMembers.count {
+                                session.memberCount = sessionMembers.count
+                                try? IMCoreManager.shared.database.sessionDao().update([session])
+                                SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                            }
                         }
                         return Observable.just(sessionMembers)
                     }

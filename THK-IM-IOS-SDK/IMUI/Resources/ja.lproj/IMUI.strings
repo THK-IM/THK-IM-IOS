@@ -32,7 +32,7 @@
 "im_un_support_msg"="[不明なメッセージ]";
 "im_video_msg"="[ビデオメッセージ]";
 "your_self"="あなた";
-"someone_at_me"="[someone@me]";
+"someone_at_me"="[誰か@私]";
 "other_side"="その他";
 "not_support_msg_update_client"="サポートされていないメッセージ タイプです。クライアントをアップグレードしてください。";
 "copy"="コピー";
