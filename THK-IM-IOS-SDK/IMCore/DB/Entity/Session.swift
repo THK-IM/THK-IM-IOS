@@ -178,7 +178,6 @@ public final class Session: TableCodable {
         self.parentId = serverSession.parentId
         self.entityId = serverSession.entityId
         self.name = serverSession.name
-        self.parentId = serverSession.parentId
         self.noteName = serverSession.noteName
         self.functionFlag = serverSession.functionFlag
         self.remark = serverSession.remark
