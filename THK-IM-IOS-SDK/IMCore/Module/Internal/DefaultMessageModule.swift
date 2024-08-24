@@ -595,7 +595,7 @@ open class DefaultMessageModule : MessageModule {
                             return
                         }
                         let unReadCount = try IMCoreManager.shared.database.messageDao().getUnReadCount(msg.sessionId)
-                        if (s.mTime <= msg.mTime || s.unreadCount != unReadCount || forceNotify || s.lastMsg == nil || ((s.lastMsg?.isEmpty) != nil)) {
+                        if (forceNotify || s.mTime <= msg.mTime || s.unreadCount != unReadCount || s.lastMsg == nil || ((s.lastMsg?.isEmpty) != nil)) {
                             let processor = self?.getMsgProcessor(msg.type)
                             var statusText = ""
                             if (msg.sendStatus == MsgSendStatus.Sending.rawValue || 
@@ -609,12 +609,13 @@ open class DefaultMessageModule : MessageModule {
                             var sender: String? = nil
                             if s.type != SessionType.Single.rawValue {
                                 if msg.fromUId > 0 {
-                                    let sessionMember = try? IMCoreManager.shared.database.sessionMemberDao().findSessionMember(s.id, msg.fromUId)
+                                    let sessionMember = IMCoreManager.shared.database.sessionMemberDao()
+                                        .findSessionMember(s.id, msg.fromUId)
                                     if sessionMember != nil && sessionMember?.noteName != nil && sessionMember!.noteName!.count > 0 {
                                         sender = sessionMember?.noteName!
                                     }
                                     if sender == nil {
-                                        let user = try? IMCoreManager.shared.database.userDao().findById(msg.fromUId)
+                                        let user = IMCoreManager.shared.database.userDao().findById(msg.fromUId)
                                         if user != nil {
                                             sender = user?.nickname
                                         }
@@ -625,7 +626,7 @@ open class DefaultMessageModule : MessageModule {
                             if sender != nil {
                                 senderText = "\(sender!):"
                             }
-                            s.lastMsg = senderText + statusText + (processor?.sessionDesc(msg: msg) ?? "")
+                            s.lastMsg = statusText + senderText + (processor?.sessionDesc(msg: msg) ?? "")
                             s.unreadCount = unReadCount
                             if s.mTime < msg.cTime {
                                 s.mTime = msg.cTime
