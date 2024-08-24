@@ -611,14 +611,10 @@ open class DefaultMessageModule : MessageModule {
                                 if msg.fromUId > 0 {
                                     let sessionMember = IMCoreManager.shared.database.sessionMemberDao()
                                         .findSessionMember(s.id, msg.fromUId)
-                                    if sessionMember != nil && sessionMember?.noteName != nil && sessionMember!.noteName!.count > 0 {
-                                        sender = sessionMember?.noteName!
-                                    }
+                                    sender = sessionMember?.noteName
                                     if sender == nil {
                                         let user = IMCoreManager.shared.database.userDao().findById(msg.fromUId)
-                                        if user != nil {
-                                            sender = user?.nickname
-                                        }
+                                        sender = user?.nickname
                                     }
                                 }
                             }
@@ -635,7 +631,7 @@ open class DefaultMessageModule : MessageModule {
                             SwiftEventBus.post(IMEvent.SessionNew.rawValue, sender: s)
                             if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) &&
                                 (msg.operateStatus & MsgOperateStatus.ServerRead.rawValue == 0) &&
-                                (sf.getMsgProcessor(msg.type).needReprocess(msg: msg) == false) {
+                                (!sf.getMsgProcessor(msg.type).needReprocess(msg: msg)) {
                                 sf.notifyNewMessage(s, msg)
                             }
                         }
