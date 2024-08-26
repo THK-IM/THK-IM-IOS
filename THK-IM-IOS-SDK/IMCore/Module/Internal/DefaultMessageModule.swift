@@ -304,11 +304,23 @@ open class DefaultMessageModule : MessageModule {
                 if let sf = self {
                     if sessions != nil {
                         for session in sessions! {
-                            sf.syncSessionMessage(session)
+                            if (session.deleted == 0 && session.id > 0 && session.type == SessionType.SuperGroup.rawValue) {
+                                sf.syncSessionMessage(session)
+                            }
                         }
                     }
                 }
             }).disposed(by: self.disposeBag)
+    }
+    
+    
+    /**
+     * 同步超级群消息
+     */
+    open func syncSuperGroupMessages(session: Session) {
+        if (session.deleted == 0 && session.id > 0 && session.type == SessionType.SuperGroup.rawValue) {
+            self.syncSessionMessage(session)
+        }
     }
     
     open func getSession(_ sessionId: Int64) -> Observable<Session> {
@@ -330,7 +342,7 @@ open class DefaultMessageModule : MessageModule {
             } else {
                 return IMCoreManager.shared.api.queryUserSession(IMCoreManager.shared.uId, sessionId)
                     .flatMap({ session in
-                        if (session.id > 0) {
+                        if (session.id > 0 && session.deleted == 0) {
                             try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
                         }
                         return Observable.just(session)
@@ -359,7 +371,7 @@ open class DefaultMessageModule : MessageModule {
             } else {
                 return IMCoreManager.shared.api.queryUserSession(IMCoreManager.shared.uId, entityId, type)
                     .flatMap({ session in
-                        if (session.id > 0) {
+                        if (session.id > 0 && session.deleted == 0) {
                             try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
                         }
                         return Observable.just(session)

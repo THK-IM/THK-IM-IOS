@@ -36,6 +36,11 @@ public protocol MessageModule : BaseModule {
      * 同步超级群消息
      */
     func syncSuperGroupMessages()
+    
+    /**
+     * 同步超级群消息
+     */
+    func syncSuperGroupMessages(session: Session)
 
     
     /**
