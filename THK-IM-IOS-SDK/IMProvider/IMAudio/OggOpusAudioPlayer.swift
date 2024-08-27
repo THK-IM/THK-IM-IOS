@@ -152,6 +152,10 @@ public class OggOpusAudioPlayer {
                 return false
             }
             
+            if _audioQueue == nil {
+                return false
+            }
+            
             var status = noErr
             // 初始化需要的缓冲区
             for _ in 0..<3 {
