@@ -112,6 +112,10 @@ open class IMCoreManager: SignalListener {
             return
         }
         if (self.uId == uId) {
+            if self._database == nil {
+                self._database = DefaultIMDatabase(uId, debug)
+                self._database?.open()
+            }
             return
         }
         
