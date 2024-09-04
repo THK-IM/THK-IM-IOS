@@ -10,7 +10,7 @@ import AVFoundation
 
 public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
     
-    weak var previewDelegate: PreviewDelegate? = nil
+    open weak var previewDelegate: PreviewDelegate? = nil
     lazy var _zoomImageView: UIImageView = {
         let view = UIImageView()
         view.isUserInteractionEnabled = true
