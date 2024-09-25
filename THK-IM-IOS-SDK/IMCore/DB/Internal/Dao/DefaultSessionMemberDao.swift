@@ -48,7 +48,19 @@ open class DefaultSessionMemberDao: SessionMemberDao {
     public func findBySessionId(_ sessionId: Int64) -> Array<SessionMember> {
         let members: Array<SessionMember>? = try? self.database?.getObjects(
             fromTable: self.tableName,
-            where: SessionMember.Properties.sessionId == sessionId
+            where: SessionMember.Properties.sessionId == sessionId,
+            orderBy: [SessionMember.Properties.cTime.order(Order.ascending)]
+        )
+        return members ?? Array<SessionMember>()
+    }
+    
+    public func findBySessionId(_ sessionId: Int64, _ offset: Int, _ count: Int) -> Array<SessionMember> {
+        let members: Array<SessionMember>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: SessionMember.Properties.sessionId == sessionId && SessionMember.Properties.deleted == 0,
+            orderBy: [SessionMember.Properties.cTime.order(Order.ascending)],
+            limit: count,
+            offset: offset
         )
         return members ?? Array<SessionMember>()
     }

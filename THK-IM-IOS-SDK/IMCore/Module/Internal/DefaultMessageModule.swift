@@ -747,9 +747,10 @@ open class DefaultMessageModule : MessageModule {
                         return self.queryLastSessionMember(sessionId, count)
                     } else {
                         let sessionMembers = sessionMemberDao.findBySessionId(sessionId)
+                        let memberCount = sessionMemberDao.findSessionMemberCount(sessionId)
                         if let session = try? IMCoreManager.shared.database.sessionDao().findById(sessionId) {
-                            if session.memberCount != sessionMembers.count {
-                                session.memberCount = sessionMembers.count
+                            if session.memberCount != memberCount {
+                                session.memberCount = memberCount
                                 try? IMCoreManager.shared.database.sessionDao().update([session])
                                 SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
                             }
