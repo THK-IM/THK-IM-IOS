@@ -762,7 +762,8 @@ open class DefaultMessageModule : MessageModule {
     }
     
     open func syncSessionMembers(_ sessionId: Int64) {
-        self.queryLastSessionMember(sessionId, 100)
+        let count = getSessionMemberCountPerRequest()
+        self.queryLastSessionMember(sessionId, count)
             .compose(RxTransformer.shared.io2Io())
             .subscribe(onNext: { _ in
                 
