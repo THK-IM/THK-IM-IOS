@@ -11,7 +11,7 @@ open class CodeMessageError: NSObject, Error, Codable {
     public let code: Int
     public let message: String
     
-    init(code: Int, message: String) {
+    public init(code: Int, message: String) {
         self.code = code
         self.message = message
     }
