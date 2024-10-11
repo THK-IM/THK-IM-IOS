@@ -11,12 +11,6 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     
     private let _avatarView = UIImageView()
     private var _nickView: UILabel? = nil
-    /// 包裹消息体的容器视图
-    let _containerView: UIView = {
-        let v = UIView()
-        v.isUserInteractionEnabled = true
-        return v
-    }()
     
     lazy var _messageStack: UIStackView = {
         let v = UIStackView()
@@ -35,20 +29,18 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
                 make.width.greaterThanOrEqualTo(20)
             }
             
-            v.addArrangedSubview(_containerView)
-            _containerView.snp.makeConstraints { make in
+            v.addArrangedSubview(containerView)
+            containerView.snp.makeConstraints { make in
                 make.height.greaterThanOrEqualTo(48)
                 make.width.greaterThanOrEqualTo(20)
             }
         } else {
-            v.addArrangedSubview(_containerView)
-            _containerView.snp.makeConstraints { make in
+            v.addArrangedSubview(containerView)
+            containerView.snp.makeConstraints { make in
                 make.height.greaterThanOrEqualTo(48)
                 make.width.greaterThanOrEqualTo(20)
             }
         }
-        
-        
         
         return v
     }()
@@ -89,35 +81,31 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
         _avatarView.contentMode = .scaleAspectFill
         contentView.addSubview(_avatarView)
         contentView.addSubview(_stateStack)
+        contentView.addSubview(bubbleView)
         contentView.addSubview(_messageStack)
     }
     
     open override func layoutSubViews(_ isEditing: Bool) {
         let editingWidth = isEditing ? 0 : IMUIManager.shared.msgCellAvatarWidth
-        var top = 10
-        if self.type != SessionType.Single.rawValue {
-            top = 2
-        }
         _avatarView.snp.remakeConstraints { make in
-            make.top.equalToSuperview().offset(2)
+            make.top.equalToSuperview()
             make.left.equalToSuperview().offset(IMUIManager.shared.msgCellAvatarLeft)
             make.size.equalTo(editingWidth)
         }
         _messageStack.snp.remakeConstraints { make in
             make.left.equalTo(_avatarView.snp.right).offset(IMUIManager.shared.msgCellAvatarRight)
-            make.top.equalToSuperview().offset(top)
+            make.top.equalToSuperview()
             make.right.lessThanOrEqualToSuperview().offset(-IMUIManager.shared.msgCellPadding)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
         _stateStack.snp.remakeConstraints { make in
-            make.left.equalTo(_messageStack.snp.right).offset(2)
+            make.right.equalTo(_messageStack.snp.left).offset(-4)
             make.size.equalTo(20)
-            make.bottom.equalTo(_containerView)
+            make.bottom.equalTo(containerView)
         }
-    }
-    
-    open override func containerView() -> UIView {
-        return self._containerView
+        bubbleView.snp.remakeConstraints { make in
+            make.edges.equalTo(self._messageStack)
+        }
     }
     
     open override func avatarView() -> UIImageView? {

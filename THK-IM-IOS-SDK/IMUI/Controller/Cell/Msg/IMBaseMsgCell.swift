@@ -20,7 +20,6 @@ open class IMBaseMsgCell : IMBaseTableCell {
     open var message: Message? = nil
     open var session: Session? = nil
     open var position: Int? = nil
-    open var bubbleView = UIImageView()
     open var replyView = IMMsgReplyView()
     
     public init(_ reuseIdentifier: String, _ wrapper: IMMsgCellWrapper) {
@@ -30,10 +29,9 @@ open class IMBaseMsgCell : IMBaseTableCell {
         self.backgroundColor = UIColor.clear
         cellWrapper.attach(contentView)
         cellWrapper.layoutSubViews(self.isEditing)
-        cellWrapper.containerView().insertSubview(self.bubbleView, at: 0)
-        cellWrapper.containerView().addSubview(self.replyView)
+        cellWrapper.containerView.addSubview(self.replyView)
         let msgView = self.msgView().contentView()
-        cellWrapper.containerView().addSubview(msgView)
+        cellWrapper.containerView.addSubview(msgView)
         self.setupEvent()
     }
     
@@ -73,7 +71,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
         .disposed(by: disposeBag)
         
         // 长按事件
-        cellWrapper.containerView().rx.longPressGesture()
+        self.cellWrapper.containerView.rx.longPressGesture()
             .when(.began)
             .subscribe(onNext: { [weak self]  _ in
                 guard let sf = self else {
@@ -216,9 +214,6 @@ open class IMBaseMsgCell : IMBaseTableCell {
     }
     
     open func initMsgContent() {
-        self.bubbleView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
         if let msg = message?.referMsg {
             self.initReplyMsg()
         } else {
@@ -227,8 +222,8 @@ open class IMBaseMsgCell : IMBaseTableCell {
         let msgView = self.msgView().contentView()
         msgView.snp.remakeConstraints { make in
             make.top.equalTo(self.replyView.snp.bottom).offset(4)
-            make.left.equalTo(self.bubbleView.snp.left).offset(4)
-            make.right.equalTo(self.bubbleView.snp.right).offset(-4)
+            make.left.equalToSuperview().offset(4)
+            make.right.equalToSuperview().offset(-4)
             make.bottom.equalToSuperview().offset(-4)
         }
     }
@@ -325,7 +320,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
     }
     
     private func updateUserBubble(image: UIImage?) {
-        self.bubbleView.image = image
+        self.cellWrapper.bubbleView.image = image
     }
     
     open func initMessageStatus() {

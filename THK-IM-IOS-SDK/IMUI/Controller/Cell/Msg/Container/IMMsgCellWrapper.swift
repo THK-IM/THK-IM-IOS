@@ -12,6 +12,15 @@ open class IMMsgCellWrapper  {
     // cellWrapper类型 单聊/群聊,不同的类型有细微差别，如单聊不显示昵称
     let type: Int
     
+    /// 包裹消息体的容器视图
+    let containerView: UIView = {
+        let v = UIView()
+        v.isUserInteractionEnabled = true
+        return v
+    }()
+    
+    let bubbleView = UIImageView()
+    
     public init(type: Int) {
         self.type = type
     }
@@ -28,13 +37,6 @@ open class IMMsgCellWrapper  {
      */
     open func layoutSubViews(_ isEditing: Bool) {
         
-    }
-    
-    /**
-     内容视图
-     */
-    open func containerView() -> UIView {
-        return UIView()
     }
     
     /**

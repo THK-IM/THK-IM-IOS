@@ -9,15 +9,8 @@ import UIKit
 
 open class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
     
-    /// 包裹消息体的容器视图
-    let _containerView: UIView = {
-        let v = UIView()
-        v.isUserInteractionEnabled = true
-        return v
-    }()
-    
     lazy var _messageStack: UIStackView = {
-        let v = UIStackView(arrangedSubviews: [_containerView])
+        let v = UIStackView(arrangedSubviews: [containerView])
         v.axis = .vertical
         v.distribution = .equalSpacing
         v.alignment = .center
@@ -25,6 +18,7 @@ open class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
     }()
     
     open override func attach(_ contentView: UIView) {
+        contentView.addSubview(bubbleView)
         contentView.addSubview(_messageStack)
     }
     
@@ -35,11 +29,9 @@ open class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
             make.right.equalToSuperview().offset(-44)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
-    }
-    
-    
-    open override func containerView() -> UIView {
-        return self._containerView
+        bubbleView.snp.remakeConstraints { make in
+            make.edges.equalTo(self._messageStack)
+        }
     }
     
 }
