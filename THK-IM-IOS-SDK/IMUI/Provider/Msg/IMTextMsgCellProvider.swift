@@ -33,7 +33,7 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
             return baseSize
         }
         let maxWidth = self.cellMaxWidth() - 24
-        let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0 ? "[已编辑]" : ""
+        let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0 ? ResourceUtils.loadString("edited") : ""
         let size = self.textRenderSize(content + updated, UIFont.systemFont(ofSize: 16), maxWidth)
         return CGSize(width: size.width, height: max(size.height, 28) + 20)
     }
@@ -42,7 +42,7 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         return true
     }
     
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView? {
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView {
         let view = IMTextMsgView(frame:.null)
         view.textColor = UIColor.darkGray
         view.font = UIFont.systemFont(ofSize: 12)
@@ -58,7 +58,7 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
             return baseSize
         }
         let maxWidth = self.cellMaxWidth() - 24 - 20
-        let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0 ? "[已编辑]" : ""
+        let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0 ? ResourceUtils.loadString("edited") : ""
         let size = self.textRenderSize(content + updated, UIFont.systemFont(ofSize: 12), maxWidth)
         return CGSize(width: size.width, height: min(size.height, 40))
     }

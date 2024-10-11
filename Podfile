@@ -44,8 +44,13 @@ target 'THK-IM-IOS' do
   pod 'YbridOpus', '0.8.0'
   pod 'YbridOgg', '0.8.0'
   
+  pod 'SJVideoPlayer'
+  pod 'SJUIKit/SQLite3'
+  pod 'SJMediaCacheServer'
+  
   ## Pods for THK-IM-IOS/IMLive
   pod 'WebRTC-SDK', '114.5735.08'
+  
   
   ## Pods for App
   pod 'GDPerformanceView-Swift', '= 2.1.1'

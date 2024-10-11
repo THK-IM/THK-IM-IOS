@@ -27,14 +27,13 @@ open class IMBaseMsgCell : IMBaseTableCell {
         self.cellWrapper = wrapper
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         self.tintColor = IMUIManager.shared.uiResourceProvider?.tintColor()
+        self.backgroundColor = UIColor.clear
         cellWrapper.attach(contentView)
         cellWrapper.layoutSubViews(self.isEditing)
-        let msgContainerView = cellWrapper.containerView()
-        msgContainerView.insertSubview(self.bubbleView, at: 0)
-        msgContainerView.addSubview(self.replyView)
+        cellWrapper.containerView().insertSubview(self.bubbleView, at: 0)
+        cellWrapper.containerView().addSubview(self.replyView)
         let msgView = self.msgView().contentView()
-        msgContainerView.addSubview(msgView)
-        self.backgroundColor = UIColor.clear
+        cellWrapper.containerView().addSubview(msgView)
         self.setupEvent()
     }
     
@@ -213,26 +212,23 @@ open class IMBaseMsgCell : IMBaseTableCell {
         guard let msg = self.message?.referMsg else {
             return
         }
-        self.replyView.updateContent(nickname, msg, self.session, self.delegate)
+        self.replyView.setRelyContent(nickname, msg, self.session, self.delegate)
     }
     
     open func initMsgContent() {
         self.bubbleView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        var size = CGSize(width: 0, height: 0)
         if let msg = message?.referMsg {
-            size = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgViewSize(msg, self.session)
-            self.replyView.resetSize(size)
             self.initReplyMsg()
         } else {
-            self.replyView.resetSize(size)
+            self.replyView.clearReplyContent()
         }
         let msgView = self.msgView().contentView()
         msgView.snp.remakeConstraints { make in
-            make.top.equalToSuperview().offset(size.height > 0 ? size.height + 30 : 4) // 补齐回复人高度
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
+            make.top.equalTo(self.replyView.snp.bottom).offset(4)
+            make.left.equalTo(self.bubbleView.snp.left).offset(4)
+            make.right.equalTo(self.bubbleView.snp.right).offset(-4)
             make.bottom.equalToSuperview().offset(-4)
         }
     }

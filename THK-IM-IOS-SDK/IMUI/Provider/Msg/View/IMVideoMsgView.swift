@@ -12,8 +12,21 @@ import CocoaLumberjack
 
 class IMVideoMsgView: UIImageView, IMsgBodyView {
     
-    private let durationLabel = IMMsgLabelView()
-    private let playView = UIImageView()
+    private lazy var durationLabel: IMMsgLabelView = {
+        let v = IMMsgLabelView()
+        v.font = UIFont.systemFont(ofSize: 10)
+        v.textColor = UIColor.white
+        v.layer.backgroundColor = UIColor.init(hex: "333333").withAlphaComponent(0.5).cgColor
+        v.layer.cornerRadius = 6
+        v.padding = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+        return v
+    }()
+    
+    private lazy var playView: UIImageView = {
+        let v = UIImageView()
+        v.image = ResourceUtils.loadImage(named: "icon_video_play")
+        return v
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,14 +38,7 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
     }
     
     private func setupUI() {
-        self.durationLabel.font = UIFont.systemFont(ofSize: 10)
-        self.durationLabel.textColor = UIColor.white
-        self.durationLabel.layer.backgroundColor = UIColor.init(hex: "333333").withAlphaComponent(0.5).cgColor
-        self.durationLabel.layer.cornerRadius = 6
-        self.durationLabel.padding = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
         self.addSubview(self.durationLabel)
-        
-        self.playView.image = ResourceUtils.loadImage(named: "icon_video_play")
         self.addSubview(self.playView)
     }
     

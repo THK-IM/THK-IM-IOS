@@ -87,7 +87,7 @@ open class IMBaseMessageCellProvider {
         }
     }
     
-    open func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView? {
+    open func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView {
         let view = IMTextMsgView()
         view.textColor = UIColor.darkGray
         view.font = UIFont.systemFont(ofSize: 12)

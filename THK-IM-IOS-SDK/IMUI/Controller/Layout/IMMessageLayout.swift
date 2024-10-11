@@ -18,7 +18,19 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     weak var sender: IMMsgSender? = nil
     weak var previewer : IMMsgPreviewer? = nil
     
-    private var messageTableView = UITableView()
+    private lazy var messageTableView: UITableView = {
+        let v = UITableView()
+        v.backgroundColor = UIColor.clear
+        v.dataSource = self
+        v.delegate = self
+        v.allowsSelection = true
+        v.allowsMultipleSelection = true
+        v.allowsMultipleSelectionDuringEditing = true
+        v.estimatedRowHeight = 88
+        v.rowHeight = UITableView.automaticDimension
+        return v
+    }()
+    
     private let disposeBag = DisposeBag()
     private let loadCount = 20
     private var isLoading = false
@@ -82,7 +94,6 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        DDLogInfo("didSelectRowAt \(indexPath.row)")
         let message = self.messages[indexPath.row]
         self.selectedMessages.insert(message)
     }
@@ -93,21 +104,21 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         self.selectedMessages.remove(message)
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let msg = self.messages[indexPath.row]
-        return self.msgCellHeight(msg)
-    }
-    
-    private func msgCellHeight(_ msg: Message) -> CGFloat {
-        let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
-        let size = provider.viewSize(msg, self.session)
-        var addHeight = provider.msgTopForSession(msg, self.session)
-        if let referMsg = msg.referMsg  {
-            addHeight += IMUIManager.shared.getMsgCellProvider(referMsg.type).replyMsgViewSize(referMsg, self.session).height
-            addHeight += 30 // 补齐回复人视图高度
-        }
-        return size.height + addHeight
-    }
+//    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        let msg = self.messages[indexPath.row]
+//        return self.msgCellHeight(msg)
+//    }
+//    
+//    private func msgCellHeight(_ msg: Message) -> CGFloat {
+//        let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
+//        let size = provider.viewSize(msg, self.session)
+//        var addHeight = provider.msgTopForSession(msg, self.session)
+//        if let referMsg = msg.referMsg  {
+//            addHeight += IMUIManager.shared.getMsgCellProvider(referMsg.type).replyMsgViewSize(referMsg, self.session).height
+//            addHeight += 30 // 补齐回复人视图高度
+//        }
+//        return size.height + addHeight
+//    }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if (abs(distanceFromBottom()) < 20) {
@@ -175,12 +186,6 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     
     private func loadMessageView() {
         self.addSubview(self.messageTableView)
-        self.messageTableView.backgroundColor = UIColor.clear
-        self.messageTableView.dataSource = self
-        self.messageTableView.delegate = self
-        self.messageTableView.allowsSelection = true
-        self.messageTableView.allowsMultipleSelection = true
-        self.messageTableView.allowsMultipleSelectionDuringEditing = true
         self.messageTableView.snp.makeConstraints { (make) -> Void in
             make.left.equalToSuperview()
             make.right.equalToSuperview()

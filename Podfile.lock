@@ -1,6 +1,7 @@
 PODS:
   - Alamofire (5.8.1)
   - BadgeSwift (8.0.0)
+  - CocoaAsyncSocket (7.6.5)
   - CocoaLumberjack (3.8.2):
     - CocoaLumberjack/Core (= 3.8.2)
   - CocoaLumberjack/Core (3.8.2)
@@ -10,6 +11,7 @@ PODS:
   - GDPerformanceView-Swift (2.1.1)
   - JDStatusBarNotification (2.2.1)
   - Kingfisher (7.10.0)
+  - Masonry (1.1.0)
   - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
   - Moya/RxSwift (15.0.0):
@@ -25,6 +27,75 @@ PODS:
   - RxRelay (6.5.0):
     - RxSwift (= 6.5.0)
   - RxSwift (6.5.0)
+  - SJBaseVideoPlayer (3.7.7.1):
+    - Masonry
+    - SJBaseVideoPlayer/AVPlayer (= 3.7.7.1)
+    - SJBaseVideoPlayer/Common (= 3.7.7.1)
+    - SJUIKit/AttributesFactory (>= 0.0.0.38)
+    - SJUIKit/ObserverHelper
+    - SJUIKit/Queues
+    - SJUIKit/SQLite3
+  - SJBaseVideoPlayer/AVPlayer (3.7.7.1):
+    - Masonry
+    - SJBaseVideoPlayer/Common
+    - SJUIKit/AttributesFactory (>= 0.0.0.38)
+    - SJUIKit/ObserverHelper
+    - SJUIKit/Queues
+    - SJUIKit/SQLite3
+  - SJBaseVideoPlayer/Common (3.7.7.1):
+    - Masonry
+    - SJBaseVideoPlayer/ResourceLoader
+    - SJUIKit/AttributesFactory (>= 0.0.0.38)
+    - SJUIKit/ObserverHelper
+    - SJUIKit/Queues
+    - SJUIKit/SQLite3
+  - SJBaseVideoPlayer/ResourceLoader (3.7.7.1):
+    - Masonry
+    - SJUIKit/AttributesFactory (>= 0.0.0.38)
+    - SJUIKit/ObserverHelper
+    - SJUIKit/Queues
+    - SJUIKit/SQLite3
+  - SJMediaCacheServer (1.7.8):
+    - SJMediaCacheServer/Core (= 1.7.8)
+    - SJMediaCacheServer/KTVCocoaHTTPServer (= 1.7.8)
+    - SJUIKit/SQLite3
+  - SJMediaCacheServer/Core (1.7.8):
+    - SJMediaCacheServer/KTVCocoaHTTPServer
+    - SJUIKit/SQLite3
+  - SJMediaCacheServer/KTVCocoaHTTPServer (1.7.8):
+    - CocoaAsyncSocket
+    - SJUIKit/SQLite3
+  - SJUIKit/AttributesFactory (0.0.0.59):
+    - SJUIKit/AttributesFactory/Deprecated (= 0.0.0.59)
+    - SJUIKit/AttributesFactory/UIKitText (= 0.0.0.59)
+  - SJUIKit/AttributesFactory/Deprecated (0.0.0.59)
+  - SJUIKit/AttributesFactory/UIKitText (0.0.0.59)
+  - SJUIKit/ObserverHelper (0.0.0.59)
+  - SJUIKit/Queues (0.0.0.59)
+  - SJUIKit/SQLite3 (0.0.0.59):
+    - SJUIKit/SQLite3/Core (= 0.0.0.59)
+    - SJUIKit/SQLite3/Protocol (= 0.0.0.59)
+    - YYModel
+  - SJUIKit/SQLite3/Core (0.0.0.59):
+    - SJUIKit/SQLite3/Protocol
+    - YYModel
+  - SJUIKit/SQLite3/Protocol (0.0.0.59):
+    - YYModel
+  - SJVideoPlayer (3.4.3):
+    - SJBaseVideoPlayer (>= 3.7.5)
+    - SJVideoPlayer/Common (= 3.4.3)
+    - SJVideoPlayer/ControlLayers (= 3.4.3)
+    - SJVideoPlayer/ResourceLoader (= 3.4.3)
+  - SJVideoPlayer/Common (3.4.3):
+    - Masonry
+    - SJBaseVideoPlayer (>= 3.7.5)
+    - SJUIKit/AttributesFactory
+    - SJVideoPlayer/ResourceLoader
+  - SJVideoPlayer/ControlLayers (3.4.3):
+    - SJBaseVideoPlayer (>= 3.7.5)
+    - SJVideoPlayer/Common
+  - SJVideoPlayer/ResourceLoader (3.4.3):
+    - SJBaseVideoPlayer (>= 3.7.5)
   - SnapKit (5.6.0)
   - Starscream (4.0.6)
   - SVGKit (3.0.0):
@@ -36,6 +107,7 @@ PODS:
   - WebRTC-SDK (114.5735.08)
   - YbridOgg (0.8.0)
   - YbridOpus (0.8.0)
+  - YYModel (1.0.4)
   - ZLPhotoBrowser (4.4.6):
     - ZLPhotoBrowser/Core (= 4.4.6)
   - ZLPhotoBrowser/Core (4.4.6)
@@ -53,6 +125,9 @@ DEPENDENCIES:
   - RxCocoa (= 6.5.0)
   - RxGesture (= 4.0.4)
   - RxSwift (= 6.5.0)
+  - SJMediaCacheServer
+  - SJUIKit/SQLite3
+  - SJVideoPlayer
   - SnapKit (= 5.6.0)
   - Starscream (= 4.0.6)
   - SVGKit
@@ -67,17 +142,23 @@ SPEC REPOS:
   https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
     - Alamofire
     - BadgeSwift
+    - CocoaAsyncSocket
     - CocoaLumberjack
     - CryptoSwift
     - GDPerformanceView-Swift
     - JDStatusBarNotification
     - Kingfisher
+    - Masonry
     - Moya
     - ProgressHUD
     - RxCocoa
     - RxGesture
     - RxRelay
     - RxSwift
+    - SJBaseVideoPlayer
+    - SJMediaCacheServer
+    - SJUIKit
+    - SJVideoPlayer
     - SnapKit
     - Starscream
     - SVGKit
@@ -87,22 +168,29 @@ SPEC REPOS:
     - WebRTC-SDK
     - YbridOgg
     - YbridOpus
+    - YYModel
     - ZLPhotoBrowser
 
 SPEC CHECKSUMS:
   Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
   BadgeSwift: a81547ffde1f462bb5fc02e3fa3fdcbc1b888354
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLumberjack: f8d89a516e7710fdb2e9b8f1560b16ec6040eef0
   CryptoSwift: b9c701d6f5011df23794dbf7f2e480a77835d83d
   GDPerformanceView-Swift: 22d964fe40b19e3d914dba2586237d064de8fd77
   JDStatusBarNotification: d43e8481174a2c5f195d16ce65c611f4a12bf507
   Kingfisher: a18f05d3b6d37d8650ee4a3e61d57a28fc6207f6
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
   ProgressHUD: abb9136ae23c85204236828562cb9a8ec98efb44
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
+  SJBaseVideoPlayer: b3122de12225b27b71bd9a8a1f08f4dcf2f4e5ec
+  SJMediaCacheServer: 95bebce42f281fccaff25a5e8284022478ff7ba5
+  SJUIKit: a40111941e408cc17d4c1c23495aa92999e814b0
+  SJVideoPlayer: 4f09814f58522e0975cb2dccfda925f6c8643467
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Starscream: fb2c4510bebf908c62bd383bcf05e673720e91fd
   SVGKit: 1ad7513f8c74d9652f94ed64ddecda1a23864dea
@@ -112,8 +200,9 @@ SPEC CHECKSUMS:
   WebRTC-SDK: c24d2a6c9f571f2ed42297cb8ffba9557093142b
   YbridOgg: 4af27a7224f0876a7000e1893df8ba986dd4a014
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
+  YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
 
-PODFILE CHECKSUM: 29d0c06cb5a6eb632d579f29fa0ff405a8da89ca
+PODFILE CHECKSUM: 9d0c61d6814e008409da3183d0df5770dfeaadd7
 
 COCOAPODS: 1.15.2

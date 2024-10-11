@@ -125,6 +125,9 @@ Pod::Spec.new do |spec|
     ui.dependency 'SVGKit'
     ui.dependency 'JDStatusBarNotification'
     ui.dependency 'SwiftEntryKit'
+    ui.dependency 'SJVideoPlayer'
+    ui.dependency 'SJUIKit/SQLite3'
+    ui.dependency 'SJMediaCacheServer'
   end
 
   spec.subspec 'IMPreviewer' do |previewer|

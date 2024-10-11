@@ -36,7 +36,7 @@ open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
         return true
     }
     
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView? {
+    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView {
         let view = IMAudioMsgView(frame:.null)
         view.setMessage(msg, session, delegate)
         return view
