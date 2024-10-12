@@ -16,6 +16,10 @@ open class PreviewCellView: UICollectionViewCell {
     var message: Message? = nil
     var disposeBag = DisposeBag()
     
+    deinit {
+        print("deinit PreviewCellView")
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
     }

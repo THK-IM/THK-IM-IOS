@@ -26,7 +26,12 @@ public class PreviewImageCellView : PreviewCellView {
         return view
     }()
     
+    deinit {
+        print("deinit PreviewImageCellView")
+    }
+    
     override init(frame: CGRect) {
+        print("deinit init PreviewImageCellView")
         super.init(frame: frame)
         self.setupView()
     }

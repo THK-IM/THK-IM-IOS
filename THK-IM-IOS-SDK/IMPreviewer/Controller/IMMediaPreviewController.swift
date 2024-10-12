@@ -31,6 +31,10 @@ public class IMMediaPreviewController: UIViewController,
     private var _isRequestingMore = false
     private var disposeBag = DisposeBag()
     
+    deinit {
+        print("deinit IMMediaPreviewController")
+    }
+    
     private let muteAudioTag = 31005
     private lazy var muteAudioButton : SJEdgeControlButtonItem = {
         let v = SJEdgeControlButtonItem(image: UIImage.init(named: "ic_audio_on")?.scaledToSize(CGSize(width: 20, height: 20)), target: self, action: #selector(mutePlayer), tag: self.muteAudioTag)
@@ -130,11 +134,11 @@ public class IMMediaPreviewController: UIViewController,
         
         let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(recognizerAction))
         self.view.addGestureRecognizer(gesture)
-        self.videoPlayer.playbackObserver.assetStatusDidChangeExeBlock = { player in
+        self.videoPlayer.playbackObserver.assetStatusDidChangeExeBlock = { [weak self] player in
             if player.assetStatus == .preparing || player.assetStatus == .unknown {
-                self.videoPlayer.defaultEdgeControlLayer.loadingView.start()
+                self?.videoPlayer.defaultEdgeControlLayer.loadingView.start()
             } else if player.assetStatus == .readyToPlay {
-                self.videoPlayer.defaultEdgeControlLayer.loadingView.stop()
+                self?.videoPlayer.defaultEdgeControlLayer.loadingView.stop()
             }
         }
         self.videoPlayer.gestureController.gestureRecognizerShouldTrigger = { _, _ , _ in
