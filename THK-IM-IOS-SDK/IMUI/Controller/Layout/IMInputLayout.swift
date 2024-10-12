@@ -25,18 +25,19 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     private static let minTextInputHeight: CGFloat = 40.0
     private let iconSize = CGSize(width: 24.0, height: 24.0)
     private let inputFont = UIFont.systemFont(ofSize: 16.0)
+    private let defaultReplyHeight = 60
     
     private var textInputHeight = IMInputLayout.minTextInputHeight
     private var inputLayoutHeight: CGFloat {
         get {
-            var replyMsgHeight = 0.0
+            var replyMsgHeight = 0
             if (self.isReplyMsgShow) {
-                replyMsgHeight = 40.0
+                replyMsgHeight = defaultReplyHeight
             }
             if (self.isSpeakViewShow) {
-                return IMInputLayout.minTextInputHeight + replyMsgHeight + 20.0
-            }            
-            return self.textInputHeight + replyMsgHeight + 20.0
+                return IMInputLayout.minTextInputHeight + CGFloat(replyMsgHeight) + 20.0
+            }
+            return self.textInputHeight + CGFloat(replyMsgHeight) + 20.0
         }
     }
     
@@ -354,7 +355,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         
         var replyHeight = 0
         if self.isReplyMsgShow {
-            replyHeight = 40
+            replyHeight = self.defaultReplyHeight
         }
         self.replyView.snp.remakeConstraints { make in
             make.bottom.equalTo(self.textView.snp.top)

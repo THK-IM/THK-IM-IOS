@@ -17,7 +17,7 @@ class IMReplyView: UIView {
     
     lazy private var closeView: UIImageView = {
         let view = UIImageView()
-        view.image = ResourceUtils.loadImage(named: "ic_close")
+        view.image = ResourceUtils.loadImage(named: "ic_close")?.scaledToSize(CGSize(width: 16, height: 16))
         view.contentMode = .scaleAspectFill
         return view
     }()
@@ -32,7 +32,7 @@ class IMReplyView: UIView {
     lazy private var replyUserView: UILabel = {
         let view = UILabel()
         view.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
-        view.font = UIFont.systemFont(ofSize: 12)
+        view.font = UIFont.systemFont(ofSize: 14)
         view.textAlignment = .left
         view.numberOfLines = 1
         return view
@@ -41,9 +41,9 @@ class IMReplyView: UIView {
     lazy private var replyMsgView: UILabel = {
         let view = UILabel()
         view.textColor = UIColor.darkGray
-        view.font = UIFont.systemFont(ofSize: 12)
+        view.font = UIFont.systemFont(ofSize: 14)
         view.textAlignment = .justified
-        view.numberOfLines = 1
+        view.numberOfLines = 2
         return view
     }()
     
@@ -80,22 +80,16 @@ class IMReplyView: UIView {
                 make.size.equalTo(30)
                 make.centerY.equalToSuperview()
             }
-            self.replyUserView.snp.remakeConstraints { [weak self] make in
-                guard let sf = self else {
-                    return
-                }
+            self.replyUserView.snp.remakeConstraints { make in
                 make.top.equalToSuperview().offset(2)
-                make.left.equalTo(sf.lineView.snp.right).offset(6)
-                make.right.equalTo(sf.closeView.snp.left).offset(-6)
+                make.left.equalTo(self.lineView.snp.right).offset(6)
+                make.right.equalTo(self.closeView.snp.left).offset(-6)
                 make.height.equalTo(14)
             }
-            self.replyMsgView.snp.remakeConstraints { [weak self] make in
-                guard let sf = self else {
-                    return
-                }
-                make.top.equalToSuperview().offset(16)
-                make.left.equalTo(sf.lineView.snp.right).offset(6)
-                make.right.equalTo(sf.closeView.snp.left).offset(-6)
+            self.replyMsgView.snp.remakeConstraints {make in
+                make.top.equalToSuperview().offset(20)
+                make.left.equalTo(self.lineView.snp.right).offset(6)
+                make.right.equalTo(self.closeView.snp.left).offset(-6)
                 make.bottom.equalToSuperview().offset(-2)
             }
             if let member = sender?.syncGetSessionMemberInfo(msg.fromUId) {
