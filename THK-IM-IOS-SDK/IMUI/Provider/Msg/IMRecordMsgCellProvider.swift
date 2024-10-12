@@ -35,7 +35,7 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
             return super.viewSize(message, session)
         }
-        let maxWidth = self.cellMaxWidth() - 24
+        let maxWidth = self.cellMaxWidth()
         let contentText = recordBody.title + "\n" + recordBody.content
         let size = self.textRenderSize(contentText, UIFont.systemFont(ofSize: 12), maxWidth)
         return CGSize(width: max(size.width + 24, 120), height: size.height + 20 + 26)
@@ -58,14 +58,10 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
             return super.viewSize(message, session)
         }
-        let maxWidth = self.cellMaxWidth() - 24 - 20
+        let maxWidth = self.replyMaxWidth()
         let contentText = recordBody.title + "\n" + recordBody.content
         let size = self.textRenderSize(contentText, UIFont.systemFont(ofSize: 12), maxWidth)
         return CGSize(width: max(size.width + 24, 120), height: size.height + 20 + 26)
-    }
-    
-    public override func msgTopForSession(_ message: Message, _ session: Session?) -> CGFloat {
-        return super.msgTopForSession(message, session) + 10
     }
     
 }

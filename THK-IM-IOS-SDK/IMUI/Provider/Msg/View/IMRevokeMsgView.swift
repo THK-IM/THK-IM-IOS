@@ -33,7 +33,6 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
         view.numberOfLines = 1
         view.font = UIFont.systemFont(ofSize: 14)
         view.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "1988f0")
-        view.text = ResourceUtils.loadString("im_edit_again", comment: "")
         view.textAlignment = .center
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         tapGesture.cancelsTouchesInView = true
@@ -57,7 +56,6 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
         
         self.reeditView.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-5)
-            make.width.equalTo(80)
             make.centerY.equalToSuperview()
             make.height.equalToSuperview()
         }
@@ -76,13 +74,8 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
         self.message = message
         self.delegate = delegate
         if (message.fromUId != IMCoreManager.shared.uId) {
-            self.reeditView.isHidden = true
-            self.reeditView.snp.updateConstraints { make in
-                make.right.equalToSuperview()
-                make.width.equalTo(0)
-                make.centerY.equalToSuperview()
-                make.height.equalToSuperview()
-            }
+            self.reeditView.isHidden = false
+            self.reeditView.text = ResourceUtils.loadString("im_edit_again", comment: "")
             if (message.data != nil) {
                 do {
                     let revokeData = try JSONDecoder().decode(IMRevokeMsgData.self, from: message.data!.data(using: .utf8) ?? Data())
@@ -103,14 +96,9 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
                 )
             }
         } else {
+            self.reeditView.text = ""
             self.textView.text = ResourceUtils.loadString("you_revoke_a_message", comment: "")
             self.reeditView.isHidden = false
-            self.reeditView.snp.updateConstraints { make in
-                make.right.equalToSuperview()
-                make.width.equalTo(80)
-                make.centerY.equalToSuperview()
-                make.height.equalToSuperview()
-            }
         }
     }
     

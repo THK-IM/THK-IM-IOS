@@ -223,7 +223,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
         msgView.snp.remakeConstraints { make in
             make.top.equalTo(self.replyView.snp.bottom)
             make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.right.lessThanOrEqualToSuperview()
             make.bottom.equalToSuperview()
         }
     }

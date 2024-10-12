@@ -19,8 +19,6 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         let view = UILabel()
         view.sizeToFit()
         view.numberOfLines = 0
-        view.font = UIFont.boldSystemFont(ofSize: 14)
-        view.textColor = UIColor.init(hex: "222222")
         view.textAlignment = .left
         return view
     }()
@@ -29,23 +27,19 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         let view = UILabel()
         view.sizeToFit()
         view.numberOfLines = 0
-        view.font = UIFont.systemFont(ofSize: 12)
-        view.textColor = UIColor.init(hex: "666666")
         view.textAlignment = .left
         return view
     }()
     
     private lazy var lineView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.init(hex: "999999")
+        view.backgroundColor = UIColor.init(hex: "CCCCCC")
         return view
     }()
     
     private lazy var descView: UILabel = {
         let view = UILabel()
         view.numberOfLines = 0
-        view.font = UIFont.systemFont(ofSize: 12)
-        view.textColor = UIColor.init(hex: "444444")
         view.textAlignment = .left
         return view
     }()
@@ -73,48 +67,31 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
             return
         }
-        let provider = IMUIManager.shared.getMsgCellProvider(message.type)
-        let size = isReply ? provider.replyMsgViewSize(message, session) : provider.viewSize(message, session)
-        self.removeConstraints(self.constraints)
-        
-        let padding = 4
-        self.snp.makeConstraints { make in
-            make.height.equalTo(size.height)
-            make.width.equalTo(size.width)
-        }
-        
-        self.recordTitleView.snp.makeConstraints { make in
+        let padding = isReply ? 4: 8
+        self.recordTitleView.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(padding)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
             make.height.equalTo(16)
         }
-        
-        self.descView.snp.makeConstraints { make in
-            make.height.equalTo(14).priority(.required)
-            make.bottom.equalToSuperview().offset(-padding)
+        self.recordContentView.snp.makeConstraints { make in
+            make.top.equalTo(self.recordTitleView.snp.bottom).offset(padding/2)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
+            make.height.lessThanOrEqualTo(60)
         }
-        
-        self.lineView.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.bottom.equalTo(sf.descView.snp.top).offset(-padding)
+        self.lineView.snp.remakeConstraints { make in
+            make.top.equalTo(self.recordContentView.snp.bottom).offset(padding/2)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
             make.height.equalTo(1)
         }
-        
-        self.recordContentView.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.top.equalTo(sf.recordTitleView.snp.bottom)
+        self.descView.snp.remakeConstraints { make in
+            make.top.equalTo(self.lineView.snp.bottom).offset(padding/2)
+            make.bottom.equalToSuperview().offset(-padding)
             make.left.equalToSuperview().offset(padding)
             make.right.equalToSuperview().offset(0-padding)
-            make.bottom.equalTo(sf.lineView.snp.top)
+            make.height.equalTo(14)
         }
         
         self.recordTitleView.text = recordBody.title
@@ -123,11 +100,18 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         
         if (isReply) {
             self.recordTitleView.font = UIFont.boldSystemFont(ofSize: 12)
-            self.recordTitleView.textColor = UIColor.init(hex: "ff999999")
+            self.recordTitleView.textColor = UIColor.init(hex: "999999")
             self.recordContentView.font = UIFont.boldSystemFont(ofSize: 12)
-            self.recordContentView.textColor = UIColor.init(hex: "ff999999")
+            self.recordContentView.textColor = UIColor.init(hex: "999999")
             self.descView.font = UIFont.boldSystemFont(ofSize: 12)
-            self.descView.textColor = UIColor.init(hex: "ff999999")
+            self.descView.textColor = UIColor.init(hex: "999999")
+        } else {
+            self.recordTitleView.font = UIFont.boldSystemFont(ofSize: 14)
+            self.recordTitleView.textColor = UIColor.init(hex: "222222")
+            self.recordContentView.font = UIFont.systemFont(ofSize: 12)
+            self.recordContentView.textColor = UIColor.init(hex: "666666")
+            self.descView.font = UIFont.systemFont(ofSize: 12)
+            self.descView.textColor = UIColor.init(hex: "444444")
         }
     }
     

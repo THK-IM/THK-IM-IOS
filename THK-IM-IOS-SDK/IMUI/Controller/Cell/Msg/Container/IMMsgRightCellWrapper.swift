@@ -100,7 +100,7 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
         _messageStack.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(10 + top)
             make.right.equalTo(_avatarView.snp.left).offset(-IMUIManager.shared.msgCellAvatarRight)
-            make.left.greaterThanOrEqualToSuperview().offset(IMUIManager.shared.msgCellPadding)
+            make.left.greaterThanOrEqualToSuperview().offset(IMUIManager.shared.msgCellPadding + 24.0)
             make.bottom.equalToSuperview().offset(-10)
         }
         _stateStack.snp.remakeConstraints { make in

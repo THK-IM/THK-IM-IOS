@@ -46,7 +46,6 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
     func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
         let provider = IMUIManager.shared.getMsgCellProvider(message.type)
         let size = isReply ? provider.replyMsgViewSize(message, session) : provider.viewSize(message, session)
-        self.removeConstraints(self.constraints)
         self.isHidden = true
         self.snp.makeConstraints { make in
             make.width.equalTo(size.width)

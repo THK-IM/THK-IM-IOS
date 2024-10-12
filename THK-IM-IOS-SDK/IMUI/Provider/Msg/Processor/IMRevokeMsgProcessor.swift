@@ -31,6 +31,7 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
     }
     
     override public func received(_ msg: Message) {
+        self.processRevokeMsg(msg: msg)
         if (msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 && msg.fromUId != IMCoreManager.shared.uId) {
             IMCoreManager.shared.messageModule.ackMessageToCache(msg)
         }

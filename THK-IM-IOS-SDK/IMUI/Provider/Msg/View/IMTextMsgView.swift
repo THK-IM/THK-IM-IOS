@@ -17,24 +17,14 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupUI()
     }
     
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupUI() {
-        self.sizeToFit()
-    }
-    
     public func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
         self.delegate = delegate
-        if isReply {
-            self.snp.remakeConstraints { make in
-                make.edges.equalToSuperview()
-            }
-        }
         guard var content = message.content else {
             return
         }

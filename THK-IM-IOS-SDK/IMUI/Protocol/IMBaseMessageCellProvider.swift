@@ -58,17 +58,21 @@ open class IMBaseMessageCellProvider {
         }
     }
     
-    open func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        return CGSize(width: 100.0, height: 48.0)
-    }
-    
     open func cellMaxWidth() -> CGFloat {
         return UIScreen.main.bounds.width - IMUIManager.shared.msgCellAvatarLeft - IMUIManager.shared.msgCellAvatarWidth 
-        - IMUIManager.shared.msgCellAvatarRight - IMUIManager.shared.msgCellPadding
+        - IMUIManager.shared.msgCellAvatarRight - 24.0 - IMUIManager.shared.msgCellPadding
+    }
+    
+    open func replyMaxWidth() -> CGFloat {
+        return self.cellMaxWidth() - 16
     }
     
     open func canSelected() -> Bool {
         return true
+    }
+    
+    open func hasBubble() -> Bool {
+        return false
     }
     
     open func textRenderSize(_ text: String, _ font: UIFont, _ maxWidth: CGFloat) -> CGSize {
@@ -95,24 +99,12 @@ open class IMBaseMessageCellProvider {
         return view
     }
     
+    open func viewSize(_ message: Message, _ session: Session?) -> CGSize {
+        return CGSize(width: 100.0, height: 48.0)
+    }
+    
     open func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
         return self.viewSize(message, session)
-    }
-    
-    open func msgTopForSession(_ message: Message, _ session: Session?) -> CGFloat {
-        if message.fromUId > 0 {
-            var top:CGFloat = 20
-            if session?.type != SessionType.Single.rawValue {
-                top += 24
-            }
-            return top
-        } else {
-            return 10
-        }
-    }
-    
-    open func hasBubble() -> Bool {
-        return false
     }
     
 }

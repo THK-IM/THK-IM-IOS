@@ -27,12 +27,17 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         }
     }
     
+    open override func cellMaxWidth() -> CGFloat {
+        let width = super.cellMaxWidth()
+        return width - 0
+    }
+    
     open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
         let baseSize = super.viewSize(message, session)
         guard let content = message.content else {
             return baseSize
         }
-        let maxWidth = self.cellMaxWidth() - 24
+        let maxWidth = self.cellMaxWidth()
         let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0 ? ResourceUtils.loadString("edited") : ""
         let size = self.textRenderSize(content + updated, UIFont.systemFont(ofSize: 16), maxWidth)
         return CGSize(width: size.width, height: max(size.height, 28) + 20)
@@ -57,7 +62,7 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         guard let content = message.content else {
             return baseSize
         }
-        let maxWidth = self.cellMaxWidth() - 24 - 20
+        let maxWidth = self.replyMaxWidth()
         let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0 ? ResourceUtils.loadString("edited") : ""
         let size = self.textRenderSize(content + updated, UIFont.systemFont(ofSize: 12), maxWidth)
         return CGSize(width: size.width, height: min(size.height, 40))
