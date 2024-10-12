@@ -30,7 +30,7 @@ open class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
         bubbleView.snp.remakeConstraints { make in
-            make.edges.equalTo(self._messageStack)
+            make.edges.equalTo(self.containerView)
         }
     }
     

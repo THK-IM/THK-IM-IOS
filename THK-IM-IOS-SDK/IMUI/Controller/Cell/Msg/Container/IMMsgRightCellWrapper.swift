@@ -18,7 +18,7 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
         v.axis = .vertical
         v.alignment = .trailing
         v.distribution = .fill
-        v.spacing = 2
+        v.spacing = 6
         
         if self.type != SessionType.Single.rawValue {
             _nickView = UILabel()
@@ -88,16 +88,20 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
     
     open override func layoutSubViews(_ isEditing: Bool) {
         let editingWidth = isEditing ? 0 : IMUIManager.shared.msgCellAvatarWidth
+        var top = 10
+        if self.type != SessionType.Single.rawValue {
+            top = 0
+        }
         _avatarView.snp.remakeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(10)
             make.right.equalToSuperview().offset(-IMUIManager.shared.msgCellAvatarLeft)
             make.size.equalTo(editingWidth)
         }
         _messageStack.snp.remakeConstraints { make in
+            make.top.equalToSuperview().offset(10 + top)
             make.right.equalTo(_avatarView.snp.left).offset(-IMUIManager.shared.msgCellAvatarRight)
-            make.top.equalToSuperview()
             make.left.greaterThanOrEqualToSuperview().offset(IMUIManager.shared.msgCellPadding)
-            make.bottom.equalToSuperview().offset(-10).priority(.low)
+            make.bottom.equalToSuperview().offset(-10)
         }
         _stateStack.snp.remakeConstraints { make in
             make.right.equalTo(_messageStack.snp.left).offset(-4)
@@ -105,7 +109,7 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
             make.bottom.equalTo(containerView)
         }
         bubbleView.snp.remakeConstraints { make in
-            make.edges.equalTo(self._messageStack)
+            make.edges.equalTo(containerView)
         }
     }
     

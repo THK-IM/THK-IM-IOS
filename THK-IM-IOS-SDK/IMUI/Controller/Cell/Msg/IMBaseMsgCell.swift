@@ -221,10 +221,10 @@ open class IMBaseMsgCell : IMBaseTableCell {
         }
         let msgView = self.msgView().contentView()
         msgView.snp.remakeConstraints { make in
-            make.top.equalTo(self.replyView.snp.bottom).offset(4)
-            make.left.equalToSuperview().offset(4)
-            make.right.equalToSuperview().offset(-4)
-            make.bottom.equalToSuperview().offset(-4)
+            make.top.equalTo(self.replyView.snp.bottom)
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
     
