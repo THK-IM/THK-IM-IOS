@@ -190,6 +190,19 @@ public class IMMediaPreviewController: UIViewController,
             sf.collectView.isScrollEnabled = scale <= 1.0
         })
         
+        SwiftEventBus.onMainThread(self, name: IMEvent.MsgNew.rawValue, handler: { [weak self ] result in
+            guard let msg = result?.object as? Message else {
+                return
+            }
+            self?.messageUpdate(msg: msg)
+        })
+        SwiftEventBus.onMainThread(self, name: IMEvent.MsgUpdate.rawValue, handler: { [weak self ]result in
+            guard let msg = result?.object as? Message else {
+                return
+            }
+            self?.messageUpdate(msg: msg)
+        })
+        
         SwiftEventBus.onMainThread(self, name: IMEvent.MsgLoadStatusUpdate.rawValue, handler: { [weak self ] result in
             guard let loadProgress = result?.object as? IMLoadProgress else {
                 return
@@ -197,6 +210,22 @@ public class IMMediaPreviewController: UIViewController,
             self?.onItemLoadUpdate(loadProgress)
         })
     }
+    
+    private func messageUpdate(msg: Message) {
+        for  i in 0 ... self.messages.count-1 {
+            if (self.messages[i].id == msg.id) {
+                if (self.messages[i].type == MsgType.Image.rawValue) {
+                    let cell = self.collectView.cellForItem(at: IndexPath.init(row: i, section: 0))
+                    if cell == nil {
+                        self.messages[i] = msg
+                        self.collectView.reloadItems(at: [IndexPath(row: i, section: 0)])
+                    }
+                }
+                break
+            }
+        }
+    }
+
     
     @objc func recognizerAction(gestureRecognizer: UIPanGestureRecognizer) {
         let translation = gestureRecognizer.translation(in: gestureRecognizer.view)

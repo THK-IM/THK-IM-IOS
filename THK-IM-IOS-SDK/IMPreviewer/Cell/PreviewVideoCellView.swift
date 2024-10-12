@@ -66,59 +66,6 @@ public class PreviewVideoCellView : PreviewCellView {
     }
     
     
-    private func updateMessage(_ cacheFileUrl: URL) {
-        DispatchQueue.global().async { [weak self] in 
-            guard let message = self?.message else {
-                return
-            }
-            do {
-                guard let file = try FileManager.default.contentsOfDirectory(
-                    atPath: cacheFileUrl.path
-                ).first else { return }
-                let sourcePath = "\(cacheFileUrl.path)/\(file)"
-                if (message.content != nil) {
-                    let body = try JSONDecoder().decode(
-                        IMVideoMsgBody.self,
-                        from: message.content!.data(using: .utf8) ?? Data()
-                    )
-                    if (body.url == nil) {
-                        return
-                    }
-                    var data: IMVideoMsgData? = nil
-                    if (message.data != nil) {
-                        data = try JSONDecoder().decode(
-                            IMVideoMsgData.self,
-                            from: message.data!.data(using: .utf8) ?? Data()
-                        )
-                        if (data!.path != nil) {
-                            return
-                        }
-                    } else {
-                        data = IMVideoMsgData()
-                    }
-                    let path = IMCoreManager.shared.storageModule.allocSessionFilePath(
-                            message.sessionId,
-                            body.name ?? String().random(8),
-                            IMFileFormat.Video.rawValue
-                        )
-                    try IMCoreManager.shared.storageModule.copyFile(sourcePath, path)
-                    if (data != nil) {
-                        data!.path = path
-                        data!.height = body.width
-                        data!.width = body.duration
-                        data!.duration = body.duration
-                        let d = try JSONEncoder().encode(data)
-                        message.data = String(data: d, encoding: .utf8)!
-                        try IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
-                            .insertOrUpdateDb(message, true, false)
-                    }
-                }
-            } catch {
-                DDLogError("\(error)")
-            }
-        }
-    }
-    
     public override func startPreview() {
         guard let message = self.message else {
             return
@@ -130,15 +77,8 @@ public class PreviewVideoCellView : PreviewCellView {
             make.edges.equalToSuperview()
         }
         
-        var sourcePath: String? = nil
         var sourceUrl: String? = nil
         do {
-            if (message.data != nil) {
-                let data = try JSONDecoder().decode(
-                    IMVideoMsgData.self,
-                    from: message.data!.data(using: .utf8) ?? Data())
-                sourcePath = data.path
-            }
             if (message.content != nil) {
                 let body = try JSONDecoder().decode(
                     IMVideoMsgBody.self,
@@ -149,20 +89,9 @@ public class PreviewVideoCellView : PreviewCellView {
             DDLogError("\(error)")
         }
         
-        if (sourcePath != nil) {
-            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(sourcePath!)
-            let videoUrl = URL(fileURLWithPath: realPath)
-            player.urlAsset = SJVideoPlayerURLAsset.init(url: videoUrl)
-            player.play()
-        } else if (sourceUrl != nil) {
+       if (sourceUrl != nil) {
             let realUrlString = self.getRealUrl(url: sourceUrl!, message: message)
             guard let realUrl = URL(string: realUrlString) else { return }
-            if MCSAssetManager.shared().isAssetStored(for: realUrl) {
-                if let asset = MCSAssetManager.shared().asset(with: realUrl) {
-                    let pathUrl = URL(fileURLWithPath: asset.path)
-                    self.updateMessage(pathUrl)
-                }
-            }
             guard let cacheUrl = SJMediaCacheServer.shared().playbackURL(with: realUrl) else { return }
             player.urlAsset = SJVideoPlayerURLAsset.init(url: cacheUrl)
             player.play()

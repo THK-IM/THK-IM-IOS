@@ -124,11 +124,11 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
                     let path = IMCoreManager.shared.storageModule.sandboxFilePath(data.thumbnailPath!)
                     self.renderImageByPathWithCorner(path: path, radius: 8.0)
                     self.isHidden = false
+                    return
                 }
             } catch {
                 DDLogError("\(error)")
             }
-            return
         }
     
         if (message.content != nil) {
