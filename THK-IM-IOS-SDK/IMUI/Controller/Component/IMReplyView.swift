@@ -31,7 +31,7 @@ class IMReplyView: UIView {
     
     lazy private var replyUserView: UILabel = {
         let view = UILabel()
-        view.textColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
+        view.textColor = UIColor.init(hex: "333333")
         view.font = UIFont.systemFont(ofSize: 14)
         view.textAlignment = .left
         view.numberOfLines = 1
@@ -40,7 +40,7 @@ class IMReplyView: UIView {
     
     lazy private var replyMsgView: UILabel = {
         let view = UILabel()
-        view.textColor = UIColor.darkGray
+        view.textColor = UIColor.init(hex: "666666")
         view.font = UIFont.systemFont(ofSize: 14)
         view.textAlignment = .justified
         view.numberOfLines = 2
