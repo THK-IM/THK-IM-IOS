@@ -15,30 +15,9 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.Record.rawValue
     }
     
-    open override func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
-        let msgType = self.messageType()
+    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper) -> IMBaseMsgCell {
         let identifier = self.identifier(viewType)
-        switch viewType {
-        case 3 * msgType:  // 中间消息
-            return IMRecordMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
-        case 3 * msgType + 2: // 自己消息
-            return IMRecordMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
-        default: // 他人消息
-            return IMRecordMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
-        }
-    }
-    
-    open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        guard let content = message.content else {
-            return super.viewSize(message, session)
-        }
-        guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
-            return super.viewSize(message, session)
-        }
-        let maxWidth = self.cellMaxWidth()
-        let contentText = recordBody.title + "\n" + recordBody.content
-        let size = self.textRenderSize(contentText, UIFont.systemFont(ofSize: 12), maxWidth)
-        return CGSize(width: max(size.width + 24, 120), height: size.height + 20 + 26)
+        return IMRecordMsgCell(identifier, wrapper)
     }
     
     open override func hasBubble() -> Bool {
@@ -49,19 +28,6 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         let view = IMRecordMsgView(frame:.null)
         view.setMessage(msg, session, delegate)
         return view
-    }
-    
-    open override func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
-        guard let content = message.content else {
-            return super.viewSize(message, session)
-        }
-        guard let recordBody = try? JSONDecoder().decode(IMRecordMsgBody.self, from: content.data(using: .utf8) ?? Data()) else {
-            return super.viewSize(message, session)
-        }
-        let maxWidth = self.replyMaxWidth()
-        let contentText = recordBody.title + "\n" + recordBody.content
-        let size = self.textRenderSize(contentText, UIFont.systemFont(ofSize: 12), maxWidth)
-        return CGSize(width: max(size.width + 24, 120), height: size.height + 20 + 26)
     }
     
 }

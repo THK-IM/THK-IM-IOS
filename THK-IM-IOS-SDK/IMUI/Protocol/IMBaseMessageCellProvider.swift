@@ -47,24 +47,24 @@ open class IMBaseMessageCellProvider {
      */
     open func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
         let msgType = self.messageType()
-        let identifier = self.identifier(viewType)
         switch viewType {
         case 3 * msgType:  // 中间消息
-            return IMBaseMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
+            return viewCellWithWrapper(viewType, IMMsgMiddleCellWrapper(type: cellType))
         case 3 * msgType + 2: // 自己消息
-            return IMBaseMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
+            return viewCellWithWrapper(viewType, IMMsgRightCellWrapper(type: cellType))
         default: // 他人消息
-            return IMBaseMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
+            return viewCellWithWrapper(viewType, IMMsgLeftCellWrapper(type: cellType))
         }
+    }
+    
+    open func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper) -> IMBaseMsgCell {
+        let identifier = self.identifier(viewType)
+        return IMBaseMsgCell(identifier, wrapper)
     }
     
     open func cellMaxWidth() -> CGFloat {
         return UIScreen.main.bounds.width - IMUIManager.shared.msgCellAvatarLeft - IMUIManager.shared.msgCellAvatarWidth 
         - IMUIManager.shared.msgCellAvatarRight - 24.0 - IMUIManager.shared.msgCellPadding
-    }
-    
-    open func replyMaxWidth() -> CGFloat {
-        return self.cellMaxWidth() - 16
     }
     
     open func canSelected() -> Bool {
@@ -97,14 +97,6 @@ open class IMBaseMessageCellProvider {
         view.font = UIFont.systemFont(ofSize: 12)
         view.numberOfLines = 0
         return view
-    }
-    
-    open func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        return CGSize(width: 100.0, height: 48.0)
-    }
-    
-    open func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
-        return self.viewSize(message, session)
     }
     
 }

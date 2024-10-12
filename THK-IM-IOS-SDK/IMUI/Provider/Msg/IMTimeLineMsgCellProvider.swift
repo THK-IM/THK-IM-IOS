@@ -13,17 +13,9 @@ open class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.TimeLine.rawValue
     }
     
-    open override func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
-        let msgType = self.messageType()
+    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper) -> IMBaseMsgCell {
         let identifier = self.identifier(viewType)
-        switch viewType {
-        case 3 * msgType:  // 中间消息
-            return IMTimeLineMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
-        case 3 * msgType + 2: // 自己消息
-            return IMTimeLineMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
-        default: // 他人消息
-            return IMTimeLineMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
-        }
+        return IMTimeLineMsgCell(identifier, wrapper)
     }
     
     open override func canSelected() -> Bool {
@@ -33,11 +25,6 @@ open class IMTimeLineMsgCellProvider: IMBaseMessageCellProvider {
     
     open override func hasBubble() -> Bool {
         return false
-    }
-    
-    
-    open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        return CGSize(width: 100.0, height: 30.0)
     }
     
 }

@@ -40,24 +40,28 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
     private func setupUI() {
         self.addSubview(self.durationLabel)
         self.addSubview(self.playView)
-    }
-    
-    
-    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
-        let provider = IMUIManager.shared.getMsgCellProvider(message.type)
-        let size = isReply ? provider.replyMsgViewSize(message, session) : provider.viewSize(message, session)
-        self.isHidden = true
-        self.snp.makeConstraints { make in
-            make.width.equalTo(size.width)
-            make.height.equalTo(size.height)
-        }
-        self.durationLabel.snp.remakeConstraints { make in
+        self.durationLabel.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-5)
             make.right.equalToSuperview().offset(-5)
             make.height.equalTo(20)
         }
-        if isReply {
-            self.durationLabel.isHidden = true
+    }
+    
+    
+    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
+        self.resetlayout(message, isReply)
+        self.showMessage(message)
+    }
+    
+    private func resetlayout(_ message: Message, _ isReply: Bool) {
+        var size = self.viewSize(message)
+        if (isReply) {
+            size = CGSize(width: size.width * 0.25, height: size.height * 0.25)
+        }
+        self.isHidden = true
+        self.snp.makeConstraints { make in
+            make.width.equalTo(size.width)
+            make.height.equalTo(size.height)
         }
         self.playView.snp.remakeConstraints { make in
             make.center.equalToSuperview()
@@ -67,6 +71,47 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
                 make.size.equalTo(40)
             }
         }
+        self.durationLabel.isHidden = isReply
+    }
+    
+    private func viewSize(_ message: Message) -> CGSize {
+        var width = 100.0
+        var height = 100.0
+        do {
+            if (message.data != nil) {
+                let data = try JSONDecoder().decode(
+                    IMVideoMsgData.self,
+                    from: message.data!.data(using: .utf8) ?? Data())
+                if data.height != nil && data.width != nil {
+                    width = Double(data.width!).ptValue()
+                    height = Double(data.height!).ptValue()
+                }
+            }
+            if (message.content != nil) {
+                let body = try JSONDecoder().decode(
+                    IMVideoMsgBody.self,
+                    from: message.content!.data(using: .utf8) ?? Data())
+                if body.height != nil && body.width != nil {
+                    width = Double(body.width!).ptValue()
+                    height = Double(body.height!).ptValue()
+                }
+            }
+            if (width >= height) {
+                let calWidth = max(80, min(200, width))
+                let calHeight = max(80, calWidth * height / width)
+                return CGSize(width: calWidth, height: calHeight)
+            } else  {
+                let calHeight = max(80, min(200, height))
+                let calWidth = max(80, calHeight * width / height)
+                return CGSize(width: calWidth, height: calHeight)
+            }
+        } catch {
+            DDLogError("\(error)")
+            return CGSize(width: width, height: 1.5 * width)
+        }
+    }
+    
+    private func showMessage(_ message: Message) {
         if (message.data != nil) {
             do {
                 let data = try JSONDecoder().decode(

@@ -14,22 +14,9 @@ open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.Audio.rawValue
     }
     
-    open override func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
-        let msgType = self.messageType()
+    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper) -> IMBaseMsgCell {
         let identifier = self.identifier(viewType)
-        switch viewType {
-        case 3 * msgType:  // 中间消息
-            return IMAudioMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
-        case 3 * msgType + 2: // 自己消息
-            return IMAudioMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
-        default: // 他人消息
-            return IMAudioMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
-        }
-    }
-    
-    open override func viewSize(_ message: Message, _ session: Session?) -> CGSize {
-        let maxWidth = self.cellMaxWidth()
-        return CGSize(width: maxWidth, height: 48)
+        return IMAudioMsgCell(identifier, wrapper)
     }
     
     open override func hasBubble() -> Bool {
@@ -42,9 +29,5 @@ open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
         return view
     }
     
-    open override func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
-        let size = self.viewSize(message, session)
-        return size
-    }
     
 }

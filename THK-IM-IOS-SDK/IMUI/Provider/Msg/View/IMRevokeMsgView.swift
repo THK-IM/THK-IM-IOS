@@ -55,15 +55,12 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
         self.addSubview(reeditView)
         
         self.reeditView.snp.makeConstraints { make in
-            make.right.equalToSuperview().offset(-5)
+            make.right.equalToSuperview().offset(-10)
             make.centerY.equalToSuperview()
             make.height.equalToSuperview()
         }
-        self.textView.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.right.equalTo(sf.reeditView.snp.left).offset(-10)
+        self.textView.snp.makeConstraints { make in
+            make.right.equalTo(self.reeditView.snp.left).offset(-10)
             make.left.equalToSuperview().offset(10)
             make.centerY.equalToSuperview()
             make.height.equalToSuperview()

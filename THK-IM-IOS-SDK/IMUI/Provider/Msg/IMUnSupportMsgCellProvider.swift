@@ -14,17 +14,9 @@ open class IMUnSupportMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.UnSupport.rawValue
     }
     
-    open override func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
-        let msgType = self.messageType()
+    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper) -> IMBaseMsgCell {
         let identifier = self.identifier(viewType)
-        switch viewType {
-        case 3 * msgType:  // 中间消息
-            return IMUnSupportMsgCell(identifier, IMMsgMiddleCellWrapper(type: cellType))
-        case 3 * msgType + 2: // 自己消息
-            return IMUnSupportMsgCell(identifier, IMMsgRightCellWrapper(type: cellType))
-        default: // 他人消息
-            return IMUnSupportMsgCell(identifier, IMMsgLeftCellWrapper(type: cellType))
-        }
+        return IMUnSupportMsgCell(identifier, wrapper)
     }
     
     open override func hasBubble() -> Bool {
@@ -35,11 +27,6 @@ open class IMUnSupportMsgCellProvider: IMBaseMessageCellProvider {
         let view = IMUnSupportMsgView(frame:.null)
         view.setMessage(msg, session, delegate)
         return view
-    }
-    
-    open override func replyMsgViewSize(_ message: Message, _ session: Session?) -> CGSize {
-        let size = self.viewSize(message, session)
-        return size
     }
 }
 

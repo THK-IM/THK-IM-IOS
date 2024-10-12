@@ -46,12 +46,12 @@ open class IMMsgReplyView: UIView {
         self.nickView.text = nickname
         let attributes = [NSAttributedString.Key.font: self.nickView.font]
         let textSize = (self.nickView.text! as NSString).size(withAttributes: attributes as [NSAttributedString.Key : Any])
-        let size = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgViewSize(msg, session)
+        let maxWidth = IMUIManager.shared.getMsgCellProvider(msg.type).cellMaxWidth() - 16
         self.snp.remakeConstraints { make in
             make.top.equalToSuperview()
             make.left.right.equalToSuperview()
-            make.height.equalTo(size.height > 0 ? size.height + 30 : 0)
-            make.width.greaterThanOrEqualTo(max(size.width, textSize.width) + 16)
+            make.width.greaterThanOrEqualTo(textSize.width + 16)
+            make.width.lessThanOrEqualTo(maxWidth)
         }
         
         self.addSubview(self.nickView)
