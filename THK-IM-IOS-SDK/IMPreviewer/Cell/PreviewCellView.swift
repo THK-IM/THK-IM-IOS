@@ -29,11 +29,24 @@ open class PreviewCellView: UICollectionViewCell {
     }
     
     open func startPreview() {
-        
+        guard let vc = self.parentController() as? IMMediaPreviewController else { return }
+        let player = vc.videoPlayer
+        if player.view.superview != nil {
+            player.view.removeFromSuperview()
+        }
     }
     
-    open func stopPreview() {
-        
+    open func onIMLoadProgress(_ loadProgress: IMLoadProgress) {}
+    
+    func parentController() -> UIViewController? {
+        var responder: UIResponder? = self
+        while let nextResponder = responder?.next {
+            if let viewController = nextResponder as? UIViewController {
+                return viewController
+            }
+            responder = nextResponder
+        }
+        return nil
     }
     
 }

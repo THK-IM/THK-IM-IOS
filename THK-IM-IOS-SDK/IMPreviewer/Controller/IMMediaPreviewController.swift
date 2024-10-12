@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 import RxSwift
+import SJVideoPlayer
+import SJMediaCacheServer
 
 public class IMMediaPreviewController: UIViewController,
                                        UICollectionViewDataSource,
@@ -29,7 +31,64 @@ public class IMMediaPreviewController: UIViewController,
     private var _isRequestingMore = false
     private var disposeBag = DisposeBag()
     
-    private lazy var _collectView : UICollectionView = {
+    private let muteAudioTag = 31005
+    private lazy var muteAudioButton : SJEdgeControlButtonItem = {
+        let v = SJEdgeControlButtonItem(image: UIImage.init(named: "ic_audio_on")?.scaledToSize(CGSize(width: 20, height: 20)), target: self, action: #selector(mutePlayer), tag: self.muteAudioTag)
+        return v
+    }()
+    
+    lazy var videoPlayer: SJVideoPlayer = {
+        let player = SJVideoPlayer()
+        player.isMuted = true
+        player.autoplayWhenSetNewAsset = true
+        player.resumePlaybackWhenScrollAppeared = false
+        player.defaultEdgeControlLayer.loadingView.showsNetworkSpeed = true
+        if #available(iOS 14.0, *) {
+            player.defaultEdgeControlLayer.automaticallyShowsPictureInPictureItem = false
+        }
+        player.controlLayerAppearManager.keepAppearState()
+        player.controlLayerAppearManager.isDisabled = true
+        player.defaultEdgeControlLayer.isDisabledPromptingWhenNetworkStatusChanges = false
+        player.defaultEdgeControlLayer.bottomAdapter.removeItem(forTag: SJEdgeControlLayerBottomItem_Full)
+        player.defaultEdgeControlLayer.topAdapter.removeItem(forTag: SJEdgeControlLayerTopItem_Back)
+        player.defaultEdgeControlLayer.topAdapter.removeItem(forTag: SJEdgeControlLayerTopItem_Title)
+        player.defaultEdgeControlLayer.topAdapter.removeItem(forTag: SJEdgeControlLayerTopItem_More)
+        if #available(iOS 14.0, *) {
+            player.defaultEdgeControlLayer.topAdapter.removeItem(forTag: SJEdgeControlLayerTopItem_PictureInPicture)
+            player.defaultEdgeControlLayer.topAdapter.item(forTag: SJEdgeControlLayerTopItem_PictureInPicture)?.isHidden = true
+        }
+        player.defaultEdgeControlLayer.bottomAdapter.add(self.muteAudioButton)
+        if player.isMuted {
+            self.muteAudioButton.image = ResourceUtils.loadImage(named: "ic_audio_off")?.scaledToSize(CGSize(width: 20, height: 20))
+        } else {
+            self.muteAudioButton.image = ResourceUtils.loadImage(named: "ic_audio_on")?.scaledToSize(CGSize(width: 20, height: 20))
+        }
+        player.defaultEdgeControlLayer.bottomAdapter.reload()
+        player.defaultEdgeControlLayer.topAdapter.reload()
+        return player
+    }()
+    
+    private func playVideoAtIndexPath(_ indexPath: IndexPath) {
+        let message = self.messages[indexPath.row]
+        if message.type != MsgType.Video.rawValue {
+            return
+        }
+        if let mediaCell = self.collectView.cellForItem(at: indexPath) as? PreviewCellView {
+            mediaCell.startPreview()
+        }
+    }
+    
+    @objc func mutePlayer() {
+        self.videoPlayer.isMuted = !self.videoPlayer.isMuted
+        if self.videoPlayer.isMuted {
+            self.muteAudioButton.image = ResourceUtils.loadImage(named: "ic_audio_off")?.scaledToSize(CGSize(width: 20, height: 20))
+        } else {
+            self.muteAudioButton.image = ResourceUtils.loadImage(named: "ic_audio_on")?.scaledToSize(CGSize(width: 20, height: 20))
+        }
+        self.videoPlayer.defaultEdgeControlLayer.bottomAdapter.updateContentForItem(withTag: self.muteAudioTag)
+    }
+    
+    private lazy var collectView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.scrollDirection = .horizontal
@@ -61,24 +120,63 @@ public class IMMediaPreviewController: UIViewController,
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.black
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        self.view.addSubview(self._collectView)
-        self._collectView.snp.makeConstraints { make in
+        self.view.addSubview(self.collectView)
+        self.collectView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
-        var position = 0
-        if self.messages.count > 0 {
-            for i in 0 ..< self.messages.count {
-                if self.messages[i].msgId == self.defaultId {
-                    position = i
-                }
-            }
-            self._collectView.selectItem(at: IndexPath(row: position, section: 0), animated: false, scrollPosition: .bottom)
-        }
+        let defaultRow = self.defatultRow()
+        self.collectView.selectItem(at: IndexPath(row: defaultRow, section: 0), animated: false, scrollPosition: .bottom)
         
         let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(recognizerAction))
         self.view.addGestureRecognizer(gesture)
+        self.videoPlayer.playbackObserver.assetStatusDidChangeExeBlock = { player in
+            if player.assetStatus == .preparing || player.assetStatus == .unknown {
+                self.videoPlayer.defaultEdgeControlLayer.loadingView.start()
+            } else if player.assetStatus == .readyToPlay {
+                self.videoPlayer.defaultEdgeControlLayer.loadingView.stop()
+            }
+        }
+        self.videoPlayer.gestureController.gestureRecognizerShouldTrigger = { _, _ , _ in
+            return false
+        }
+        self.videoPlayer.playbackObserver.playbackDidFinishExeBlock = { player in
+            player.replay()
+        }
         initEvents()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
+            guard let sf = self else { return }
+            sf.playVideoAtIndexPath(IndexPath.init(row: defaultRow, section: 0))
+        })
+    }
+    
+    private func defatultRow() -> Int {
+        var row = 0
+        if self.messages.count > 0 {
+            for i in 0 ..< self.messages.count {
+                if self.messages[i].msgId == self.defaultId {
+                    row = i
+                    break
+                }
+            }
+        }
+        return row
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.videoPlayer.vc_viewDidAppear()
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.videoPlayer.vc_viewWillDisappear()
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.videoPlayer.vc_viewDidDisappear()
     }
     
     private func initEvents() {
@@ -89,32 +187,15 @@ public class IMMediaPreviewController: UIViewController,
             guard let scale = result?.object as? CGFloat else {
                 return
             }
-            sf._collectView.isScrollEnabled = scale <= 1.0
+            sf.collectView.isScrollEnabled = scale <= 1.0
         })
-        SwiftEventBus.onMainThread(self, name: IMEvent.MsgNew.rawValue, handler: { [weak self ] result in
-            guard let msg = result?.object as? Message else {
+        
+        SwiftEventBus.onMainThread(self, name: IMEvent.MsgLoadStatusUpdate.rawValue, handler: { [weak self ] result in
+            guard let loadProgress = result?.object as? IMLoadProgress else {
                 return
             }
-            self?.messageUpdate(msg: msg)
+            self?.onItemLoadUpdate(loadProgress)
         })
-        SwiftEventBus.onMainThread(self, name: IMEvent.MsgUpdate.rawValue, handler: { [weak self ]result in
-            guard let msg = result?.object as? Message else {
-                return
-            }
-            self?.messageUpdate(msg: msg)
-        })
-    }
-    
-    private func messageUpdate(msg: Message) {
-        for  i in 0 ... self.messages.count-1 {
-            if (self.messages[i].id == msg.id) {
-                if (self.messages[i].type == MsgType.Image.rawValue) {
-                    self.messages[i] = msg
-                    self._collectView.reloadItems(at: [IndexPath(row: i, section: 0)])
-                }
-                break
-            }
-        }
     }
     
     @objc func recognizerAction(gestureRecognizer: UIPanGestureRecognizer) {
@@ -141,7 +222,7 @@ public class IMMediaPreviewController: UIViewController,
             )
             let scaleTransform = CGAffineTransform(scaleX: scale, y: scale)
             let combinedTransform = translationTransform.concatenating(scaleTransform)
-            self._collectView.transform = combinedTransform
+            self.collectView.transform = combinedTransform
             self.view.backgroundColor = UIColor.black.withAlphaComponent(scale)
             break
         case .ended, .cancelled, .failed:
@@ -151,8 +232,8 @@ public class IMMediaPreviewController: UIViewController,
             } else {
                 self.startPoint = nil
                 self.view.backgroundColor = UIColor.black
-                self._collectView.transform = CGAffineTransformMakeScale(1, 1)
-                self._collectView.frame = self.view.frame
+                self.collectView.transform = CGAffineTransformMakeScale(1, 1)
+                self.collectView.frame = self.view.frame
             }
             break
         default:
@@ -166,8 +247,19 @@ public class IMMediaPreviewController: UIViewController,
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return self._collectView.frame.size
+        return self.collectView.frame.size
     }
+    
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        self.currentId = self.messages[indexPath.row].msgId
+        if (indexPath.row == 0) {
+            self.loadMoreMessage(self.messages[indexPath.row], true)
+        }
+        if (indexPath.row == self.messages.count - 1) {
+            self.loadMoreMessage(self.messages[indexPath.row], false)
+        }
+    }
+
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let message = self.messages[indexPath.row]
@@ -190,22 +282,8 @@ public class IMMediaPreviewController: UIViewController,
         }
     }
     
-    
-    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let previewCell = cell as! PreviewCellView
-        previewCell.stopPreview()
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        self.currentId = self.messages[indexPath.row].msgId
-        if (indexPath.row == 0) {
-            self.loadMoreMessage(self.messages[indexPath.row], true)
-        } else if (indexPath.row == self.messages.count - 1) {
-            self.loadMoreMessage(self.messages[indexPath.row], false)
-        }
-        
-        let previewCell = cell as! PreviewCellView
-        previewCell.startPreview()
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.findCellInCenter()
     }
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -225,10 +303,32 @@ public class IMMediaPreviewController: UIViewController,
         super.viewWillTransition(to: size, with: coordinator)
         
         coordinator.animate(alongsideTransition: { (context) in
-            self._collectView.collectionViewLayout.invalidateLayout()
+            self.collectView.collectionViewLayout.invalidateLayout()
         }, completion: nil)
     }
     
+    private func findCellInCenter() {
+        videoPlayer.pause()
+        let visibleIndexPaths = self.collectView.indexPathsForVisibleItems
+        let centerOffset = self.collectView.contentOffset.x + self.collectView.bounds.width / 2
+
+        for indexPath in visibleIndexPaths {
+            let attributes = self.collectView.layoutAttributesForItem(at: indexPath)
+            if let attributes = attributes {
+                if attributes.frame.contains(CGPoint(x: centerOffset, y: self.collectView.center.y)) {
+                    self.playVideoAtIndexPath(indexPath)
+                }
+            }
+        }
+    }
+    
+    
+    private func onItemLoadUpdate(_ loadProgress: IMLoadProgress) {
+        for  i in 0 ... self.messages.count-1 {
+            let cell = self.collectView.cellForItem(at: IndexPath.init(row: i, section: 0)) as? PreviewCellView
+            cell?.onIMLoadProgress(loadProgress)
+        }
+    }
     
     private func loadMoreMessage(_ message: Message, _ older: Bool) {
         if !loadMore {
@@ -273,7 +373,7 @@ public class IMMediaPreviewController: UIViewController,
                 for i in (pos ..< pos + messages.count) {
                     paths.append(IndexPath.init(row: i, section: 0))
                 }
-                sf._collectView.insertItems(at: paths)
+                sf.collectView.insertItems(at: paths)
             }, onCompleted: { [weak self] in
                 guard let sf = self else {
                     return
@@ -283,7 +383,6 @@ public class IMMediaPreviewController: UIViewController,
                 } else {
                     sf.isLoadingNewer = false
                 }
-                
             })
             .disposed(by: self.disposeBag)
     }
@@ -315,7 +414,7 @@ public class IMMediaPreviewController: UIViewController,
             )
             let scaleTransform = CGAffineTransform(scaleX: finalScale, y: finalScale)
             let combinedTransform = scaleTransform.concatenating(translationTransform)
-            sf._collectView.transform = combinedTransform
+            sf.collectView.transform = combinedTransform
             sf.startPoint = nil
         }, completion: { [weak self] _ in
             self?.dismiss(animated: false)

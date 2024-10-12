@@ -9,13 +9,23 @@
 import Foundation
 import UIKit
 import RxSwift
+import SJMediaCacheServer
 
 public class Previewer : IMPreviewer {
     
     private let disposeBag = DisposeBag()
     
     public init(token: String, endpoint: String) {
-        AVCacheManager.shared.delegate = IMAVCacheProtocol(token: token, endpoint: endpoint)
+        SJMediaCacheServer.shared().requestHandler = { request in
+            if request.url?.absoluteString.hasPrefix(endpoint) == true {
+                request.addValue(token, forHTTPHeaderField: APITokenInterceptor.tokenKey)
+                request.addValue(AppUtils.getDeviceName(), forHTTPHeaderField: APITokenInterceptor.deviceKey)
+                request.addValue(AppUtils.getTimezone(), forHTTPHeaderField: APITokenInterceptor.timezoneKey)
+                request.addValue(AppUtils.getLanguage(), forHTTPHeaderField: APITokenInterceptor.languageKey)
+                request.addValue("IOS", forHTTPHeaderField: APITokenInterceptor.platformKey)
+            }
+            return request
+        }
     }
     
     public func previewMessage(_ controller: UIViewController, _ items: [Message], _ view: UIView, _ loadMore: Bool, _ defaultId: Int64) {

@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 import AVFoundation
 import CocoaLumberjack
+import SJMediaCacheServer
+import SJBaseVideoPlayer
 
 public class PreviewVideoCellView : PreviewCellView {
     
@@ -16,92 +18,42 @@ public class PreviewVideoCellView : PreviewCellView {
     private var taskId: String?
     private var listener: FileLoadListener?
     
-    
-    private lazy var progressView: CircleProgressView = {
-        let p = CircleProgressView(
-            frame: CGRect(x: 0, y: 0, width: 40, height: 40)
-        )
-        return p
-    }()
-    
-    private lazy var videoPlayView: IMCacheVideoPlayerView = {
-        let v = IMCacheVideoPlayerView(frame: self.contentView.frame)
-        return v
+    lazy var imageView: UIImageView = {
+        let view = UIImageView(frame: self.contentView.frame)
+        view.isUserInteractionEnabled = true
+        return view
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupView()
+        self.contentView.addSubview(self.imageView)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func setupView() {
-        self.addSubview(self.videoPlayView)
-        self.progressView.center = self.contentView.center
-        self.progressView.isHidden = true
-        self.contentView.addSubview(progressView)
+    public override func setMessage(_ message: Message) {
+        super.setMessage(message)
+        self.showImage()
     }
     
-    public func showVideo() {
+    public func showImage() {
         guard let message = self.message else {
             return
         }
-        var duration = 0
-        var coverPath : String? = nil
-        var coverUrl: String? = nil
-        var sourcePath: String? = nil
-        var sourceUrl: String? = nil
         do {
             if (message.data != nil) {
                 let data = try JSONDecoder().decode(
                     IMVideoMsgData.self,
                     from: message.data!.data(using: .utf8) ?? Data())
-                if (data.duration != nil) {
-                    duration = data.duration!
+                if (data.thumbnailPath != nil) {
+                    let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(data.thumbnailPath!)
+                    self.imageView.renderImageByPath(path: realPath)
                 }
-                sourcePath = data.path
-                coverPath = data.thumbnailPath
-            }
-            if (message.content != nil) {
-                let body = try JSONDecoder().decode(
-                    IMVideoMsgBody.self,
-                    from: message.content!.data(using: .utf8) ?? Data())
-                if (body.duration != nil) {
-                    duration = body.duration!
-                }
-                sourceUrl = body.url
-                coverUrl = body.thumbnailUrl
             }
         } catch {
             DDLogError("\(error)")
-        }
-        
-        self.videoPlayView.initDuration(duration)
-        if (coverPath != nil) {
-            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(coverPath!)
-            self.videoPlayView.initCover(realPath)
-        } else if (coverUrl != nil) {
-            _ = IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
-                .downloadMsgContent(message, resourceType: IMMsgResourceType.Thumbnail.rawValue)
-        }
-        if (sourcePath != nil) {
-            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(sourcePath!)
-            self.videoPlayView.initDataSource(NSURL(fileURLWithPath: realPath) as URL)
-        } else if (sourceUrl != nil) {
-            let realUrl = self.getRealUrl(url: sourceUrl!, message: message)
-            let cache = AVCacheManager.shared.loadCache(realUrl)
-            if (cache.cacheInfo.isFinished()) {
-                DispatchQueue.global().async { [weak self] in
-                    self?.updateMessage(cache: cache)
-                }
-            }
-            guard let url = NSURL(string: realUrl) as URL? else {
-                return
-            }
-            self.videoPlayView.initDataSource(url)
         }
     }
     
@@ -113,39 +65,25 @@ public class PreviewVideoCellView : PreviewCellView {
         }
     }
     
-    public override func startPreview() {
-        SwiftEventBus.onBackgroundThread(self, name: AVCacheManager.IMAVCacheEvent, handler: { [weak self ] result in
-            guard let cache = result?.object as? AVCache else {
+    
+    private func updateMessage(_ cacheFileUrl: URL) {
+        DispatchQueue.global().async { [weak self] in 
+            guard let message = self?.message else {
                 return
             }
-            self?.updateMessage(cache: cache)
-        })
-        self.showVideo()
-    }
-    
-    public override func stopPreview() {
-        self.videoPlayView.pause()
-        SwiftEventBus.unregister(self, name: AVCacheManager.IMAVCacheEvent)
-    }
-    
-    private func updateMessage(cache: AVCache) {
-        guard let message = self.message else {
-            return
-        }
-        if (!cache.cacheInfo.isFinished()) {
-            return
-        }
-        do {
-            if (message.content != nil) {
-                let body = try JSONDecoder().decode(
-                    IMVideoMsgBody.self,
-                    from: message.content!.data(using: .utf8) ?? Data()
-                )
-                if (body.url == nil) {
-                    return
-                }
-                let realUrl = self.getRealUrl(url: body.url!, message: message)
-                if (realUrl == cache.cacheUrl) {
+            do {
+                guard let file = try FileManager.default.contentsOfDirectory(
+                    atPath: cacheFileUrl.path
+                ).first else { return }
+                let sourcePath = "\(cacheFileUrl.path)/\(file)"
+                if (message.content != nil) {
+                    let body = try JSONDecoder().decode(
+                        IMVideoMsgBody.self,
+                        from: message.content!.data(using: .utf8) ?? Data()
+                    )
+                    if (body.url == nil) {
+                        return
+                    }
                     var data: IMVideoMsgData? = nil
                     if (message.data != nil) {
                         data = try JSONDecoder().decode(
@@ -163,7 +101,7 @@ public class PreviewVideoCellView : PreviewCellView {
                             body.name ?? String().random(8),
                             IMFileFormat.Video.rawValue
                         )
-                    try IMCoreManager.shared.storageModule.copyFile(cache.cacheFilePath, path)
+                    try IMCoreManager.shared.storageModule.copyFile(sourcePath, path)
                     if (data != nil) {
                         data!.path = path
                         data!.height = body.width
@@ -175,10 +113,61 @@ public class PreviewVideoCellView : PreviewCellView {
                             .insertOrUpdateDb(message, true, false)
                     }
                 }
+            } catch {
+                DDLogError("\(error)")
+            }
+        }
+    }
+    
+    public override func startPreview() {
+        guard let message = self.message else {
+            return
+        }
+        guard let vc = self.parentController() as? IMMediaPreviewController else { return }
+        let player = vc.videoPlayer
+        self.imageView.addSubview(player.view)
+        player.view.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        var sourcePath: String? = nil
+        var sourceUrl: String? = nil
+        do {
+            if (message.data != nil) {
+                let data = try JSONDecoder().decode(
+                    IMVideoMsgData.self,
+                    from: message.data!.data(using: .utf8) ?? Data())
+                sourcePath = data.path
+            }
+            if (message.content != nil) {
+                let body = try JSONDecoder().decode(
+                    IMVideoMsgBody.self,
+                    from: message.content!.data(using: .utf8) ?? Data())
+                sourceUrl = body.url
             }
         } catch {
             DDLogError("\(error)")
         }
+        
+        if (sourcePath != nil) {
+            let realPath = IMCoreManager.shared.storageModule.sandboxFilePath(sourcePath!)
+            let videoUrl = URL(fileURLWithPath: realPath)
+            player.urlAsset = SJVideoPlayerURLAsset.init(url: videoUrl)
+            player.play()
+        } else if (sourceUrl != nil) {
+            let realUrlString = self.getRealUrl(url: sourceUrl!, message: message)
+            guard let realUrl = URL(string: realUrlString) else { return }
+            if MCSAssetManager.shared().isAssetStored(for: realUrl) {
+                if let asset = MCSAssetManager.shared().asset(with: realUrl) {
+                    let pathUrl = URL(fileURLWithPath: asset.path)
+                    self.updateMessage(pathUrl)
+                }
+            }
+            guard let cacheUrl = SJMediaCacheServer.shared().playbackURL(with: realUrl) else { return }
+            player.urlAsset = SJVideoPlayerURLAsset.init(url: cacheUrl)
+            player.play()
+        }
+        
     }
     
 }

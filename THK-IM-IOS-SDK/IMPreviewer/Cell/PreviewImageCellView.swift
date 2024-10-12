@@ -12,8 +12,9 @@ public class PreviewImageCellView : PreviewCellView {
     var cellIndex: Int = 0
     private var taskId: String?
     private var listener: FileLoadListener?
-    private lazy var progressView: CircleProgressView = {
-        let p = CircleProgressView(
+    
+    private lazy var progressView: CircularProgressBarView = {
+        let p = CircularProgressBarView(
             frame: CGRect(x: 0, y: 0, width: 40, height: 40)
         )
         return p
@@ -44,6 +45,7 @@ public class PreviewImageCellView : PreviewCellView {
     override public func setMessage(_ message: Message) {
         super.setMessage(message)
         self.imageView.previewDelegate = delegate
+        self.showImage()
     }
     
     public func showImage() {
@@ -68,6 +70,47 @@ public class PreviewImageCellView : PreviewCellView {
         }
     }
     
+    open override func onIMLoadProgress(_ loadProgress: IMLoadProgress) {
+        guard let message = self.message else {
+            return
+        }
+        if (message.content != nil) {
+            do {
+                let content = try JSONDecoder().decode(
+                    IMImageMsgBody.self,
+                    from: message.content!.data(using: .utf8) ?? Data())
+                if (content.url != loadProgress.url) {
+                    return
+                }
+            } catch {
+                DDLogError("\(error)")
+                return
+            }
+        }
+        if (loadProgress.state == FileLoadState.Success.rawValue) {
+            self.progressView.isHidden = true
+            if (message.data != nil) {
+                do {
+                    let data = try JSONDecoder().decode(
+                        IMImageMsgData.self,
+                        from: message.data!.data(using: .utf8) ?? Data())
+                    data.path = loadProgress.path
+                    let newdata = try JSONEncoder().encode(data)
+                    message.data = String.init(data: newdata, encoding: .utf8)
+                    self.setImagePath(loadProgress.path)
+                } catch {
+                    DDLogError("\(error)")
+                }
+            }
+        } else if (loadProgress.state == FileLoadState.Ing.rawValue
+                   || loadProgress.state == FileLoadState.Init.rawValue ) {
+            self.progressView.isHidden = false
+            self.progressView.setProgress(Double(loadProgress.progress))
+        } else {
+            self.progressView.isHidden = false
+        }
+    }
+    
     private func startDownload(_ message: Message) {
         _ = IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
                 .downloadMsgContent(message, resourceType: IMMsgResourceType.Source.rawValue)
@@ -78,12 +121,4 @@ public class PreviewImageCellView : PreviewCellView {
         self.imageView.setImagePath(realPath)
     }
     
-    public override func startPreview() {
-        showImage()
-    }
-    
-    
-    public override func stopPreview() {
-        self.imageView.zoomScale = 1.0
-    }
 }
