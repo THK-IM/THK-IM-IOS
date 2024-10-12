@@ -74,8 +74,8 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
         self.message = message
         self.delegate = delegate
         if (message.fromUId != IMCoreManager.shared.uId) {
-            self.reeditView.isHidden = false
-            self.reeditView.text = ResourceUtils.loadString("im_edit_again", comment: "")
+            self.reeditView.isHidden = true
+            self.reeditView.text = ""
             if (message.data != nil) {
                 do {
                     let revokeData = try JSONDecoder().decode(IMRevokeMsgData.self, from: message.data!.data(using: .utf8) ?? Data())
@@ -96,7 +96,7 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
                 )
             }
         } else {
-            self.reeditView.text = ""
+            self.reeditView.text = ResourceUtils.loadString("im_edit_again", comment: "")
             self.textView.text = ResourceUtils.loadString("you_revoke_a_message", comment: "")
             self.reeditView.isHidden = false
         }
