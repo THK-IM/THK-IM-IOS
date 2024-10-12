@@ -101,6 +101,12 @@ public class PreviewImageCellView : PreviewCellView {
                 } catch {
                     DDLogError("\(error)")
                 }
+            } else {
+                let data = IMImageMsgData()
+                data.path = loadProgress.path
+                let newdata = try? JSONEncoder().encode(data)
+                message.data = String.init(data: newdata ?? Data(), encoding: .utf8)
+                self.setImagePath(loadProgress.path)
             }
         } else if (loadProgress.state == FileLoadState.Ing.rawValue
                    || loadProgress.state == FileLoadState.Init.rawValue ) {
