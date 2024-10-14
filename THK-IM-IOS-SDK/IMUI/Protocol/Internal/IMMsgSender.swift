@@ -79,6 +79,12 @@ public protocol IMMsgSender : AnyObject {
 
     /// dismiss Loading
     func dismissSenderLoading()
+    
+    /// show toast
+    func showSenderToast(_ text: String)
+    
+    /// show error
+    func showSenderError(_ err: Error)
 
     /// show message
     func showSenderMessage(text: String, success: Bool)

@@ -931,6 +931,17 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         self.dismissLoading()
     }
     
+    /// show toast
+    public func showSenderToast(_ text: String) {
+        self.showToast(text)
+    }
+    
+    /// show error
+    public func showSenderError(_ err: Error) {
+        self.showError(err)
+    }
+    
+    
     /// show message
     public func showSenderMessage(text: String, success: Bool) {
         if Thread.current.isMainThread {

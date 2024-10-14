@@ -341,6 +341,17 @@ open class DefaultMessageDao : MessageDao {
         return atMeMsgs
     }
     
+    public func findLatestMessagesByType(_ type: Int, _ offset: Int, _ count: Int) -> Array<Message> {
+        let message: Array<Message>? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.type == type,
+            orderBy: [Message.Properties.cTime.order(Order.descending)],
+            limit: count,
+            offset: offset
+        )
+        return message ?? Array<Message>()
+    }
+    
     
     public func search(_ sessionId: Int64, _ type: Int, _ keyword: String, _ count: Int, _ offset: Int) -> Array<Message> {
         let message: Array<Message>? = try? self.database?.getObjects(

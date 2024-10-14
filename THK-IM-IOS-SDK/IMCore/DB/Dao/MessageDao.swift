@@ -148,6 +148,12 @@ public protocol MessageDao {
     func findSessionAtMeUnreadMessages(_ sessionId: Int64) -> Array<Message>
     
     
+    /**
+     * 根据消息类型查询消息
+     */
+    func findLatestMessagesByType(_ type: Int, _ offset: Int, _ count: Int) -> Array<Message>
+    
+    
     func search(_ sessionId: Int64, _ type: Int, _ keyword: String, _ count: Int, _ offset: Int) -> Array<Message>
     
     
