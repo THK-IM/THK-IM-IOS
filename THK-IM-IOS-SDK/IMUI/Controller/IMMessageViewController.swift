@@ -343,8 +343,11 @@ open class IMMessageViewController: BaseViewController {
     }
     
     func registerKeyboardEvent() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
+        let showInput = (self.session?.functionFlag ?? 0) > 0
+        if (showInput) {
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
+        }
     }
     
     @objc func keyboardWillAppear(note: NSNotification) {
