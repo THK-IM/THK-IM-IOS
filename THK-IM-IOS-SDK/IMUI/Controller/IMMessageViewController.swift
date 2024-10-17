@@ -80,7 +80,8 @@ open class IMMessageViewController: BaseViewController {
         guard let sessionId = self.session?.id else {
             return
         }
-        IMCoreManager.shared.messageModule.querySessionMembers(sessionId, true)
+        let online = IMCoreManager.shared.signalModule.getSignalStatus() == SignalStatus.Connected
+        IMCoreManager.shared.messageModule.querySessionMembers(sessionId, online)
             .flatMap { members in
                 var ids = Set<Int64>()
                 for m in members {
