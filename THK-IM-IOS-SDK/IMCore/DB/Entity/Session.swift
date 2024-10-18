@@ -16,7 +16,7 @@ public final class Session: TableCodable {
     // session类型
     public var type: Int = 0
     // session对象id, 单聊时为对方id, 群聊时为群id
-    public var entityId : Int64 = 0
+    public var entityId: Int64 = 0
     // session名称
     public var name: String = ""
     // note_name
@@ -55,9 +55,9 @@ public final class Session: TableCodable {
     public var cTime: Int64
     // 消息最近修改时间
     public var mTime: Int64
-    
-    public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
-    
+
+    public var isAutoIncrement: Bool = false  // 用于定义是否使用自增的方式插入
+
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Session
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
@@ -89,7 +89,7 @@ public final class Session: TableCodable {
         case cTime = "c_time"
         case mTime = "m_time"
     }
-    
+
     public init(id: Int64) {
         self.id = id
         self.parentId = 0
@@ -115,7 +115,7 @@ public final class Session: TableCodable {
         self.cTime = 0
         self.mTime = 0
     }
-    
+
     public init(id: Int64, type: Int) {
         self.id = id
         self.parentId = 0
@@ -141,12 +141,13 @@ public final class Session: TableCodable {
         self.cTime = 0
         self.mTime = 0
     }
-    
-    
+
     public init(
-        id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, noteName: String?, noteAvatar: String?,
+        id: Int64, parentId: Int64, type: Int, entityId: Int64, name: String, noteName: String?,
+        noteAvatar: String?,
         remark: String, mute: Int, role: Int, status: Int, unreadCount: Int64, draft: String? = nil,
-        lastMsg: String? = nil, topTimestamp: Int64, extData: String? = nil, msgSyncTime: Int64, memberSyncTime: Int64,
+        lastMsg: String? = nil, topTimestamp: Int64, extData: String? = nil, msgSyncTime: Int64,
+        memberSyncTime: Int64,
         memberCount: Int, functionFlag: Int64, deleted: Int, cTime: Int64, mTime: Int64
     ) {
         self.id = id
@@ -173,7 +174,7 @@ public final class Session: TableCodable {
         self.cTime = cTime
         self.mTime = mTime
     }
-    
+
     public func mergeServerSession(_ serverSession: Session) {
         self.parentId = serverSession.parentId
         self.entityId = serverSession.entityId
@@ -188,13 +189,13 @@ public final class Session: TableCodable {
         self.extData = serverSession.extData
         self.topTimestamp = serverSession.topTimestamp
     }
-    
+
     public static func emptySession() -> Session {
         return Session(id: 0)
     }
-    
+
     public static func emptyTypeSession(_ type: Int) -> Session {
         return Session(id: 0, type: type)
     }
-    
+
 }

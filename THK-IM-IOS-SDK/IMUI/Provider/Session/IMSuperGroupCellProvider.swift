@@ -9,13 +9,12 @@
 import Foundation
 
 open class IMSuperGroupSessionCellProvider: IMBaseSessionCellProvider {
-    
+
     open override func sessionType() -> Int {
         return SessionType.SuperGroup.rawValue
     }
-    
+
     open override func viewCell() -> IMBaseSessionCell {
         return GroupSessionCell(style: .default, reuseIdentifier: self.identifier())
     }
 }
-

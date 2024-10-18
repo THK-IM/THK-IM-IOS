@@ -14,26 +14,27 @@
  * limitations under the License.
  **/
 
-import Foundation
 import AudioToolbox
-import YbridOpus
+import Foundation
 import YbridOgg
-
+import YbridOpus
 
 class OGGEncoder {
 
-    private var stream: ogg_stream_state   // state of the ogg stream
-    private var encoder: OpaquePointer      // encoder to convert pcm to opus
-    private var granulePosition: Int64     // total number of encoded pcm samples in the stream
-    private var packetNumber: Int64        // total number of packets encoded in the stream
-    private let frameSize: Int32           // number of pcm frames to encode in an opus frame (20ms)
-    private let maxFrameSize: Int32 = 3832 // maximum size of an opus frame
-    private let opusRate: Int32            // desired sample rate of the opus audio
-    private let pcmBytesPerFrame: UInt32   // bytes per frame in the pcm audio
-    private var pcmCache = Data()          // cache for pcm audio that is too short to encode
-    private var oggCache = Data()          // cache for ogg stream
+    private var stream: ogg_stream_state  // state of the ogg stream
+    private var encoder: OpaquePointer  // encoder to convert pcm to opus
+    private var granulePosition: Int64  // total number of encoded pcm samples in the stream
+    private var packetNumber: Int64  // total number of packets encoded in the stream
+    private let frameSize: Int32  // number of pcm frames to encode in an opus frame (20ms)
+    private let maxFrameSize: Int32 = 3832  // maximum size of an opus frame
+    private let opusRate: Int32  // desired sample rate of the opus audio
+    private let pcmBytesPerFrame: UInt32  // bytes per frame in the pcm audio
+    private var pcmCache = Data()  // cache for pcm audio that is too short to encode
+    private var oggCache = Data()  // cache for ogg stream
 
-    convenience init(format: AudioStreamBasicDescription, opusRate: Int32, application: Application) throws {
+    convenience init(format: AudioStreamBasicDescription, opusRate: Int32, application: Application)
+        throws
+    {
         try self.init(
             pcmRate: Int32(format.mSampleRate),
             pcmChannels: Int32(format.mChannelsPerFrame),
@@ -43,10 +44,15 @@ class OGGEncoder {
         )
     }
 
-    init(pcmRate: Int32, pcmChannels: Int32, pcmBytesPerFrame: UInt32, opusRate: Int32, application: Application) throws {
+    init(
+        pcmRate: Int32, pcmChannels: Int32, pcmBytesPerFrame: UInt32, opusRate: Int32,
+        application: Application
+    ) throws {
         // avoid resampling
         guard pcmRate == opusRate else {
-            print("Resampling is not supported. Please ensure that the PCM and Opus sample rates match.")
+            print(
+                "Resampling is not supported. Please ensure that the PCM and Opus sample rates match."
+            )
             throw OggError.internalError
         }
 
@@ -160,11 +166,11 @@ class OGGEncoder {
     }
 
     internal func encode(pcm: Data) throws {
-//        try pcm.withUnsafeBytes { (bytes: UnsafePointer<Int16>) in
-//            try encode(pcm: bytes, count: pcm.count)
-//        }
-        
-        try pcm.withUnsafeBytes{ (bytes: UnsafeRawBufferPointer) in
+        //        try pcm.withUnsafeBytes { (bytes: UnsafePointer<Int16>) in
+        //            try encode(pcm: bytes, count: pcm.count)
+        //        }
+
+        try pcm.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) in
             guard let int16Pointer = bytes.bindMemory(to: Int16.self).baseAddress else {
                 return
             }
@@ -249,17 +255,20 @@ class OGGEncoder {
         // encode an opus frame
         var opus = [UInt8](repeating: 0, count: Int(maxFrameSize))
         let samples = pcmCache.withUnsafeBytes {
-            Array(UnsafeBufferPointer<Int16>(start: $0.baseAddress!.assumingMemoryBound(to: Int16.self), count: pcmCache.count/MemoryLayout<Int16>.size))
+            Array(
+                UnsafeBufferPointer<Int16>(
+                    start: $0.baseAddress!.assumingMemoryBound(to: Int16.self),
+                    count: pcmCache.count / MemoryLayout<Int16>.size))
         }
         let numBytes = opus_encode(encoder, samples, frameSize, &opus, maxFrameSize)
-        if (numBytes < 0) {
+        if numBytes < 0 {
             throw OggError.internalError
         }
 
         // construct ogg packet with opus frame
         var packet = ogg_packet()
         granulePosition += Int64(frameSize * 48000 / opusRate)
-//        packet.packet = UnsafeMutablePointer<UInt8>(mutating: opus)
+        //        packet.packet = UnsafeMutablePointer<UInt8>(mutating: opus)
         let unsafeMutableRawBufferPointer = opus.withUnsafeMutableBufferPointer { $0 }
         packet.packet = unsafeMutableRawBufferPointer.baseAddress
         packet.bytes = Int(numBytes)
@@ -299,16 +308,19 @@ class OGGEncoder {
         // encode an opus frame
         var opus = [UInt8](repeating: 0, count: Int(maxFrameSize))
         let samples = pcmCache.withUnsafeBytes {
-            Array(UnsafeBufferPointer<Int16>(start: $0.baseAddress!.assumingMemoryBound(to: Int16.self), count: pcmCache.count/MemoryLayout<Int16>.size))
+            Array(
+                UnsafeBufferPointer<Int16>(
+                    start: $0.baseAddress!.assumingMemoryBound(to: Int16.self),
+                    count: pcmCache.count / MemoryLayout<Int16>.size))
         }
         let numBytes = opus_encode(encoder, samples, frameSize, &opus, maxFrameSize)
-        if (numBytes < 0) {
+        if numBytes < 0 {
             throw OggError.internalError
         }
 
         // construct ogg packet with opus frame
         var packet = ogg_packet()
-//        packet.packet = UnsafeMutablePointer<UInt8>(mutating: opus)
+        //        packet.packet = UnsafeMutablePointer<UInt8>(mutating: opus)
         let unsafeMutableRawBufferPointer = opus.withUnsafeMutableBufferPointer { $0 }
         packet.packet = unsafeMutableRawBufferPointer.baseAddress
         packet.bytes = Int(numBytes)
@@ -336,9 +348,11 @@ class OGGEncoder {
 
             // assemble accumulated packets into an ogg page
             switch (flush, fillBytes) {
-            case (true, .some(let fillBytes)): status = ogg_stream_flush_fill(&stream, &page, fillBytes)
+            case (true, .some(let fillBytes)):
+                status = ogg_stream_flush_fill(&stream, &page, fillBytes)
             case (true, .none): status = ogg_stream_flush(&stream, &page)
-            case (false, .some(let fillBytes)): status = ogg_stream_pageout_fill(&stream, &page, fillBytes)
+            case (false, .some(let fillBytes)):
+                status = ogg_stream_pageout_fill(&stream, &page, fillBytes)
             case (false, .none): status = ogg_stream_pageout(&stream, &page)
             }
 
@@ -364,9 +378,12 @@ private class Header {
     private(set) var outputGain: Int16
     private(set) var channelMappingFamily: ChannelMappingFamily
 
-    init(outputChannels: UInt8, preskip: UInt16, inputSampleRate: UInt32, outputGain: Int16, channelMappingFamily: ChannelMappingFamily) {
-        self.magicSignature = [ 0x4f, 0x70, 0x75, 0x73, 0x48, 0x65, 0x61, 0x64 ] // "OpusHead"
-        self.version = 1 // must always be `1` for this version of the encapsulation specification
+    init(
+        outputChannels: UInt8, preskip: UInt16, inputSampleRate: UInt32, outputGain: Int16,
+        channelMappingFamily: ChannelMappingFamily
+    ) {
+        self.magicSignature = [0x4f, 0x70, 0x75, 0x73, 0x48, 0x65, 0x61, 0x64]  // "OpusHead"
+        self.version = 1  // must always be `1` for this version of the encapsulation specification
         self.outputChannels = outputChannels
         self.preskip = preskip
         self.inputSampleRate = inputSampleRate
@@ -378,11 +395,29 @@ private class Header {
         var data = Data()
         data.append(magicSignature, count: magicSignature.count)
         withUnsafePointer(to: &version) { ptr in data.append(ptr, count: MemoryLayout<UInt8>.size) }
-        withUnsafePointer(to: &outputChannels) { ptr in data.append(ptr, count: MemoryLayout<UInt8>.size) }
-        withUnsafePointer(to: &preskip) { ptr in ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in data.append(ptr, count: MemoryLayout<UInt16>.size) }}
-        withUnsafePointer(to: &inputSampleRate) { ptr in ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in data.append(ptr, count: MemoryLayout<UInt32>.size) }}
-        withUnsafePointer(to: &outputGain) { ptr in ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in data.append(ptr, count: MemoryLayout<UInt16>.size) }}
-        withUnsafePointer(to: &channelMappingFamily) { ptr in ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in data.append(ptr, count: MemoryLayout<ChannelMappingFamily>.size) }}
+        withUnsafePointer(to: &outputChannels) { ptr in
+            data.append(ptr, count: MemoryLayout<UInt8>.size)
+        }
+        withUnsafePointer(to: &preskip) { ptr in
+            ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in
+                data.append(ptr, count: MemoryLayout<UInt16>.size)
+            }
+        }
+        withUnsafePointer(to: &inputSampleRate) { ptr in
+            ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in
+                data.append(ptr, count: MemoryLayout<UInt32>.size)
+            }
+        }
+        withUnsafePointer(to: &outputGain) { ptr in
+            ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in
+                data.append(ptr, count: MemoryLayout<UInt16>.size)
+            }
+        }
+        withUnsafePointer(to: &channelMappingFamily) { ptr in
+            ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in
+                data.append(ptr, count: MemoryLayout<ChannelMappingFamily>.size)
+            }
+        }
         return data
     }
 }
@@ -396,7 +431,7 @@ private class CommentHeader {
     private(set) var userComments: [Comment]
 
     init() {
-        magicSignature = [ 0x4f, 0x70, 0x75, 0x73, 0x54, 0x61, 0x67, 0x73 ] // "OpusTags"
+        magicSignature = [0x4f, 0x70, 0x75, 0x73, 0x54, 0x61, 0x67, 0x73]  // "OpusTags"
         vendorString = String(validatingUTF8: opus_get_version_string())!
         vendorStringLength = UInt32(vendorString.count)
         userComments = [Comment(tag: "ENCODER", value: "IBM Mobile Innovation Lab")]
@@ -406,9 +441,17 @@ private class CommentHeader {
     func toData() -> Data {
         var data = Data()
         data.append(magicSignature, count: magicSignature.count)
-        withUnsafePointer(to: &vendorStringLength) { ptr in ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in data.append(ptr, count: MemoryLayout<UInt32>.size) }}
+        withUnsafePointer(to: &vendorStringLength) { ptr in
+            ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in
+                data.append(ptr, count: MemoryLayout<UInt32>.size)
+            }
+        }
         data.append(vendorString.data(using: String.Encoding.utf8)!)
-        withUnsafePointer(to: &userCommentListLength) { ptr in ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in data.append(ptr, count: MemoryLayout<UInt32>.size) }}
+        withUnsafePointer(to: &userCommentListLength) { ptr in
+            ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in
+                data.append(ptr, count: MemoryLayout<UInt32>.size)
+            }
+        }
         for comment in userComments {
             data.append(comment.toData())
         }
@@ -428,7 +471,11 @@ private class Comment {
 
     fileprivate func toData() -> Data {
         var data = Data()
-        withUnsafePointer(to: &length) { ptr in ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in data.append(ptr, count: MemoryLayout<UInt32>.size) }}
+        withUnsafePointer(to: &length) { ptr in
+            ptr.withMemoryRebound(to: UInt8.self, capacity: 1) { ptr in
+                data.append(ptr, count: MemoryLayout<UInt32>.size)
+            }
+        }
         data.append(comment.data(using: String.Encoding.utf8)!)
         return data
     }
@@ -464,4 +511,3 @@ internal enum Application {
         }
     }
 }
-

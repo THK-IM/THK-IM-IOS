@@ -5,19 +5,20 @@
 //  Created by vizoss on 2023/7/2.
 //
 
-import UIKit
-import RxSwift
 import CocoaLumberjack
+import RxSwift
+import UIKit
 
-public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsgCellOperator {
-    
-    var mode: Int = 0 // 0 正常模式，1预览消息记录模式
+public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate, IMMsgCellOperator
+{
+
+    var mode: Int = 0  // 0 正常模式，1预览消息记录模式
     var session: Session? = nil
-    var messages: Array<Message> = Array()
+    var messages: [Message] = Array()
     private var selectedMessages: Set<Message> = Set()
     weak var sender: IMMsgSender? = nil
-    weak var previewer : IMMsgPreviewer? = nil
-    
+    weak var previewer: IMMsgPreviewer? = nil
+
     private lazy var messageTableView: UITableView = {
         let v = UITableView()
         v.backgroundColor = UIColor.clear
@@ -30,7 +31,7 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         v.rowHeight = UITableView.automaticDimension
         return v
     }()
-    
+
     private let disposeBag = DisposeBag()
     private let loadCount = 20
     private var isLoading = false
@@ -39,22 +40,23 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     private let timeLineInterval = 5 * 60 * 1000
     private let lock = NSLock()
     private var lastResize = 0.0
-    
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.loadMessageView()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath)
+        -> UITableViewCell
+    {
         let msg = self.messages[indexPath.row]
         let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
         let viewType = provider.viewType(msg)
@@ -71,66 +73,73 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         (cell as! IMBaseMsgCell).multipleSelectionBackgroundView?.backgroundColor = UIColor.clear
         return cell!
     }
-    
-    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+
+    public func tableView(
+        _ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath
+    ) {
         let messageCellView = cell as! IMBaseMsgCell
         messageCellView.delegate = self
         messageCellView.appear()
     }
-    
-    public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+
+    public func tableView(
+        _ tableView: UITableView, didEndDisplaying cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
         let sessionCell = cell as! IMBaseMsgCell
         sessionCell.disappear()
     }
-    
-    public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+
+    public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath)
+        -> UITableViewCell.EditingStyle
+    {
         return .none
     }
-    
+
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         let msg = self.messages[indexPath.row]
         let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
         return provider.canSelected()
     }
-    
+
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = self.messages[indexPath.row]
         self.selectedMessages.insert(message)
     }
-    
+
     public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         DDLogInfo("didDeselectRowAt \(indexPath.row)")
         let message = self.messages[indexPath.row]
         self.selectedMessages.remove(message)
     }
-    
-//    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        let msg = self.messages[indexPath.row]
-//        return self.msgCellHeight(msg)
-//    }
-//    
-//    private func msgCellHeight(_ msg: Message) -> CGFloat {
-//        let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
-//        let size = provider.viewSize(msg, self.session)
-//        var addHeight = provider.msgTopForSession(msg, self.session)
-//        if let referMsg = msg.referMsg  {
-//            addHeight += IMUIManager.shared.getMsgCellProvider(referMsg.type).replyMsgViewSize(referMsg, self.session).height
-//            addHeight += 30 // 补齐回复人视图高度
-//        }
-//        return size.height + addHeight
-//    }
-    
+
+    //    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    //        let msg = self.messages[indexPath.row]
+    //        return self.msgCellHeight(msg)
+    //    }
+    //
+    //    private func msgCellHeight(_ msg: Message) -> CGFloat {
+    //        let provider = IMUIManager.shared.getMsgCellProvider(msg.type)
+    //        let size = provider.viewSize(msg, self.session)
+    //        var addHeight = provider.msgTopForSession(msg, self.session)
+    //        if let referMsg = msg.referMsg  {
+    //            addHeight += IMUIManager.shared.getMsgCellProvider(referMsg.type).replyMsgViewSize(referMsg, self.session).height
+    //            addHeight += 30 // 补齐回复人视图高度
+    //        }
+    //        return size.height + addHeight
+    //    }
+
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (abs(distanceFromBottom()) < 20) {
+        if abs(distanceFromBottom()) < 20 {
             self.sender?.showNewMsgTipsView(false)
         }
-        if (session?.type == SessionType.MsgRecord.rawValue) {
+        if session?.type == SessionType.MsgRecord.rawValue {
             return
         }
         let offsetY = self.messageTableView.contentOffset.y
-        if (offsetY < 200) {
+        if offsetY < 200 {
             if isLoadAble {
-                if (!self.messageTableView.isDragging) {
+                if !self.messageTableView.isDragging {
                     self.loadMessages()
                     isLoadAble = false
                 }
@@ -139,12 +148,12 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             isLoadAble = true
         }
     }
-    
+
     func scrollToBottom(_ delay: CGFloat = 0.1) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            if (self.messages.count > 0) {
+            if self.messages.count > 0 {
                 let rows = self.messageTableView.numberOfRows(inSection: 0)
-                if (rows > 0) {
+                if rows > 0 {
                     let indexPath = IndexPath(row: rows - 1, section: 0)
                     self.messageTableView.scrollToRow(
                         at: indexPath,
@@ -155,9 +164,9 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             }
         }
     }
-    
+
     func loadMessages() {
-        if (isLoading) {
+        if isLoading {
             return
         }
         isLoading = true
@@ -171,19 +180,22 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         } else {
             endTime = IMCoreManager.shared.severTime
         }
-        if (self.session != nil) {
+        if self.session != nil {
             IMCoreManager.shared.messageModule
                 .queryLocalMessages((self.session?.id)!, 0, endTime, self.loadCount, excludeIds)
                 .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] value in
-                    self?.addMessages(value)
-                    self?.isLoading = false
-                }, onCompleted: { [weak self] in
-                    self?.isLoading = false
-                }).disposed(by: self.disposeBag)
+                .subscribe(
+                    onNext: { [weak self] value in
+                        self?.addMessages(value)
+                        self?.isLoading = false
+                    },
+                    onCompleted: { [weak self] in
+                        self?.isLoading = false
+                    }
+                ).disposed(by: self.disposeBag)
         }
     }
-    
+
     private func loadMessageView() {
         self.addSubview(self.messageTableView)
         self.messageTableView.snp.makeConstraints { (make) -> Void in
@@ -193,61 +205,64 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             make.bottom.equalToSuperview()
         }
         self.messageTableView.separatorStyle = .none
-        
+
         self.messageTableView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
             delegate.beginPolicy = .custom { [weak self] gestureRecognizer in
                 return !(self?.messageTableView.isEditing ?? false)
             }
-            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
-                if (otherGestureRecognizer.cancelsTouchesInView) {
+            delegate.otherFailureRequirementPolicy = .custom {
+                gestureRecognizer, otherGestureRecognizer in
+                if otherGestureRecognizer.cancelsTouchesInView {
                     return true
                 }
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         })
         .when(.ended)
-        .subscribe(onNext: { [weak self]  _ in
+        .subscribe(onNext: { [weak self] _ in
             self?.sender?.closeBottomPanel()
         })
         .disposed(by: disposeBag)
     }
-    
+
     private func newTimelineMessage(_ cTime: Int64) -> Message {
         let id = IMCoreManager.shared.messageModule.generateNewMsgId()
         let message = Message(
-            id: id, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0, type: MsgType.TimeLine.rawValue,
-            content: "", data: "", sendStatus: 0, operateStatus: 0, referMsgId: nil, extData: nil, atUsers: nil,
+            id: id, sessionId: self.session?.id ?? 0, fromUId: 0, msgId: 0,
+            type: MsgType.TimeLine.rawValue,
+            content: "", data: "", sendStatus: 0, operateStatus: 0, referMsgId: nil, extData: nil,
+            atUsers: nil,
             cTime: cTime, mTime: 0
         )
         lastTimelineMsgCTime = cTime
         return message
     }
-    
+
     private func addTimelineMessage(_ message: Message) -> Message? {
-        var timeLineMsg : Message? = nil
-        if (abs(message.cTime - lastTimelineMsgCTime) > timeLineInterval) {
+        var timeLineMsg: Message? = nil
+        if abs(message.cTime - lastTimelineMsgCTime) > timeLineInterval {
             timeLineMsg = newTimelineMessage(message.cTime)
         }
         return timeLineMsg
     }
-    
-    func appendTimeLineMessages(_ messages: Array<Message>) -> Array<Message> {
-        if (messages.isEmpty) {
+
+    func appendTimeLineMessages(_ messages: [Message]) -> [Message] {
+        if messages.isEmpty {
             return []
         }
         if let firstMsg = self.messages.first {
             lastTimelineMsgCTime = firstMsg.cTime
         }
-        var newMessages = Array<Message>()
+        var newMessages = [Message]()
         var index = 0
         for m in messages {
             index += 1
             newMessages.append(m)
             if index <= messages.count - 1 {
                 let olderMsg = messages[index]
-                if (abs(olderMsg.cTime - m.cTime) > timeLineInterval) {
+                if abs(olderMsg.cTime - m.cTime) > timeLineInterval {
                     let msg = addTimelineMessage(m)
-                    if (msg != nil) {
+                    if msg != nil {
                         newMessages.append(msg!)
                     }
                 }
@@ -261,20 +276,20 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         }
         return newMessages
     }
-    
-    func addMessages(_ messages: Array<Message>) {
-        if (messages.isEmpty) {
+
+    func addMessages(_ messages: [Message]) {
+        if messages.isEmpty {
             return
         }
         let messagesWithTimeLine = self.appendTimeLineMessages(messages)
         UIView.setAnimationsEnabled(false)
         var indexPaths = [IndexPath]()
-        for i in (0 ..< messagesWithTimeLine.count) {
+        for i in (0..<messagesWithTimeLine.count) {
             self.messages.insert(messagesWithTimeLine[i], at: 0)
             indexPaths.append(IndexPath(row: i, section: 0))
         }
         self.messageTableView.insertRows(at: indexPaths, with: .none)
-        let scrollTo = min(messagesWithTimeLine.count-1, self.messages.count-1)
+        let scrollTo = min(messagesWithTimeLine.count - 1, self.messages.count - 1)
         self.messageTableView.scrollToRow(
             at: IndexPath(row: scrollTo, section: 0),
             at: .top,
@@ -282,18 +297,19 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         )
         UIView.setAnimationsEnabled(true)
     }
-    
-    func insertMessages(_ messages: Array<Message>) {
-        var realInsertMsgs = Array<Message>()
+
+    func insertMessages(_ messages: [Message]) {
+        var realInsertMsgs = [Message]()
         for m in messages {
             let pos = self.findPosition(m)
-            if (pos == -1) {
+            if pos == -1 {
                 realInsertMsgs.append(m)
             } else {
-                if (self.messages[pos].sendStatus != m.sendStatus) {
+                if self.messages[pos].sendStatus != m.sendStatus {
                     self.messages[pos].sendStatus = m.sendStatus
                     self.messages[pos].msgId = m.msgId
-                    self.messageTableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
+                    self.messageTableView.reloadRows(
+                        at: [IndexPath.init(row: pos, section: 0)], with: .none)
                 }
             }
         }
@@ -301,12 +317,12 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             self.insertMessage(m)
         }
     }
-    
+
     func insertMessage(_ message: Message) {
         DDLogDebug("insertMessage \(message)")
         let tableView = self.messageTableView
         let pos = findPosition(message)
-        if (pos != -1) {
+        if pos != -1 {
             // 老消息，替换reload
             self.messages[pos] = message
             tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
@@ -315,22 +331,25 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         let insertPos = findInsertPosition(message)
         UIView.setAnimationsEnabled(false)
         if insertPos > 0 {
-            lastTimelineMsgCTime = self.messages[insertPos-1].cTime
+            lastTimelineMsgCTime = self.messages[insertPos - 1].cTime
         }
         let timelineMsg = addTimelineMessage(message)
-        if (timelineMsg != nil) {
+        if timelineMsg != nil {
             self.messages.insert(timelineMsg!, at: insertPos)
-            self.messages.insert(message, at: insertPos  + 1)
-            tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0),
-                                      IndexPath.init(row: insertPos + 1, section: 0)],
-                                 with: .none)
+            self.messages.insert(message, at: insertPos + 1)
+            tableView.insertRows(
+                at: [
+                    IndexPath.init(row: insertPos, section: 0),
+                    IndexPath.init(row: insertPos + 1, section: 0),
+                ],
+                with: .none)
         } else {
             self.messages.insert(message, at: insertPos)
             tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
         }
         UIView.setAnimationsEnabled(true)
         let distance = self.distanceFromBottom()
-        if  distance < 200 || message.fromUId == IMCoreManager.shared.uId {
+        if distance < 200 || message.fromUId == IMCoreManager.shared.uId {
             self.scrollToBottom(0.2)
         } else {
             if message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 {
@@ -338,27 +357,27 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             }
         }
     }
-    
+
     func updateMessage(_ message: Message) {
         let tableView = self.messageTableView
         let pos = findPosition(message)
-        if (pos != -1) {
+        if pos != -1 {
             // 老消息，替换reload
             self.messages[pos] = message
             tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
         }
     }
-    
+
     func deleteMessage(_ message: Message) {
         var deletePaths = [IndexPath]()
         var positions = [Int]()
         let pos = findPosition(message)
-        if (pos < 0) {
+        if pos < 0 {
             return
         }
         positions.append(pos)
-        if (pos - 1 > 0 && self.messages[pos - 1].type == MsgType.TimeLine.rawValue) {
-            positions.append(pos-1)
+        if pos - 1 > 0 && self.messages[pos - 1].type == MsgType.TimeLine.rawValue {
+            positions.append(pos - 1)
         }
         for pos in positions.sorted().reversed() {
             self.messages.remove(at: pos)
@@ -366,18 +385,18 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         }
         self.messageTableView.deleteRows(at: deletePaths, with: .none)
     }
-    
-    func deleteMessages(_ messages: Array<Message>) {
+
+    func deleteMessages(_ messages: [Message]) {
         var deletePaths = [IndexPath]()
         var positions = [Int]()
         for msg in messages {
             let pos = findPosition(msg)
-            if (pos < 0) {
+            if pos < 0 {
                 continue
             }
             positions.append(pos)
-            if (pos - 1 > 0 && self.messages[pos - 1].type == MsgType.TimeLine.rawValue) {
-                positions.append(pos-1)
+            if pos - 1 > 0 && self.messages[pos - 1].type == MsgType.TimeLine.rawValue {
+                positions.append(pos - 1)
             }
         }
         for pos in positions.sorted().reversed() {
@@ -386,36 +405,36 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         }
         self.messageTableView.deleteRows(at: deletePaths, with: .none)
     }
-    
+
     func clearMessage() {
         self.messages.removeAll()
         self.messageTableView.reloadData()
     }
-    
+
     private func findPosition(_ message: Message) -> Int {
         let count = self.messages.count
-        for i in 0 ..< count {
-            if (message.id == self.messages[count-1-i].id) {
-                return count-1-i
+        for i in 0..<count {
+            if message.id == self.messages[count - 1 - i].id {
+                return count - 1 - i
             }
         }
         return -1
     }
-    
+
     private func findInsertPosition(_ message: Message) -> Int {
         let count = self.messages.count
-        for i in 0 ..< count {
-            if (message.cTime >= self.messages[count-1-i].cTime) {
-                return count-i
+        for i in 0..<count {
+            if message.cTime >= self.messages[count - 1 - i].cTime {
+                return count - i
             }
         }
         return 0
     }
-    
+
     public func onMsgReferContentClick(message: Message, view: UIView) {
         self.scrollToMsg(message)
     }
-    
+
     func scrollToMsg(_ message: Message) {
         if let row = self.messages.firstIndex(of: message) {
             self.scrollToRow(row)
@@ -424,32 +443,38 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             if let lastMsg = self.messages.last {
                 let startTime = message.cTime
                 let endTime = lastMsg.cTime
-                IMCoreManager.shared.messageModule.queryLocalMessages(message.sessionId, startTime, endTime, Int.max, [lastMsg.msgId])
-                    .compose(RxTransformer.shared.io2Main())
-                    .subscribe(onNext: { [weak self] messages in
-                        guard let sf = self else {
-                            return
-                        }
-                        sf.addMessages(messages)
-                        if let row = sf.messages.firstIndex(of: message) {
-                            sf.scrollToRow(row)
-                        }
-                    }).disposed(by: self.disposeBag)
+                IMCoreManager.shared.messageModule.queryLocalMessages(
+                    message.sessionId, startTime, endTime, Int.max, [lastMsg.msgId]
+                )
+                .compose(RxTransformer.shared.io2Main())
+                .subscribe(onNext: { [weak self] messages in
+                    guard let sf = self else {
+                        return
+                    }
+                    sf.addMessages(messages)
+                    if let row = sf.messages.firstIndex(of: message) {
+                        sf.scrollToRow(row)
+                    }
+                }).disposed(by: self.disposeBag)
             }
         }
     }
-    
+
     private func scrollToRow(_ row: Int) {
-        self.messageTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .top, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
-            (self?.messageTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? IMBaseMsgCell)?.highlightFlashing(6)
-        })
+        self.messageTableView.scrollToRow(
+            at: IndexPath(row: row, section: 0), at: .top, animated: true)
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 0.5,
+            execute: { [weak self] in
+                (self?.messageTableView.cellForRow(at: IndexPath(row: row, section: 0))
+                    as? IMBaseMsgCell)?.highlightFlashing(6)
+            })
     }
-    
+
     public func onMsgCellClick(message: Message, position: Int, view: UIView) {
         self.previewer?.previewMessage(message, position, view)
     }
-    
+
     public func onMsgSenderClick(message: Message, position: Int, view: UIView) {
         if let session = self.session {
             IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
@@ -458,16 +483,17 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
                     guard let vc = self?.getViewController() else {
                         return
                     }
-                    IMUIManager.shared.pageRouter?.openUserPage(controller: vc, user: user, session: session)
+                    IMUIManager.shared.pageRouter?.openUserPage(
+                        controller: vc, user: user, session: session)
                 }).disposed(by: self.disposeBag)
         }
     }
-    
+
     public func onMsgSenderLongClick(message: Message, position: Int, view: UIView) {
         guard let session = self.session else {
             return
         }
-        if (session.type == SessionType.Single.rawValue) {
+        if session.type == SessionType.Single.rawValue {
             return
         }
         if let memberInfo = self.sender?.syncGetSessionMemberInfo(message.fromUId) {
@@ -479,14 +505,13 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
                     self?.sender?.addAtUser(user: user, sessionMember: nil)
                 }).disposed(by: self.disposeBag)
         }
-        
+
     }
-    
-    
+
     public func onMsgCellLongClick(message: Message, position: Int, view: UIView) {
         self.sender?.popupMessageOperatorPanel(view, message)
     }
-    
+
     public func onMsgReadStatusClick(message: Message) {
         guard let controller = self.getViewController() else {
             return
@@ -499,37 +524,37 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             )
         }
     }
-    
-    
+
     public func onMsgResendClick(message: Message) {
         self.sender?.resendMessage(message)
     }
-    
+
     public func isSelectMode() -> Bool {
         return self.messageTableView.isEditing
     }
-    
+
     public func isItemSelected(message: Message) -> Bool {
         return self.selectedMessages.contains(message)
     }
-    
+
     public func onSelected(message: Message, selected: Bool) {
-        if (selected) {
+        if selected {
             self.selectedMessages.insert(message)
         } else {
             self.selectedMessages.remove(message)
         }
     }
-    
+
     func setSelectMode(_ selected: Bool, message: Message? = nil) {
         self.selectedMessages.removeAll()
         if self.messageTableView.isEditing != selected {
-            if (selected) {
-                if (message != nil) {
+            if selected {
+                if message != nil {
                     self.selectedMessages.insert(message!)
                     let pos = self.findPosition(message!)
-                    if (pos >= 0) {
-                        self.messageTableView.cellForRow(at: IndexPath.init(row: pos, section: 0))?.isSelected = true
+                    if pos >= 0 {
+                        self.messageTableView.cellForRow(at: IndexPath.init(row: pos, section: 0))?
+                            .isSelected = true
                     }
                 }
             } else {
@@ -538,39 +563,40 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             self.messageTableView.isEditing = selected
         }
     }
-    
+
     public func msgSender() -> IMMsgSender? {
         return self.sender
     }
-    
+
     func getSelectMessages() -> Set<Message> {
         return self.selectedMessages
     }
-    
-    
+
     func refreshMessageUserInfo() {
         for i in 0...self.messages.count {
-            if let cell = self.messageTableView.cellForRow(at: IndexPath(row: i, section: 0)) as? IMBaseMsgCell {
+            if let cell = self.messageTableView.cellForRow(at: IndexPath(row: i, section: 0))
+                as? IMBaseMsgCell
+            {
                 cell.initUser()
             }
         }
     }
-    
+
     private func getViewController() -> UIViewController? {
         for view in sequence(first: self.superview, next: { $0?.superview }) {
             if let responder = view?.next {
-                if responder.isKind(of: UIViewController.self){
+                if responder.isKind(of: UIViewController.self) {
                     return responder as? UIViewController
                 }
             }
         }
         return nil
     }
-    
+
     func getContentHeight() -> CGFloat {
         return self.messageTableView.contentSize.height
     }
-    
+
     func distanceFromBottom() -> CGFloat {
         let contentHeight = self.messageTableView.contentSize.height
         let scrollViewHeight = self.messageTableView.bounds.size.height
@@ -579,9 +605,9 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         let distanceFromBottom = contentHeight + bottomInset - scrollViewHeight - scrollOffset
         return distanceFromBottom
     }
-    
+
     func layoutResize(_ height: CGFloat) {
-        let offsetY = self.messageTableView.contentOffset.y + (height-lastResize)
+        let offsetY = self.messageTableView.contentOffset.y + (height - lastResize)
         self.messageTableView.setContentOffset(CGPoint(x: 0, y: offsetY), animated: false)
         lastResize = height
     }

@@ -10,24 +10,23 @@ import Foundation
 import WCDBSwift
 
 open class DefaultGroupDao: GroupDao {
-    
-    
+
     weak var database: Database?
     let tableName: String
-    
+
     init(_ database: Database, _ tableName: String) {
         self.database = database
         self.tableName = tableName
     }
-    
+
     public func insertOrReplace(_ groups: [Group]) throws {
         try self.database?.insertOrReplace(groups, intoTable: self.tableName)
     }
-    
+
     public func insertOrIgnore(_ groups: [Group]) throws {
         try self.database?.insertOrIgnore(groups, intoTable: self.tableName)
     }
-    
+
     public func deleteByIds(_ ids: Set<Int64>) throws {
         var groupIds = [Int64]()
         for id in ids {
@@ -38,18 +37,18 @@ open class DefaultGroupDao: GroupDao {
             where: Group.Properties.id.in(groupIds)
         )
     }
-    
-    public func findAll() -> Array<Group> {
-        let groups: Array<Group>? = try? self.database?.getObjects(
+
+    public func findAll() -> [Group] {
+        let groups: [Group]? = try? self.database?.getObjects(
             fromTable: self.tableName,
             orderBy: [Group.Properties.cTime.order(Order.descending)]
         )
-        return groups ?? Array<Group>()
+        return groups ?? [Group]()
     }
-    
+
     public func findById(_ id: Int64) -> Group? {
-        return try? self.database?.getObject(fromTable: self.tableName, where: Group.Properties.id == id)
+        return try? self.database?.getObject(
+            fromTable: self.tableName, where: Group.Properties.id == id)
     }
-    
-    
+
 }

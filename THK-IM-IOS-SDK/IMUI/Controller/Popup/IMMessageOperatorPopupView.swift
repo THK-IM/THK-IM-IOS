@@ -9,7 +9,7 @@
 import UIKit
 
 class IMMessageOperatorPopupView: UIView {
-    
+
     private lazy var shadowView: UIView = {
         let shadowView = UIView()
         shadowView.backgroundColor = .clear
@@ -19,7 +19,7 @@ class IMMessageOperatorPopupView: UIView {
         shadowView.layer.shadowRadius = 4
         return shadowView
     }()
-    
+
     private lazy var cornerRadiusView: UIView = {
         let cornerRadiusView = UIView()
         cornerRadiusView.backgroundColor = .white
@@ -27,20 +27,20 @@ class IMMessageOperatorPopupView: UIView {
         cornerRadiusView.layer.masksToBounds = true
         return cornerRadiusView
     }()
-    
+
     private var contentView: UIView
-    
+
     override init(frame: CGRect) {
         self.contentView = UIView(frame: frame)
         super.init(frame: UIScreen.main.bounds)
         self.addSubview(self.contentView)
         self.initViews()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func initViews() {
         self.contentView.addSubview(self.shadowView)
         self.shadowView.snp.makeConstraints { make in
@@ -51,22 +51,28 @@ class IMMessageOperatorPopupView: UIView {
             make.edges.equalToSuperview()
         }
     }
-    
-    func show(_ rowCount: Int, _ operators: [IMMessageOperator], _ sender: IMMsgSender, _ message: Message) {
+
+    func show(
+        _ rowCount: Int, _ operators: [IMMessageOperator], _ sender: IMMsgSender, _ message: Message
+    ) {
         for i in operators.indices {
-            let view = IMMessageOperatorItemView(frame: CGRect(x: (i%rowCount) * 60 , y: (i/rowCount) * 60, width: 60, height: 60))
+            let view = IMMessageOperatorItemView(
+                frame: CGRect(x: (i % rowCount) * 60, y: (i / rowCount) * 60, width: 60, height: 60)
+            )
             self.cornerRadiusView.addSubview(view)
-            view.setIMMessageOperator(operators[i], sender, message, { [weak self] in
-                self?.dismiss()
-            })
+            view.setIMMessageOperator(
+                operators[i], sender, message,
+                { [weak self] in
+                    self?.dismiss()
+                })
         }
         UIApplication.shared.windows.first?.addSubview(self)
     }
-    
+
     func dismiss() {
         self.removeFromSuperview()
     }
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         if let touch = touches.first {
@@ -76,5 +82,5 @@ class IMMessageOperatorPopupView: UIView {
             }
         }
     }
-    
+
 }

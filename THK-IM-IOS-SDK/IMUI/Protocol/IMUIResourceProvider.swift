@@ -10,19 +10,19 @@ import Foundation
 import UIKit
 
 public protocol IMUIResourceProvider {
-    
+
     func avatar(user: User) -> UIImage?
-    
+
     func unicodeEmojis() -> [String]?
-    
+
     func msgBubble(message: Message, session: Session?) -> UIImage?
-    
+
     func tintColor() -> UIColor?
-    
+
     func inputBgColor() -> UIColor?
-    
+
     func inputLayoutBgColor() -> UIColor?
-    
+
     func supportFunction(_ session: Session, _ functionFlag: Int64) -> Bool
-    
+
 }

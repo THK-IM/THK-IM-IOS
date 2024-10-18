@@ -5,23 +5,23 @@
 //  Created by vizoss on 2023/5/28.
 //
 
-import Foundation
-import UIKit
-import Kingfisher
 import CocoaLumberjack
-import RxSwift
+import Foundation
+import Kingfisher
 import RxCocoa
 import RxGesture
+import RxSwift
+import UIKit
 
-open class IMBaseMsgCell : IMBaseTableCell {
-    
+open class IMBaseMsgCell: IMBaseTableCell {
+
     open weak var delegate: IMMsgCellOperator? = nil
     open var cellWrapper: IMMsgCellWrapper
     open var message: Message? = nil
     open var session: Session? = nil
     open var position: Int? = nil
     open var replyView = IMMsgReplyView()
-    
+
     public init(_ reuseIdentifier: String, _ wrapper: IMMsgCellWrapper) {
         self.cellWrapper = wrapper
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
@@ -34,15 +34,16 @@ open class IMBaseMsgCell : IMBaseTableCell {
         cellWrapper.containerView.addSubview(msgView)
         self.setupEvent()
     }
-    
+
     func setupEvent() {
         self.replyView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
-            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+            delegate.otherFailureRequirementPolicy = .custom {
+                gestureRecognizer, otherGestureRecognizer in
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         })
         .when(.ended)
-        .subscribe(onNext: { [weak self]  _ in
+        .subscribe(onNext: { [weak self] _ in
             guard let sf = self else {
                 return
             }
@@ -52,16 +53,17 @@ open class IMBaseMsgCell : IMBaseTableCell {
             sf.delegate?.onMsgReferContentClick(message: referMsg, view: sf.replyView)
         })
         .disposed(by: disposeBag)
-        
+
         let msgView = self.msgView().contentView()
         // 点击事件
         msgView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
-            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+            delegate.otherFailureRequirementPolicy = .custom {
+                gestureRecognizer, otherGestureRecognizer in
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         })
         .when(.ended)
-        .subscribe(onNext: { [weak self]  _ in
+        .subscribe(onNext: { [weak self] _ in
             self?.delegate?.onMsgCellClick(
                 message: (self?.message)!,
                 position: self?.position ?? 0,
@@ -69,11 +71,11 @@ open class IMBaseMsgCell : IMBaseTableCell {
             )
         })
         .disposed(by: disposeBag)
-        
+
         // 长按事件
         self.cellWrapper.containerView.rx.longPressGesture()
             .when(.began)
-            .subscribe(onNext: { [weak self]  _ in
+            .subscribe(onNext: { [weak self] _ in
                 guard let sf = self else {
                     return
                 }
@@ -88,7 +90,7 @@ open class IMBaseMsgCell : IMBaseTableCell {
             })
             .disposed(by: disposeBag)
         let resendButton = self.cellWrapper.resendButton()
-        if (resendButton != nil) {
+        if resendButton != nil {
             resendButton!.rx.tap
                 .subscribe(onNext: { [weak self] data in
                     guard let msg = self?.message else {
@@ -102,22 +104,23 @@ open class IMBaseMsgCell : IMBaseTableCell {
             delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
                 return touches.view == self?.cellWrapper.avatarView()
             }
-            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+            delegate.otherFailureRequirementPolicy = .custom {
+                gestureRecognizer, otherGestureRecognizer in
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         })
         .when(.ended)
-        .subscribe(onNext: { [weak self]  _ in
+        .subscribe(onNext: { [weak self] _ in
             self?.delegate?.onMsgSenderClick(
                 message: (self?.message)!,
                 position: self?.position ?? 0,
                 view: (self?.cellWrapper.avatarView())!
             )
         }).disposed(by: disposeBag)
-        
+
         avatarView?.rx.longPressGesture()
             .when(.began)
-            .subscribe(onNext: { [weak self]  _ in
+            .subscribe(onNext: { [weak self] _ in
                 self?.delegate?.onMsgSenderLongClick(
                     message: (self?.message)!,
                     position: self?.position ?? 0,
@@ -130,30 +133,33 @@ open class IMBaseMsgCell : IMBaseTableCell {
                 delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
                     return touches.view == self?.cellWrapper.readStatusView()
                 }
-                delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                delegate.otherFailureRequirementPolicy = .custom {
+                    gestureRecognizer, otherGestureRecognizer in
                     return otherGestureRecognizer is UILongPressGestureRecognizer
                 }
             })
             .when(.ended)
-            .subscribe(onNext: { [weak self]  _ in
+            .subscribe(onNext: { [weak self] _ in
                 self?.delegate?.onMsgReadStatusClick(message: (self?.message)!)
             }).disposed(by: self.disposeBag)
         }
     }
-    
-    open func setMessage(_ position: Int, _ messages: Array<Message>, _ session: Session, _ delegate: IMMsgCellOperator) {
+
+    open func setMessage(
+        _ position: Int, _ messages: [Message], _ session: Session, _ delegate: IMMsgCellOperator
+    ) {
         self.message = messages[position]
         self.position = position
         self.session = session
         layoutMessageView()
     }
-    
+
     override open func layoutSubviews() {
         super.layoutSubviews()
-//        self.initChecked()
+        //        self.initChecked()
         self.cellWrapper.layoutSubViews(self.isEditing)
     }
-    
+
     private func initChecked() {
         if let editControlClass = NSClassFromString("UITableViewCellEditControl") {
             for subview in self.subviews {
@@ -162,9 +168,11 @@ open class IMBaseMsgCell : IMBaseTableCell {
                         if v is UIImageView {
                             if let imageView = (v as? UIImageView) {
                                 if self.isSelected {
-                                    imageView.image = ResourceUtils.loadImage(named: "ic_message_checked")
+                                    imageView.image = ResourceUtils.loadImage(
+                                        named: "ic_message_checked")
                                 } else {
-                                    imageView.image = ResourceUtils.loadImage(named: "ic_message_unchecked")
+                                    imageView.image = ResourceUtils.loadImage(
+                                        named: "ic_message_unchecked")
                                 }
                             }
                         }
@@ -173,15 +181,14 @@ open class IMBaseMsgCell : IMBaseTableCell {
             }
         }
     }
-    
-    
+
     func layoutMessageView() {
         self.initUser()
         self.initBubble()
         self.initMsgContent()
         self.initMessageStatus()
     }
-    
+
     private func initReplyMsg() {
         guard let msg = self.message?.referMsg else {
             return
@@ -198,21 +205,24 @@ open class IMBaseMsgCell : IMBaseTableCell {
             IMCoreManager.shared.userModule
                 .queryUser(id: msg.fromUId)
                 .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] user in
-                    self?.showReplyMsg(user.nickname)
-                }, onError: { err in
-                    DDLogError("initReplyMsg queryUser \(err)")
-                }).disposed(by: disposeBag)
+                .subscribe(
+                    onNext: { [weak self] user in
+                        self?.showReplyMsg(user.nickname)
+                    },
+                    onError: { err in
+                        DDLogError("initReplyMsg queryUser \(err)")
+                    }
+                ).disposed(by: disposeBag)
         }
     }
-    
+
     private func showReplyMsg(_ nickname: String) {
         guard let msg = self.message?.referMsg else {
             return
         }
         self.replyView.setRelyContent(nickname, msg, self.session, self.delegate)
     }
-    
+
     open func initMsgContent() {
         if let msg = message?.referMsg {
             self.initReplyMsg()
@@ -227,11 +237,11 @@ open class IMBaseMsgCell : IMBaseTableCell {
             make.bottom.equalToSuperview()
         }
     }
-    
+
     open func initUser() {
         self.initReplyMsg()
         let fromUId = self.message?.fromUId
-        if (self.showAvatar() && fromUId != nil && self.cellWrapper.avatarView() != nil) {
+        if self.showAvatar() && fromUId != nil && self.cellWrapper.avatarView() != nil {
             guard let delegate = self.delegate else {
                 return
             }
@@ -250,33 +260,36 @@ open class IMBaseMsgCell : IMBaseTableCell {
                         sf.updateUserInfo(user: user, sessionMember: nil)
                     }).disposed(by: disposeBag)
             }
-            
+
         } else {
             self.cellWrapper.avatarView()?.isHidden = true
         }
     }
-    
+
     open func initBubble() {
         guard let message = self.message else { return }
-        if (self.hasBubble()) {
+        if self.hasBubble() {
             let position = cellPosition()
             var image: UIImage? = nil
-            if (position == IMMsgPosType.Left.rawValue) {
-                image = IMUIManager.shared.uiResourceProvider?.msgBubble(message: message, session: self.session)
+            if position == IMMsgPosType.Left.rawValue {
+                image = IMUIManager.shared.uiResourceProvider?.msgBubble(
+                    message: message, session: self.session)
                 if image == nil {
                     image = Bubble().drawRectWithRoundedCorner(
                         radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "E5E5E5"),
                         borderColor: UIColor.init(hex: "E5E5E5"), width: 40, height: 40, pos: 0)
                 }
-            } else if (position == IMMsgPosType.Right.rawValue) {
-                image = IMUIManager.shared.uiResourceProvider?.msgBubble(message: message, session: self.session)
+            } else if position == IMMsgPosType.Right.rawValue {
+                image = IMUIManager.shared.uiResourceProvider?.msgBubble(
+                    message: message, session: self.session)
                 if image == nil {
                     image = Bubble().drawRectWithRoundedCorner(
                         radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "ffd1e3fe"),
                         borderColor: UIColor.init(hex: "ffd1e3fe"), width: 40, height: 40, pos: 0)
                 }
             } else {
-                image = IMUIManager.shared.uiResourceProvider?.msgBubble(message: message, session: self.session)
+                image = IMUIManager.shared.uiResourceProvider?.msgBubble(
+                    message: message, session: self.session)
                 if image == nil {
                     image = Bubble().drawRectWithRoundedCorner(
                         radius: 8, borderWidth: 0, backgroundColor: UIColor.init(hex: "BBBBBB"),
@@ -288,15 +301,15 @@ open class IMBaseMsgCell : IMBaseTableCell {
             updateUserBubble(image: nil)
         }
     }
-    
+
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     open func msgView() -> IMsgBodyView {
         return IMUnSupportMsgView()
     }
-    
+
     private func updateUserInfo(user: User, sessionMember: SessionMember?) {
         var showNickname = IMUIManager.shared.nicknameForSessionMember(user, sessionMember)
         if sessionMember?.deleted == 1 {
@@ -305,30 +318,32 @@ open class IMBaseMsgCell : IMBaseTableCell {
         self.cellWrapper.nickView()?.text = showNickname
         if let avatar = IMUIManager.shared.avatarForSessionMember(user, sessionMember) {
             if avatar.length > 0 {
-                self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(url: avatar, radius: CGFloat(IMUIManager.shared.msgCellAvatarWidth/2))
+                self.cellWrapper.avatarView()?.renderImageByUrlWithCorner(
+                    url: avatar, radius: CGFloat(IMUIManager.shared.msgCellAvatarWidth / 2))
                 self.cellWrapper.avatarView()?.isHidden = false
                 return
             }
         }
         self.renderProviderAvatar(user: user)
     }
-    
+
     private func renderProviderAvatar(user: User) {
         let image = IMUIManager.shared.uiResourceProvider?.avatar(user: user)
         self.cellWrapper.avatarView()?.image = image
         self.cellWrapper.avatarView()?.isHidden = false
     }
-    
+
     private func updateUserBubble(image: UIImage?) {
         self.cellWrapper.bubbleView.image = image
     }
-    
+
     open func initMessageStatus() {
         guard let message = self.message else {
             return
         }
         switch message.sendStatus {
-        case MsgSendStatus.Init.rawValue, MsgSendStatus.Uploading.rawValue, MsgSendStatus.Sending.rawValue:
+        case MsgSendStatus.Init.rawValue, MsgSendStatus.Uploading.rawValue,
+            MsgSendStatus.Sending.rawValue:
             self.cellWrapper.statusView()?.isHidden = false
             self.cellWrapper.resendButton()?.isHidden = true
             self.cellWrapper.readStatusView()?.isHidden = true
@@ -347,71 +362,77 @@ open class IMBaseMsgCell : IMBaseTableCell {
             break
         }
     }
-    
+
     private func queryReadStatus() {
         guard let session = self.session else {
             return
         }
-        if session.type == SessionType.MsgRecord.rawValue || session.type == SessionType.SuperGroup.rawValue {
+        if session.type == SessionType.MsgRecord.rawValue
+            || session.type == SessionType.SuperGroup.rawValue
+        {
             return
         }
-        let supportRead = IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.Read.rawValue) ?? false
+        let supportRead =
+            IMUIManager.shared.uiResourceProvider?.supportFunction(
+                session, IMChatFunction.Read.rawValue) ?? false
         if !supportRead {
             return
         }
         Observable.just(session.id).flatMap { sessionId in
-            let count = IMCoreManager.shared.database.sessionMemberDao().findSessionMemberCount(sessionId)
+            let count = IMCoreManager.shared.database.sessionMemberDao().findSessionMemberCount(
+                sessionId)
             return Observable.just(count)
         }.compose(RxTransformer.shared.io2Main())
             .subscribe(onNext: { [weak self] count in
                 self?.showReadStatus(count)
             }).disposed(by: self.disposeBag)
     }
-    
+
     private func showReadStatus(_ count: Int) {
         guard let message = self.message else {
             return
         }
         let readUIds = message.getReadUIds()
-        let realCount = max(count-1, 1)
-        let progress = CGFloat(readUIds.count)/CGFloat(realCount)
+        let realCount = max(count - 1, 1)
+        let progress = CGFloat(readUIds.count) / CGFloat(realCount)
         self.cellWrapper.readStatusView()?.isHidden = false
-        let statusColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#17a121")
+        let statusColor =
+            IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#17a121")
         self.cellWrapper.readStatusView()?.updateStatus(statusColor, 4, progress)
     }
-    
+
     open override func appear() {
         self.cellWrapper.appear()
         self.onMessageShow()
         self.msgView().onViewAppear()
     }
-    
+
     open override func disappear() {
         self.cellWrapper.disAppear()
         self.msgView().onViewDisappear()
     }
-    
+
     open func hasBubble() -> Bool {
         guard let msg = self.message else {
             return false
         }
         return IMUIManager.shared.getMsgCellProvider(msg.type).hasBubble()
     }
-    
+
     open func canSelected() -> Bool {
         guard let msg = self.message else {
             return false
         }
         return IMUIManager.shared.getMsgCellProvider(msg.type).canSelected()
     }
-    
+
     open func showAvatar() -> Bool {
         guard let msg = self.message else {
             return false
         }
         return msg.fromUId != 0
     }
-    
+
     /**
      cell 位置0: 中间1: 左边2:右边
      */
@@ -423,33 +444,36 @@ open class IMBaseMsgCell : IMBaseTableCell {
         }
         return IMMsgPosType.Mid.rawValue
     }
-    
+
     open func onMessageShow() {
-        if (message == nil) {
+        if message == nil {
             return
         }
-        if (message!.msgId <= 0 || message!.fromUId == IMCoreManager.shared.uId) {
+        if message!.msgId <= 0 || message!.fromUId == IMCoreManager.shared.uId {
             return
         }
         if (message!.operateStatus & MsgOperateStatus.ClientRead.rawValue) > 0
-            && ((message!.operateStatus & MsgOperateStatus.ServerRead.rawValue) > 0
-            ) {
+            && ((message!.operateStatus & MsgOperateStatus.ServerRead.rawValue) > 0)
+        {
             return
         }
         self.delegate?.msgSender()?.readMessage(message!)
     }
-    
+
     open func highlightFlashing(_ times: Int) {
-        if (times == 0) {
+        if times == 0 {
             return
         }
-        if (times%2 == 0) {
-            self.backgroundColor = IMUIManager.shared.uiResourceProvider?.tintColor()?.withAlphaComponent(0.12)
+        if times % 2 == 0 {
+            self.backgroundColor = IMUIManager.shared.uiResourceProvider?.tintColor()?
+                .withAlphaComponent(0.12)
         } else {
             self.backgroundColor = UIColor.clear
         }
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.35, execute: { [weak self] in
-            self?.highlightFlashing(times - 1)
-        })
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 0.35,
+            execute: { [weak self] in
+                self?.highlightFlashing(times - 1)
+            })
     }
 }

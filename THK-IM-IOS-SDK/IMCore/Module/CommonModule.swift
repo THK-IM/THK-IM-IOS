@@ -8,11 +8,11 @@
 import Foundation
 
 public protocol CommonModule: BaseModule {
-    
+
     func getSeverTime() -> Int64
-    
+
     func getConnId() -> String
-    
+
     func beKickOff()
-    
+
 }

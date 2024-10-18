@@ -9,32 +9,38 @@
 import UIKit
 
 public class IMMsgRevokeOperator: IMMessageOperator {
-    
+
     public func id() -> String {
         return "Revoke"
     }
-    
+
     public func title() -> String {
         return ResourceUtils.loadString("revoke", comment: "")
     }
-    
+
     public func icon() -> UIImage? {
         return ResourceUtils.loadImage(named: "ic_msg_opr_revoke")
     }
-    
+
     public func onClick(sender: IMMsgSender, message: Message) {
         weak var sender = sender
         IMCoreManager.shared.messageModule
             .getMsgProcessor(MsgType.Revoke.rawValue)
-            .send(message, false, { _ , err in
-                if err != nil {
-                    sender?.showSenderMessage(text: ResourceUtils.loadString("revoke_failed", comment: ""), success: false)
-                } else {
-                    sender?.showSenderMessage(text: ResourceUtils.loadString("revoke_success", comment: ""), success: false)
-                }
-            })
+            .send(
+                message, false,
+                { _, err in
+                    if err != nil {
+                        sender?.showSenderMessage(
+                            text: ResourceUtils.loadString("revoke_failed", comment: ""),
+                            success: false)
+                    } else {
+                        sender?.showSenderMessage(
+                            text: ResourceUtils.loadString("revoke_success", comment: ""),
+                            success: false)
+                    }
+                })
     }
-    
+
     public func supportMessage(_ message: Message, _ session: Session) -> Bool {
         if message.type == MsgType.Revoke.rawValue {
             return false
@@ -48,5 +54,5 @@ public class IMMsgRevokeOperator: IMMessageOperator {
         }
         return true
     }
-    
+
 }

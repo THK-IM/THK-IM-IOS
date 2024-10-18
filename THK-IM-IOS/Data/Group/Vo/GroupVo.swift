@@ -22,7 +22,7 @@ class GroupVo: Codable {
     var enterFlag: Int
     var createTime: Int64
     var updateTime: Int64
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case displayId = "display_id"
@@ -38,13 +38,15 @@ class GroupVo: Codable {
         case createTime = "create_time"
         case updateTime = "update_time"
     }
-    
+
     func toGroup() -> Group {
         return Group(
-            id: id, displayId: displayId, name: name, sessionId: sessionId, ownerId: ownerId, avatar: avatar,
-            announce: announce, qrcode: qrcode, enterFlag: enterFlag, memberCount: memberCount, extData: extData,
+            id: id, displayId: displayId, name: name, sessionId: sessionId, ownerId: ownerId,
+            avatar: avatar,
+            announce: announce, qrcode: qrcode, enterFlag: enterFlag, memberCount: memberCount,
+            extData: extData,
             cTime: createTime, mTime: updateTime
         )
     }
-    
+
 }

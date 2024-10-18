@@ -14,7 +14,7 @@ class UserBasicInfoVo: Codable {
     var nickname: String?
     var avatar: String?
     var sex: Int8?
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case displayId = "display_id"
@@ -22,7 +22,7 @@ class UserBasicInfoVo: Codable {
         case avatar = "avatar"
         case sex = "sex"
     }
-    
+
     func toUser() -> User {
         let now = IMCoreManager.shared.commonModule.getSeverTime()
         return User(

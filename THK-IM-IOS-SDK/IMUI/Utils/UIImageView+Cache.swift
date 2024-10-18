@@ -5,43 +5,57 @@
 //  Created by vizoss on 2023/7/4.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
+extension UIImageView {
 
-public extension UIImageView {
-    
-    func renderImageByPathWithCorner(path: String, radius: CGFloat, placeHolderImage: UIImage? = nil) {
+    public func renderImageByPathWithCorner(
+        path: String, radius: CGFloat, placeHolderImage: UIImage? = nil
+    ) {
         self.layer.cornerRadius = radius
         self.layer.masksToBounds = true
-        self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)), placeholder: placeHolderImage)
+        self.kf.setImage(
+            with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)),
+            placeholder: placeHolderImage)
     }
-    
-    func renderImageByUrlWithCorner(url: String, radius: CGFloat, placeHolderImage: UIImage? = nil) {
+
+    public func renderImageByUrlWithCorner(
+        url: String, radius: CGFloat, placeHolderImage: UIImage? = nil
+    ) {
         self.layer.cornerRadius = radius
         self.layer.masksToBounds = true
         self.kf.setImage(with: URL(string: url), placeholder: placeHolderImage)
     }
-    
-    func renderImageByUrl(url: String, placeHolderImage: UIImage? = nil) {
+
+    public func renderImageByUrl(url: String, placeHolderImage: UIImage? = nil) {
         self.layer.masksToBounds = true
         self.kf.setImage(with: URL(string: url), placeholder: placeHolderImage)
     }
-    
-    func renderImageByUrl(url: String, placeHolderImage: UIImage? = nil, _ completeHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)? = nil) {
+
+    public func renderImageByUrl(
+        url: String, placeHolderImage: UIImage? = nil,
+        _ completeHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)? = nil
+    ) {
         self.layer.masksToBounds = true
-        self.kf.setImage(with: URL(string: url), placeholder: placeHolderImage, completionHandler: completeHandler)
+        self.kf.setImage(
+            with: URL(string: url), placeholder: placeHolderImage,
+            completionHandler: completeHandler)
     }
-    
-    func renderImageByPath(path: String, placeHolderImage: UIImage? = nil) {
+
+    public func renderImageByPath(path: String, placeHolderImage: UIImage? = nil) {
         self.layer.masksToBounds = true
-        self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)), placeholder: placeHolderImage)
+        self.kf.setImage(
+            with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)),
+            placeholder: placeHolderImage)
     }
-    
-    func renderImageByPath(path: String, radius: CGFloat, placeHolderImage: UIImage? = nil) {
+
+    public func renderImageByPath(path: String, radius: CGFloat, placeHolderImage: UIImage? = nil) {
         self.layer.cornerRadius = radius
         self.layer.masksToBounds = true
-        self.kf.setImage(with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)), placeholder: placeHolderImage)
+        self.kf.setImage(
+            with: LocalFileImageDataProvider(fileURL: URL(fileURLWithPath: path)),
+            placeholder: placeHolderImage)
     }
-    
+
 }

@@ -6,30 +6,30 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
-import RxSwift
+import BadgeSwift
 import JDStatusBarNotification
 import ProgressHUD
+import RxSwift
 import SwiftEntryKit
-import BadgeSwift
+import UIKit
 
 open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
-    
+
     public let menuItemTagNews = "News"
     public let menuItemTagAdd = "add"
     public let menuItemTagSearch = "search"
     public let menuSize = CGSize(width: 30, height: 30)
     open var isNavigationBarHidden = false
-    
+
     public let disposeBag = DisposeBag()
-    
+
     override open func viewDidLoad() {
         super.viewDidLoad()
         self.initNavigationBar()
     }
-    
+
     open func initNavigationBar() {
-        if (hasTitlebar()) {
+        if hasTitlebar() {
             if let title = title() {
                 setTitle(title: title)
             }
@@ -52,12 +52,12 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
                 actions.append(#selector(searchTapped))
             }
             setRightItems(images: images, titles: titles, actions: actions)
-            if (self.swipeBack()) {
+            if self.swipeBack() {
                 let backImage = backIcon()?.withRenderingMode(.alwaysOriginal)
                 let customView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
                 let button = UIButton(type: .system)
                 button.addTarget(self, action: #selector(self.backAction), for: .touchUpInside)
-                button.frame = CGRect(x: -12, y: -6, width: 32, height: 32) // 调整x值以增加或减少间隔
+                button.frame = CGRect(x: -12, y: -6, width: 32, height: 32)  // 调整x值以增加或减少间隔
                 button.setImage(backImage, for: .normal)
                 customView.addSubview(button)
                 let backItem = UIBarButtonItem(customView: customView)
@@ -70,55 +70,55 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         self.navigationController?.isNavigationBarHidden = isNavigationBarHidden
         self.navigationController?.navigationBar.isHidden = !hasTitlebar()
     }
-    
+
     @objc open func viewTouched() {
         self.view.endEditing(true)
     }
-    
+
     open func hasTitlebar() -> Bool {
         return true
     }
-    
+
     open func backIcon() -> UIImage? {
         return ResourceUtils.loadImage(named: "ic_titlebar_back")
     }
-    
+
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationItem.hidesBackButton = true
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         self.navigationController?.navigationBar.isHidden = !hasTitlebar()
     }
-    
+
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
-    
+
     @objc open func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
-    
+
     open func title() -> String? {
         return nil
     }
-    
+
     open func hasNewsMenu() -> Bool {
         return false
     }
-    
+
     open func hasAddMenu() -> Bool {
         return false
     }
-    
+
     open func hasSearchMenu() -> Bool {
         return false
     }
-    
+
     open func menuImages(menu: String) -> UIImage? {
         var image: UIImage? = nil
-        if (menu == menuItemTagAdd) {
+        if menu == menuItemTagAdd {
             image = ResourceUtils.loadImage(named: "ic_titlebar_add")
-        } else if (menu == menuItemTagSearch) {
+        } else if menu == menuItemTagSearch {
             image = ResourceUtils.loadImage(named: "ic_titlebar_search")
         }
         if image == nil {
@@ -126,15 +126,15 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         return image!.scaledToSize(menuSize)
     }
-    
+
     open func hasBadge(menu: String) -> Bool {
         return false
     }
-    
+
     open func onMenuClick(menu: String) {
-        
+
     }
-    
+
     open func showError(_ err: Error) {
         if let codeMessageErr = err as? CodeMessageError {
             showToast(codeMessageErr.message)
@@ -142,36 +142,37 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             showToast(err.localizedDescription)
         }
     }
-    
+
     @objc func newsTapped() {
         onMenuClick(menu: menuItemTagNews)
     }
-    
+
     @objc func addTapped() {
         onMenuClick(menu: menuItemTagAdd)
     }
-    
+
     @objc func searchTapped() {
         onMenuClick(menu: menuItemTagSearch)
     }
-    
-    
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+
+    public func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch
+    ) -> Bool {
         return true
     }
-    
+
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return self.swipeBack()
     }
-    
+
     open func swipeBack() -> Bool {
         return self.navigationController?.children.count ?? 0 > 1
     }
-    
+
     open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
-    
+
     open func getTitleBarHeight() -> CGFloat {
         var navigationBarHeight = 0.0
         if self.navigationController != nil {
@@ -179,18 +180,19 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         return navigationBarHeight + AppUtils.getStatusBarHeight()
     }
-    
+
     open func getNavHeight() -> CGFloat {
         var navHeight: CGFloat = 0
-        if (self.navigationController != nil) {
+        if self.navigationController != nil {
             navHeight = self.navigationController!.navigationBar.frame.size.height
         }
         return navHeight + UIApplication.shared.windows[0].safeAreaInsets.top
     }
-    
+
     // 显示自定义的警告对话框
     open func showDialog(
-        title: String, message: String?, okString: String, cancelString: String, extraString: String?,
+        title: String, message: String?, okString: String, cancelString: String,
+        extraString: String?,
         _ ok: @escaping () -> Void, _ cancel: @escaping () -> Void, _ extra: (() -> Void)?
     ) {
         var subViews = [UIView]()
@@ -198,17 +200,20 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         var attributes = EKAttributes.centerFloat
         attributes.windowLevel = .normal
         attributes.hapticFeedbackType = .success
-        attributes.displayDuration = .infinity // 对话框会一直显示直到用户交互
-        attributes.entryBackground = .color(color: EKColor(UIColor.white)) // 背景颜色
-        attributes.shadow = .active(with: .init(color: EKColor(UIColor.black.withAlphaComponent(0.3)), opacity: 1, radius: 10))
-        attributes.screenBackground = .color(color: EKColor(UIColor.black.withAlphaComponent(0.5))) // 屏幕背景半透明遮罩
-        attributes.roundCorners = .all(radius: 16) // 圆角
-        attributes.border = .value(color: UIColor.gray, width: 0.5) // 边框
-        attributes.positionConstraints.maxSize = .init(width: .offset(value: 20), height: .intrinsic)
-        
+        attributes.displayDuration = .infinity  // 对话框会一直显示直到用户交互
+        attributes.entryBackground = .color(color: EKColor(UIColor.white))  // 背景颜色
+        attributes.shadow = .active(
+            with: .init(
+                color: EKColor(UIColor.black.withAlphaComponent(0.3)), opacity: 1, radius: 10))
+        attributes.screenBackground = .color(color: EKColor(UIColor.black.withAlphaComponent(0.5)))  // 屏幕背景半透明遮罩
+        attributes.roundCorners = .all(radius: 16)  // 圆角
+        attributes.border = .value(color: UIColor.gray, width: 0.5)  // 边框
+        attributes.positionConstraints.maxSize = .init(
+            width: .offset(value: 20), height: .intrinsic)
+
         // 设置交互类型
         attributes.screenInteraction = .dismiss
-        
+
         // 标题
         let titleLabel = UILabel()
         titleLabel.text = title
@@ -216,12 +221,12 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         titleLabel.textColor = UIColor.black
         titleLabel.textAlignment = .center
         subViews.append(titleLabel)
-        
+
         // 分隔线
         let separatorLineView = UIView()
         separatorLineView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
         subViews.append(separatorLineView)
-        
+
         if message != nil {
             // 消息文本
             let messageLabel = UILabel()
@@ -232,7 +237,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             messageLabel.textColor = UIColor.darkGray
             subViews.append(messageLabel)
         }
-        
+
         // 确认按钮
         let confirmButton = UIButton(type: .system)
         confirmButton.setTitle(okString, for: .normal)
@@ -245,7 +250,8 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
                 return touches.view == confirmButton
             }
-            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+            delegate.otherFailureRequirementPolicy = .custom {
+                gestureRecognizer, otherGestureRecognizer in
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         }).when(.ended)
@@ -254,7 +260,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
                 ok()
             }.disposed(by: self.disposeBag)
         subViews.append(confirmButton)
-        
+
         // 取消按钮
         let cancelButton = UIButton(type: .system)
         cancelButton.setTitle(cancelString, for: .normal)
@@ -267,7 +273,8 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
                 return touches.view == cancelButton
             }
-            delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+            delegate.otherFailureRequirementPolicy = .custom {
+                gestureRecognizer, otherGestureRecognizer in
                 return otherGestureRecognizer is UILongPressGestureRecognizer
             }
         }).when(.ended)
@@ -276,7 +283,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
                 cancel()
             }.disposed(by: self.disposeBag)
         subViews.append(cancelButton)
-        
+
         if extraString != nil {
             let extraButton = UIButton(type: .system)
             extraButton.setTitle(extraString!, for: .normal)
@@ -288,7 +295,8 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
                 delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
                     return touches.view == extraButton
                 }
-                delegate.otherFailureRequirementPolicy = .custom { gestureRecognizer, otherGestureRecognizer in
+                delegate.otherFailureRequirementPolicy = .custom {
+                    gestureRecognizer, otherGestureRecognizer in
                     return otherGestureRecognizer is UILongPressGestureRecognizer
                 }
             }).when(.ended)
@@ -297,35 +305,35 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
                     extra?()
                 }.disposed(by: self.disposeBag)
             subViews.append(extraButton)
-            
+
             extraButton.translatesAutoresizingMaskIntoConstraints = false
-            extraButton.heightAnchor.constraint(equalToConstant: 44).isActive = true // 设置按钮高度
+            extraButton.heightAnchor.constraint(equalToConstant: 44).isActive = true  // 设置按钮高度
         }
 
         // 垂直堆叠视图
-        
+
         let stackView = UIStackView(arrangedSubviews: subViews)
         stackView.axis = .vertical
         stackView.spacing = 10
-        
+
         // 添加约束
         separatorLineView.translatesAutoresizingMaskIntoConstraints = false
         separatorLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
+
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
-        confirmButton.heightAnchor.constraint(equalToConstant: 44).isActive = true // 设置按钮高度
+        confirmButton.heightAnchor.constraint(equalToConstant: 44).isActive = true  // 设置按钮高度
 
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        cancelButton.heightAnchor.constraint(equalToConstant: 44).isActive = true // 设置按钮高度
-        
+        cancelButton.heightAnchor.constraint(equalToConstant: 44).isActive = true  // 设置按钮高度
+
         // 设置内边距
         stackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         stackView.isLayoutMarginsRelativeArrangement = true
-        
+
         // 显示对话框
         SwiftEntryKit.display(entry: stackView, using: attributes)
     }
-    
+
     open func setTitle(title: String) {
         let titleView = UILabel(frame: CGRect.init(x: 0, y: -20, width: 150, height: 30))
         titleView.text = title
@@ -335,7 +343,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         self.navigationItem.titleView = titleView
         self.navigationItem.titleView?.contentMode = .center
     }
-    
+
     open func setRightItems(images: [UIImage?], titles: [String], actions: [Selector?]) {
         var rightBarButtonItems = [UIBarButtonItem]()
         var i = 0
@@ -355,11 +363,11 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             customButton.addSubview(b)
             item.customView = customButton
             rightBarButtonItems.append(item)
-            i+=1
+            i += 1
         }
         self.navigationItem.rightBarButtonItems = rightBarButtonItems
     }
-    
+
     open func setNavigationItemBadge(_ count: Int64, title: String) {
         var text: String? = ""
         if count <= 0 {
@@ -373,7 +381,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             for item in rightBarButtonItems {
                 if item.title == title {
                     item.customView?.subviews.forEach({ view in
-                        if (view is BadgeSwift) {
+                        if view is BadgeSwift {
                             if text == nil {
                                 (view as? BadgeSwift)?.isHidden = true
                             } else {
@@ -386,18 +394,18 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
     }
-    
+
     open func showLoading(text: String? = nil, _ interaction: Bool = false) {
         ProgressHUD.animate(text, .horizontalBarScaling, interaction: interaction)
     }
-    
+
     open func dismissLoading() {
         ProgressHUD.dismiss()
     }
-    
+
     open func showToast(_ toast: String, _ success: Bool = true) {
         NotificationPresenter.shared.present(toast)
         NotificationPresenter.shared.dismiss(after: 1)
     }
-    
+
 }

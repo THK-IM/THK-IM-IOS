@@ -6,46 +6,51 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 open class IMMsgReplyView: UIView {
-    
+
     weak var sender: IMMsgSender? = nil
     private let disposeBag = DisposeBag()
     private var message: Message? = nil
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
+
     lazy private var lineView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 2
-        view.backgroundColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
+        view.backgroundColor =
+            IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
         return view
     }()
-    
+
     lazy private var nickView: UILabel = {
         let view = UILabel()
-        view.textColor =  IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
+        view.textColor =
+            IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
         view.font = UIFont.systemFont(ofSize: 13)
         view.textAlignment = .left
         view.numberOfLines = 1
         return view
     }()
-    
+
     private var replyMsgView = UIView()
-    
+
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func setRelyContent(_ nickname: String, _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) {
+
+    func setRelyContent(
+        _ nickname: String, _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
+    ) {
         self.removeAllSubviews()
         self.nickView.text = nickname
         let attributes = [NSAttributedString.Key.font: self.nickView.font]
-        let textSize = (self.nickView.text! as NSString).size(withAttributes: attributes as [NSAttributedString.Key : Any])
+        let textSize = (self.nickView.text! as NSString).size(
+            withAttributes: attributes as [NSAttributedString.Key: Any])
         let maxWidth = IMUIManager.shared.getMsgCellProvider(msg.type).cellMaxWidth() - 16
         self.snp.remakeConstraints { make in
             make.top.equalToSuperview()
@@ -53,18 +58,18 @@ open class IMMsgReplyView: UIView {
             make.width.greaterThanOrEqualTo(textSize.width + 16)
             make.width.lessThanOrEqualTo(maxWidth)
         }
-        
+
         self.addSubview(self.nickView)
         self.addSubview(self.lineView)
         self.addSubview(self.replyMsgView)
-        
+
         self.lineView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(6)
             make.bottom.equalToSuperview().offset(-6)
             make.left.equalToSuperview().offset(6)
             make.width.equalTo(4)
         }
-        
+
         self.nickView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(6)
             make.height.equalTo(14)
@@ -77,8 +82,9 @@ open class IMMsgReplyView: UIView {
             make.left.equalTo(self.lineView.snp.right).offset(6)
             make.right.equalToSuperview().offset(-6)
         }
-        
-        let iMsgBodyView = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgView(msg, session, delegate)
+
+        let iMsgBodyView = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgView(
+            msg, session, delegate)
         let view = iMsgBodyView.contentView()
         self.replyMsgView.addSubview(view)
         view.snp.makeConstraints { make in
@@ -87,7 +93,7 @@ open class IMMsgReplyView: UIView {
         }
         iMsgBodyView.setMessage(msg, session, delegate, true)
     }
-    
+
     func clearReplyContent() {
         self.removeAllSubviews()
         self.snp.remakeConstraints { make in
@@ -96,7 +102,7 @@ open class IMMsgReplyView: UIView {
             make.height.equalTo(0)
         }
     }
-    
+
     private func removeAllSubviews() {
         self.replyMsgView.subviews.forEach { v in
             v.removeFromSuperview()
@@ -105,5 +111,5 @@ open class IMMsgReplyView: UIView {
             v.removeFromSuperview()
         }
     }
-    
+
 }

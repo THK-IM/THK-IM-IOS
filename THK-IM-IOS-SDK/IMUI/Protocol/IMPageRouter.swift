@@ -9,14 +9,14 @@
 import UIKit
 
 public protocol IMPageRouter {
-    
+
     func openSession(controller: UIViewController, session: Session)
-    
+
     func openUserPage(controller: UIViewController, user: User, session: Session)
-    
+
     func openGroupPage(controller: UIViewController, group: Group, session: Session)
-    
+
     func openLiveCall(controller: UIViewController, session: Session)
-    
+
     func openMsgReadStatusPage(controller: UIViewController, session: Session, message: Message)
 }

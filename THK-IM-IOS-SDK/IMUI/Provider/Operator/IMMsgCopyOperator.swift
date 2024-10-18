@@ -9,41 +9,44 @@
 import UIKit
 
 public class IMMsgCopyOperator: IMMessageOperator {
-    
+
     public func id() -> String {
         return "Copy"
     }
-    
+
     public func title() -> String {
         return ResourceUtils.loadString("copy", comment: "")
     }
-    
+
     public func icon() -> UIImage? {
         return ResourceUtils.loadImage(named: "ic_msg_opr_copy")
     }
-    
+
     public func onClick(sender: IMMsgSender, message: Message) {
         if message.type == MsgType.Text.rawValue {
             if message.atUsers != nil {
-                let content = AtStringUtils.replaceAtUIdsToNickname(message.content!, message.getAtUIds()) { id in
+                let content = AtStringUtils.replaceAtUIdsToNickname(
+                    message.content!, message.getAtUIds()
+                ) { id in
                     if let member = sender.syncGetSessionMemberInfo(id) {
                         return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
                     }
                     return "\(id)"
                 }
                 UIPasteboard.general.string = content
-                sender.showSenderMessage(text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
+                sender.showSenderMessage(
+                    text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
             } else {
                 UIPasteboard.general.string = message.content
-                sender.showSenderMessage(text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
+                sender.showSenderMessage(
+                    text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
             }
         }
         // TODO other msgType
     }
-    
+
     public func supportMessage(_ message: Message, _ session: Session) -> Bool {
         return message.type == MsgType.Text.rawValue
     }
-    
-    
+
 }

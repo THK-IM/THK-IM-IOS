@@ -6,9 +6,9 @@
 //  Copyright © 2023 THK. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import UIKit
 
 public typealias OnItemClick = () -> Void
 
@@ -24,13 +24,13 @@ public class IMMessageOperatorItemView: UIView {
         v.textAlignment = .center
         return v
     }()
-    
+
     private lazy var iconView: UIImageView = {
         let v = UIImageView()
         v.contentMode = .scaleAspectFit
         return v
     }()
-    
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(self.iconView)
@@ -45,15 +45,16 @@ public class IMMessageOperatorItemView: UIView {
             make.centerX.equalToSuperview()
             make.height.equalTo(16)
         }
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        let tapGestureRecognizer = UITapGestureRecognizer(
+            target: self, action: #selector(viewTapped))
         self.addGestureRecognizer(tapGestureRecognizer)
         self.isUserInteractionEnabled = true
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc func viewTapped() {
         guard let msgOperator = self.msgOperator else {
             return
@@ -67,8 +68,11 @@ public class IMMessageOperatorItemView: UIView {
         msgOperator.onClick(sender: sender, message: message)
         self.onItemClick?()
     }
-    
-    func setIMMessageOperator(_ msgOperator: IMMessageOperator, _ sender: IMMsgSender, _ message: Message, _ onItemClick: OnItemClick? ) {
+
+    func setIMMessageOperator(
+        _ msgOperator: IMMessageOperator, _ sender: IMMsgSender, _ message: Message,
+        _ onItemClick: OnItemClick?
+    ) {
         self.msgOperator = msgOperator
         self.onItemClick = onItemClick
         self.sender = sender

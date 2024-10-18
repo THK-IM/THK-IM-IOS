@@ -21,7 +21,7 @@ public final class SessionMember: TableCodable {
     public var deleted: Int
     public var cTime: Int64
     public var mTime: Int64
-    
+
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = SessionMember
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
@@ -39,9 +39,9 @@ public final class SessionMember: TableCodable {
         case cTime = "c_time"
         case mTime = "m_time"
     }
-    
-    public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
-    
+
+    public var isAutoIncrement: Bool = false  // 用于定义是否使用自增的方式插入
+
     public init(
         sessionId: Int64, userId: Int64, role: Int, status: Int, mute: Int, noteName: String? = nil,
         noteAvatar: String? = nil, extData: String? = nil, deleted: Int, cTime: Int64, mTime: Int64
@@ -58,7 +58,7 @@ public final class SessionMember: TableCodable {
         self.cTime = cTime
         self.mTime = mTime
     }
-    
+
     public init(userId: Int64) {
         self.sessionId = 0
         self.userId = userId
@@ -73,4 +73,3 @@ public final class SessionMember: TableCodable {
         self.mTime = 0
     }
 }
-

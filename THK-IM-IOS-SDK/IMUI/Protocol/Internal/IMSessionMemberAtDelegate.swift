@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol IMSessionMemberAtDelegate: AnyObject {
-    
+
     func onSessionMemberAt(_ memberInfo: (User, SessionMember?))
-    
+
 }

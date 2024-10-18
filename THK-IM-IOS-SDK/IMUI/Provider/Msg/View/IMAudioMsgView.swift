@@ -6,21 +6,20 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import Foundation
-
-import UIKit
 import CocoaLumberjack
+import Foundation
 import RxSwift
+import UIKit
 
 class IMAudioMsgView: UIView, IMsgBodyView {
-    
-    private lazy var audioMsgView : UIImageView = {
+
+    private lazy var audioMsgView: UIImageView = {
         let view = UIImageView()
         view.image = ResourceUtils.loadImage(named: "ic_msg_audio")
         return view
     }()
-    
-    private lazy var durationView : IMMsgLabelView = {
+
+    private lazy var durationView: IMMsgLabelView = {
         let view = IMMsgLabelView()
         view.sizeToFit()
         view.numberOfLines = 1
@@ -29,7 +28,7 @@ class IMAudioMsgView: UIView, IMsgBodyView {
         view.isUserInteractionEnabled = true
         return view
     }()
-    
+
     private lazy var statusView: UIImageView = {
         let view = UIImageView()
         view.layer.masksToBounds = true
@@ -37,16 +36,16 @@ class IMAudioMsgView: UIView, IMsgBodyView {
         view.layer.backgroundColor = UIColor.red.cgColor
         return view
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupUI() {
         self.addSubview(audioMsgView)
         self.audioMsgView.snp.makeConstraints { make in
@@ -54,7 +53,7 @@ class IMAudioMsgView: UIView, IMsgBodyView {
             make.centerY.equalToSuperview()
             make.size.equalTo(20)
         }
-        
+
         self.addSubview(durationView)
         self.durationView.snp.makeConstraints { make in
             make.left.equalTo(self.audioMsgView.snp.right)
@@ -62,7 +61,7 @@ class IMAudioMsgView: UIView, IMsgBodyView {
             make.centerY.equalToSuperview()
             make.width.lessThanOrEqualToSuperview()
         }
-        
+
         self.addSubview(statusView)
         self.statusView.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
@@ -75,20 +74,22 @@ class IMAudioMsgView: UIView, IMsgBodyView {
             make.centerY.equalToSuperview()
         }
     }
-    
-    
-    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
-        if (message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) {
+
+    func setMessage(
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
+        _ isReply: Bool = false
+    ) {
+        if message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 {
             self.statusView.isHidden = false
         } else {
             self.statusView.isHidden = true
         }
-        if (message.data != nil) {
+        if message.data != nil {
             do {
                 let data = try JSONDecoder().decode(
                     IMAudioMsgData.self,
                     from: message.data!.data(using: .utf8) ?? Data())
-                if (data.duration != nil) {
+                if data.duration != nil {
                     self.durationView.text = DateUtils.secondToDuration(seconds: data.duration!)
                 }
             } catch {
@@ -96,28 +97,29 @@ class IMAudioMsgView: UIView, IMsgBodyView {
             }
             return
         }
-        
-        if (message.content != nil) {
+
+        if message.content != nil {
             do {
                 let body = try JSONDecoder().decode(
                     IMAudioMsgBody.self,
                     from: message.content!.data(using: .utf8) ?? Data())
-                if (body.duration != nil) {
+                if body.duration != nil {
                     self.durationView.text = DateUtils.secondToDuration(seconds: body.duration!)
                     self.statusView.isHidden = false
                 }
-                if (body.url != nil) {
+                if body.url != nil {
                     _ = IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
-                        .downloadMsgContent(message, resourceType: IMMsgResourceType.Source.rawValue)
+                        .downloadMsgContent(
+                            message, resourceType: IMMsgResourceType.Source.rawValue)
                 }
             } catch {
                 DDLogError("\(error)")
             }
         }
     }
-    
+
     func contentView() -> UIView {
         return self
     }
-    
+
 }

@@ -19,7 +19,7 @@ public final class Contact: TableCodable {
     public var extData: String?
     public var cTime: Int64
     public var mTime: Int64
-    
+
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Contact
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
@@ -34,10 +34,13 @@ public final class Contact: TableCodable {
         case cTime = "c_time"
         case mTime = "m_time"
     }
-    
-    public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
-    
-    public init(id: Int64, sessionId: Int64? = nil, noteName: String? = nil, relation: Int, extData: String? = nil, cTime: Int64, mTime: Int64) {
+
+    public var isAutoIncrement: Bool = false  // 用于定义是否使用自增的方式插入
+
+    public init(
+        id: Int64, sessionId: Int64? = nil, noteName: String? = nil, relation: Int,
+        extData: String? = nil, cTime: Int64, mTime: Int64
+    ) {
         self.id = id
         self.sessionId = sessionId
         self.noteName = noteName

@@ -7,14 +7,17 @@
 
 import Foundation
 
-/**
- * 表名
- */
+/// 表名
 public enum TableName: String {
-    case Message = "message",
-         Session = "session",
-         User = "user",
-         Group = "group_",
-         Contact = "contact",
-         SessionMember = "session_member"
+    case Message = "message"
+    case
+        Session = "session"
+    case
+        User = "user"
+    case
+        Group = "group_"
+    case
+        Contact = "contact"
+    case
+        SessionMember = "session_member"
 }

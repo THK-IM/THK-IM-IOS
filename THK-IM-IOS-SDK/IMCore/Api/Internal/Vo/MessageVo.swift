@@ -7,12 +7,11 @@
 
 import Foundation
 
-
 public class MessageVo: Codable {
     var clientId: Int64 = 0
     var fUId: Int64 = 0
-    var sessionId : Int64 = 0
-    var msgId: Int64  = 0
+    var sessionId: Int64 = 0
+    var msgId: Int64 = 0
     var type: Int = 0
     var body: String = ""
     var status: Int? = nil
@@ -20,7 +19,7 @@ public class MessageVo: Codable {
     var atUsers: String? = nil
     var extData: String? = nil
     var cTime: Int64 = 0
-    
+
     init(msg: Message) {
         self.clientId = msg.id
         self.fUId = msg.fromUId
@@ -33,7 +32,7 @@ public class MessageVo: Codable {
         self.extData = msg.extData
         self.cTime = msg.cTime
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.clientId = try container.decodeIfPresent(Int64.self, forKey: .clientId) ?? 0
@@ -48,8 +47,11 @@ public class MessageVo: Codable {
         self.extData = try container.decodeIfPresent(String.self, forKey: .extData)
         self.cTime = try container.decodeIfPresent(Int64.self, forKey: .cTime) ?? 0
     }
-    
-    init(clientId: Int64, fUId: Int64, sessionId: Int64, msgId: Int64, type: Int, body: String, rMsgId: Int64? = nil, atUsers: String? = nil, cTime: Int64) {
+
+    init(
+        clientId: Int64, fUId: Int64, sessionId: Int64, msgId: Int64, type: Int, body: String,
+        rMsgId: Int64? = nil, atUsers: String? = nil, cTime: Int64
+    ) {
         self.clientId = clientId
         self.fUId = fUId
         self.sessionId = sessionId
@@ -60,7 +62,7 @@ public class MessageVo: Codable {
         self.atUsers = atUsers
         self.cTime = cTime
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case clientId = "c_id"
         case fUId = "f_u_id"
@@ -74,16 +76,18 @@ public class MessageVo: Codable {
         case extData = "ext_data"
         case cTime = "c_time"
     }
-    
+
     func toMessage() -> Message {
         var oprStatus = self.status
-        if (oprStatus == nil) {
+        if oprStatus == nil {
             oprStatus = MsgOperateStatus.Init.rawValue
         }
         let message = Message(
             id: self.clientId, sessionId: self.sessionId, fromUId: self.fUId, msgId: self.msgId,
-            type: self.type, content: self.body, data: nil, sendStatus: MsgSendStatus.Success.rawValue,
-            operateStatus: oprStatus!, referMsgId: self.rMsgId, extData: self.extData, atUsers: self.atUsers,
+            type: self.type, content: self.body, data: nil,
+            sendStatus: MsgSendStatus.Success.rawValue,
+            operateStatus: oprStatus!, referMsgId: self.rMsgId, extData: self.extData,
+            atUsers: self.atUsers,
             cTime: self.cTime, mTime: self.cTime)
         return message
     }

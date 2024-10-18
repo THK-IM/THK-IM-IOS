@@ -9,11 +9,10 @@
 import Foundation
 
 protocol LoadTask: AnyObject {
-    
+
     func start()
-    
+
     func cancel()
-    
+
     func notify(progress: Int, state: Int, err: Error?)
 }
-

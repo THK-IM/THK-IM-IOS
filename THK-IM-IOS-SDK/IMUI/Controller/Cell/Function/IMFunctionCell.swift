@@ -9,10 +9,10 @@ import Foundation
 import UIKit
 
 class IMFunctionCell: UICollectionViewCell {
-    
+
     private let labelView = UILabel()
     private let iconView = UIImageView()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.contentView.addSubview(labelView)
@@ -25,7 +25,7 @@ class IMFunctionCell: UICollectionViewCell {
             make.bottom.equalToSuperview().offset(-10)
         }
         self.contentView.addSubview(iconView)
-        
+
         iconView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview()
@@ -35,15 +35,14 @@ class IMFunctionCell: UICollectionViewCell {
         iconView.layer.cornerRadius = 8
         iconView.clipsToBounds = true
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setFunction(_ function: IMBaseFunctionCellProvider) {
         self.labelView.text = function.name()
         self.iconView.image = function.icon()
     }
-    
-}
 
+}

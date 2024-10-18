@@ -15,9 +15,8 @@
  **/
 
 import Foundation
-
-import YbridOpus
 import YbridOgg
+import YbridOpus
 
 // MARK: - OpusError
 internal enum OpusError: Error {
@@ -63,4 +62,3 @@ internal enum OggError: Error {
     case outOfSync
     case internalError
 }
-

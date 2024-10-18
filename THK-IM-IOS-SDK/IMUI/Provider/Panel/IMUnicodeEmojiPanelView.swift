@@ -8,13 +8,15 @@
 import Foundation
 import UIKit
 
-open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
+open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSource,
+    UICollectionViewDelegateFlowLayout
+{
+
     private let cellId = "unicode_emoji_cell_id"
     private let countOneRow = 7.0
-    
+
     weak var sender: IMMsgSender?
-    
+
     lazy var emojiView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
@@ -32,9 +34,9 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
         collectionView.alpha = 1
         return collectionView
     }()
-    
+
     // 来自: https://emojixd.com/
-    lazy var emojis: Array<String> = {
+    lazy var emojis: [String] = {
         var emojis = IMUIManager.shared.uiResourceProvider?.unicodeEmojis()
         if emojis == nil {
             emojis = [
@@ -42,57 +44,64 @@ open class IMUnicodeEmojiPanelView: UIView, UICollectionViewDelegate, UICollecti
                 "🥰", "😍", "🤩", "😘", "😗", "☺️", "😚", "😙", "🥲", "😋", "😛", "😜", "🤪",
                 "😝", "🤑", "🤗", "🤭", "🤫", "🤔", "🤐", "🤨", "😐", "😑", "😶", "😏", "😒",
                 "🙄", "😬", "🤥", "😶‍🌫️", "😮‍💨", "😌", "😔", "😪", "🤤", "😴", "😷", "🤒", "🤕",
-                "🤢", "🤮", "🤧", "🥵", "🥶", "🥴", "😵", "🤯", "😵‍💫"
+                "🤢", "🤮", "🤧", "🥵", "🥶", "🥴", "😵", "🤯", "😵‍💫",
             ]
         }
         return emojis!
     }()
-    
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupUI()
     }
-    
+
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override open func layoutSubviews() {
         updateUI()
     }
-    
+
     func setupUI() {
         self.addSubview(self.emojiView)
     }
-    
+
     func updateUI() {
         self.emojiView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
+
     }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellId, for: indexPath)
+
+    public func collectionView(
+        _ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: self.cellId, for: indexPath)
         let emojiCell = cell as! IMUnicodeEmojiCell
         emojiCell.setEmoji(self.emojis[indexPath.row])
         return cell
     }
-    
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+    public func collectionView(
+        _ collectionView: UICollectionView, numberOfItemsInSection section: Int
+    ) -> Int {
         return self.emojis.count
     }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+    public func collectionView(
+        _ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         let boundSize: CGFloat = UIScreen.main.bounds.width / countOneRow
         return CGSize(width: boundSize, height: boundSize)
     }
-    
-    
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+    public func collectionView(
+        _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath
+    ) {
         self.sender?.addInputContent(text: self.emojis[indexPath.row])
     }
-    
-    
-}
 
+}

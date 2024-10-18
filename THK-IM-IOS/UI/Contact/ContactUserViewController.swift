@@ -6,31 +6,32 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class ContactUserViewController: BaseViewController {
-    
+
     static func open(_ uiViewController: UIViewController, _ user: User) {
         let contractUserController = ContactUserViewController()
         contractUserController.user = user
         contractUserController.hidesBottomBarWhenPushed = true
-        uiViewController.navigationController?.pushViewController(contractUserController, animated: true)
+        uiViewController.navigationController?.pushViewController(
+            contractUserController, animated: true)
     }
-    
+
     private let headerView = UIView()
     private let avatarView = UIImageView()
     private let nicknameView = UILabel()
     private let accountView = UILabel()
     private let accountIdView = UILabel()
     var user: User? = nil
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.init(hex: "dcdcdc")
         self.setupUI()
     }
-    
+
     private func setupUI() {
         self.view.addSubview(self.headerView)
         self.headerView.snp.makeConstraints { make in
@@ -43,13 +44,13 @@ class ContactUserViewController: BaseViewController {
             initHeader(user: user)
         }
     }
-    
+
     private func initHeader(user: User) {
         self.headerView.addSubview(self.avatarView)
         self.headerView.addSubview(self.nicknameView)
         self.headerView.addSubview(self.accountView)
         self.headerView.addSubview(self.accountIdView)
-        
+
         self.avatarView.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(10)
             make.top.equalToSuperview().offset(100)
@@ -57,7 +58,7 @@ class ContactUserViewController: BaseViewController {
             make.width.equalTo(60)
         }
         self.avatarView.renderImageByUrlWithCorner(url: user.avatar ?? "", radius: 0)
-        
+
         self.nicknameView.snp.makeConstraints { make in
             make.left.equalTo(self.avatarView.snp.right).offset(10)
             make.right.equalToSuperview().offset(-10)
@@ -67,7 +68,7 @@ class ContactUserViewController: BaseViewController {
         self.nicknameView.text = user.nickname
         self.nicknameView.textColor = UIColor.black
         self.nicknameView.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
-        
+
         self.accountView.snp.makeConstraints { make in
             make.left.equalTo(self.avatarView.snp.right).offset(10)
             make.right.equalToSuperview().offset(-10)
@@ -77,7 +78,7 @@ class ContactUserViewController: BaseViewController {
         self.accountView.text = "账户ID:"
         self.accountView.textColor = UIColor.init(hex: "666666")
         self.accountView.font = UIFont.systemFont(ofSize: 16.0)
-        
+
         self.accountIdView.snp.makeConstraints { make in
             make.left.equalTo(self.avatarView.snp.right).offset(10)
             make.right.equalToSuperview().offset(-100)
@@ -87,10 +88,10 @@ class ContactUserViewController: BaseViewController {
         self.accountIdView.text = user.displayId
         self.accountIdView.textColor = UIColor.init(hex: "666666")
         self.accountIdView.font = UIFont.systemFont(ofSize: 16.0)
-        
+
         self.setupButtons()
     }
-    
+
     private func setupButtons() {
         let followButton = UIButton(type: .custom)
         let followImage = Bubble().drawRectWithRoundedCorner(
@@ -99,7 +100,8 @@ class ContactUserViewController: BaseViewController {
             width: 40, height: 40)
         let followPressedImage = Bubble().drawRectWithRoundedCorner(
             radius: 10.0, borderWidth: 0,
-            backgroundColor: UIColor.init(hex: "3282F6", factor: 2), borderColor: UIColor.init(hex: "3282F6", factor: 2),
+            backgroundColor: UIColor.init(hex: "3282F6", factor: 2),
+            borderColor: UIColor.init(hex: "3282F6", factor: 2),
             width: 40, height: 40)
         self.view.addSubview(followButton)
         followButton.snp.makeConstraints { make in
@@ -117,7 +119,7 @@ class ContactUserViewController: BaseViewController {
         followButton.rx.tap.asObservable().subscribe(onNext: { [weak self] in
             self?.follow()
         }).disposed(by: self.disposeBag)
-        
+
         let addFriendButton = UIButton(type: .custom)
         let addFriendImage = Bubble().drawRectWithRoundedCorner(
             radius: 10.0, borderWidth: 0,
@@ -125,7 +127,8 @@ class ContactUserViewController: BaseViewController {
             width: 40, height: 40)
         let addFriendPressedImage = Bubble().drawRectWithRoundedCorner(
             radius: 10.0, borderWidth: 0,
-            backgroundColor: UIColor.init(hex: "3282F6", factor: 2), borderColor: UIColor.init(hex: "3282F6", factor: 2),
+            backgroundColor: UIColor.init(hex: "3282F6", factor: 2),
+            borderColor: UIColor.init(hex: "3282F6", factor: 2),
             width: 40, height: 40)
         self.view.addSubview(addFriendButton)
         addFriendButton.snp.makeConstraints { make in
@@ -143,7 +146,7 @@ class ContactUserViewController: BaseViewController {
         addFriendButton.rx.tap.asObservable().subscribe(onNext: { [weak self] in
             self?.addFriend()
         }).disposed(by: self.disposeBag)
-        
+
         let sendMsgButton = UIButton(type: .custom)
         let sendMsgImage = Bubble().drawRectWithRoundedCorner(
             radius: 10.0, borderWidth: 0,
@@ -151,7 +154,8 @@ class ContactUserViewController: BaseViewController {
             width: 40, height: 40)
         let sendMsgPressedImage = Bubble().drawRectWithRoundedCorner(
             radius: 10.0, borderWidth: 0,
-            backgroundColor: UIColor.init(hex: "3282F6", factor: 2), borderColor: UIColor.init(hex: "3282F6", factor: 2),
+            backgroundColor: UIColor.init(hex: "3282F6", factor: 2),
+            borderColor: UIColor.init(hex: "3282F6", factor: 2),
             width: 40, height: 40)
         self.view.addSubview(sendMsgButton)
         sendMsgButton.snp.makeConstraints { make in
@@ -170,7 +174,7 @@ class ContactUserViewController: BaseViewController {
             self?.sendMsg()
         }).disposed(by: self.disposeBag)
     }
-    
+
     private func follow() {
         guard let user = self.user else {
             return
@@ -186,9 +190,9 @@ class ContactUserViewController: BaseViewController {
                     self?.showToast("关注成功")
                 }).disposed(by: self.disposeBag)
         }
-        
+
     }
-    
+
     private func addFriend() {
         guard let user = self.user else {
             return
@@ -204,9 +208,9 @@ class ContactUserViewController: BaseViewController {
                     self?.showToast("好友申请发送成功")
                 }).disposed(by: self.disposeBag)
         }
-        
+
     }
-    
+
     private func sendMsg() {
         guard let user = self.user else {
             return
@@ -230,5 +234,5 @@ class ContactUserViewController: BaseViewController {
                 }).disposed(by: self.disposeBag)
         }
     }
-    
+
 }

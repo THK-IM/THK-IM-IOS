@@ -7,15 +7,15 @@
 
 import Foundation
 
-public extension Data {
-    
-    func detectImageType() -> String {
+extension Data {
+
+    public func detectImageType() -> String {
         if self.count < 16 { return "" }
-        
-        var value = [UInt8](repeating:0, count:1)
-        
+
+        var value = [UInt8](repeating: 0, count: 1)
+
         self.copyBytes(to: &value, count: 1)
-        
+
         switch value[0] {
         case 0x4D, 0x49:
             return "tiff"

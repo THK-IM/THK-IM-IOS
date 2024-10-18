@@ -9,10 +9,10 @@
 import Foundation
 
 class BlackVo: Codable {
-    
+
     var uId: Int64
     var contactId: Int64
-    
+
     enum CodingKeys: String, CodingKey {
         case uId = "u_id"
         case contactId = "contact_id"

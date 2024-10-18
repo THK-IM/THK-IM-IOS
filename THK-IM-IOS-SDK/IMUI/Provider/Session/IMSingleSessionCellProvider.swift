@@ -9,11 +9,11 @@
 import Foundation
 
 open class IMSingleSessionCellProvider: IMBaseSessionCellProvider {
-    
+
     open override func sessionType() -> Int {
         return SessionType.Single.rawValue
     }
-    
+
     open override func viewCell() -> IMBaseSessionCell {
         return SingleSessionCell(style: .default, reuseIdentifier: self.identifier())
     }

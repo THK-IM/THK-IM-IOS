@@ -9,11 +9,11 @@
 import Foundation
 
 class UpdateNoteNameVo: Codable {
-    
+
     var uId: Int64
     var contactId: Int64
     var noteName: String
-    
+
     enum CodingKeys: String, CodingKey {
         case uId = "u_id"
         case contactId = "contact_id"

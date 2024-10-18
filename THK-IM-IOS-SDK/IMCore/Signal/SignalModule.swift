@@ -7,15 +7,15 @@
 
 import Foundation
 
-public protocol SignalModule : AnyObject {
-    
+public protocol SignalModule: AnyObject {
+
     func connect()
-    
+
     func sendSignal(_ signal: String)
-    
+
     func disconnect(_ reason: String)
-    
+
     func getSignalStatus() -> SignalStatus
-    
-    func setSignalListener(_ listener: SignalListener) 
+
+    func setSignalListener(_ listener: SignalListener)
 }

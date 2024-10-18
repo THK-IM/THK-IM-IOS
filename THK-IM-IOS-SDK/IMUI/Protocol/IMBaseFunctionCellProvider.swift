@@ -9,12 +9,12 @@ import Foundation
 import UIKit
 
 public protocol IMBaseFunctionCellProvider: AnyObject {
-    
+
     func name() -> String
-    
+
     func icon() -> UIImage?
-    
+
     func click(sender: IMMsgSender?)
-    
+
     func support(session: Session) -> Bool
 }

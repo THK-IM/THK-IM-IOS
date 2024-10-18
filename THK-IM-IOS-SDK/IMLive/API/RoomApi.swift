@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 import Moya
 
 enum RoomApi {
@@ -20,13 +19,12 @@ enum RoomApi {
     case delRoom(_ vo: DelRoomReqVo)
 }
 
-
 extension RoomApi: TargetType {
-    
+
     var baseURL: URL {
         return URL.init(string: "\(IMLiveManager.shared.liveApi.getEndpoint())/room")!
     }
-    
+
     var path: String {
         switch self {
         case .createRoom:
@@ -39,7 +37,7 @@ extension RoomApi: TargetType {
             return ""
         }
     }
-    
+
     var method: Moya.Method {
         switch self {
         case .createRoom:
@@ -52,7 +50,7 @@ extension RoomApi: TargetType {
             return .delete
         }
     }
-    
+
     var task: Moya.Task {
         switch self {
         case let .createRoom(vo):
@@ -65,12 +63,12 @@ extension RoomApi: TargetType {
             return .requestJSONEncodable(vo)
         }
     }
-    
+
     var validationType: Moya.ValidationType {
         return .none
     }
-    
-    var headers: [String : String]? {
+
+    var headers: [String: String]? {
         return nil
     }
 }

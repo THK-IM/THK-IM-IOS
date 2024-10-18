@@ -5,16 +5,16 @@
 //  Created by vizoss on 2023/8/2.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class LiveController: UIViewController {
-    
+
     let localView = ParticipantView()
     private let disposeBag = DisposeBag()
-    
+
     var isFullscreen = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
@@ -23,7 +23,7 @@ class LiveController: UIViewController {
             make.edges.equalToSuperview()
         }
         self.localView.setFullScreen(false)
-        
+
         self.view.rx.tapGesture()
             .when(.ended)
             .asObservable()

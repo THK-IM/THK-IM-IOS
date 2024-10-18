@@ -5,29 +5,29 @@
 //  Created by vizoss on 2023/6/4.
 //
 
-import Foundation
 import CommonCrypto
+import Foundation
 import UIKit
 
-public extension String {
-    
-    var length: Int {
+extension String {
+
+    public var length: Int {
         return self.utf16.count
     }
-    
-    static func getNumber(count: Int) -> String? {
-        if (count <= 0) {
+
+    public static func getNumber(count: Int) -> String? {
+        if count <= 0 {
             return nil
-        } else if (count < 100) {
+        } else if count < 100 {
             return "\(count)"
         } else {
             return "99+"
         }
     }
-    
-    func sizeWith(_ font : UIFont , _ maxSize : CGSize) ->CGSize {
+
+    public func sizeWith(_ font: UIFont, _ maxSize: CGSize) -> CGSize {
         let options = NSStringDrawingOptions.usesLineFragmentOrigin
-        var attributes : [NSAttributedString.Key : Any] = [:]
+        var attributes: [NSAttributedString.Key: Any] = [:]
         attributes[NSAttributedString.Key.font] = font
         let textBouds = self.boundingRect(
             with: maxSize,
@@ -37,8 +37,8 @@ public extension String {
         )
         return textBouds.size
     }
-    
-    func random(_ length: Int) -> String {
+
+    public func random(_ length: Int) -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         let count = UInt32(letters.count)
         var random = SystemRandomNumberGenerator()
@@ -50,8 +50,8 @@ public extension String {
         }
         return randomString
     }
-    
-    var sha256Hash: String {
+
+    public var sha256Hash: String {
         guard let data = data(using: .utf8) else {
             return self
         }
@@ -61,8 +61,8 @@ public extension String {
         }
         return digest.map { String(format: "%02x", $0) }.joined()
     }
-    
-    var sha1Hash: String {
+
+    public var sha1Hash: String {
         guard let data = data(using: .utf8) else {
             return self
         }

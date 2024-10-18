@@ -8,14 +8,14 @@
 
 import UIKit
 
-public extension Double {
-    
-    func pxValue() -> Double {
+extension Double {
+
+    public func pxValue() -> Double {
         return Double(UIScreen.main.scale) * self
     }
-    
-    func ptValue() -> Double {
+
+    public func ptValue() -> Double {
         return self / Double(UIScreen.main.scale)
     }
-    
+
 }

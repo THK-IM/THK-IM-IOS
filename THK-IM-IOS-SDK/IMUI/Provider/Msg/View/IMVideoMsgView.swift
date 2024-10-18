@@ -6,12 +6,11 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
 import CocoaLumberjack
-
+import UIKit
 
 class IMVideoMsgView: UIImageView, IMsgBodyView {
-    
+
     private lazy var durationLabel: IMMsgLabelView = {
         let v = IMMsgLabelView()
         v.font = UIFont.systemFont(ofSize: 10)
@@ -21,22 +20,22 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
         v.padding = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
         return v
     }()
-    
+
     private lazy var playView: UIImageView = {
         let v = UIImageView()
         v.image = ResourceUtils.loadImage(named: "icon_video_play")
         return v
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupUI() {
         self.addSubview(self.durationLabel)
         self.addSubview(self.playView)
@@ -46,16 +45,18 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
             make.height.equalTo(20)
         }
     }
-    
-    
-    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
+
+    func setMessage(
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
+        _ isReply: Bool = false
+    ) {
         self.resetlayout(message, isReply)
         self.showMessage(message)
     }
-    
+
     private func resetlayout(_ message: Message, _ isReply: Bool) {
         var size = self.viewSize(message)
-        if (isReply) {
+        if isReply {
             size = CGSize(width: size.width * 0.25, height: size.height * 0.25)
         }
         self.isHidden = true
@@ -73,12 +74,12 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
         }
         self.durationLabel.isHidden = isReply
     }
-    
+
     private func viewSize(_ message: Message) -> CGSize {
         var width = 100.0
         var height = 100.0
         do {
-            if (message.data != nil) {
+            if message.data != nil {
                 let data = try JSONDecoder().decode(
                     IMVideoMsgData.self,
                     from: message.data!.data(using: .utf8) ?? Data())
@@ -87,7 +88,7 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
                     height = Double(data.height!).ptValue()
                 }
             }
-            if (message.content != nil) {
+            if message.content != nil {
                 let body = try JSONDecoder().decode(
                     IMVideoMsgBody.self,
                     from: message.content!.data(using: .utf8) ?? Data())
@@ -96,11 +97,11 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
                     height = Double(body.height!).ptValue()
                 }
             }
-            if (width >= height) {
+            if width >= height {
                 let calWidth = max(80, min(200, width))
                 let calHeight = max(80, calWidth * height / width)
                 return CGSize(width: calWidth, height: calHeight)
-            } else  {
+            } else {
                 let calHeight = max(80, min(200, height))
                 let calWidth = max(80, calHeight * width / height)
                 return CGSize(width: calWidth, height: calHeight)
@@ -110,18 +111,19 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
             return CGSize(width: width, height: 1.5 * width)
         }
     }
-    
+
     private func showMessage(_ message: Message) {
-        if (message.data != nil) {
+        if message.data != nil {
             do {
                 let data = try JSONDecoder().decode(
                     IMVideoMsgData.self,
                     from: message.data!.data(using: .utf8) ?? Data())
-                if (data.duration != nil) {
+                if data.duration != nil {
                     self.durationLabel.text = DateUtils.secondToDuration(seconds: data.duration!)
                 }
-                if (data.thumbnailPath != nil) {
-                    let path = IMCoreManager.shared.storageModule.sandboxFilePath(data.thumbnailPath!)
+                if data.thumbnailPath != nil {
+                    let path = IMCoreManager.shared.storageModule.sandboxFilePath(
+                        data.thumbnailPath!)
                     self.renderImageByPathWithCorner(path: path, radius: 8.0)
                     self.isHidden = false
                     return
@@ -130,25 +132,26 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
                 DDLogError("\(error)")
             }
         }
-    
-        if (message.content != nil) {
+
+        if message.content != nil {
             do {
                 let body = try JSONDecoder().decode(
                     IMVideoMsgBody.self,
                     from: message.content!.data(using: .utf8) ?? Data())
-                if (body.duration != nil) {
+                if body.duration != nil {
                     self.durationLabel.text = DateUtils.secondToDuration(seconds: body.duration!)
                 }
-                if (body.thumbnailUrl != nil) {
+                if body.thumbnailUrl != nil {
                     _ = IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
-                        .downloadMsgContent(message, resourceType: IMMsgResourceType.Thumbnail.rawValue)
+                        .downloadMsgContent(
+                            message, resourceType: IMMsgResourceType.Thumbnail.rawValue)
                 }
             } catch {
                 DDLogError("\(error)")
             }
         }
     }
-    
+
     func contentView() -> UIView {
         return self
     }

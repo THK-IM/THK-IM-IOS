@@ -9,7 +9,7 @@
 import Foundation
 
 open class SingleSessionCell: IMBaseSessionCell {
-    
+
     override open func showSessionEntityInfo(_ session: Session) {
         IMCoreManager.shared.userModule.queryUser(id: session.entityId)
             .subscribe(onNext: { [weak self] user in

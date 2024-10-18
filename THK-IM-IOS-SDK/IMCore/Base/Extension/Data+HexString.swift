@@ -8,10 +8,10 @@
 
 import Foundation
 
-public extension Data {
-    
-    func hexString() -> String {
-        return map {String(format: "%02x", $0)}.joined(separator: "")
+extension Data {
+
+    public func hexString() -> String {
+        return map { String(format: "%02x", $0) }.joined(separator: "")
     }
-    
+
 }

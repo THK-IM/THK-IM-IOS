@@ -9,12 +9,12 @@
 import Foundation
 
 class ReviewFriendApplyVo: Codable {
-    
+
     var uId: Int64
     var applyId: Int64
     var pass: Int
     var msg: String
-    
+
     enum CodingKeys: String, CodingKey {
         case uId = "u_id"
         case applyId = "apply_id"

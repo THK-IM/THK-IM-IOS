@@ -9,7 +9,7 @@
 import Foundation
 
 class ContactVo: Codable {
-    
+
     var id: Int64
     var sessionId: Int64?
     var relation: Int
@@ -19,7 +19,7 @@ class ContactVo: Codable {
     var sex: Int
     var createTime: Int64
     var updateTime: Int64
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case sessionId = "session_id"
@@ -31,12 +31,12 @@ class ContactVo: Codable {
         case createTime = "create_time"
         case updateTime = "update_time"
     }
-    
+
     func toContact() -> Contact {
         return Contact(
             id: id, sessionId: sessionId, noteName: noteName, relation: relation,
             extData: nil, cTime: createTime, mTime: updateTime
         )
     }
-    
+
 }

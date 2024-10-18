@@ -23,7 +23,7 @@ extension GroupApi: TargetType {
     var baseURL: URL {
         return URL.init(string: "\(DataRepository.shared.getApiHost(type: "group"))")!
     }
-    
+
     var path: String {
         switch self {
         case .createGroup(_):
@@ -42,7 +42,7 @@ extension GroupApi: TargetType {
             return "/group/\(req.groupId)"
         }
     }
-    
+
     var method: Moya.Method {
         switch self {
         case .createGroup(_):
@@ -61,7 +61,7 @@ extension GroupApi: TargetType {
             return .post
         }
     }
-    
+
     var task: Moya.Task {
         switch self {
         case let .createGroup(req):
@@ -80,10 +80,9 @@ extension GroupApi: TargetType {
             return .requestJSONEncodable(req)
         }
     }
-    
-    var headers: [String : String]? {
+
+    var headers: [String: String]? {
         return nil
     }
-    
-}
 
+}

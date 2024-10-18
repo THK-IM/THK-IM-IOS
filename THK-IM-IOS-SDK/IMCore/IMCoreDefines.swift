@@ -8,52 +8,66 @@
 import Foundation
 
 public enum SignalStatus: Int {
-    case Init = 0,
-         Connecting = 1,
-         Connected = 2,
-         DisConnected = 3
+    case Init = 0
+    case
+        Connecting = 1
+    case
+        Connected = 2
+    case
+        DisConnected = 3
 }
 
 public enum SessionStatus: Int {
-    case Reject = 1,
+    case Reject = 1
+    case
         Silence = 2
 }
 
-/**
- * IM事件
- */
+/// IM事件
 public enum IMEvent: String {
-    case OnlineStatusUpdate = "IMEventOnlineStatusUpdate",
-         BatchMsgNew = "IMEventBatchMsgNew",
-         MsgNew = "IMEventMsgNew",
-         MsgUpdate = "IMEventMsgUpdate",
-         MsgDelete = "IMEventMsgDelete",
-         BatchMsgDelete = "IMEventBatchMsgDelete",
-         SessionMessageClear = "IMEventSessionMessageClear",
-         SessionNew = "IMEventSessionNew",
-         SessionUpdate = "IMEventSessionUpdate",
-         SessionDelete = "IMEventSessionDelete",
-         MsgLoadStatusUpdate = "IMEventMsgLoadStatusUpdate"
+    case OnlineStatusUpdate = "IMEventOnlineStatusUpdate"
+    case
+        BatchMsgNew = "IMEventBatchMsgNew"
+    case
+        MsgNew = "IMEventMsgNew"
+    case
+        MsgUpdate = "IMEventMsgUpdate"
+    case
+        MsgDelete = "IMEventMsgDelete"
+    case
+        BatchMsgDelete = "IMEventBatchMsgDelete"
+    case
+        SessionMessageClear = "IMEventSessionMessageClear"
+    case
+        SessionNew = "IMEventSessionNew"
+    case
+        SessionUpdate = "IMEventSessionUpdate"
+    case
+        SessionDelete = "IMEventSessionDelete"
+    case
+        MsgLoadStatusUpdate = "IMEventMsgLoadStatusUpdate"
 }
 
 public enum IMFileFormat: String {
-    case Image = "image",
-         Video = "video",
-         Audio = "audio",
-         Doc = "doc",
-         Other = "other"
+    case Image = "image"
+    case
+        Video = "video"
+    case
+        Audio = "audio"
+    case
+        Doc = "doc"
+    case
+        Other = "other"
 }
 
-
-
 public class IMLoadProgress: Codable {
-    
+
     var type: String
     var url: String
     var path: String
     var state: Int
     var progress: Int
-    
+
     init(_ type: String, _ url: String, _ path: String, _ state: Int, _ progress: Int) {
         self.type = type
         self.url = url
@@ -61,7 +75,7 @@ public class IMLoadProgress: Codable {
         self.state = state
         self.progress = progress
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case type = "type"
         case url = "url"
@@ -72,21 +86,20 @@ public class IMLoadProgress: Codable {
 }
 
 public enum IMLoadType: String {
-    case Upload = "upload",
-         Download = "download"
+    case Upload = "upload"
+    case
+        Download = "download"
 }
 
 public enum IMMsgResourceType: String {
-    case Thumbnail = "thumbnail",
-         Source = "source"
+    case Thumbnail = "thumbnail"
+    case
+        Source = "source"
 }
 
-
-public typealias IMSendMsgResult = (_ : Message, _: Error?) -> Void
+public typealias IMSendMsgResult = (_: Message, _: Error?) -> Void
 
 public protocol Crypto {
     func encrypt(_ text: String) -> String?
     func decrypt(_ cipherText: String) -> String?
 }
-
-

@@ -8,12 +8,11 @@
 
 import Foundation
 
-
 public class ForwardMessageVo: Codable {
     var clientId: Int64 = 0
     var fUId: Int64 = 0
-    var sessionId : Int64 = 0
-    var msgId: Int64  = 0
+    var sessionId: Int64 = 0
+    var msgId: Int64 = 0
     var type: Int = 0
     var body: String = ""
     var status: Int? = nil
@@ -24,8 +23,10 @@ public class ForwardMessageVo: Codable {
     var forwardSid: Int64? = nil
     var forwardFromUIds: Set<Int64>? = nil
     var forwardClientIds: Set<Int64>? = nil
-    
-    public init(msg: Message, forwardSid: Int64, forwardFromUIds: Set<Int64>, forwardClientIds: Set<Int64>) {
+
+    public init(
+        msg: Message, forwardSid: Int64, forwardFromUIds: Set<Int64>, forwardClientIds: Set<Int64>
+    ) {
         self.clientId = msg.id
         self.fUId = msg.fromUId
         self.sessionId = msg.sessionId
@@ -40,7 +41,7 @@ public class ForwardMessageVo: Codable {
         self.forwardFromUIds = forwardFromUIds
         self.forwardClientIds = forwardClientIds
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.clientId = try container.decodeIfPresent(Int64.self, forKey: .clientId) ?? 0
@@ -55,11 +56,12 @@ public class ForwardMessageVo: Codable {
         self.extData = try container.decodeIfPresent(String.self, forKey: .extData)
         self.cTime = try container.decodeIfPresent(Int64.self, forKey: .cTime) ?? 0
         self.forwardSid = try container.decodeIfPresent(Int64.self, forKey: .forwardSid) ?? nil
-        self.forwardFromUIds = try container.decodeIfPresent(Set<Int64>.self, forKey: .forwardFromUIds) ?? nil
-        self.forwardClientIds = try container.decodeIfPresent(Set<Int64>.self, forKey: .forwardClientIds) ?? nil
+        self.forwardFromUIds =
+            try container.decodeIfPresent(Set<Int64>.self, forKey: .forwardFromUIds) ?? nil
+        self.forwardClientIds =
+            try container.decodeIfPresent(Set<Int64>.self, forKey: .forwardClientIds) ?? nil
     }
-    
-    
+
     enum CodingKeys: String, CodingKey {
         case clientId = "c_id"
         case fUId = "f_u_id"
@@ -76,18 +78,18 @@ public class ForwardMessageVo: Codable {
         case forwardFromUIds = "fwd_from_u_ids"
         case forwardClientIds = "fwd_client_ids"
     }
-    
+
     func toMessage() -> Message {
         var oprStatus = self.status
-        if (oprStatus == nil) {
+        if oprStatus == nil {
             oprStatus = MsgOperateStatus.Init.rawValue
         }
         let message = Message(
             id: self.clientId, sessionId: self.sessionId, fromUId: self.fUId, msgId: self.msgId,
-            type: self.type, content: self.body, data: nil, sendStatus: MsgSendStatus.Success.rawValue,
-            operateStatus: oprStatus!, referMsgId: self.rMsgId, extData: self.extData, cTime: self.cTime, mTime: self.cTime)
+            type: self.type, content: self.body, data: nil,
+            sendStatus: MsgSendStatus.Success.rawValue,
+            operateStatus: oprStatus!, referMsgId: self.rMsgId, extData: self.extData,
+            cTime: self.cTime, mTime: self.cTime)
         return message
     }
 }
-
-

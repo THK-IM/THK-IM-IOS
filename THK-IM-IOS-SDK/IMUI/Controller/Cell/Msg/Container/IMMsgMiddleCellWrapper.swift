@@ -7,8 +7,8 @@
 
 import UIKit
 
-open class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
-    
+open class IMMsgMiddleCellWrapper: IMMsgCellWrapper {
+
     lazy var _messageStack: UIStackView = {
         let v = UIStackView(arrangedSubviews: [containerView])
         v.axis = .vertical
@@ -16,12 +16,12 @@ open class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
         v.alignment = .center
         return v
     }()
-    
+
     open override func attach(_ contentView: UIView) {
         contentView.addSubview(bubbleView)
         contentView.addSubview(_messageStack)
     }
-    
+
     open override func layoutSubViews(_ isEditing: Bool) {
         _messageStack.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(10)
@@ -33,5 +33,5 @@ open class IMMsgMiddleCellWrapper : IMMsgCellWrapper {
             make.edges.equalTo(self.containerView)
         }
     }
-    
+
 }

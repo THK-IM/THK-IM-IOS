@@ -9,13 +9,10 @@
 import Foundation
 
 public protocol IMSessionCellOperator: AnyObject {
-    
+
     func updateSession(_ session: Session)
 
     func deleteSession(_ session: Session)
 
     func openSession(_ session: Session)
 }
-
-
-

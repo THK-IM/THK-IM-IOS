@@ -8,18 +8,18 @@
 import Foundation
 import RxSwift
 
-public protocol ContactModule : BaseModule {
-    
+public protocol ContactModule: BaseModule {
+
     func syncContacts()
-    
+
     func updateContact(_ contact: Contact) -> Observable<Void>
-    
+
     func queryContactByUserId(_ id: Int64) -> Observable<Contact>
-    
-    func queryContactsByUserIds(_ ids: Array<Int64>) -> Observable<Array<Contact>>
-    
-    func queryAllContacts() -> Observable<Array<Contact>>
-    
-    func queryContactsByRelation(_ relation: Int) -> Observable<Array<Contact>>
-    
+
+    func queryContactsByUserIds(_ ids: [Int64]) -> Observable<[Contact]>
+
+    func queryAllContacts() -> Observable<[Contact]>
+
+    func queryContactsByRelation(_ relation: Int) -> Observable<[Contact]>
+
 }

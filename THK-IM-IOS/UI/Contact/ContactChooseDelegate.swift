@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol ContactChooseDelegate: AnyObject {
-    
+
     func onContactChoose(ids: Set<Int64>)
-    
+
 }

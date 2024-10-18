@@ -23,7 +23,7 @@ public final class Group: TableCodable {
     public var extData: String?
     public var cTime: Int64
     public var mTime: Int64
-    
+
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Group
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
@@ -44,9 +44,9 @@ public final class Group: TableCodable {
         case cTime = "c_time"
         case mTime = "m_time"
     }
-    
-    public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
-    
+
+    public var isAutoIncrement: Bool = false  // 用于定义是否使用自增的方式插入
+
     public init(id: Int64) {
         self.id = id
         self.displayId = ""
@@ -62,9 +62,13 @@ public final class Group: TableCodable {
         self.cTime = 0
         self.mTime = 0
     }
-    
-    public init(id: Int64, displayId: String, name: String, sessionId: Int64, ownerId: Int64, avatar: String, announce: String,
-         qrcode: String, enterFlag: Int, memberCount: Int, extData: String?, cTime: Int64, mTime: Int64) {
+
+    public init(
+        id: Int64, displayId: String, name: String, sessionId: Int64, ownerId: Int64,
+        avatar: String, announce: String,
+        qrcode: String, enterFlag: Int, memberCount: Int, extData: String?, cTime: Int64,
+        mTime: Int64
+    ) {
         self.id = id
         self.displayId = displayId
         self.name = name

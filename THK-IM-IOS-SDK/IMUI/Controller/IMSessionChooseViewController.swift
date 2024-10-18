@@ -7,16 +7,18 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 class IMSessionChooseViewController: IMSessionViewController {
-    
+
     var forwardType: Int?
-    var messages: Array<Message>?
+    var messages: [Message]?
     weak var sender: IMMsgSender?
-    
-    public static func popup(vc: UIViewController, forwardType: Int, messages: Array<Message>, sender: IMMsgSender) {
+
+    public static func popup(
+        vc: UIViewController, forwardType: Int, messages: [Message], sender: IMMsgSender
+    ) {
         let choose = IMSessionChooseViewController()
         choose.forwardType = forwardType
         choose.messages = messages
@@ -28,12 +30,12 @@ class IMSessionChooseViewController: IMSessionViewController {
         vc.navigationController?.view.layer.add(transition, forKey: kCATransition)
         vc.navigationController?.pushViewController(choose, animated: false)
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = ResourceUtils.loadString("choose_one_session", comment: "")
     }
-    
+
     override func openSession(_ session: Session) {
         guard let forwardType = self.forwardType else {
             return
@@ -41,30 +43,36 @@ class IMSessionChooseViewController: IMSessionViewController {
         guard let messages = self.messages else {
             return
         }
-        if (forwardType == 0) { // 单条转发
+        if forwardType == 0 {  // 单条转发
             for m in messages {
                 IMCoreManager.shared.messageModule.getMsgProcessor(m.type)
                     .forwardMessage(m, session.id)
             }
             self.pop()
-        } else { // 转发历史记录
+        } else {  // 转发历史记录
             self.buildRecordBody(messages: messages, session: session)
                 .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { recordBody in
-                    let newBody = recordBody.clone()
-                    for m in newBody.messages {
-                        m.operateStatus = MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.ServerRead.rawValue
-                        m.sendStatus = MsgSendStatus.Success.rawValue
-                        m.rUsers = nil
-                        m.data = nil
+                .subscribe(
+                    onNext: { recordBody in
+                        let newBody = recordBody.clone()
+                        for m in newBody.messages {
+                            m.operateStatus =
+                                MsgOperateStatus.Ack.rawValue | MsgOperateStatus.ClientRead.rawValue
+                                | MsgOperateStatus.ServerRead.rawValue
+                            m.sendStatus = MsgSendStatus.Success.rawValue
+                            m.rUsers = nil
+                            m.data = nil
+                        }
+                        IMCoreManager.shared.messageModule.sendMessage(
+                            session.id, MsgType.Record.rawValue, newBody, nil, nil, nil, nil)
+                    },
+                    onCompleted: { [weak self] in
+                        self?.pop()
                     }
-                    IMCoreManager.shared.messageModule.sendMessage(session.id, MsgType.Record.rawValue, newBody, nil, nil, nil, nil)
-                }, onCompleted: { [weak self] in
-                    self?.pop()
-                }).disposed(by: self.disposeBag)
+                ).disposed(by: self.disposeBag)
         }
     }
-    
+
     private func pop() {
         let transition = CATransition.init()
         transition.duration = 0.4
@@ -74,8 +82,10 @@ class IMSessionChooseViewController: IMSessionViewController {
         self.navigationController?.view.layer.add(transition, forKey: kCATransition)
         self.navigationController?.popViewController(animated: false)
     }
-    
-    private func buildRecordBody(messages: Array<Message>, session: Session) -> Observable<IMRecordMsgBody> {
+
+    private func buildRecordBody(messages: [Message], session: Session) -> Observable<
+        IMRecordMsgBody
+    > {
         let recordBody = IMRecordMsgBody(title: "", messages: messages, content: "")
         return Observable.just(recordBody)
             .flatMap({ [weak self] (recordBody) -> Observable<IMRecordMsgBody> in
@@ -84,21 +94,22 @@ class IMSessionChooseViewController: IMSessionViewController {
                 for m in messages {
                     var userName = "XX"
                     let member = self?.sender?.syncGetSessionMemberInfo(m.fromUId)
-                    if (member != nil) {
-                        if (member?.0 != nil) {
+                    if member != nil {
+                        if member?.0 != nil {
                             userName = member?.0.nickname ?? "XX"
                         }
-                        if (member?.1 != nil && member?.1?.noteName != "") {
+                        if member?.1 != nil && member?.1?.noteName != "" {
                             userName = member?.1?.noteName ?? "XX"
                         }
                     }
-                    let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type).msgDesc(msg: m)
+                    let subContent = IMCoreManager.shared.messageModule.getMsgProcessor(m.type)
+                        .msgDesc(msg: m)
                     content = "\(content)\(userName):\(subContent)"
                     if i > 5 {
                         break
                     }
                     i += 1
-                    if (i <= messages.count - 1) {
+                    if i <= messages.count - 1 {
                         content += "\n"
                     }
                 }
@@ -107,27 +118,25 @@ class IMSessionChooseViewController: IMSessionViewController {
             }).flatMap({ [weak self] (recordBody) -> Observable<IMRecordMsgBody> in
                 var userName = "XX"
                 let member = self?.sender?.syncGetSessionMemberInfo(IMCoreManager.shared.uId)
-                if (member != nil) {
-                    if (member?.0 != nil) {
+                if member != nil {
+                    if member?.0 != nil {
                         userName = member?.0.nickname ?? "XX"
                     }
-                    if (member?.1 != nil && member?.1?.noteName != "") {
+                    if member?.1 != nil && member?.1?.noteName != "" {
                         userName = member?.1?.noteName ?? "XX"
                     }
                 }
                 recordBody.title = userName
                 return Observable.just(recordBody)
             }).flatMap({ (recordBody) -> Observable<IMRecordMsgBody> in
-                let title: String = (
-                    session.type == SessionType.Group.rawValue ||
-                    session.type == SessionType.SuperGroup.rawValue
-                ) ? ResourceUtils.loadString("someone_s_group_chat_record", comment: "") : ResourceUtils.loadString("someone_s_chat_record", comment: "")
+                let title: String =
+                    (session.type == SessionType.Group.rawValue
+                        || session.type == SessionType.SuperGroup.rawValue)
+                    ? ResourceUtils.loadString("someone_s_group_chat_record", comment: "")
+                    : ResourceUtils.loadString("someone_s_chat_record", comment: "")
                 recordBody.title = String.init(format: title, recordBody.title)
                 return Observable.just(recordBody)
             })
     }
-    
-    
-    
-    
+
 }

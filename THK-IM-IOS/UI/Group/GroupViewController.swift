@@ -6,11 +6,13 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
-class GroupViewController: BaseViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ContactChooseDelegate {
-    
+class GroupViewController: BaseViewController, UICollectionViewDelegate, UICollectionViewDataSource,
+    UICollectionViewDelegateFlowLayout, ContactChooseDelegate
+{
+
     static func open(_ uiViewController: UIViewController, _ group: Group?, _ mode: Int = 0) {
         let groupController = GroupViewController()
         groupController.group = group
@@ -18,7 +20,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         groupController.hidesBottomBarWhenPushed = true
         uiViewController.navigationController?.pushViewController(groupController, animated: true)
     }
-    
+
     private lazy var groupNameLayout: UIView = {
         let view = UIView()
         view.addSubview(self.groupNameView)
@@ -51,7 +53,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         view.font = UIFont.systemFont(ofSize: 14)
         return view
     }()
-    
+
     private lazy var groupAvatarLayout: UIView = {
         let view = UIView()
         view.addSubview(self.groupAvatarView)
@@ -82,7 +84,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         view.contentMode = .scaleToFill
         return view
     }()
-    
+
     private lazy var groupAnnounceLayout: UIView = {
         let view = UIView()
         view.addSubview(self.groupAnnounceView)
@@ -115,7 +117,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         view.font = UIFont.systemFont(ofSize: 14)
         return view
     }()
-    
+
     private lazy var groupMemberLayout: UIView = {
         let view = UIView()
         view.addSubview(self.groupMemberView)
@@ -146,7 +148,7 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         view.image = UIImage.init(named: "ic_arrow_right")
         return view
     }()
-    
+
     private lazy var groupMembersView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
@@ -168,14 +170,14 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         collectionView.alpha = 1
         return collectionView
     }()
-    
-    var mode: Int = 0 // 0 创建群 1查看群
+
+    var mode: Int = 0  // 0 创建群 1查看群
     var group: Group? = nil
     var members = [SessionMember]()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        if (mode == 0) {
+        if mode == 0 {
             self.setTitle(title: "创建群")
         } else {
             self.setTitle(title: group!.name)
@@ -183,36 +185,36 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         self.view.backgroundColor = UIColor.init(hex: "dcdcdc")
         self.setupUI()
     }
-    
+
     override func hasAddMenu() -> Bool {
-        if (mode == 0) {
+        if mode == 0 {
             return true
         } else {
             return false
         }
     }
-    
+
     override func hasSearchMenu() -> Bool {
         return false
     }
-    
+
     override func menuImages(menu: String) -> UIImage? {
-        if (menu == "add") {
+        if menu == "add" {
             return UIImage(named: "ic_choose")?.scaledToSize(CGSize(width: 24, height: 24))
         }
         return super.menuImages(menu: menu)
     }
-    
+
     override func onMenuClick(menu: String) {
-        if (menu == "add") {
-            if (mode == 0) {
+        if menu == "add" {
+            if mode == 0 {
                 self.createGroup()
             }
-        } else if (menu == "click") {
-            
+        } else if menu == "click" {
+
         }
     }
-    
+
     private func setupUI() {
         let statusHeight = AppUtils.getStatusBarHeight()
         let navigationItemHeight = self.navigationController?.navigationBar.frame.height ?? 0
@@ -224,15 +226,15 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
             make.left.equalToSuperview()
             make.right.equalToSuperview()
         }
-        
+
         self.view.addSubview(self.groupAvatarLayout)
         self.groupAvatarLayout.snp.makeConstraints { make in
             make.top.equalTo(self.groupNameLayout.snp.bottom)
-            make.height.equalTo(mode == 0 ? 0: 60)
+            make.height.equalTo(mode == 0 ? 0 : 60)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
         }
-        
+
         self.view.addSubview(self.groupAnnounceLayout)
         self.groupAnnounceLayout.snp.makeConstraints { make in
             make.top.equalTo(self.groupAvatarLayout.snp.bottom)
@@ -255,43 +257,46 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
             make.right.equalToSuperview().offset(-10)
             make.bottom.equalToSuperview()
         }
-        
+
         self.setupNameLayout()
         self.setupAvatarLayout()
         self.setupAnnounceLayout()
         self.setupMembersLayout()
-        
+
     }
-    
+
     private func setupNameLayout() {
-        if (mode == 0) {
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: { [weak self] in
+        if mode == 0 {
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + 0.5,
+                execute: { [weak self] in
                     self?.groupNameTextView.becomeFirstResponder()
-            })
+                })
         } else {
             self.groupNameTextView.text = group?.name ?? ""
         }
     }
-    
+
     private func setupAvatarLayout() {
-        if (mode == 0) {
+        if mode == 0 {
             self.groupAvatarLayout.isHidden = true
         } else {
             self.groupAvatarLayout.isHidden = false
-            self.groupAvatarImageView.renderImageByUrlWithCorner(url: group?.avatar ?? "", radius: 10)
+            self.groupAvatarImageView.renderImageByUrlWithCorner(
+                url: group?.avatar ?? "", radius: 10)
         }
     }
-    
+
     private func setupAnnounceLayout() {
-        if (mode == 0) {
-            
+        if mode == 0 {
+
         } else {
             self.groupAnnounceTextView.text = group?.announce ?? ""
         }
     }
-    
+
     private func setupMembersLayout() {
-        if (mode == 0) {
+        if mode == 0 {
             let tapGesture = UITapGestureRecognizer()
             tapGesture.rx.event.asObservable()
                 .subscribe({ [weak self] _ in
@@ -313,26 +318,34 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
                 }).disposed(by: self.disposeBag)
         }
     }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+        -> Int
+    {
         return members.count
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {        
+
+    func collectionView(
+        _ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         let boundSize: CGFloat = UIScreen.main.bounds.width / 5 - 4
         return CGSize(width: boundSize, height: boundSize)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: NSStringFromClass(SessionMemberCell.self),
-            for: indexPath
-        ) as! SessionMemberCell
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+        -> UICollectionViewCell
+    {
+        let cell =
+            collectionView.dequeueReusableCell(
+                withReuseIdentifier: NSStringFromClass(SessionMemberCell.self),
+                for: indexPath
+            ) as! SessionMemberCell
         let member = self.members[indexPath.row]
         cell.setMemberId(id: member.userId)
         return cell
     }
-    
+
     private func createGroup() {
         guard let groupName = groupNameTextView.text else {
             showToast("请输入群名称")
@@ -344,15 +357,15 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         }
         var memberIds = Set<Int64>()
         for m in members {
-            if (m.userId > 0) {
+            if m.userId > 0 {
                 memberIds.insert(m.userId)
             }
         }
-        if (memberIds.count <= 0) {
+        if memberIds.count <= 0 {
             showToast("请选择群成员")
             return
         }
-        
+
         let req = CreateGroupVo(
             uId: uId,
             members: memberIds,
@@ -377,13 +390,13 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
                 guard let sf = self else {
                     return
                 }
-                if (session.id > 0) {
+                if session.id > 0 {
                     IMUIManager.shared.pageRouter?.openSession(controller: sf, session: session)
                 }
             }).disposed(by: self.disposeBag)
-        
+
     }
-    
+
     func onContactChoose(ids: Set<Int64>) {
         self.members.removeAll()
         for id in ids {
@@ -391,8 +404,5 @@ class GroupViewController: BaseViewController, UICollectionViewDelegate, UIColle
         }
         self.groupMembersView.reloadData()
     }
-    
-    
-    
-    
+
 }

@@ -8,17 +8,17 @@
 import Foundation
 
 class JoinRoomReqVo: Codable {
-    
+
     let roomId: String
     let uId: Int64
     let role: Int
-    
+
     init(roomId: String, uId: Int64, role: Int) {
         self.roomId = roomId
         self.uId = uId
         self.role = role
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case roomId = "room_id"
         case uId = "u_id"
@@ -27,14 +27,14 @@ class JoinRoomReqVo: Codable {
 }
 
 class JoinRoomResVo: Codable {
-    
+
     let id: String
     let mode: Int
     let members: Set<Int64>
     let ownerId: Int64
     let createTime: Int64
-    let participants: Array<ParticipantVo>?
-    
+    let participants: [ParticipantVo]?
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case mode = "mode"
@@ -45,16 +45,15 @@ class JoinRoomResVo: Codable {
     }
 }
 
-
 class RefuseJoinReqVo: Codable {
     let roomId: String
     let uId: Int64
-    
+
     init(roomId: String, uId: Int64) {
         self.roomId = roomId
         self.uId = uId
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case roomId = "room_id"
         case uId = "u_id"
@@ -64,12 +63,12 @@ class RefuseJoinReqVo: Codable {
 class DelRoomReqVo: Codable {
     let roomId: String
     let uId: Int64
-    
+
     init(roomId: String, uId: Int64) {
         self.roomId = roomId
         self.uId = uId
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case roomId = "room_id"
         case uId = "u_id"

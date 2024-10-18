@@ -9,14 +9,14 @@
 import UIKit
 
 class SessionTabViewController: IMSessionViewController {
-    
+
     override func title() -> String? {
         return "Message"
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.init(hex: "#EEEEEE")
     }
-    
+
 }

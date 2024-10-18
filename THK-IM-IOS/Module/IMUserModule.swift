@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 class IMUserModule: DefaultUserModule {
-    
+
     override func queryServerUser(id: Int64) -> Observable<User> {
         print("queryServerUser \(id)")
         return DataRepository.shared.userApi.rx.request(.queryUser(id))
@@ -22,5 +22,5 @@ class IMUserModule: DefaultUserModule {
                 return Observable.just(user)
             })
     }
-    
+
 }

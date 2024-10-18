@@ -10,15 +10,15 @@ import Foundation
 import RxSwift
 
 open class DefaultGroupModule: GroupModule {
-    
+
     public init() {
-        
+
     }
-    
+
     open func queryServerGroupById(id: Int64) -> RxSwift.Observable<Group?> {
         return Observable.just(Group(id: id))
     }
-    
+
     open func findById(id: Int64) -> RxSwift.Observable<Group?> {
         return Observable.create({ observer -> Disposable in
             let group = IMCoreManager.shared.database.groupDao().findById(id)
@@ -26,9 +26,9 @@ open class DefaultGroupModule: GroupModule {
             observer.onCompleted()
             return Disposables.create()
         }).flatMap({ group -> Observable<Group?> in
-            if (group == nil) {
+            if group == nil {
                 return self.queryServerGroupById(id: id).flatMap({ group -> Observable<Group?> in
-                    if (group != nil) {
+                    if group != nil {
                         try IMCoreManager.shared.database.groupDao().insertOrReplace([group!])
                     }
                     return Observable.just(group)
@@ -38,8 +38,8 @@ open class DefaultGroupModule: GroupModule {
             }
         })
     }
-    
-    open func queryAllGroups() -> RxSwift.Observable<Array<Group>> {
+
+    open func queryAllGroups() -> RxSwift.Observable<[Group]> {
         return Observable.create({ observer -> Disposable in
             let groups = IMCoreManager.shared.database.groupDao().findAll()
             observer.onNext(groups)
@@ -47,13 +47,12 @@ open class DefaultGroupModule: GroupModule {
             return Disposables.create()
         })
     }
-    
+
     open func onSignalReceived(_ type: Int, _ body: String) {
-        
+
     }
-    
+
     open func reset() {
     }
-    
-    
+
 }

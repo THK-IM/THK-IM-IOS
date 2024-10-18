@@ -9,9 +9,9 @@
 import UIKit
 
 class IMEmojiPanelTitleCell: UICollectionViewCell {
-    
+
     private let titleView = UIImageView()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.contentView.addSubview(titleView)
@@ -22,14 +22,15 @@ class IMEmojiPanelTitleCell: UICollectionViewCell {
         }
         let backgroundView = UIView(frame: frame)
         backgroundView.layer.cornerRadius = 6
-        backgroundView.layer.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()?.cgColor
+        backgroundView.layer.backgroundColor =
+            IMUIManager.shared.uiResourceProvider?.inputBgColor()?.cgColor
         self.selectedBackgroundView = backgroundView
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setProvider(_ provider: IMBasePanelViewProvider) {
         self.titleView.image = provider.icon(selected: false)
     }

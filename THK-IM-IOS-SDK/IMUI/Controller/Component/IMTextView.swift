@@ -14,19 +14,19 @@ protocol TextViewBackwardDelegate: AnyObject {
 }
 
 class IMTextView: UITextView {
-    
-    weak var backwardDelegate:TextViewBackwardDelegate?
-    
+
+    weak var backwardDelegate: TextViewBackwardDelegate?
+
     override func deleteBackward() {
-        if (backwardDelegate == nil) {
+        if backwardDelegate == nil {
             super.deleteBackward()
         } else {
-            if (!backwardDelegate!.onDeleted()) {
+            if !backwardDelegate!.onDeleted() {
                 super.deleteBackward()
             }
         }
     }
-    
+
     let placeholderLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
@@ -43,7 +43,7 @@ class IMTextView: UITextView {
 
     override var text: String! {
         didSet {
-            textDidChange() // 调用监听文本变化的方法
+            textDidChange()  // 调用监听文本变化的方法
         }
     }
 
@@ -58,13 +58,15 @@ class IMTextView: UITextView {
     }
 
     private func commonInit() {
-        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: UITextView.textDidChangeNotification, object: nil)
-        
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(textDidChange), name: UITextView.textDidChangeNotification,
+            object: nil)
+
         addSubview(placeholderLabel)
         NSLayoutConstraint.activate([
             placeholderLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             placeholderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            placeholderLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 10)
+            placeholderLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 10),
         ])
         placeholderLabel.isHidden = self.text.count > 0
     }

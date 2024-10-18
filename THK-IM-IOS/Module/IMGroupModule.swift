@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 class IMGroupModule: DefaultGroupModule {
-    
+
     override func queryServerGroupById(id: Int64) -> Observable<Group?> {
         return DataRepository.shared.groupApi.rx.request(.queryGroup(id))
             .asObservable()
@@ -20,4 +20,3 @@ class IMGroupModule: DefaultGroupModule {
             })
     }
 }
-

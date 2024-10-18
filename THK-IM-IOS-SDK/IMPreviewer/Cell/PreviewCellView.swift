@@ -6,32 +6,31 @@
 //  Copyright © 2023 THK. All rights reserved.
 //
 
-import UIKit
 import RxSwift
-
+import UIKit
 
 open class PreviewCellView: UICollectionViewCell {
-    
+
     weak var delegate: PreviewDelegate? = nil
     var message: Message? = nil
     var disposeBag = DisposeBag()
-    
+
     deinit {
         print("deinit PreviewCellView")
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
+
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     open func setMessage(_ message: Message) {
         self.message = message
     }
-    
+
     open func startPreview() {
         guard let vc = self.parentController() as? IMMediaPreviewController else { return }
         let player = vc.videoPlayer
@@ -39,9 +38,9 @@ open class PreviewCellView: UICollectionViewCell {
             player.view.removeFromSuperview()
         }
     }
-    
+
     open func onIMLoadProgress(_ loadProgress: IMLoadProgress) {}
-    
+
     func parentController() -> UIViewController? {
         var responder: UIResponder? = self
         while let nextResponder = responder?.next {
@@ -52,6 +51,5 @@ open class PreviewCellView: UICollectionViewCell {
         }
         return nil
     }
-    
-}
 
+}

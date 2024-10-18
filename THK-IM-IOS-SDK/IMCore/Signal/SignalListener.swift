@@ -8,9 +8,9 @@
 import Foundation
 
 public protocol SignalListener {
-    
+
     func onSignalStatusChange(_ status: SignalStatus)
-    
+
     func onNewSignal(_ type: Int, _ body: String)
-    
+
 }

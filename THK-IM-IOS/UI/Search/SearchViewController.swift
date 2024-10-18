@@ -9,15 +9,16 @@
 import UIKit
 
 class SearchViewController: BaseViewController, UITextFieldDelegate {
-    
+
     static func open(_ uiViewController: UIViewController, _ searchType: Int) {
         let searchViewController = SearchViewController()
         searchViewController.searchType = searchType
         searchViewController.hidesBottomBarWhenPushed = true
-        uiViewController.navigationController?.pushViewController(searchViewController, animated: false)
+        uiViewController.navigationController?.pushViewController(
+            searchViewController, animated: false)
     }
-    
-    var searchType = 0 // 1 搜索用户 2 搜索群
+
+    var searchType = 0  // 1 搜索用户 2 搜索群
     private let cancelButton = UIButton()
     lazy private var textInputView: UITextField = {
         let textView = UITextField()
@@ -33,7 +34,7 @@ class SearchViewController: BaseViewController, UITextFieldDelegate {
         textView.rightViewMode = .always
         return textView
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.init(hex: "#dcdcdc")
@@ -52,7 +53,7 @@ class SearchViewController: BaseViewController, UITextFieldDelegate {
         }
         self.textInputView.text = "d86s4l3scyn5"
         self.view.addSubview(self.cancelButton)
-        self.cancelButton.snp.makeConstraints {make in
+        self.cancelButton.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(statusHeight)
             make.width.equalTo(40)
             make.right.equalToSuperview().offset(-10)
@@ -61,18 +62,18 @@ class SearchViewController: BaseViewController, UITextFieldDelegate {
         self.cancelButton.setTitle("取消", for: .normal)
         self.cancelButton.setTitleColor(UIColor.init(hex: "666666"), for: .normal)
         self.cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
-        
+
         self.textInputView.becomeFirstResponder()
     }
-    
+
     override func hasTitlebar() -> Bool {
         return false
     }
-    
+
     @objc func cancelTapped() {
         self.navigationController?.popViewController(animated: true)
     }
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let keywords = textField.text else {
             return false
@@ -80,16 +81,15 @@ class SearchViewController: BaseViewController, UITextFieldDelegate {
         self.searchByKeywords(text: keywords)
         return true
     }
-    
+
     private func searchByKeywords(text: String) {
-        if (searchType == 1) {
+        if searchType == 1 {
             self.searchUser(id: text)
         } else {
             self.searchGroup(id: text)
         }
     }
-    
-    
+
     private func searchUser(id: String) {
         DataRepository.shared.userApi.rx.request(.searchUserByDisplayId(id))
             .asObservable()
@@ -103,7 +103,7 @@ class SearchViewController: BaseViewController, UITextFieldDelegate {
                 ContactUserViewController.open(sf, user)
             }).disposed(by: self.disposeBag)
     }
-    
+
     private func searchGroup(id: String) {
         DataRepository.shared.groupApi.rx.request(.searchGroup(id))
             .asObservable()
@@ -117,5 +117,5 @@ class SearchViewController: BaseViewController, UITextFieldDelegate {
                 GroupViewController.open(sf, group)
             }).disposed(by: self.disposeBag)
     }
-        
+
 }

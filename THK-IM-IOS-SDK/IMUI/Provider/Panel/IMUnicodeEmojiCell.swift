@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 
 class IMUnicodeEmojiCell: UICollectionViewCell {
-    
+
     private let labelView = UILabel()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.contentView.addSubview(labelView)
@@ -21,13 +21,13 @@ class IMUnicodeEmojiCell: UICollectionViewCell {
             make.edges.equalToSuperview()
         }
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setEmoji(_ unicode: String) {
         self.labelView.text = unicode
     }
-    
+
 }

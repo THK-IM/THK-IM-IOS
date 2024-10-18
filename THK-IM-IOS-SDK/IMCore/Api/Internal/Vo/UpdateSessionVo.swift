@@ -9,17 +9,18 @@
 import Foundation
 
 public class UpdateSessionVo: Codable {
-    
+
     var uId: Int64
     var sId: Int64
-    var top : Int64?
+    var top: Int64?
     var noteName: String?
     var noteAvatar: String?
     var status: Int?
     var parentId: Int64?
-    
+
     public init(
-        uId: Int64, sId: Int64, top: Int64? = nil, noteName: String? = nil, noteAvatar: String? = nil,
+        uId: Int64, sId: Int64, top: Int64? = nil, noteName: String? = nil,
+        noteAvatar: String? = nil,
         status: Int? = nil, parentId: Int64? = nil
     ) {
         self.uId = uId
@@ -30,8 +31,7 @@ public class UpdateSessionVo: Codable {
         self.status = status
         self.parentId = parentId
     }
-    
-    
+
     enum CodingKeys: String, CodingKey {
         case uId = "u_id"
         case sId = "s_id"

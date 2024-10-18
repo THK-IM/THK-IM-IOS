@@ -9,11 +9,14 @@
 import Foundation
 import UIKit
 
-public protocol IMPreviewer: AnyObject  {
-    
-    func previewMessage(_ controller: UIViewController, _ items: [Message], _ view: UIView, _ loadMore: Bool, _ defaultId: Int64)
-    
+public protocol IMPreviewer: AnyObject {
+
+    func previewMessage(
+        _ controller: UIViewController, _ items: [Message], _ view: UIView, _ loadMore: Bool,
+        _ defaultId: Int64)
+
     /// 预览消息记录
-    func previewRecordMessage(_ controller: UIViewController, _ originSession: Session, _ message: Message)
+    func previewRecordMessage(
+        _ controller: UIViewController, _ originSession: Session, _ message: Message)
 
 }

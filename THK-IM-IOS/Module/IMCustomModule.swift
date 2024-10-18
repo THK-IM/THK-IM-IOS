@@ -6,18 +6,20 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import Foundation
 import CocoaLumberjack
+import Foundation
 import RxSwift
 
 public enum LiveSignalType: Int {
-    case InviteLiveCall = 1,
-         HangupLiveCall = 2,
-         EndLiveCall = 3
+    case InviteLiveCall = 1
+    case
+        HangupLiveCall = 2
+    case
+        EndLiveCall = 3
 }
 
 public class LiveSignal: Codable {
-    
+
     let roomId: String
     let members: Set<Int64>
     let ownerId: Int64
@@ -25,7 +27,7 @@ public class LiveSignal: Codable {
     let createTime: Int64
     let msgType: Int
     let operatorId: Int64
-    
+
     enum CodingKeys: String, CodingKey {
         case roomId = "room_id"
         case members = "members"
@@ -35,8 +37,11 @@ public class LiveSignal: Codable {
         case msgType = "msg_type"
         case operatorId = "operator_id"
     }
-    
-    init(roomId: String, members: Set<Int64>, ownerId: Int64, mode: Int, createTime: Int64, msgType: Int, operatorId: Int64) {
+
+    init(
+        roomId: String, members: Set<Int64>, ownerId: Int64, mode: Int, createTime: Int64,
+        msgType: Int, operatorId: Int64
+    ) {
         self.roomId = roomId
         self.members = members
         self.ownerId = ownerId
@@ -48,14 +53,16 @@ public class LiveSignal: Codable {
 }
 
 class IMCustomModule: DefaultCustomModule {
-    
+
     static let liveCallSignalType = 400
-    
+
     private let disposeBag = DisposeBag()
-    
+
     override func onSignalReceived(_ type: Int, _ body: String) {
         if type == IMCustomModule.liveCallSignalType {
-            if let signal = try? JSONDecoder().decode(LiveSignal.self, from: body.data(using: .utf8) ?? Data()) {
+            if let signal = try? JSONDecoder().decode(
+                LiveSignal.self, from: body.data(using: .utf8) ?? Data())
+            {
                 DDLogInfo("IMLiveManager: onSignalReceived \(signal)")
                 let room = IMLiveManager.shared.getRoom()
                 if signal.msgType == LiveSignalType.InviteLiveCall.rawValue {
@@ -64,20 +71,23 @@ class IMCustomModule: DefaultCustomModule {
                     } else {
                         // TODO 弹出加入
                         if signal.ownerId != IMLiveManager.shared.selfId() {
-                            IMLiveManager.shared.joinRoom(roomId: signal.roomId, role: Role.Broadcaster)
-                                .compose(RxTransformer.shared.io2Main())
-                                .subscribe(onNext: { room in
-                                    let window = AppUtils.getWindow()
-                                    let vc = window?.rootViewController
-                                    if vc != nil {
-                                        LiveCallViewController.presentLiveCallViewController(vc!, room)
-                                    }
-                                }).disposed(by: self.disposeBag)
+                            IMLiveManager.shared.joinRoom(
+                                roomId: signal.roomId, role: Role.Broadcaster
+                            )
+                            .compose(RxTransformer.shared.io2Main())
+                            .subscribe(onNext: { room in
+                                let window = AppUtils.getWindow()
+                                let vc = window?.rootViewController
+                                if vc != nil {
+                                    LiveCallViewController.presentLiveCallViewController(vc!, room)
+                                }
+                            }).disposed(by: self.disposeBag)
                         }
                     }
                 } else if signal.msgType == LiveSignalType.HangupLiveCall.rawValue {
                     if room != nil {
-                        IMLiveManager.shared.onMemberHangup(roomId: signal.roomId, uId: signal.operatorId)
+                        IMLiveManager.shared.onMemberHangup(
+                            roomId: signal.roomId, uId: signal.operatorId)
                     }
                 } else if signal.msgType == LiveSignalType.EndLiveCall.rawValue {
                     if room != nil {
@@ -87,5 +97,5 @@ class IMCustomModule: DefaultCustomModule {
             }
         }
     }
-    
+
 }

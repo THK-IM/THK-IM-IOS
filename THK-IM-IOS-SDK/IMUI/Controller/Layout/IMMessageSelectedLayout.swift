@@ -6,19 +6,18 @@
 //
 
 import Foundation
-import UIKit
-import RxSwift
 import RxGesture
-
+import RxSwift
+import UIKit
 
 public class IMMessageSelectedLayout: UIView {
-    
+
     weak var sender: IMMsgSender?
     private let disposeBag = DisposeBag()
     private let iconSize = CGSize(width: 32.0, height: 32.0)
     var height = 60
-    
-    lazy private var contentView: UIStackView =  {
+
+    lazy private var contentView: UIStackView = {
         let v = UIStackView()
         v.axis = .horizontal
         v.distribution = .fillEqually
@@ -28,7 +27,7 @@ public class IMMessageSelectedLayout: UIView {
         v.addArrangedSubview(forwardButton)
         return v
     }()
-    
+
     lazy private var deleteButton: UIImageView = {
         let button = UIImageView()
         let image = ResourceUtils.loadImage(named: "ic_msg_opr_delete")?.scaledToSize(iconSize)
@@ -39,7 +38,7 @@ public class IMMessageSelectedLayout: UIView {
         }
         return button
     }()
-    
+
     lazy private var forwardButton: UIImageView = {
         let button = UIImageView()
         let image = ResourceUtils.loadImage(named: "ic_msg_opr_forward")?.scaledToSize(iconSize)
@@ -50,7 +49,7 @@ public class IMMessageSelectedLayout: UIView {
         }
         return button
     }()
-    
+
     lazy private var cancelButton: UIImageView = {
         let button = UIImageView()
         let image = ResourceUtils.loadImage(named: "ic_msg_opr_cancel")?.scaledToSize(iconSize)
@@ -61,16 +60,16 @@ public class IMMessageSelectedLayout: UIView {
         }
         return button
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupView()
     }
-    
+
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupView() {
         self.addSubview(self.contentView)
         self.contentView.snp.makeConstraints { make in
@@ -80,7 +79,7 @@ public class IMMessageSelectedLayout: UIView {
             make.right.equalToSuperview()
         }
         self.deleteButton.rx.tapGesture()
-            .subscribe(onNext: {[weak self]  event in
+            .subscribe(onNext: { [weak self] event in
                 guard let sf = self else {
                     return
                 }
@@ -88,9 +87,9 @@ public class IMMessageSelectedLayout: UIView {
                 sf.sender?.setSelectMode(false, message: nil)
             })
             .disposed(by: disposeBag)
-        
+
         self.forwardButton.rx.tapGesture()
-            .subscribe(onNext: {[weak self]  event in
+            .subscribe(onNext: { [weak self] event in
                 guard let sf = self else {
                     return
                 }
@@ -98,7 +97,7 @@ public class IMMessageSelectedLayout: UIView {
             })
             .disposed(by: disposeBag)
         self.cancelButton.rx.tapGesture()
-            .subscribe(onNext: {[weak self]  event in
+            .subscribe(onNext: { [weak self] event in
                 guard let sf = self else {
                     return
                 }
@@ -106,14 +105,16 @@ public class IMMessageSelectedLayout: UIView {
             })
             .disposed(by: disposeBag)
     }
-    
+
     func getLayoutHeight() -> Int {
         return self.height
     }
-    
+
     public override func layoutSubviews() {
         if let session = self.sender?.getSession() {
-            self.forwardButton.isHidden = !(IMUIManager.shared.uiResourceProvider?.supportFunction(session, IMChatFunction.Forward.rawValue) ?? false)
+            self.forwardButton.isHidden =
+                !(IMUIManager.shared.uiResourceProvider?.supportFunction(
+                    session, IMChatFunction.Forward.rawValue) ?? false)
         }
     }
 }

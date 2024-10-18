@@ -8,9 +8,9 @@
 import UIKit
 
 open class Bubble {
-    
+
     public init() {}
-    
+
     public func drawRectWithRoundedCorner(
         radius: CGFloat,
         borderWidth: CGFloat,
@@ -30,8 +30,9 @@ open class Bubble {
         context.setLineWidth(borderWidth)
         context.setStrokeColor(borderColor.cgColor)
         context.setFillColor(backgroundColor.cgColor)
-        
-        let width = sizeToFit.width, height = sizeToFit.height
+
+        let width = sizeToFit.width
+        let height = sizeToFit.height
         context.move(to: CGPoint(x: width - halfBorderWidth, y: radius + halfBorderWidth))
         // 右下角
         context.addArc(
@@ -61,10 +62,10 @@ open class Bubble {
         let output = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         let insets = UIEdgeInsets(
-            top: radius+borderWidth,
-            left: radius+borderWidth,
-            bottom: height-2*(radius+borderWidth),
-            right: width-2*(radius+borderWidth)
+            top: radius + borderWidth,
+            left: radius + borderWidth,
+            bottom: height - 2 * (radius + borderWidth),
+            right: width - 2 * (radius + borderWidth)
         )
         if output == nil {
             return nil
@@ -72,7 +73,7 @@ open class Bubble {
         let resize = output!.resizableImage(withCapInsets: insets, resizingMode: .stretch)
         return resize
     }
-    
+
     public func drawRectWithRoundedCorner(
         radius: CGFloat,
         borderWidth: CGFloat,
@@ -92,8 +93,9 @@ open class Bubble {
         context.setLineWidth(borderWidth)
         context.setStrokeColor(borderColor.cgColor)
         context.setFillColor(backgroundColor.cgColor)
-        
-        let width = sizeToFit.width, height = sizeToFit.height
+
+        let width = sizeToFit.width
+        let height = sizeToFit.height
         context.move(to: CGPoint(x: width - halfBorderWidth, y: radius + halfBorderWidth))
         // 右下角
         context.addArc(
@@ -123,10 +125,10 @@ open class Bubble {
         let output = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         let insets = UIEdgeInsets(
-            top: radius+borderWidth,
-            left: radius+borderWidth,
-            bottom: height-2*(radius+borderWidth),
-            right: width-2*(radius+borderWidth)
+            top: radius + borderWidth,
+            left: radius + borderWidth,
+            bottom: height - 2 * (radius + borderWidth),
+            right: width - 2 * (radius + borderWidth)
         )
         if output == nil {
             return nil

@@ -15,13 +15,12 @@ enum StreamApi {
     case requestPlay(_ bean: PlayStreamReqVo)
 }
 
-
 extension StreamApi: TargetType {
-    
+
     var baseURL: URL {
         return URL.init(string: "\(IMLiveManager.shared.liveApi.getEndpoint())/stream")!
     }
-    
+
     var path: String {
         switch self {
         case .requestPublish:
@@ -30,7 +29,7 @@ extension StreamApi: TargetType {
             return "/play"
         }
     }
-    
+
     var method: Moya.Method {
         switch self {
         case .requestPublish:
@@ -39,7 +38,7 @@ extension StreamApi: TargetType {
             return .post
         }
     }
-    
+
     var task: Moya.Task {
         switch self {
         case let .requestPublish(bean):
@@ -48,13 +47,12 @@ extension StreamApi: TargetType {
             return .requestJSONEncodable(bean)
         }
     }
-    
+
     var validationType: Moya.ValidationType {
         return .none
     }
-    
-    var headers: [String : String]? {
+
+    var headers: [String: String]? {
         return nil
     }
 }
-

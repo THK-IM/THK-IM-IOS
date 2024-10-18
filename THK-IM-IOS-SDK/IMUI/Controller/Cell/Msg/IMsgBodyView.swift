@@ -8,14 +8,15 @@
 
 import UIKit
 
-public protocol IMsgBodyView : AnyObject {
-    
-    func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool)
-    
+public protocol IMsgBodyView: AnyObject {
+
+    func setMessage(
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool)
+
     func contentView() -> UIView
-    
+
     func onViewDisappear()
-    
+
     func onViewAppear()
 }
 

@@ -6,29 +6,31 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class IMReplyView: UIView {
-    
+
     weak var sender: IMMsgSender? = nil
     private let disposeBag = DisposeBag()
     private var message: Message? = nil
-    
+
     lazy private var closeView: UIImageView = {
         let view = UIImageView()
-        view.image = ResourceUtils.loadImage(named: "ic_close")?.scaledToSize(CGSize(width: 16, height: 16))
+        view.image = ResourceUtils.loadImage(named: "ic_close")?.scaledToSize(
+            CGSize(width: 16, height: 16))
         view.contentMode = .scaleAspectFill
         return view
     }()
-    
+
     lazy private var lineView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 2
-        view.backgroundColor = IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
+        view.backgroundColor =
+            IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
         return view
     }()
-    
+
     lazy private var replyUserView: UILabel = {
         let view = UILabel()
         view.textColor = UIColor.init(hex: "333333")
@@ -37,7 +39,7 @@ class IMReplyView: UIView {
         view.numberOfLines = 1
         return view
     }()
-    
+
     lazy private var replyMsgView: UILabel = {
         let view = UILabel()
         view.textColor = UIColor.init(hex: "666666")
@@ -46,7 +48,7 @@ class IMReplyView: UIView {
         view.numberOfLines = 2
         return view
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(self.lineView)
@@ -58,15 +60,15 @@ class IMReplyView: UIView {
                 self?.sender?.closeReplyMessage()
             }).disposed(by: self.disposeBag)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setMessage(_ msg: Message) {
         self.message = msg
     }
-    
+
     func resetLayout() {
         if let msg = self.message {
             self.lineView.snp.remakeConstraints { make in
@@ -86,7 +88,7 @@ class IMReplyView: UIView {
                 make.right.equalTo(self.closeView.snp.left).offset(-6)
                 make.height.equalTo(14)
             }
-            self.replyMsgView.snp.remakeConstraints {make in
+            self.replyMsgView.snp.remakeConstraints { make in
                 make.top.equalToSuperview().offset(20)
                 make.left.equalTo(self.lineView.snp.right).offset(6)
                 make.right.equalTo(self.closeView.snp.left).offset(-6)
@@ -106,7 +108,7 @@ class IMReplyView: UIView {
                     })
                     .disposed(by: self.disposeBag)
             }
-            
+
         } else {
             self.closeView.snp.remakeConstraints { make in
                 make.height.equalToSuperview()
@@ -126,20 +128,20 @@ class IMReplyView: UIView {
             }
         }
     }
-    
+
     private func showContentView(_ nickname: String, _ msg: Message) {
         self.replyUserView.text = "\(nickname)"
-        self.replyMsgView.text = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).msgDesc(msg: msg)
+        self.replyMsgView.text = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
+            .msgDesc(msg: msg)
     }
-    
+
     func clearMessage() {
         self.message = nil
         self.resetLayout()
     }
-    
+
     func getReplyMessage() -> Message? {
         return self.message
     }
 
-    
 }

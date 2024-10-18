@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol IMMessageOperator: AnyObject {
-    func id()-> String
+    func id() -> String
     func title() -> String
     func icon() -> UIImage?
     func onClick(sender: IMMsgSender, message: Message)

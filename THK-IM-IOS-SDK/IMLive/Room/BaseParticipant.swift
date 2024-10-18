@@ -5,14 +5,14 @@
 //  Created by vizoss on 2023/8/2.
 //
 
+import CocoaLumberjack
 import Foundation
-import WebRTC
 import Moya
 import RxSwift
-import CocoaLumberjack
+import WebRTC
 
 class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate {
-    
+
     let uId: Int64
     let roomId: String
     let role: Role
@@ -24,13 +24,13 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     private var rtcVideoView: RTCMTLVideoView?
     private var audioMuted: Bool = false
     private var videoMuted: Bool = false
-    
+
     init(uId: Int64, roomId: String, role: Role) {
         self.uId = uId
         self.roomId = roomId
         self.role = role
     }
-    
+
     open func initPeerConnection() {
         let config = RTCConfiguration()
         // Unified plan is more superior than planB
@@ -43,7 +43,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
         )
         self.peerConnection = p
     }
-    
+
     open func startPeerConnection() {
         guard let p = self.peerConnection else {
             return
@@ -69,7 +69,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             }
         }
     }
-    
+
     open func onLocalSdpCreated(_ sdp: RTCSessionDescription) {
         guard let p = self.peerConnection else {
             return
@@ -86,11 +86,11 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             }
         }
     }
-    
+
     open func onLocalSdpSetSuccess(_ sdp: RTCSessionDescription) {
-        
+
     }
-    
+
     open func setRemoteSessionDescription(_ sdp: RTCSessionDescription) {
         guard let p = self.peerConnection else {
             return
@@ -101,7 +101,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             }
         }
     }
-    
+
     open func attachViewRender(_ rtcVideoView: RTCMTLVideoView) {
         DDLogInfo("peerConnection attachViewRender \(self)")
         if self.rtcVideoView != nil {
@@ -110,7 +110,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
         self.rtcVideoView = rtcVideoView
         self.attach()
     }
-    
+
     private func attach() {
         DDLogInfo("peerConnection attach \(self)")
         guard let view = self.rtcVideoView else {
@@ -120,13 +120,13 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             videoTrack.add(view)
         }
     }
-    
+
     open func detachViewRender() {
         DDLogInfo("peerConnection detachViewRender \(self)")
         self.detach()
         self.rtcVideoView = nil
     }
-    
+
     private func detach() {
         DDLogInfo("peerConnection detach \(self) \(videoTracks.count)")
         guard let view = self.rtcVideoView else {
@@ -136,20 +136,20 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             videoTrack.remove(view)
         }
     }
-    
+
     func addAudioTrack(track: RTCAudioTrack) {
         self.audioTracks.append(track)
     }
-    
+
     func addVideoTrack(track: RTCVideoTrack) {
         self.videoTracks.append(track)
         self.attach()
     }
-    
+
     func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
-    
+
     }
-    
+
     func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
         DDLogInfo("peerConnection didReceiveMessageWith \(self) \(buffer.data)")
         if buffer.isBinary {
@@ -158,14 +158,14 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             self.onNewMessage(data: buffer.data)
         }
     }
-    
+
     private func onNewBufferMessage(data: Data) {
         guard let room = IMLiveManager.shared.getRoom() else {
             return
         }
         room.receiveDcData(data)
     }
-    
+
     private func onNewMessage(data: Data) {
         guard let room = IMLiveManager.shared.getRoom() else {
             return
@@ -177,7 +177,8 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             case NotifyType.NewStream.rawValue:
                 let newStream = try JSONDecoder().decode(
                     NewStreamNotify.self, from: notify.message.data(using: .utf8) ?? Data())
-                let role = newStream.role == Role.Broadcaster.rawValue ? Role.Broadcaster: Role.Audience
+                let role =
+                    newStream.role == Role.Broadcaster.rawValue ? Role.Broadcaster : Role.Audience
                 let audioEnable = room.mode == Mode.Audio || room.mode == Mode.Video
                 let videoEnable = room.mode == Mode.Video
                 let participant = RemoteParticipant(
@@ -196,12 +197,13 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
                 let removeStream = try JSONDecoder().decode(
                     RemoveStreamNotify.self, from: notify.message.data(using: .utf8) ?? Data())
                 DispatchQueue.main.async {
-                    room.participantLeave(roomId: removeStream.roomId, streamKey: removeStream.streamKey)
+                    room.participantLeave(
+                        roomId: removeStream.roomId, streamKey: removeStream.streamKey)
                 }
                 break
             case NotifyType.DataChannelMsg.rawValue:
                 let dataChannelMsg = try JSONDecoder().decode(
-                        DataChannelMsg.self, from: notify.message.data(using: .utf8) ?? Data())
+                    DataChannelMsg.self, from: notify.message.data(using: .utf8) ?? Data())
                 DispatchQueue.main.async {
                     room.receivedDcMsg(dataChannelMsg.uId, dataChannelMsg.text)
                 }
@@ -214,36 +216,44 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             DDLogError("Participant: onNewMessage \(error)")
         }
     }
-    
-    
+
     func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
         DDLogInfo("peerConnectionShouldNegotiate \(self)")
     }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
+
+    func peerConnection(
+        _ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState
+    ) {
         DDLogInfo("peerConnection didChange RTCSignalingState: \(stateChanged) \(self)")
-        
+
     }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
+
+    func peerConnection(
+        _ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState
+    ) {
         DDLogInfo("peerConnection didChange RTCIceConnectionState: \(newState) \(self)")
     }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCPeerConnectionState) {
-        DDLogInfo("peerConnection didChange RTCPeerConnectionState: \(newState.rawValue), \(RTCPeerConnectionState.connected.rawValue) \(self)")
+
+    func peerConnection(
+        _ peerConnection: RTCPeerConnection, didChange newState: RTCPeerConnectionState
+    ) {
+        DDLogInfo(
+            "peerConnection didChange RTCPeerConnectionState: \(newState.rawValue), \(RTCPeerConnectionState.connected.rawValue) \(self)"
+        )
         switch newState {
         case RTCPeerConnectionState.new, RTCPeerConnectionState.connecting:
             break
         case RTCPeerConnectionState.connected:
             break
-        case RTCPeerConnectionState.closed, RTCPeerConnectionState.disconnected, RTCPeerConnectionState.failed:
+        case RTCPeerConnectionState.closed, RTCPeerConnectionState.disconnected,
+            RTCPeerConnectionState.failed:
             self.onDisconnected()
             break
         default:
             break
         }
     }
-    
+
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
         DDLogInfo("peerConnection didRemove RTCMediaStream \(self)")
         if self is RemoteParticipant {
@@ -262,7 +272,7 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             }
         }
     }
-    
+
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
         DDLogInfo("peerConnection didAdd RTCMediaStream \(self)")
         if self is RemoteParticipant {
@@ -273,32 +283,41 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             }
         }
     }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver, streams mediaStreams: [RTCMediaStream]) {
+
+    func peerConnection(
+        _ peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver,
+        streams mediaStreams: [RTCMediaStream]
+    ) {
         DDLogInfo("peerConnection didAdd RTCRtpReceiver \(self)")
     }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove rtpReceiver: RTCRtpReceiver) {
+
+    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove rtpReceiver: RTCRtpReceiver)
+    {
         DDLogInfo("peerConnection didRemove RTCRtpReceiver \(self)")
     }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
+
+    func peerConnection(
+        _ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState
+    ) {
         DDLogInfo("peerConnection didChange RTCIceGatheringState: \(newState)")
     }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
+
+    func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate)
+    {
         DDLogInfo("peerConnection didGenerate RTCIceCandidate: \(candidate)")
     }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
+
+    func peerConnection(
+        _ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]
+    ) {
         DDLogInfo("peerConnection didRemove RTCIceCandidate: \(candidates)")
     }
-    
+
     func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
         self.dataChannels[dataChannel.label] = dataChannel
         dataChannel.delegate = self
     }
-    
+
     func pushStreamKey() -> String? {
         return nil
     }
@@ -306,30 +325,29 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
     func playStreamKey() -> String? {
         return nil
     }
-    
+
     func setVideoMuted(_ muted: Bool) {
         for t in self.videoTracks {
             t.isEnabled = !muted
         }
         videoMuted = muted
     }
-    
+
     func getVideoMuted() -> Bool {
         return videoMuted
     }
-    
+
     func setAudioMuted(_ muted: Bool) {
         for t in self.audioTracks {
             t.isEnabled = !muted
         }
         audioMuted = muted
     }
-    
+
     func getAudioMuted() -> Bool {
         return audioMuted
     }
-    
-    
+
     open func onDisconnected() {
         self.detachViewRender()
         self.videoTracks.removeAll()
@@ -339,10 +357,10 @@ class BaseParticipant: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelega
             dc.close()
         }
     }
-    
+
     open func leave() {
         self.peerConnection?.close()
         self.peerConnection = nil
     }
-    
+
 }

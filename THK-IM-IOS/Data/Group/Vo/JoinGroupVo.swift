@@ -13,12 +13,12 @@ class JoinGroupVo: Codable {
     var uId: Int64
     var channel: Int
     var content: String
-    
+
     enum CodingKeys: String, CodingKey {
         case groupId = "group_id"
         case uId = "u_id"
         case channel = "channel"
         case content = "content"
     }
-    
+
 }

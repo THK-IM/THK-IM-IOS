@@ -6,35 +6,38 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
 import CocoaLumberjack
 import RxSwift
+import UIKit
 
 open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
-    
+
     private var disposeBag = DisposeBag()
     private weak var delegate: IMMsgCellOperator?
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
+
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    public func setMessage(_ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool = false) {
+
+    public func setMessage(
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
+        _ isReply: Bool = false
+    ) {
         self.delegate = delegate
         guard var content = message.content else {
             return
         }
-        let updated = message.operateStatus&MsgOperateStatus.Update.rawValue > 0
-        if (message.atUsers != nil && message.atUsers!.length > 0) {
+        let updated = message.operateStatus & MsgOperateStatus.Update.rawValue > 0
+        if message.atUsers != nil && message.atUsers!.length > 0 {
             content = self.replaceIdToNickname(content, message.getAtUIds())
         }
         render(content, updated)
     }
-    
+
     private func replaceIdToNickname(_ content: String, _ atUIds: Set<Int64>) -> String {
         let content = AtStringUtils.replaceAtUIdsToNickname(content, atUIds) { [weak self] id in
             if let member = self?.delegate?.msgSender()?.syncGetSessionMemberInfo(id) {
@@ -44,8 +47,7 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         }
         return content
     }
-    
-    
+
     private func render(_ data: String, _ updated: Bool) {
         guard let regex = try? NSRegularExpression(pattern: AtStringUtils.atRegular) else {
             return
@@ -58,7 +60,8 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
             range.location -= 1
             contentAttributedStr.addAttribute(
                 .foregroundColor,
-                value: IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4"),
+                value: IMUIManager.shared.uiResourceProvider?.tintColor()
+                    ?? UIColor.init(hex: "#1390f4"),
                 range: range
             )
             contentAttributedStr.addAttribute(
@@ -67,8 +70,8 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
                 range: range
             )
         }
-        
-        if (updated) {
+
+        if updated {
             let editStr = ResourceUtils.loadString("edited", comment: "")
             let editAttributedStr = NSMutableAttributedString(string: editStr)
             let editRange = NSRange(editStr.startIndex..<editStr.endIndex, in: editStr)
@@ -86,7 +89,7 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         }
         self.attributedText = contentAttributedStr
     }
-    
+
     public func contentView() -> UIView {
         return self
     }

@@ -9,8 +9,7 @@
 import Foundation
 
 protocol LiveCallProtocol: AnyObject {
-   
-    
+
     /**
      * 扬声器是否打开
      */
@@ -24,7 +23,7 @@ protocol LiveCallProtocol: AnyObject {
     /**
      * 获取本地摄像头: 0 未知, 1 后置, 2 前置
      */
-    func currentLocalCamera()-> Int
+    func currentLocalCamera() -> Int
 
     /**
      * 切换本地摄像头
@@ -36,7 +35,7 @@ protocol LiveCallProtocol: AnyObject {
      */
     func muteLocalVideo(mute: Bool)
 
-    func isLocalVideoMuted()-> Bool
+    func isLocalVideoMuted() -> Bool
 
     /**
      * 打开/关闭本地音频
@@ -46,7 +45,7 @@ protocol LiveCallProtocol: AnyObject {
     /**
      * 本地音频是否关闭
      */
-    func isLocalAudioMuted()-> Bool
+    func isLocalAudioMuted() -> Bool
 
     /**
      * 打开/关闭远端音频
@@ -56,7 +55,7 @@ protocol LiveCallProtocol: AnyObject {
     /**
      * 远端音频是否关闭
      */
-    func isRemoteAudioMuted(uId: Int64)-> Bool
+    func isRemoteAudioMuted(uId: Int64) -> Bool
 
     /**
      * 打开/关闭远端视频
@@ -67,15 +66,15 @@ protocol LiveCallProtocol: AnyObject {
      * 远端视频是否关闭
      */
     func isRemoteVideoMuted(uId: Int64) -> Bool
-    
+
     /**
      * 接听
      */
     func accept()
-    
+
     /**
      * 挂断
      */
     func hangup()
-    
+
 }

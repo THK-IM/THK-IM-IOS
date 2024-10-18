@@ -5,14 +5,14 @@
 //  Created by vizoss on 2023/7/5.
 //
 
-import UIKit
-import CocoaLumberjack
 import AVFoundation
+import CocoaLumberjack
+import UIKit
 
 class IMSpeakView: UILabel {
-    
+
     weak var sender: IMMsgSender?
-    
+
     private var hasTouchOutside = false
     private var recordingDb: Double = 0.0
     private let imageVolume1 = ResourceUtils.loadImage(named: "ic_volume_1")
@@ -20,8 +20,7 @@ class IMSpeakView: UILabel {
     private let imageVolume3 = ResourceUtils.loadImage(named: "ic_volume_3")
     private let imageVolume4 = ResourceUtils.loadImage(named: "ic_volume_4")
     private let imageVolume5 = ResourceUtils.loadImage(named: "ic_volume_5")
-    
-    
+
     private lazy var rootView: UIView = {
         var root = self.superview
         while root?.superview != nil {
@@ -29,12 +28,12 @@ class IMSpeakView: UILabel {
         }
         return root!
     }()
-    
+
     private lazy var recordingDBView: UIImageView = {
         let db = UIImageView()
         return db
     }()
-    
+
     private lazy var recordingTipsView: UILabel = {
         let tips = UILabel()
         tips.font = UIFont.systemFont(ofSize: 16.0)
@@ -42,7 +41,7 @@ class IMSpeakView: UILabel {
         tips.textAlignment = .center
         return tips
     }()
-    
+
     private lazy var recordingPopup: UIView = {
         let popup = UIView()
         popup.backgroundColor = UIColor.black.withAlphaComponent(0.8)
@@ -54,8 +53,8 @@ class IMSpeakView: UILabel {
             make.centerX.equalToSuperview()
             make.size.equalTo(60)
         }
-        
-        popup.addSubview(self.recordingTipsView) 
+
+        popup.addSubview(self.recordingTipsView)
         self.recordingTipsView.snp.makeConstraints { make in
             make.height.equalTo(30)
             make.left.equalToSuperview()
@@ -64,7 +63,7 @@ class IMSpeakView: UILabel {
         }
         return popup
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.font = UIFont.boldSystemFont(ofSize: 16.0)
@@ -75,18 +74,18 @@ class IMSpeakView: UILabel {
         self.isUserInteractionEnabled = true
         self.isMultipleTouchEnabled = true
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.checkLocation(touches, with: event)
         let permission = AVAudioSession.sharedInstance().recordPermission
         if permission == .granted {
             self.startRecord()
         } else if permission == .undetermined {
-            AVAudioSession.sharedInstance().requestRecordPermission {_ in
+            AVAudioSession.sharedInstance().requestRecordPermission { _ in
             }
         } else {
             self.sender?.showSenderMessage(
@@ -99,9 +98,9 @@ class IMSpeakView: UILabel {
                 }
             }
         }
-        
+
     }
-    
+
     private func startRecord() {
         let started = self.startRecordAudio()
         if started {
@@ -114,22 +113,22 @@ class IMSpeakView: UILabel {
             )
         }
     }
-    
+
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.checkLocation(touches, with: event)
         self.layoutRecording()
     }
-    
+
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.checkLocation(touches, with: event)
         self.resetUI()
     }
-    
+
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.checkLocation(touches, with: event)
         self.resetUI()
     }
-    
+
     private func checkLocation(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {
             return
@@ -137,7 +136,7 @@ class IMSpeakView: UILabel {
         let location = touch.location(in: self)
         self.hasTouchOutside = !CGRectContainsPoint(self.bounds, location)
     }
-    
+
     private func showTipsPopup() {
         // Customize config using the default as a base.
         self.rootView.insertSubview(self.recordingPopup, at: 2)
@@ -146,21 +145,23 @@ class IMSpeakView: UILabel {
             make.size.equalTo(160)
         }
     }
-    
+
     private func dismissTipsPopup() {
         self.recordingPopup.removeFromSuperview()
         self.endRecordAudio()
     }
-    
+
     private func layoutRecording() {
         DispatchQueue.main.async { [weak self] in
             guard let sf = self else {
                 return
             }
-            if (sf.hasTouchOutside) {
-                sf.recordingTipsView.text = ResourceUtils.loadString("release_to_cancel", comment: "")
+            if sf.hasTouchOutside {
+                sf.recordingTipsView.text = ResourceUtils.loadString(
+                    "release_to_cancel", comment: "")
             } else {
-                sf.recordingTipsView.text = ResourceUtils.loadString("release_to_send_voice", comment: "")
+                sf.recordingTipsView.text = ResourceUtils.loadString(
+                    "release_to_send_voice", comment: "")
             }
             if sf.recordingDb <= 45 {
                 sf.recordingDBView.image = sf.imageVolume1
@@ -175,18 +176,18 @@ class IMSpeakView: UILabel {
             }
         }
     }
-    
+
     private func startUI() {
         self.text = ResourceUtils.loadString("release_to_cancel", comment: "")
         self.backgroundColor = UIColor.init(hex: "CCCCCC")
     }
-    
+
     private func resetUI() {
         self.text = ResourceUtils.loadString("press_for_record_voice", comment: "")
         self.backgroundColor = UIColor.white
         self.dismissTipsPopup()
     }
-    
+
     func startRecordAudio() -> Bool {
         guard let session = self.sender?.getSession() else {
             return false
@@ -208,11 +209,12 @@ class IMSpeakView: UILabel {
                 return
             }
             if stopped {
-                if (!sf.hasTouchOutside) {
+                if !sf.hasTouchOutside {
                     // 发送
                     if duration < 2000 {
                         sf.sender?.showSenderMessage(
-                            text: ResourceUtils.loadString("record_duration_too_short", comment: ""), success: false
+                            text: ResourceUtils.loadString(
+                                "record_duration_too_short", comment: ""), success: false
                         )
                         IMCoreManager.shared.storageModule.removeFile(path)
                     } else {
@@ -232,19 +234,17 @@ class IMSpeakView: UILabel {
             }
         }
     }
-    
+
     func sendAudioMsg(duration: Int, path: String) {
         DispatchQueue.main.async { [weak self] in
             let audioData = IMAudioMsgData(path: path, duration: duration)
             self?.sender?.sendMessage(MsgType.Audio.rawValue, nil, audioData, nil)
         }
     }
-    
+
     func endRecordAudio() {
         if OggOpusAudioRecorder.shared.isRecording() {
             OggOpusAudioRecorder.shared.stopRecording()
         }
     }
 }
-
-

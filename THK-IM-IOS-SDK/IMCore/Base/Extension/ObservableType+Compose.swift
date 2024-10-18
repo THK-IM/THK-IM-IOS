@@ -13,14 +13,14 @@ public struct ObservableTransformer<T, R> {
     public init(_ transformer: @escaping (Observable<T>) -> Observable<R>) {
         self.transformer = transformer
     }
-    
+
     public func call(_ observable: Observable<T>) -> Observable<R> {
         return transformer(observable)
     }
 }
 
-public extension ObservableType {
-    func compose<R>(_ transformer: ObservableTransformer<Element, R>) -> Observable<R> {
+extension ObservableType {
+    public func compose<R>(_ transformer: ObservableTransformer<Element, R>) -> Observable<R> {
         return transformer.call(self.asObservable())
     }
 }

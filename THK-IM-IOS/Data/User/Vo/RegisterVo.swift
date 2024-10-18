@@ -11,11 +11,10 @@ import Foundation
 class RegisterVo: Codable {
     var token: String
     var user: UserVo
-    
+
     enum CodingKeys: String, CodingKey {
         case token = "token"
         case user = "user"
     }
-    
-}
 
+}

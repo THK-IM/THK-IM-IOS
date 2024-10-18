@@ -7,15 +7,14 @@
 
 import Foundation
 
+public class ListVo<T: Codable>: Codable {
 
-public class ListVo<T: Codable> : Codable {
-    
-    public var data: Array<T>
-    
-    public init(data: Array<T>) {
+    public var data: [T]
+
+    public init(data: [T]) {
         self.data = data
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case data = "data"
     }

@@ -9,15 +9,15 @@
 import Foundation
 
 public protocol GroupDao {
-    
+
     func insertOrReplace(_ groups: [Group]) throws
-    
+
     func insertOrIgnore(_ groups: [Group]) throws
-    
+
     func deleteByIds(_ ids: Set<Int64>) throws
-    
-    func findAll() -> Array<Group>
-    
+
+    func findAll() -> [Group]
+
     func findById(_ id: Int64) -> Group?
-    
+
 }

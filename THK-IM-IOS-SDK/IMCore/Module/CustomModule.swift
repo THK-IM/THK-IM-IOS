@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol CustomModule : BaseModule {
-    
+public protocol CustomModule: BaseModule {
+
 }

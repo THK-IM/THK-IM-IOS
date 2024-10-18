@@ -5,16 +5,15 @@
 //  Created by vizoss on 2023/5/20.
 //
 
-import Foundation
-import Starscream
 import Alamofire
 import CocoaLumberjack
+import Foundation
+import Starscream
 
 public class DefaultSignalModule: SignalModule, WebSocketDelegate {
-    
-    
+
     private var token = ""
-    private  var signalListener : SignalListener?
+    private var signalListener: SignalListener?
     private let reachabilityManager = NetworkReachabilityManager.init()
     private var status = SignalStatus.Init
     private var webSocketUrl = ""
@@ -23,20 +22,20 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     private let reconnectInterval: Float = 3.0
     private let heatBeatInterval = 10
     private let lock = NSLock.init()
-    
+
     private var hearBeatTask: GCDTask?
     private var timeoutTask: GCDTask?
     private var reconnectTask: GCDTask?
-    
-    public init( _ token: String, _ webSocketUrl: String) {
+
+    public init(_ token: String, _ webSocketUrl: String) {
         self.webSocketUrl = webSocketUrl
         self.token = token
     }
-    
+
     public func connect() {
         DDLogDebug("DefaultSignalModule: connect start, status: \(self.status) ")
         lock.lock()
-        defer {lock.unlock()}
+        defer { lock.unlock() }
         if self.status == SignalStatus.Connecting || self.status == SignalStatus.Connected {
             return
         }
@@ -46,17 +45,20 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
         self.onStateChange(SignalStatus.Connecting)
         var request = URLRequest(url: URL(string: self.webSocketUrl)!)
         request.timeoutInterval = connectTimeout
-        request.setValue(AppUtils.getDeviceName(), forHTTPHeaderField: APITokenInterceptor.deviceKey)
-        request.setValue(AppUtils.getTimezone(), forHTTPHeaderField: APITokenInterceptor.timezoneKey)
+        request.setValue(
+            AppUtils.getDeviceName(), forHTTPHeaderField: APITokenInterceptor.deviceKey)
+        request.setValue(
+            AppUtils.getTimezone(), forHTTPHeaderField: APITokenInterceptor.timezoneKey)
         request.setValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.versionKey)
-        request.setValue(AppUtils.getLanguage(), forHTTPHeaderField: APITokenInterceptor.languageKey)
+        request.setValue(
+            AppUtils.getLanguage(), forHTTPHeaderField: APITokenInterceptor.languageKey)
         request.setValue("IOS", forHTTPHeaderField: APITokenInterceptor.platformKey)
         request.setValue(token, forHTTPHeaderField: APITokenInterceptor.tokenKey)
         self.webSocketClient = WebSocket(request: request)
         self.webSocketClient?.delegate = self
         self.webSocketClient?.connect()
     }
-    
+
     private func startTimeoutTask() {
         GCDTool.gcdCancel(self.timeoutTask)
         self.timeoutTask = GCDTool.gcdDelay(TimeInterval(connectTimeout)) { [weak self] in
@@ -64,17 +66,17 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
                 return
             }
             DDLogDebug("DefaultSignalModule startTimeoutTask status \(sf.status)")
-            if sf.status == SignalStatus.Connecting  {
+            if sf.status == SignalStatus.Connecting {
                 sf.onStateChange(SignalStatus.DisConnected)
             }
         }
     }
-    
+
     private func cancelTimeoutTask() {
         GCDTool.gcdCancel(self.timeoutTask)
         self.timeoutTask = nil
     }
-    
+
     private func startReconnectTask() {
         GCDTool.gcdCancel(self.reconnectTask)
         DDLogDebug("DefaultSignalModule startReconnectTask \(self.status)")
@@ -85,12 +87,12 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             sf.connect()
         }
     }
-    
+
     private func cancelReconnectTask() {
         GCDTool.gcdCancel(self.reconnectTask)
         self.reconnectTask = nil
     }
-    
+
     private func startHeatBeatTask() {
         GCDTool.gcdCancel(self.hearBeatTask)
         self.hearBeatTask = GCDTool.gcdDelay(TimeInterval(heatBeatInterval)) { [weak self] in
@@ -103,12 +105,12 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             }
         }
     }
-    
+
     private func cancelHeatBeatTask() {
         GCDTool.gcdCancel(self.hearBeatTask)
         self.hearBeatTask = nil
     }
-    
+
     private func onTextMessage(_ message: String) {
         DispatchQueue.global().async { [weak self] in
             guard let sf = self else {
@@ -130,7 +132,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             }
         }
     }
-    
+
     public func disconnect(_ reason: String) {
         lock.lock()
         self.webSocketClient?.forceDisconnect()
@@ -138,20 +140,19 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
         self.status = SignalStatus.DisConnected
         lock.unlock()
     }
-    
+
     public func getSignalStatus() -> SignalStatus {
         lock.lock()
         defer { lock.unlock() }
         return self.status
     }
-    
+
     public func setSignalListener(_ listener: SignalListener) {
         lock.lock()
         defer { lock.unlock() }
         self.signalListener = listener
     }
-    
-    
+
     public func sendSignal(_ signal: String) {
         lock.lock()
         defer { lock.unlock() }
@@ -164,9 +165,9 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             self.webSocketClient?.write(string: msg)
         }
     }
-    
-    
-    public func didReceive(event: Starscream.WebSocketEvent, client: any Starscream.WebSocketClient) {
+
+    public func didReceive(event: Starscream.WebSocketEvent, client: any Starscream.WebSocketClient)
+    {
         switch event {
         case .connected:
             DDLogDebug("DefaultSignalModule: connected")
@@ -203,7 +204,8 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             onStateChange(SignalStatus.DisConnected)
             break
         case .error(let error):
-            DDLogDebug("DefaultSignalModule: error: \(error ?? CocoaError.error(.coderInvalidValue))")
+            DDLogDebug(
+                "DefaultSignalModule: error: \(error ?? CocoaError.error(.coderInvalidValue))")
             onStateChange(SignalStatus.DisConnected)
             break
         case .peerClosed:
@@ -212,24 +214,24 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             break
         }
     }
-    
+
     private func onStateChange(_ status: SignalStatus) {
         DDLogDebug("DefaultSignalModule: onStateChange \(status)")
-        if (self.status != status) {
+        if self.status != status {
             self.status = status
             self.signalListener?.onSignalStatusChange(status)
-            
-            if (self.status == SignalStatus.Connecting) {
+
+            if self.status == SignalStatus.Connecting {
                 // 连接中，只跑超时任务
                 cancelHeatBeatTask()
                 cancelReconnectTask()
                 startTimeoutTask()
-            } else if (self.status == SignalStatus.DisConnected) {
+            } else if self.status == SignalStatus.DisConnected {
                 // 连接断开，只跑重连任务
                 cancelTimeoutTask()
                 cancelHeatBeatTask()
                 startReconnectTask()
-            } else if (self.status == SignalStatus.Connected) {
+            } else if self.status == SignalStatus.Connected {
                 // 连接成功，只跑心跳任务
                 cancelTimeoutTask()
                 cancelReconnectTask()
@@ -237,5 +239,5 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
             }
         }
     }
-    
+
 }

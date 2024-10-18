@@ -6,14 +6,13 @@
 //
 
 import Foundation
-
 import Moya
 
 enum IMMessageApi {
     /// 发送消息
     case sendMsg(_ req: MessageVo)
     /// 查询最新消息
-    case queryLatestMsg(_ uId: Int64, _ offset :Int, _ count: Int, _ cTime: Int64)
+    case queryLatestMsg(_ uId: Int64, _ offset: Int, _ count: Int, _ cTime: Int64)
     /// 消息ack
     case ackMsgs(_ req: AckMsgVo)
     /// 已读消息
@@ -28,13 +27,12 @@ enum IMMessageApi {
     case deleteMsgs(_ req: DeleteMsgVo)
 }
 
-
 extension IMMessageApi: TargetType {
-    
+
     var baseURL: URL {
         return URL.init(string: "\(IMCoreManager.shared.api.getEndpoint())")!
     }
-    
+
     var path: String {
         switch self {
         case .sendMsg:
@@ -55,7 +53,7 @@ extension IMMessageApi: TargetType {
             return "/message"
         }
     }
-    
+
     var method: Moya.Method {
         switch self {
         case .sendMsg:
@@ -76,13 +74,14 @@ extension IMMessageApi: TargetType {
             return .delete
         }
     }
-    
+
     var task: Moya.Task {
         switch self {
         case let .sendMsg(req):
             return .requestJSONEncodable(req)
         case let .queryLatestMsg(uId, offset, count, cTime):
-            let urlParameters = ["u_id": uId, "offset": offset, "count": count, "c_time": cTime] as [String : Any]
+            let urlParameters =
+                ["u_id": uId, "offset": offset, "count": count, "c_time": cTime] as [String: Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         case let .ackMsgs(req):
             return .requestJSONEncodable(req)
@@ -98,12 +97,12 @@ extension IMMessageApi: TargetType {
             return .requestJSONEncodable(req)
         }
     }
-    
+
     var validationType: Moya.ValidationType {
         return .none
     }
-    
-    var headers: [String : String]? {
+
+    var headers: [String: String]? {
         return nil
     }
 }

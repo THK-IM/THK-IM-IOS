@@ -10,24 +10,28 @@ import Foundation
 import UIKit
 
 public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
-    
+
     override public func messageType() -> Int {
         return MsgType.Record.rawValue
     }
-    
-    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper) -> IMBaseMsgCell {
+
+    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper)
+        -> IMBaseMsgCell
+    {
         let identifier = self.identifier(viewType)
         return IMRecordMsgCell(identifier, wrapper)
     }
-    
+
     open override func hasBubble() -> Bool {
         return true
     }
-    
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView {
-        let view = IMRecordMsgView(frame:.null)
+
+    open override func replyMsgView(
+        _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
+    ) -> IMsgBodyView {
+        let view = IMRecordMsgView(frame: .null)
         view.setMessage(msg, session, delegate)
         return view
     }
-    
+
 }

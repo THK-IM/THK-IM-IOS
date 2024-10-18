@@ -7,8 +7,7 @@
 
 import UIKit
 
-
-public protocol IMMsgPreviewer : AnyObject {
+public protocol IMMsgPreviewer: AnyObject {
     ///  预览消息
     func previewMessage(_ msg: Message, _ position: Int, _ originView: UIView)
 }

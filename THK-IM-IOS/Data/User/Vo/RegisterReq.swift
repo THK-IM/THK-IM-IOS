@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 class RegisterReq: Codable {
     var account: String?
     var password: String?
@@ -16,7 +15,7 @@ class RegisterReq: Codable {
     var avatar: String?
     var sex: Int?
     var birthday: Int64?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case password = "password"

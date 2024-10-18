@@ -5,8 +5,8 @@
 //  Created by vizoss on 2023/5/13.
 //
 
-import Foundation
 import CocoaLumberjack
+import Foundation
 import RxSwift
 
 open class IMCoreManager: SignalListener {
@@ -23,7 +23,7 @@ open class IMCoreManager: SignalListener {
             return self._fileLoadModule!
         }
     }
-    
+
     private var _storageModule: StorageModule?
     public var storageModule: StorageModule {
         set {
@@ -33,7 +33,7 @@ open class IMCoreManager: SignalListener {
             return self._storageModule!
         }
     }
-    
+
     private var _api: IMApi?
     public var api: IMApi {
         set {
@@ -43,7 +43,7 @@ open class IMCoreManager: SignalListener {
             return self._api!
         }
     }
-    
+
     private var _signalModule: SignalModule?
     public var signalModule: SignalModule {
         set {
@@ -53,10 +53,9 @@ open class IMCoreManager: SignalListener {
             return self._signalModule!
         }
     }
-    
-    
+
     private var _database: IMDatabase?
-    public var database : IMDatabase{
+    public var database: IMDatabase {
         set {
             self._database = newValue
         }
@@ -64,24 +63,22 @@ open class IMCoreManager: SignalListener {
             return self._database!
         }
     }
-    
+
     public var uId: Int64 = 0
-    
-    public var severTime : Int64 {
-        get {
-            return commonModule.getSeverTime()
-        }
+
+    public var severTime: Int64 {
+        return commonModule.getSeverTime()
     }
-    
+
     public var commonModule: CommonModule
     public var userModule: UserModule
     public var contactModule: ContactModule
     public var groupModule: GroupModule
     public var messageModule: MessageModule
     public var customModule: CustomModule
-    
+
     public var crypto: Crypto?
-    
+
     private init() {
         self.commonModule = DefaultCommonModule()
         self.userModule = DefaultUserModule()
@@ -90,15 +87,15 @@ open class IMCoreManager: SignalListener {
         self.messageModule = DefaultMessageModule()
         self.customModule = DefaultCustomModule()
     }
-    
+
     private func initIMLog() {
-        DDLog.add(DDOSLogger.sharedInstance) // Uses os_log
-        let fileLogger: DDFileLogger = DDFileLogger() // File Logger
-        fileLogger.rollingFrequency = 60 * 60 * 24 // 24 hours
+        DDLog.add(DDOSLogger.sharedInstance)  // Uses os_log
+        let fileLogger: DDFileLogger = DDFileLogger()  // File Logger
+        fileLogger.rollingFrequency = 60 * 60 * 24  // 24 hours
         fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.add(fileLogger)
     }
-    
+
     public func initApplication(_ debug: Bool = true) {
         self.debug = debug
         if self.debug {
@@ -106,60 +103,60 @@ open class IMCoreManager: SignalListener {
         }
         self.initIMLog()
     }
-    
-    public func initUser(_ uId :Int64) {
-        if (uId < 0) {
+
+    public func initUser(_ uId: Int64) {
+        if uId < 0 {
             return
         }
-        if (self.uId == uId) {
+        if self.uId == uId {
             if self._database == nil {
                 self._database = DefaultIMDatabase(uId, debug)
                 self._database?.open()
             }
             return
         }
-        
-        if (self.uId != 0) {
+
+        if self.uId != 0 {
             self.shutDown()
         }
-        
+
         self.uId = uId
         self._database = DefaultIMDatabase(uId, debug)
         self.database.open()
         self._storageModule = DefaultStorageModule(uId)
         self.connect()
     }
-    
+
     private func connect() {
         self._signalModule?.setSignalListener(self)
         self._signalModule?.connect()
     }
-    
+
     public func onSignalStatusChange(_ status: SignalStatus) {
-        if (status == SignalStatus.Connected) {
+        if status == SignalStatus.Connected {
             messageModule.syncLatestSessionsFromServer()
             messageModule.syncOfflineMessages()
             contactModule.syncContacts()
         }
         SwiftEventBus.post(IMEvent.OnlineStatusUpdate.rawValue, sender: status)
     }
-    
+
     public func onNewSignal(_ type: Int, _ body: String) {
-        if (type == SignalType.SignalNewMessage.rawValue) {
+        if type == SignalType.SignalNewMessage.rawValue {
             messageModule.onSignalReceived(type, body)
-        } else if (type < 100) {
+        } else if type < 100 {
             commonModule.onSignalReceived(type, body)
-        } else if (type < 200) {
+        } else if type < 200 {
             userModule.onSignalReceived(type, body)
-        } else if (type < 300) {
+        } else if type < 300 {
             contactModule.onSignalReceived(type, body)
-        } else if (type < 400) {
+        } else if type < 400 {
             groupModule.onSignalReceived(type, body)
         } else {
             customModule.onSignalReceived(type, body)
         }
     }
-    
+
     public func shutDown() {
         fileLoadModule.reset()
         messageModule.reset()
@@ -167,5 +164,5 @@ open class IMCoreManager: SignalListener {
         _database?.close()
         self.uId = 0
     }
-    
+
 }

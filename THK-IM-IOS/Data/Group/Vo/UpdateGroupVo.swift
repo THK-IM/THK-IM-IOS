@@ -16,7 +16,7 @@ class UpdateGroupVo: Codable {
     var announce: String?
     var extData: String?
     var enterFlag: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case groupId = "group_id"
         case uId = "u_id"
@@ -26,5 +26,5 @@ class UpdateGroupVo: Codable {
         case extData = "ext_data"
         case enterFlag = "enter_flag"
     }
-    
+
 }

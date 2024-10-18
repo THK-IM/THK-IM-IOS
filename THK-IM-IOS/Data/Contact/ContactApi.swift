@@ -21,12 +21,11 @@ enum ContactApi {
     case queryLatestContactList(_ uId: Int64, _ mTime: Int64, _ count: Int, _ offset: Int)
 }
 
-
 extension ContactApi: TargetType {
     var baseURL: URL {
         return URL.init(string: "\(DataRepository.shared.getApiHost(type: "contact"))")!
     }
-    
+
     var path: String {
         switch self {
         case .updateNoteName(_):
@@ -49,7 +48,7 @@ extension ContactApi: TargetType {
             return "/contact/latest"
         }
     }
-    
+
     var method: Moya.Method {
         switch self {
         case .updateNoteName(_):
@@ -72,7 +71,7 @@ extension ContactApi: TargetType {
             return .get
         }
     }
-    
+
     var task: Moya.Task {
         switch self {
         case let .updateNoteName(req):
@@ -92,13 +91,14 @@ extension ContactApi: TargetType {
         case let .createContactSession(req):
             return .requestJSONEncodable(req)
         case let .queryLatestContactList(uId, mTime, count, offset):
-            let urlParameters = ["u_id": uId, "m_time": mTime, "count": count, "offset": offset] as [String : Any]
+            let urlParameters =
+                ["u_id": uId, "m_time": mTime, "count": count, "offset": offset] as [String: Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         }
     }
-    
-    var headers: [String : String]? {
+
+    var headers: [String: String]? {
         return nil
     }
-    
+
 }

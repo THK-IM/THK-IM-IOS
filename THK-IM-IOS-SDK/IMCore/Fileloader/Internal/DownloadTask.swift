@@ -6,19 +6,19 @@
 //  Copyright © 2023 THK. All rights reserved.
 //
 
-import Foundation
 import Alamofire
 import CocoaLumberjack
+import Foundation
 
 class DownloadTask: LoadTask {
-    
+
     private var request: DownloadRequest?
     private let key: String
     private let downLoadParam: String
     private let tmpFilePath: String
     private let filePath: String
     private weak var fileModule: DefaultFileLoadModule?
-    
+
     init(fileModule: DefaultFileLoadModule, key: String, downLoadParam: String) {
         self.fileModule = fileModule
         self.key = key
@@ -27,13 +27,13 @@ class DownloadTask: LoadTask {
         self.tmpFilePath = fileModule.cacheDirPath + "/\(hashUrl).tmp"
         self.filePath = fileModule.cacheDirPath + "/\(hashUrl)"
     }
-    
+
     func start() {
-        if (FileManager.default.fileExists(atPath: self.filePath)) {
+        if FileManager.default.fileExists(atPath: self.filePath) {
             notify(progress: 100, state: FileLoadState.Success.rawValue)
             return
         }
-        if (FileManager.default.fileExists(atPath: self.tmpFilePath)) {
+        if FileManager.default.fileExists(atPath: self.tmpFilePath) {
             do {
                 try FileManager.default.removeItem(atPath: self.tmpFilePath)
             } catch {
@@ -42,42 +42,57 @@ class DownloadTask: LoadTask {
             }
         }
         guard let fileLoadModule = self.fileModule else {
-            notify(progress: 0, state: FileLoadState.Failed.rawValue, err: CocoaError.init(.executableNotLoadable))
+            notify(
+                progress: 0, state: FileLoadState.Failed.rawValue,
+                err: CocoaError.init(.executableNotLoadable))
             return
         }
         let tempFileURL = NSURL(fileURLWithPath: tmpFilePath) as URL
         let fileUrl = NSURL(fileURLWithPath: self.filePath) as URL
         self.notify(progress: 0, state: FileLoadState.Init.rawValue)
-        let redirector = Redirector(behavior: .modify({ [weak self] task, request, response  -> URLRequest? in
-            guard let location = response.headers["Location"] else {
-                return nil
-            }
-            guard let fileLoadModule = self?.fileModule else {
-                return nil
-            }
-            do {
-                var newRequest = try request.asURLRequest()
-                newRequest.url = URL.init(string: location)
-                if location.hasPrefix(fileLoadModule.endpoint) {
-                    if request.headers[APITokenInterceptor.tokenKey] == nil || request.headers[APITokenInterceptor.tokenKey] == "" {
-                        newRequest.setValue(AppUtils.getDeviceName(), forHTTPHeaderField: APITokenInterceptor.deviceKey)
-                        newRequest.setValue(AppUtils.getTimezone(), forHTTPHeaderField: APITokenInterceptor.timezoneKey)
-                        newRequest.setValue(AppUtils.getVersion(), forHTTPHeaderField: APITokenInterceptor.versionKey)
-                        newRequest.setValue(AppUtils.getLanguage(), forHTTPHeaderField: APITokenInterceptor.languageKey)
-                        newRequest.setValue(fileLoadModule.token, forHTTPHeaderField: APITokenInterceptor.tokenKey)
-                    }
-                } else {
-                    newRequest.setValue(nil, forHTTPHeaderField: APITokenInterceptor.tokenKey)
+        let redirector = Redirector(
+            behavior: .modify({ [weak self] task, request, response -> URLRequest? in
+                guard let location = response.headers["Location"] else {
+                    return nil
                 }
-                return newRequest
-            } catch {
-                return nil
-            }
-        }))
+                guard let fileLoadModule = self?.fileModule else {
+                    return nil
+                }
+                do {
+                    var newRequest = try request.asURLRequest()
+                    newRequest.url = URL.init(string: location)
+                    if location.hasPrefix(fileLoadModule.endpoint) {
+                        if request.headers[APITokenInterceptor.tokenKey] == nil
+                            || request.headers[APITokenInterceptor.tokenKey] == ""
+                        {
+                            newRequest.setValue(
+                                AppUtils.getDeviceName(),
+                                forHTTPHeaderField: APITokenInterceptor.deviceKey)
+                            newRequest.setValue(
+                                AppUtils.getTimezone(),
+                                forHTTPHeaderField: APITokenInterceptor.timezoneKey)
+                            newRequest.setValue(
+                                AppUtils.getVersion(),
+                                forHTTPHeaderField: APITokenInterceptor.versionKey)
+                            newRequest.setValue(
+                                AppUtils.getLanguage(),
+                                forHTTPHeaderField: APITokenInterceptor.languageKey)
+                            newRequest.setValue(
+                                fileLoadModule.token,
+                                forHTTPHeaderField: APITokenInterceptor.tokenKey)
+                        }
+                    } else {
+                        newRequest.setValue(nil, forHTTPHeaderField: APITokenInterceptor.tokenKey)
+                    }
+                    return newRequest
+                } catch {
+                    return nil
+                }
+            }))
         var headers = HTTPHeaders()
         var realUrl = self.key
-        if (!self.key.hasSuffix("http")) {
-            realUrl = "\(fileLoadModule.endpoint)/session/object/download_url?\(downLoadParam)"            
+        if !self.key.hasSuffix("http") {
+            realUrl = "\(fileLoadModule.endpoint)/session/object/download_url?\(downLoadParam)"
             headers.add(name: APITokenInterceptor.tokenKey, value: fileLoadModule.token)
             headers.add(name: APITokenInterceptor.deviceKey, value: AppUtils.getDeviceName())
             headers.add(name: APITokenInterceptor.timezoneKey, value: AppUtils.getTimezone())
@@ -88,15 +103,16 @@ class DownloadTask: LoadTask {
             realUrl, headers: headers,
             to: { _, response in
                 return (tempFileURL, [.removePreviousFile, .createIntermediateDirectories])
-            }).redirect(using: redirector)
-        .downloadProgress(queue: DispatchQueue.global()) { [weak self] progress in
+            }
+        ).redirect(using: redirector)
+            .downloadProgress(queue: DispatchQueue.global()) { [weak self] progress in
                 guard let sf = self else {
                     return
                 }
                 let p: Int = Int(100 * progress.completedUnitCount / progress.totalUnitCount)
                 sf.notify(progress: p, state: FileLoadState.Ing.rawValue)
             }
-        .validate(statusCode: 200..<300)
+            .validate(statusCode: 200..<300)
             .response(queue: DispatchQueue.global()) { [weak self] response in
                 guard let sf = self else {
                     return
@@ -108,10 +124,13 @@ class DownloadTask: LoadTask {
                             try FileManager.default.moveItem(at: tempFileURL, to: fileUrl)
                             sf.notify(progress: 100, state: FileLoadState.Success.rawValue)
                         } catch {
-                            sf.notify(progress: 100, state: FileLoadState.Failed.rawValue, err: error)
+                            sf.notify(
+                                progress: 100, state: FileLoadState.Failed.rawValue, err: error)
                         }
                     } else {
-                        sf.notify(progress: 100, state: FileLoadState.Failed.rawValue, err: CocoaError.init(CocoaError.fileNoSuchFile))
+                        sf.notify(
+                            progress: 100, state: FileLoadState.Failed.rawValue,
+                            err: CocoaError.init(CocoaError.fileNoSuchFile))
                     }
                     break
                 case let .failure(err):
@@ -120,25 +139,26 @@ class DownloadTask: LoadTask {
                 }
             }
     }
-    
+
     func cancel() {
-        if (self.request != nil) {
-            if (!self.request!.isCancelled && !self.request!.isFinished) {
+        if self.request != nil {
+            if !self.request!.isCancelled && !self.request!.isFinished {
                 self.request!.cancel()
             }
         }
     }
-    
+
     func notify(progress: Int, state: Int, err: Error? = nil) {
         guard let fileLoadModule = self.fileModule else {
             return
         }
-        if (state == FileLoadState.Success.rawValue) {
-            fileLoadModule.notifyListeners(progress: progress, state: state, url: self.key, path: self.filePath, err: err)
+        if state == FileLoadState.Success.rawValue {
+            fileLoadModule.notifyListeners(
+                progress: progress, state: state, url: self.key, path: self.filePath, err: err)
         } else {
-            fileLoadModule.notifyListeners(progress: progress, state: state, url: self.key, path: "", err: err)
+            fileLoadModule.notifyListeners(
+                progress: progress, state: state, url: self.key, path: "", err: err)
         }
     }
-    
-}
 
+}

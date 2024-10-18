@@ -6,11 +6,13 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
-class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
-    
+class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITableViewDataSource,
+    UIViewControllerTransitioningDelegate
+{
+
     private let disposeBag = DisposeBag()
     private let titleView = UILabel()
     private let memberTableView = UITableView()
@@ -18,13 +20,13 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
     private var memberMap = [(User, SessionMember?)]()
     var session: Session? = nil
     weak var delegate: IMSessionMemberAtDelegate?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupUI()
         self.fetchSessionMembers()
     }
-    
+
     private func setupUI() {
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(self.titleView)
@@ -38,7 +40,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
         self.titleView.font = UIFont.boldSystemFont(ofSize: 18)
         self.titleView.textAlignment = .center
         self.titleView.textColor = UIColor.init(hex: "#333333")
-        
+
         self.view.addSubview(memberTableView)
         self.memberTableView.separatorStyle = .none
         self.memberTableView.backgroundColor = UIColor.white
@@ -54,7 +56,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
         self.memberTableView.dataSource = self
         self.memberTableView.delegate = self
     }
-    
+
     private func fetchSessionMembers() {
         guard let sessionId = self.session?.id else {
             return
@@ -80,7 +82,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
                         for (k, v) in userMap {
                             var member: SessionMember? = nil
                             for m in members {
-                                if (m.userId == k) {
+                                if m.userId == k {
                                     member = m
                                     break
                                 }
@@ -94,7 +96,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
                 self?.updateSessionMember(map)
             }).disposed(by: self.disposeBag)
     }
-    
+
     private func updateSessionMember(_ map: [Int64: (User, SessionMember?)]) {
         self.memberMap.append(contentsOf: map.values)
         if self.memberMap.count > 2 {
@@ -102,34 +104,37 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
         }
         self.memberTableView.reloadData()
     }
-    
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.memberMap.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let member = self.memberMap[indexPath.row]
         var viewCell = tableView.dequeueReusableCell(withIdentifier: sessionMemberIdentifier)
-        if (viewCell == nil) {
-            viewCell = IMSessionMemberCell(style: .default, reuseIdentifier: sessionMemberIdentifier)
+        if viewCell == nil {
+            viewCell = IMSessionMemberCell(
+                style: .default, reuseIdentifier: sessionMemberIdentifier)
         }
         (viewCell! as! IMSessionMemberCell).setData(memberInfo: member)
         return viewCell!
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: true)
         let member = self.memberMap[indexPath.row]
         self.delegate?.onSessionMemberAt(member)
     }
-    
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        return BottomPresentationController(presentedViewController: presented, presenting: presenting)
+
+    func presentationController(
+        forPresented presented: UIViewController, presenting: UIViewController?,
+        source: UIViewController
+    ) -> UIPresentationController? {
+        return BottomPresentationController(
+            presentedViewController: presented, presenting: presenting)
     }
 }
-

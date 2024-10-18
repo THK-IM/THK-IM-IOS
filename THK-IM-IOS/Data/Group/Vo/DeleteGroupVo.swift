@@ -11,10 +11,10 @@ import Foundation
 class DeleteGroupVo: Codable {
     var groupId: Int64
     var uId: Int64
-    
+
     enum CodingKeys: String, CodingKey {
         case groupId = "group_id"
         case uId = "u_id"
     }
-    
+
 }

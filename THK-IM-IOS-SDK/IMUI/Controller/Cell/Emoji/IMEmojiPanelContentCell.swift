@@ -8,15 +8,15 @@
 import UIKit
 
 class IMEmojiPanelContentCell: UICollectionViewCell {
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setProvider(_ sender: IMMsgSender?, _ provider: IMBasePanelViewProvider) {
         self.contentView.subviews.forEach { v in
             v.removeFromSuperview()
@@ -28,4 +28,3 @@ class IMEmojiPanelContentCell: UICollectionViewCell {
         }
     }
 }
-

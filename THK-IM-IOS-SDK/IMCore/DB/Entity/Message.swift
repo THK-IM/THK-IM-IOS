@@ -12,7 +12,7 @@ public final class Message: TableCodable, Hashable {
     // 消息id(客户端)
     public var id: Int64 = 0
     // sessionId
-    public var sessionId : Int64 = 0
+    public var sessionId: Int64 = 0
     // 发件人id
     public var fromUId: Int64 = 0
     // 消息id(服务端)
@@ -38,15 +38,17 @@ public final class Message: TableCodable, Hashable {
     public var cTime: Int64
     // 消息最近修改时间
     public var mTime: Int64
-    
+
     public var referMsg: Message?
-    
+
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = Message
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
             BindMultiPrimary(id, sessionId, fromUId, onConflict: ConflictAction.Replace)
             BindMultiUnique(sessionId, msgId, onConflict: ConflictAction.Replace)
-            BindIndex(sessionId, cTime, namedWith: "message_session_id_create_time_index", isUnique: false)
+            BindIndex(
+                sessionId, cTime, namedWith: "message_session_id_create_time_index", isUnique: false
+            )
         }
         case id = "id"
         case sessionId = "session_id"
@@ -64,12 +66,16 @@ public final class Message: TableCodable, Hashable {
         case cTime = "c_time"
         case mTime = "m_time"
     }
-    
-    public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
-    
-    public init(id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String?, data: String?,
-                sendStatus: Int, operateStatus: Int, rUsers: String? = nil, referMsgId: Int64? = nil, extData: String?,
-                atUsers: String? = nil, cTime: Int64, mTime: Int64) {
+
+    public var isAutoIncrement: Bool = false  // 用于定义是否使用自增的方式插入
+
+    public init(
+        id: Int64, sessionId: Int64, fromUId: Int64, msgId: Int64, type: Int, content: String?,
+        data: String?,
+        sendStatus: Int, operateStatus: Int, rUsers: String? = nil, referMsgId: Int64? = nil,
+        extData: String?,
+        atUsers: String? = nil, cTime: Int64, mTime: Int64
+    ) {
         self.id = id
         self.sessionId = sessionId
         self.fromUId = fromUId
@@ -86,7 +92,7 @@ public final class Message: TableCodable, Hashable {
         self.cTime = cTime
         self.mTime = mTime
     }
-    
+
     public func getReadUIds() -> Set<Int64> {
         var uIds = Set<Int64>()
         if let rUsers = self.rUsers {
@@ -99,7 +105,7 @@ public final class Message: TableCodable, Hashable {
         }
         return uIds
     }
-    
+
     public func getAtUIds() -> Set<Int64> {
         var uIds = Set<Int64>()
         if let atUsers = self.atUsers {
@@ -112,7 +118,7 @@ public final class Message: TableCodable, Hashable {
         }
         return uIds
     }
-    
+
     public func isAtMe() -> Bool {
         if let atUsers = self.atUsers {
             let uIdStrs = atUsers.split(separator: "#")
@@ -126,26 +132,25 @@ public final class Message: TableCodable, Hashable {
         }
         return false
     }
-    
+
     public func clone() -> Message {
         let message = Message(
             id: self.id, sessionId: self.sessionId, fromUId: self.fromUId, msgId: self.msgId,
-            type: self.type, content: self.content, data: self.data, sendStatus: self.sendStatus, 
-            operateStatus: self.operateStatus, rUsers: self.rUsers, referMsgId: self.referMsgId, extData: self.extData, 
+            type: self.type, content: self.content, data: self.data, sendStatus: self.sendStatus,
+            operateStatus: self.operateStatus, rUsers: self.rUsers, referMsgId: self.referMsgId,
+            extData: self.extData,
             atUsers: self.atUsers, cTime: self.cTime, mTime: self.mTime
         )
         message.referMsg = self.referMsg
         return message
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine("\(sessionId)/\(msgId)")
     }
-    
-    
+
     public static func == (lhs: Message, rhs: Message) -> Bool {
         return lhs.sessionId == rhs.sessionId && lhs.msgId == rhs.msgId
     }
-    
-    
+
 }

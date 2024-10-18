@@ -9,56 +9,59 @@ import AVFoundation
 import CocoaLumberjack
 
 public class OggOpusAudioPlayer {
-    
+
     public static let shared = OggOpusAudioPlayer()
-    
+
     private let LogTag = "OggOpusAudioPlayer"
     private let lock = NSLock()
-    private let callbackInterval = 100 // 单位ms
+    private let callbackInterval = 100  // 单位ms
     private var _audioFormat = AudioStreamBasicDescription()
-    
-    private var _callback : AudioCallback?
+
+    private var _callback: AudioCallback?
     private var _filePath: String?
     private var _audioFile: FileHandle?
     private var _oggDecoder: OGGDecoder?
-    
+
     // 定义一个 AudioQueueRef 对象
     private var _audioQueue: AudioQueueRef?
     // 定义一个 AudioStreamBasicDescription 对象
     private var buffers = [AudioQueueBufferRef?]()
     private var idleBufferTag = [Bool]()
-    
+
     private var _startTimestamp: Int64?
     private var _currentLen = 0
     private var lastCallbackTime: Int64 = 0
-    
+
     private let _bufferCount: UInt32
     private init() {
         // 配置录音格式 48KHz双声道
         _audioFormat.mSampleRate = 16000
         _audioFormat.mFormatID = kAudioFormatLinearPCM
-        _audioFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked
+        _audioFormat.mFormatFlags =
+            kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked
         _audioFormat.mBitsPerChannel = 16
         _audioFormat.mChannelsPerFrame = 1
         _audioFormat.mFramesPerPacket = 1
-        _audioFormat.mBytesPerFrame = _audioFormat.mChannelsPerFrame * (_audioFormat.mBitsPerChannel / 8)
+        _audioFormat.mBytesPerFrame =
+            _audioFormat.mChannelsPerFrame * (_audioFormat.mBitsPerChannel / 8)
         _audioFormat.mBytesPerPacket = _audioFormat.mBytesPerFrame * _audioFormat.mFramesPerPacket
         _audioFormat.mReserved = 0
-        _bufferCount = _audioFormat.mBytesPerPacket * UInt32((_audioFormat.mSampleRate/10))
+        _bufferCount = _audioFormat.mBytesPerPacket * UInt32((_audioFormat.mSampleRate / 10))
     }
-    
-    let audioPlayAQOutputCallback : AudioQueueOutputCallback = { (userData, audioQueueRef, audioQueueBufferRef) in
-        if (userData != nil) {
+
+    let audioPlayAQOutputCallback: AudioQueueOutputCallback = {
+        (userData, audioQueueRef, audioQueueBufferRef) in
+        if userData != nil {
             let player = Unmanaged<OggOpusAudioPlayer>.fromOpaque(userData!).takeUnretainedValue()
             for i in 0..<player.buffers.count {
-                if (player.buffers[i] == audioQueueBufferRef) {
+                if player.buffers[i] == audioQueueBufferRef {
                     player.idleBufferTag[i] = true
                 }
             }
             player.playPCMData()
         }
     }
-    
+
     private func initPlaying() -> Bool {
         do {
             try AVAudioSession.sharedInstance().setCategory(
@@ -67,16 +70,16 @@ public class OggOpusAudioPlayer {
                     .defaultToSpeaker,
                     .allowAirPlay,
                     .allowBluetooth,
-                    .allowBluetoothA2DP
+                    .allowBluetoothA2DP,
                 ])
             try AVAudioSession.sharedInstance().setActive(true)
-            
+
             let format = AVAudioFormat(streamDescription: &_audioFormat)
-            if (format == nil) {
+            if format == nil {
                 DDLogError("[\(LogTag)] format error")
                 return false
             }
-            
+
             let status = AudioQueueNewOutput(
                 &_audioFormat,
                 audioPlayAQOutputCallback,
@@ -89,20 +92,20 @@ public class OggOpusAudioPlayer {
             if _audioQueue == nil || status != noErr {
                 return false
             }
-            
+
             // 设置音量
             AudioQueueSetParameter(_audioQueue!, kAudioQueueParam_Volume, 1.0)
-            
+
         } catch {
             DDLogError("\(error)")
             return false
         }
         return true
     }
-    
+
     private func releasePlaying() {
         lock.lock()
-        defer {lock.unlock()}
+        defer { lock.unlock() }
         do {
             try AVAudioSession.sharedInstance().setActive(false)
             try self._audioFile?.close()
@@ -110,14 +113,16 @@ public class OggOpusAudioPlayer {
             DDLogError("\(error)")
         }
         let queue = self._audioQueue
-        if (queue != nil) {
-            DispatchQueue.global().asyncAfter(deadline: .now()+0.3, execute: {
-                let status = AudioQueueStop(queue!, true)
-                if status == noErr {
-                    // 释放录音队列
-                    _ = AudioQueueDispose(queue!, true)
-                }
-            })
+        if queue != nil {
+            DispatchQueue.global().asyncAfter(
+                deadline: .now() + 0.3,
+                execute: {
+                    let status = AudioQueueStop(queue!, true)
+                    if status == noErr {
+                        // 释放录音队列
+                        _ = AudioQueueDispose(queue!, true)
+                    }
+                })
         }
         _currentLen = 0
         _oggDecoder = nil
@@ -130,32 +135,32 @@ public class OggOpusAudioPlayer {
         idleBufferTag.removeAll()
         _callback = nil
     }
-    
+
     private func decodeAndPlay() -> Bool {
         do {
-            if (self._filePath == nil) {
+            if self._filePath == nil {
                 return false
             }
             _audioFile = FileHandle(forReadingAtPath: self._filePath!)
-            if (_audioFile == nil) {
+            if _audioFile == nil {
                 DDLogError("[\(LogTag)] _audioFile read error")
                 return false
             }
-            if (self._audioFile == nil) {
+            if self._audioFile == nil {
                 return false
             }
             let audioData = self._audioFile!.readDataToEndOfFile()
-            
+
             self._oggDecoder = try OGGDecoder(audioData: audioData)
-            if (self._oggDecoder == nil) {
+            if self._oggDecoder == nil {
                 DDLogError("[\(LogTag)] ops decoder error")
                 return false
             }
-            
+
             if _audioQueue == nil {
                 return false
             }
-            
+
             var status = noErr
             // 初始化需要的缓冲区
             for _ in 0..<3 {
@@ -181,28 +186,28 @@ public class OggOpusAudioPlayer {
         }
         return true
     }
-    
+
     public func isPlaying() -> Bool {
         lock.lock()
-        defer {lock.unlock()}
-        if (_audioQueue != nil) {
+        defer { lock.unlock() }
+        if _audioQueue != nil {
             return true
         }
         return false
     }
-    
+
     public func currentPlayPath() -> String? {
         if !isPlaying() {
             return nil
         }
         return _filePath
     }
-    
+
     public func startPlaying(_ filePath: String, _ callback: @escaping AudioCallback) -> Bool {
-        if (self.isPlaying()) {
+        if self.isPlaying() {
             return false
         }
-        if (!initPlaying()) {
+        if !initPlaying() {
             releasePlaying()
             return false
         } else {
@@ -210,7 +215,7 @@ public class OggOpusAudioPlayer {
             self._callback = callback
             DispatchQueue.global().async {
                 let ret = self.decodeAndPlay()
-                if (!ret) {
+                if !ret {
                     self.stopPlaying()
                 } else {
                     self.playPCMData()
@@ -219,27 +224,27 @@ public class OggOpusAudioPlayer {
             return true
         }
     }
-    
+
     private func playPCMData() {
         guard let oggDecoder = self._oggDecoder else {
             return
         }
-        if (_currentLen >= oggDecoder.pcmData.count) {
+        if _currentLen >= oggDecoder.pcmData.count {
             stopPlaying()
             return
         }
         lock.lock()
-        let length : Int = Int(_bufferCount)
+        let length: Int = Int(_bufferCount)
         var end = _currentLen + length
         if end > oggDecoder.pcmData.count {
             end = oggDecoder.pcmData.count
         }
-        let data = oggDecoder.pcmData.subdata(in: _currentLen ..< end)
+        let data = oggDecoder.pcmData.subdata(in: _currentLen..<end)
         doCallback(data)
         for i in 0..<self.idleBufferTag.count {
-            if (self.idleBufferTag[i]) {
+            if self.idleBufferTag[i] {
                 let buffer = self.buffers[i]
-                if (buffer != nil) {
+                if buffer != nil {
                     // 将 AVAudioPCMBuffer 中的音频数据复制到 AudioQueueBufferRef 中
                     memcpy(buffer!.pointee.mAudioData, (data as NSData).bytes, (end - _currentLen))
                     buffer!.pointee.mAudioDataByteSize = UInt32(length)
@@ -251,24 +256,24 @@ public class OggOpusAudioPlayer {
         _currentLen = end
         lock.unlock()
     }
-    
+
     public func stopPlaying() {
-        if (_startTimestamp == nil) {
+        if _startTimestamp == nil {
             _startTimestamp = Date().timeMilliStamp
         }
-        if (_callback != nil) {
+        if _callback != nil {
             let now = Date().timeMilliStamp
             self._callback?(0, Int(now - self._startTimestamp!), self._filePath!, true)
-            
+
             lastCallbackTime = now
         }
         releasePlaying()
     }
-    
+
     private func doCallback(_ audioPCMData: Data) {
-        if (_callback != nil) {
+        if _callback != nil {
             let now = Date().timeMilliStamp
-            if (_startTimestamp == nil) {
+            if _startTimestamp == nil {
                 _startTimestamp = now
             }
             if (now - lastCallbackTime) > callbackInterval {

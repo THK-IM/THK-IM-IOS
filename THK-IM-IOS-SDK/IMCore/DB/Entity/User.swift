@@ -26,7 +26,7 @@ public final class User: TableCodable {
     public var cTime: Int64 = 0
     // 修改时间
     public var mTime: Int64 = 0
-    
+
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = User
         public static let objectRelationalMapping = TableBinding(CodingKeys.self) {
@@ -36,15 +36,15 @@ public final class User: TableCodable {
         case displayId = "display_id"
         case nickname = "nickname"
         case avatar = "avatar"
-        case sex="sex"
-        case status="status"
+        case sex = "sex"
+        case status = "status"
         case extData = "ext_data"
         case cTime = "c_time"
         case mTime = "m_time"
     }
-    
-    public var isAutoIncrement: Bool = false // 用于定义是否使用自增的方式插入
-    
+
+    public var isAutoIncrement: Bool = false  // 用于定义是否使用自增的方式插入
+
     public init(id: Int64, nickname: String = "") {
         self.id = id
         self.displayId = ""
@@ -56,10 +56,11 @@ public final class User: TableCodable {
         self.cTime = 0
         self.mTime = 0
     }
-    
-    public init(id: Int64, displayId: String, nickname: String, avatar: String?, sex: Int8?, status: Int,
-                extData: String? = nil, cTime: Int64, mTime: Int64)
-    {
+
+    public init(
+        id: Int64, displayId: String, nickname: String, avatar: String?, sex: Int8?, status: Int,
+        extData: String? = nil, cTime: Int64, mTime: Int64
+    ) {
         self.id = id
         self.displayId = displayId
         self.nickname = nickname
@@ -70,6 +71,6 @@ public final class User: TableCodable {
         self.cTime = cTime
         self.mTime = mTime
     }
-    
+
     public static let all = User(id: -1, nickname: "All")
 }

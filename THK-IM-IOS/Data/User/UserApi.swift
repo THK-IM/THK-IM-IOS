@@ -20,17 +20,16 @@ enum UserApi {
     case searchUserByDisplayId(_ displayId: String)
 }
 
-
 extension UserApi: TargetType {
-    
-    var headers: [String : String]? {
+
+    var headers: [String: String]? {
         return nil
     }
-    
+
     var baseURL: URL {
         return URL.init(string: "\(DataRepository.shared.getApiHost(type: "user"))")!
     }
-    
+
     var path: String {
         switch self {
         case .register:
@@ -43,7 +42,7 @@ extension UserApi: TargetType {
             return "/user/search"
         }
     }
-    
+
     var method: Moya.Method {
         switch self {
         case .register:
@@ -56,7 +55,7 @@ extension UserApi: TargetType {
             return .get
         }
     }
-    
+
     var task: Moya.Task {
         switch self {
         case let .register(req):
@@ -66,9 +65,9 @@ extension UserApi: TargetType {
         case .queryUser:
             return .requestPlain
         case let .searchUserByDisplayId(displayId):
-            let urlParameters = ["display_id": displayId] as [String : Any]
+            let urlParameters = ["display_id": displayId] as [String: Any]
             return .requestParameters(parameters: urlParameters, encoding: URLEncoding.queryString)
         }
     }
-    
+
 }

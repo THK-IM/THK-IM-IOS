@@ -10,8 +10,10 @@ import Foundation
 import UIKit
 
 public enum IMMsgPosType: Int {
-    case Mid = 0,
-         Left = 1,
+    case Mid = 0
+    case
+        Left = 1
+    case
         Right = 2
 }
 
@@ -19,7 +21,7 @@ public class IMFile {
     var data: Data
     var mimeType: String
     var name: String
-    
+
     public init(data: Data, name: String, mimeType: String) {
         self.data = data
         self.mimeType = mimeType
@@ -27,16 +29,21 @@ public class IMFile {
     }
 }
 
-/**
- 功能，1基础功能 2语音 4 表情  8 图片 16视频  32转发 64已读
- */
+/// 功能，1基础功能 2语音 4 表情  8 图片 16视频  32转发 64已读
 public enum IMChatFunction: Int64 {
-    case BaseInput = 1, // 文本输入/删除/文本表情
-         Audio = 2,
-        Emoji = 4,      //
-        Image = 8,
-        Video = 16,
-        Forward = 32,
-        Read = 64,
+    case BaseInput = 1
+    case
+        Audio = 2
+    case
+        Emoji = 4
+    case
+        Image = 8
+    case
+        Video = 16
+    case
+        Forward = 32
+    case
+        Read = 64
+    case
         ALL = 127
 }

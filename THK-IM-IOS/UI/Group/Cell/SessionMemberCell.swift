@@ -6,24 +6,24 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class SessionMemberCell: UICollectionViewCell {
-    
+
     private let avatarView = UIImageView()
     private let nicknameView = UILabel()
     private let disposeBag = DisposeBag()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupUI() {
         self.contentView.addSubview(avatarView)
         self.avatarView.snp.makeConstraints { make in
@@ -43,7 +43,7 @@ class SessionMemberCell: UICollectionViewCell {
         self.nicknameView.textColor = UIColor.init(hex: "333333")
         self.nicknameView.font = UIFont.systemFont(ofSize: 14)
     }
-    
+
     func setMemberId(id: Int64) {
         IMCoreManager.shared.userModule.queryUser(id: id)
             .compose(RxTransformer.shared.io2Main())

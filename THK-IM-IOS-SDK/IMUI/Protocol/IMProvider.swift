@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-public protocol IMProvider: AnyObject  {
-    
+public protocol IMProvider: AnyObject {
+
     func openCamera(
         controller: UIViewController,
         formats: [IMFileFormat],
@@ -22,7 +22,8 @@ public protocol IMProvider: AnyObject  {
         formats: [IMFileFormat],
         imContentResult: @escaping IMContentResult)
 
-    func startRecordAudio(path: String, duration: Int, audioCallback: @escaping AudioCallback) -> Bool
+    func startRecordAudio(path: String, duration: Int, audioCallback: @escaping AudioCallback)
+        -> Bool
 
     func stopRecordAudio()
 
@@ -31,7 +32,7 @@ public protocol IMProvider: AnyObject  {
     func startPlayAudio(path: String, audioCallback: @escaping AudioCallback) -> Bool
 
     func stopPlayAudio()
-    
+
     func currentPlayingPath() -> String?
 
     func isPlayingAudio() -> Bool

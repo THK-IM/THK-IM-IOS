@@ -11,7 +11,7 @@ public class SessionVo: Codable {
     var sessionId: Int64
     var parentId: Int64?
     var type: Int
-    var entityId : Int64
+    var entityId: Int64
     var name: String
     var remark: String
     var noteName: String?
@@ -25,7 +25,7 @@ public class SessionVo: Codable {
     var cTime: Int64
     var mTime: Int64
     var deleted: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case sessionId = "s_id"
         case parentId = "parent_id"
@@ -45,13 +45,17 @@ public class SessionVo: Codable {
         case mTime = "m_time"
         case deleted = "deleted"
     }
-    
+
     public func toSession() -> Session {
         let session = Session(
-            id: self.sessionId, parentId: self.parentId ?? 0, type: self.type, entityId: self.entityId, name: self.name,
-            noteName: self.noteName, noteAvatar: self.noteAvatar, remark: self.remark, mute: self.mute, role: self.role,
-            status: self.status, unreadCount: 0, topTimestamp: top ?? 0, extData: extData, msgSyncTime: 0,
-            memberSyncTime: 0, memberCount: 0, functionFlag: functionFlag, deleted: self.deleted ?? 0, cTime: cTime, mTime: mTime
+            id: self.sessionId, parentId: self.parentId ?? 0, type: self.type,
+            entityId: self.entityId, name: self.name,
+            noteName: self.noteName, noteAvatar: self.noteAvatar, remark: self.remark,
+            mute: self.mute, role: self.role,
+            status: self.status, unreadCount: 0, topTimestamp: top ?? 0, extData: extData,
+            msgSyncTime: 0,
+            memberSyncTime: 0, memberCount: 0, functionFlag: functionFlag,
+            deleted: self.deleted ?? 0, cTime: cTime, mTime: mTime
         )
         return session
     }

@@ -6,11 +6,11 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class ContactTabViewController: ContactViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }

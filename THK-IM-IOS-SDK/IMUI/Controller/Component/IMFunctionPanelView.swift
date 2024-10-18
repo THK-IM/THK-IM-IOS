@@ -6,16 +6,18 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
-class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSource,
+    UICollectionViewDelegateFlowLayout
+{
     weak var sender: IMMsgSender?
     private let cellID = "function_cell_id"
     private let countOneRow = 4.0
     private let disposeBag = DisposeBag()
-    private var functions = Array<IMBaseFunctionCellProvider>()
-    
+    private var functions = [IMBaseFunctionCellProvider]()
+
     lazy var functionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
@@ -33,25 +35,23 @@ class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDat
         collectionView.alpha = 1
         return collectionView
     }()
-    
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupView() {
         self.addSubview(self.functionView)
         self.functionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
-    
-    
+
     override func layoutSubviews() {
         if self.functions.count == 0 {
             if let session = self.sender?.getSession() {
@@ -61,24 +61,31 @@ class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDat
             }
         }
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellID, for: indexPath)
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+        -> UICollectionViewCell
+    {
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: self.cellID, for: indexPath)
         let functionCell = cell as! IMFunctionCell
         functionCell.setFunction(functions[indexPath.row])
         return functionCell
     }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+        -> Int
+    {
         return functions.count
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+    func collectionView(
+        _ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         let boundSize: CGFloat = UIScreen.main.bounds.width / countOneRow
         return CGSize(width: boundSize, height: boundSize)
     }
-    
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let f = functions[indexPath.row]
         guard let s = sender else {
@@ -86,6 +93,5 @@ class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDat
         }
         f.click(sender: s)
     }
-    
-}
 
+}

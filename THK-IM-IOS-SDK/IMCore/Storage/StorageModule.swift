@@ -7,39 +7,34 @@
 
 import Foundation
 
+/// 存储协议
+public protocol StorageModule: AnyObject {
 
-/**
- 存储协议
- */
-public protocol StorageModule : AnyObject {
-    
     // 删除文件
     func removeFile(_ fullPath: String)
-    
+
     // 更换sandbox沙盒目录地址
     func sandboxFilePath(_ fullPath: String) -> String
-    
+
     /**
      * 获取文件目录和文件名
      */
     func getPathsFromFullPath(_ fullPath: String) -> (String, String)
-    
-    
+
     func getFileExt(_ path: String) -> (String, String)
-    
+
     /**
      * 从url中获取文件扩展名
      */
     func getFileExtFromUrl(_ url: String) -> String
-    
+
     func saveMediaDataInto(_ fullPath: String, _ data: Data) throws
-    
+
     /**
      * 拷贝文件
      */
-    func copyFile(_ srcPath :String, _ dePath: String) throws
-    
-    
+    func copyFile(_ srcPath: String, _ dePath: String) throws
+
     /**
      * 申请会话下文件存放路径，函数内不会创建文件
      * @return  ex: /{application}/{files}/im/session-${uId}/{format}/xxx.jpeg
@@ -53,7 +48,7 @@ public protocol StorageModule : AnyObject {
         _ fileName: String,
         _ format: String
     ) -> String
-    
+
     /**
      * 是否为IM内部的路径
      */
@@ -62,12 +57,12 @@ public protocol StorageModule : AnyObject {
         _ format: String,
         _ sId: Int64
     ) -> Bool
-    
+
     /**
      * 获取session
      */
-    func getSessionCacheFiles(_ format: String, _ sId: Int64) -> Array<String>
-    
+    func getSessionCacheFiles(_ format: String, _ sId: Int64) -> [String]
+
     /**
      * 获取session下缓存目录大小
      */

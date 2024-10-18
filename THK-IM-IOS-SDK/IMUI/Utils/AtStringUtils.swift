@@ -8,15 +8,16 @@
 
 import Foundation
 
-
 public class AtStringUtils {
-    
-    public typealias findIdByNickname =  (_ nickname: String) -> Int64?
-    public typealias findNicknameById =  (_ id: Int64) -> String
-    
+
+    public typealias findIdByNickname = (_ nickname: String) -> Int64?
+    public typealias findNicknameById = (_ id: Int64) -> String
+
     public static let atRegular = "(?<=@)(.+?)(?=\\s)"
-    
-    public static func replaceAtNickNamesToUIds(_ text: String, _ finder: findIdByNickname) -> (String, String?) {
+
+    public static func replaceAtNickNamesToUIds(_ text: String, _ finder: findIdByNickname) -> (
+        String, String?
+    ) {
         let replacement = NSMutableString(string: text)
         guard let regex = try? NSRegularExpression(pattern: atRegular) else {
             return (text, nil)
@@ -28,12 +29,14 @@ public class AtStringUtils {
                 let nickName = String(text[nickRange])
                 let id = finder(nickName)
                 if id != nil {
-                    if (!atUIds.isEmpty) {
+                    if !atUIds.isEmpty {
                         atUIds += "#"
                     }
                     atUIds += "\(id!)"
                     if matchResult.range.location + matchResult.range.length <= replacement.length {
-                        replacement.replaceOccurrences(of:nickName, with: "\(id!)", options: .caseInsensitive, range: matchResult.range)
+                        replacement.replaceOccurrences(
+                            of: nickName, with: "\(id!)", options: .caseInsensitive,
+                            range: matchResult.range)
                     }
                 }
             }
@@ -41,7 +44,9 @@ public class AtStringUtils {
         return (String(replacement), atUIds.length == 0 ? nil : atUIds)
     }
 
-    public static func replaceAtUIdsToNickname(_ text: String, _ atUIds: Set<Int64>, _ finder: findNicknameById) -> String {
+    public static func replaceAtUIdsToNickname(
+        _ text: String, _ atUIds: Set<Int64>, _ finder: findNicknameById
+    ) -> String {
         let replacement = NSMutableString(string: text)
         guard let regex = try? NSRegularExpression(pattern: atRegular) else {
             return text
@@ -53,7 +58,7 @@ public class AtStringUtils {
                     if atUIds.contains(id) {
                         let nickname = finder(id)
                         replacement.replaceOccurrences(
-                            of:String(id),
+                            of: String(id),
                             with: nickname,
                             options: .caseInsensitive,
                             range: matchResult.range
@@ -65,5 +70,3 @@ public class AtStringUtils {
         return String(replacement)
     }
 }
-
-

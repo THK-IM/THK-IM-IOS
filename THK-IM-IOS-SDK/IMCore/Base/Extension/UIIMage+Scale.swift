@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIImage {
-    
+
     public func scaledToSize(_ size: CGSize) -> UIImage? {
         let renderer = UIGraphicsImageRenderer(size: size)
         let scaledImage = renderer.image { (context) in

@@ -9,25 +9,27 @@ import Foundation
 import UIKit
 
 open class IMUnSupportMsgCellProvider: IMBaseMessageCellProvider {
-    
+
     open override func messageType() -> Int {
         return MsgType.UnSupport.rawValue
     }
-    
-    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper) -> IMBaseMsgCell {
+
+    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper)
+        -> IMBaseMsgCell
+    {
         let identifier = self.identifier(viewType)
         return IMUnSupportMsgCell(identifier, wrapper)
     }
-    
+
     open override func hasBubble() -> Bool {
         return true
     }
-    
-    open override func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?) -> IMsgBodyView {
-        let view = IMUnSupportMsgView(frame:.null)
+
+    open override func replyMsgView(
+        _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
+    ) -> IMsgBodyView {
+        let view = IMUnSupportMsgView(frame: .null)
         view.setMessage(msg, session, delegate)
         return view
     }
 }
-
-

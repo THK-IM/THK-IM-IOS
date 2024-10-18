@@ -6,18 +6,18 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
-open class IMBaseTableCell : UITableViewCell {
-    
+open class IMBaseTableCell: UITableViewCell {
+
     public let disposeBag = DisposeBag()
-    
+
     open func appear() {
-        
+
     }
-    
-    open func disappear () {
-        
+
+    open func disappear() {
+
     }
 }

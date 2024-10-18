@@ -10,11 +10,11 @@ import Foundation
 
 class TokenLoginReq: Codable {
     var token: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case token = "token"
     }
-    
+
     init(token: String? = nil) {
         self.token = token
     }

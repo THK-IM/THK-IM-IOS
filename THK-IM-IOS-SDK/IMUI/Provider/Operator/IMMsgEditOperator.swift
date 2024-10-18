@@ -9,27 +9,27 @@
 import UIKit
 
 public class IMMsgEditOperator: IMMessageOperator {
-    
+
     public func id() -> String {
         return "Edit"
     }
-    
+
     public func title() -> String {
         return ResourceUtils.loadString("edit", comment: "")
     }
-    
+
     public func icon() -> UIImage? {
         return ResourceUtils.loadImage(named: "ic_msg_opr_edit")
     }
-    
+
     public func onClick(sender: IMMsgSender, message: Message) {
         if message.type == MsgType.Text.rawValue {
             sender.reeditMessage(message)
         }
     }
-    
+
     public func supportMessage(_ message: Message, _ session: Session) -> Bool {
         return message.type == MsgType.Text.rawValue && message.fromUId == IMCoreManager.shared.uId
     }
-    
+
 }

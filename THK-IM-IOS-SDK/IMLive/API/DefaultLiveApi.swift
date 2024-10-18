@@ -10,15 +10,13 @@ import Moya
 import RxSwift
 
 class DefaultLiveApi: LiveApi {
-    
-    
+
     private var endpoint: String
     private var token: String
     private let apiInterceptor: APITokenInterceptor
     private let roomApi: MoyaProvider<RoomApi>
     private let streamApi: MoyaProvider<StreamApi>
-    
-    
+
     public init(token: String, endpoint: String) {
         self.endpoint = endpoint
         self.token = token
@@ -27,56 +25,55 @@ class DefaultLiveApi: LiveApi {
         self.roomApi = MoyaProvider<RoomApi>(plugins: [self.apiInterceptor])
         self.streamApi = MoyaProvider<StreamApi>(plugins: [self.apiInterceptor])
     }
-    
+
     public func getEndpoint() -> String {
         return self.endpoint
     }
-    
-    
+
     public func getToken() -> String {
         return self.token
     }
-    
+
     public func updateToken(token: String) {
         self.token = token
         self.apiInterceptor.updateToken(token: token)
     }
-    
+
     func createRoom(_ req: CreateRoomReqVo) -> Observable<CreateRoomResVo> {
         return roomApi.rx
             .request(.createRoom(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(CreateRoomResVo.self))
     }
-    
+
     func joinRoom(_ req: JoinRoomReqVo) -> Observable<JoinRoomResVo> {
         return roomApi.rx
             .request(.joinRoom(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(JoinRoomResVo.self))
     }
-    
+
     func refuseJoinRoom(_ req: RefuseJoinReqVo) -> RxSwift.Observable<Void> {
         return roomApi.rx
             .request(.refuseJoinRoom(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }
-    
+
     func deleteRoom(_ req: DelRoomReqVo) -> RxSwift.Observable<Void> {
         return roomApi.rx
             .request(.delRoom(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }
-    
+
     func publishStream(_ req: PublishStreamReqVo) -> Observable<PublishStreamResVo> {
         return streamApi.rx
             .request(.requestPublish(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(PublishStreamResVo.self))
     }
-    
+
     func playStream(_ req: PlayStreamReqVo) -> Observable<PlayStreamResVo> {
         return streamApi.rx
             .request(.requestPlay(req))
