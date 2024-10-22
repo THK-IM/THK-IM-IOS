@@ -417,6 +417,7 @@ public class IMMediaPreviewController: UIViewController,
             if isLoadingNewer {
                 return
             }
+            isLoadingNewer = true
         }
         Observable.just(message)
             .map({ message in

@@ -49,6 +49,7 @@ public class PreviewImageCellView: PreviewCellView {
 
     override public func setMessage(_ message: Message) {
         super.setMessage(message)
+        self.imageView.clearImage()
         self.imageView.previewDelegate = delegate
         self.showImage()
     }
@@ -63,15 +64,19 @@ public class PreviewImageCellView: PreviewCellView {
                     IMImageMsgData.self,
                     from: message.data!.data(using: .utf8) ?? Data())
                 if data.path != nil {
-                    setImagePath(data.path!)
-                } else if data.thumbnailPath != nil {
-                    setImagePath(data.thumbnailPath!)
-                    startDownload(message)
+                    self.setImagePath(data.path!)
+                } else {
+                    if data.thumbnailPath != nil {
+                        self.setImagePath(data.thumbnailPath!)
+                    }
+                    self.startDownload(message)
                 }
             } catch {
                 DDLogError("\(error)")
             }
             return
+        } else {
+            self.startDownload(message)
         }
     }
 
@@ -85,6 +90,7 @@ public class PreviewImageCellView: PreviewCellView {
                     IMImageMsgBody.self,
                     from: message.content!.data(using: .utf8) ?? Data())
                 if content.url != loadProgress.url {
+                    self.progressView.isHidden = true
                     return
                 }
             } catch {
@@ -119,7 +125,7 @@ public class PreviewImageCellView: PreviewCellView {
             self.progressView.isHidden = false
             self.progressView.setProgress(Double(loadProgress.progress))
         } else {
-            self.progressView.isHidden = false
+            self.progressView.isHidden = true
         }
     }
 

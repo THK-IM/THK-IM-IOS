@@ -87,4 +87,8 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
             self.zoomScale = 1.0
         }
     }
+    
+    func clearImage() {
+        self._zoomImageView.image = nil
+    }
 }

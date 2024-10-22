@@ -35,6 +35,7 @@ public class PreviewVideoCellView: PreviewCellView {
 
     public override func setMessage(_ message: Message) {
         super.setMessage(message)
+        self.imageView.image = nil
         self.showImage()
     }
 
