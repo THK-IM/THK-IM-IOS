@@ -9,7 +9,14 @@
 import CocoaLumberjack
 import UIKit
 
-class IMVideoMsgView: UIImageView, IMsgBodyView {
+class IMVideoMsgView: UIView, IMsgBodyView {
+    
+    private lazy var imageView: UIImageView = {
+        let v = UIImageView()
+        v.contentMode = .scaleAspectFill
+        return v
+    }()
+
 
     private lazy var durationLabel: IMMsgLabelView = {
         let v = IMMsgLabelView()
@@ -37,8 +44,18 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
     }
 
     private func setupUI() {
-        self.addSubview(self.durationLabel)
-        self.addSubview(self.playView)
+        self.layer.backgroundColor = UIColor.white.cgColor
+        self.layer.cornerRadius = 8
+        self.addSubview(self.imageView)
+        self.imageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        self.imageView.addSubview(self.durationLabel)
+        self.imageView.addSubview(self.playView)
+        self.playView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(40)
+        }
         self.durationLabel.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-5)
             make.right.equalToSuperview().offset(-5)
@@ -50,6 +67,7 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
         _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
         _ isReply: Bool = false
     ) {
+        self.imageView.isHidden = true
         self.resetlayout(message, isReply)
         self.showMessage(message)
     }
@@ -59,13 +77,11 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
         if isReply {
             size = CGSize(width: size.width * 0.25, height: size.height * 0.25)
         }
-        self.isHidden = true
         self.snp.makeConstraints { make in
             make.width.equalTo(size.width)
             make.height.equalTo(size.height)
         }
-        self.playView.snp.remakeConstraints { make in
-            make.center.equalToSuperview()
+        self.playView.snp.updateConstraints { make in
             if isReply {
                 make.size.equalTo(10)
             } else {
@@ -124,8 +140,8 @@ class IMVideoMsgView: UIImageView, IMsgBodyView {
                 if data.thumbnailPath != nil {
                     let path = IMCoreManager.shared.storageModule.sandboxFilePath(
                         data.thumbnailPath!)
-                    self.renderImageByPathWithCorner(path: path, radius: 8.0)
-                    self.isHidden = false
+                    self.imageView.renderImageByPathWithCorner(path: path, radius: 8.0)
+                    self.imageView.isHidden = false
                     return
                 }
             } catch {

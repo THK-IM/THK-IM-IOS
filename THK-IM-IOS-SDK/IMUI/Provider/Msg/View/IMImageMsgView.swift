@@ -9,7 +9,13 @@
 import CocoaLumberjack
 import UIKit
 
-class IMImageMsgView: UIImageView, IMsgBodyView {
+class IMImageMsgView: UIView, IMsgBodyView {
+    
+    private lazy var imageView: UIImageView = {
+        let v = UIImageView()
+        v.contentMode = .scaleAspectFill
+        return v
+    }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,14 +27,19 @@ class IMImageMsgView: UIImageView, IMsgBodyView {
     }
 
     private func setupUI() {
-        self.backgroundColor = .black
-        self.contentMode = .scaleAspectFill
+        self.layer.backgroundColor = UIColor.white.cgColor
+        self.layer.cornerRadius = 8
+        self.addSubview(self.imageView)
+        self.imageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func setMessage(
         _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
         _ isReply: Bool = false
     ) {
+        self.imageView.isHidden = true
         self.resetlayout(message, isReply)
         self.showMessage(message)
     }
@@ -38,7 +49,6 @@ class IMImageMsgView: UIImageView, IMsgBodyView {
         if isReply {
             size = CGSize(width: size.width * 0.25, height: size.height * 0.25)
         }
-        self.isHidden = true
         self.snp.makeConstraints { make in
             make.width.equalTo(size.width)
             make.height.equalTo(size.height)
@@ -91,8 +101,8 @@ class IMImageMsgView: UIImageView, IMsgBodyView {
                 if data.thumbnailPath != nil {
                     let path = IMCoreManager.shared.storageModule.sandboxFilePath(
                         data.thumbnailPath!)
-                    self.renderImageByPathWithCorner(path: path, radius: 8.0)
-                    self.isHidden = false
+                    self.imageView.renderImageByPathWithCorner(path: path, radius: 8.0)
+                    self.imageView.isHidden = false
                     return
                 }
             } catch {
