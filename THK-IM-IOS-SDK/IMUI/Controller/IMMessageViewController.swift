@@ -141,10 +141,8 @@ open class IMMessageViewController: BaseViewController {
                 IMCoreManager.shared.groupModule.findById(id: session.entityId)
                     .compose(RxTransformer.shared.io2Main())
                     .subscribe(onNext: { group in
-                        if let g = group {
-                            IMUIManager.shared.pageRouter?.openGroupPage(
-                                controller: self, group: g, session: session)
-                        }
+                        IMUIManager.shared.pageRouter?.openGroupPage(
+                            controller: self, group: group, session: session)
                     }).disposed(by: self.disposeBag)
             }
         }

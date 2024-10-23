@@ -129,7 +129,6 @@ open class IMBaseSessionCell: IMBaseTableCell {
     }
 
     public func setSession(_ session: Session) {
-        self.showSessionEntityInfo(session)
         self.updateSession(session)
     }
 
@@ -159,6 +158,7 @@ open class IMBaseSessionCell: IMBaseTableCell {
         } else {
             self.contentView.backgroundColor = .clear
         }
+        self.showSessionEntityInfo(session)
     }
 
     open func showSessionEntityInfo(_ session: Session) {

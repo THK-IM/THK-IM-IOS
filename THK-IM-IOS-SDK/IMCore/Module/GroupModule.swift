@@ -10,9 +10,9 @@ import RxSwift
 
 public protocol GroupModule: BaseModule {
 
-    func queryServerGroupById(id: Int64) -> Observable<Group?>
+    func queryServerGroupById(id: Int64) -> Observable<Group>
 
-    func findById(id: Int64) -> Observable<Group?>
+    func findById(id: Int64) -> Observable<Group>
 
     func queryAllGroups() -> Observable<[Group]>
 
