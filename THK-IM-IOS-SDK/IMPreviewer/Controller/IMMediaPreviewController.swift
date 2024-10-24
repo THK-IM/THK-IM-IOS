@@ -46,6 +46,7 @@ public class IMMediaPreviewController: UIViewController,
 
     lazy var videoPlayer: SJVideoPlayer = {
         let player = SJVideoPlayer()
+        player.rotationManager?.isDisabledAutorotation = true
         player.isMuted = true
         player.autoplayWhenSetNewAsset = true
         player.resumePlaybackWhenScrollAppeared = false
@@ -56,8 +57,7 @@ public class IMMediaPreviewController: UIViewController,
         player.controlLayerAppearManager.keepAppearState()
         player.controlLayerAppearManager.isDisabled = true
         player.defaultEdgeControlLayer.isDisabledPromptingWhenNetworkStatusChanges = false
-        player.defaultEdgeControlLayer.bottomAdapter.removeItem(
-            forTag: SJEdgeControlLayerBottomItem_Full)
+
         player.defaultEdgeControlLayer.topAdapter.removeItem(forTag: SJEdgeControlLayerTopItem_Back)
         player.defaultEdgeControlLayer.topAdapter.removeItem(
             forTag: SJEdgeControlLayerTopItem_Title)
@@ -68,6 +68,8 @@ public class IMMediaPreviewController: UIViewController,
             player.defaultEdgeControlLayer.topAdapter.item(
                 forTag: SJEdgeControlLayerTopItem_PictureInPicture)?.isHidden = true
         }
+        player.defaultEdgeControlLayer.bottomAdapter.removeItem(
+            forTag: SJEdgeControlLayerBottomItem_Full)
         player.defaultEdgeControlLayer.bottomAdapter.add(self.muteAudioButton)
         if player.isMuted {
             self.muteAudioButton.image = ResourceUtils.loadImage(named: "ic_audio_off")?
@@ -76,6 +78,11 @@ public class IMMediaPreviewController: UIViewController,
             self.muteAudioButton.image = ResourceUtils.loadImage(named: "ic_audio_on")?
                 .scaledToSize(CGSize(width: 20, height: 20))
         }
+        player.defaultEdgeControlLayer.leftAdapter.removeAllItems()
+        player.defaultEdgeControlLayer.rightAdapter.removeAllItems()
+
+        player.defaultEdgeControlLayer.rightAdapter.reload()
+        player.defaultEdgeControlLayer.leftAdapter.reload()
         player.defaultEdgeControlLayer.bottomAdapter.reload()
         player.defaultEdgeControlLayer.topAdapter.reload()
         return player
