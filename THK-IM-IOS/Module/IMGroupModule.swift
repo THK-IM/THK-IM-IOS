@@ -11,7 +11,7 @@ import RxSwift
 
 class IMGroupModule: DefaultGroupModule {
 
-    override func queryServerGroupById(id: Int64) -> Observable<Group?> {
+    override func queryServerGroupById(id: Int64) -> Observable<Group> {
         return DataRepository.shared.groupApi.rx.request(.queryGroup(id))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(GroupVo.self))
