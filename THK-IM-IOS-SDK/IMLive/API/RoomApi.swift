@@ -32,7 +32,7 @@ extension RoomApi: TargetType {
         case .joinRoom:
             return "/member/join"
         case .refuseJoinRoom:
-            return "/member/hangup"
+            return "/member/refuse_join"
         case .delRoom:
             return ""
         }
