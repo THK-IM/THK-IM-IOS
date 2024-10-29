@@ -9,14 +9,14 @@
 import CocoaLumberjack
 import UIKit
 
-class LiveCallViewController: BaseViewController, RoomDelegate {
+class LiveCallViewController: BaseViewController {
 
-    static func pushLiveCallViewController(_ from: UIViewController, _ room: Room) {
+    static func pushLiveCallViewController(_ from: UIViewController, _ room: RTCRoom) {
         let vc = LiveCallViewController()
         from.navigationController?.pushViewController(vc, animated: true)
     }
 
-    static func presentLiveCallViewController(_ from: UIViewController, _ room: Room) {
+    static func presentLiveCallViewController(_ from: UIViewController, _ room: RTCRoom) {
         let vc = LiveCallViewController()
         vc.modalPresentationStyle = .overFullScreen
         from.present(vc, animated: true)
@@ -148,7 +148,7 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
         .disposed(by: disposeBag)
 
         if let room = IMLiveManager.shared.getRoom() {
-            room.registerObserver(self)
+            room.delegate = self
             self.setupView(room)
         }
     }
@@ -183,7 +183,7 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
         }
     }
 
-    private func setupView(_ room: Room) {
+    private func setupView(_ room: RTCRoom) {
         self.showUserInfo()
         var remoteParticipantCount = 0
         room.getAllParticipants().forEach({ p in
@@ -287,14 +287,6 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
         exit()
     }
 
-    func onTextMsgReceived(uId: Int64, text: String) {
-
-    }
-
-    func onBufferMsgReceived(data: Data) {
-
-    }
-
     func exit() {
         IMLiveManager.shared.destroyRoom()
         if self.navigationController == nil {
@@ -306,7 +298,34 @@ class LiveCallViewController: BaseViewController, RoomDelegate {
 
 }
 
+extension LiveCallViewController: RTCRoomProtocol {
+    func onError(_ function: String, _ err: any Error) {
+    }
+
+    func onParticipantJoin(_ p: BaseParticipant) {
+        self.join(p)
+    }
+
+    func onParticipantLeave(_ p: BaseParticipant) {
+        self.leave(p)
+    }
+
+    func onDataMsgReceived(_ uId: Int64, _ data: Data) {
+
+    }
+
+    func onParticipantVoice(_ uId: Int64, _ volume: Double) {
+
+    }
+
+    func onTextMsgReceived(_ uId: Int64, _ text: String) {
+
+    }
+
+}
+
 extension LiveCallViewController: LiveCallProtocol {
+
     func isSpeakerMuted() -> Bool {
         return IMLiveManager.shared.isSpeakerMuted()
     }
@@ -369,7 +388,10 @@ extension LiveCallViewController: LiveCallProtocol {
     }
 
     func hangup() {
-        IMLiveManager.shared.leaveRoom()
+        guard let room = IMLiveManager.shared.getRoom() else {
+            return
+        }
+        IMLiveManager.shared.refuseJoinRoom(roomId: room.id)
         self.exit()
     }
 

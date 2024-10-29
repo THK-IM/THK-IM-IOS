@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-protocol LiveApi {
+public protocol LiveApi {
 
     func getEndpoint() -> String
 

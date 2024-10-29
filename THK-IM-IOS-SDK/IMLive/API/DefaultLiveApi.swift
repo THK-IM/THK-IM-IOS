@@ -39,42 +39,42 @@ class DefaultLiveApi: LiveApi {
         self.apiInterceptor.updateToken(token: token)
     }
 
-    func createRoom(_ req: CreateRoomReqVo) -> Observable<CreateRoomResVo> {
+    public func createRoom(_ req: CreateRoomReqVo) -> Observable<CreateRoomResVo> {
         return roomApi.rx
             .request(.createRoom(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(CreateRoomResVo.self))
     }
 
-    func joinRoom(_ req: JoinRoomReqVo) -> Observable<JoinRoomResVo> {
+    public func joinRoom(_ req: JoinRoomReqVo) -> Observable<JoinRoomResVo> {
         return roomApi.rx
             .request(.joinRoom(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(JoinRoomResVo.self))
     }
 
-    func refuseJoinRoom(_ req: RefuseJoinReqVo) -> RxSwift.Observable<Void> {
+    public func refuseJoinRoom(_ req: RefuseJoinReqVo) -> RxSwift.Observable<Void> {
         return roomApi.rx
             .request(.refuseJoinRoom(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }
 
-    func deleteRoom(_ req: DelRoomReqVo) -> RxSwift.Observable<Void> {
+    public func deleteRoom(_ req: DelRoomReqVo) -> RxSwift.Observable<Void> {
         return roomApi.rx
             .request(.delRoom(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }
 
-    func publishStream(_ req: PublishStreamReqVo) -> Observable<PublishStreamResVo> {
+    public func publishStream(_ req: PublishStreamReqVo) -> Observable<PublishStreamResVo> {
         return streamApi.rx
             .request(.requestPublish(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(PublishStreamResVo.self))
     }
 
-    func playStream(_ req: PlayStreamReqVo) -> Observable<PlayStreamResVo> {
+    public func playStream(_ req: PlayStreamReqVo) -> Observable<PlayStreamResVo> {
         return streamApi.rx
             .request(.requestPlay(req))
             .asObservable()

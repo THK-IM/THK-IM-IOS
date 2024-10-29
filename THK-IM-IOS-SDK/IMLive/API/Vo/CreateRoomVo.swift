@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CreateRoomReqVo: Codable {
+public class CreateRoomReqVo: Codable {
 
     let uId: Int64
     let mode: Int
@@ -26,7 +26,7 @@ class CreateRoomReqVo: Codable {
     }
 }
 
-class CreateRoomResVo: Codable {
+public class CreateRoomResVo: Codable {
     let id: String
     let mode: Int
     let members: Set<Int64>

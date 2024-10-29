@@ -8,7 +8,7 @@
 import Foundation
 import WebRTC
 
-class RemoteParticipant: BaseParticipant {
+open class RemoteParticipant: BaseParticipant {
 
     private let audioEnable: Bool
     private let videoEnable: Bool
@@ -16,8 +16,8 @@ class RemoteParticipant: BaseParticipant {
     private var streamKey: String? = nil
 
     init(
-        uId: Int64, roomId: String, role: Role, subStreamKey: String, audioEnable: Bool,
-        videoEnable: Bool
+        uId: Int64, roomId: String, role: Role, subStreamKey: String,
+        audioEnable: Bool, videoEnable: Bool
     ) {
         self.subStreamKey = subStreamKey
         self.audioEnable = audioEnable
@@ -25,7 +25,7 @@ class RemoteParticipant: BaseParticipant {
         super.init(uId: uId, roomId: roomId, role: role)
     }
 
-    override func initPeerConnection() {
+    open override func initPeerConnection() {
         super.initPeerConnection()
         guard let p = self.peerConnection else {
             return
@@ -42,7 +42,7 @@ class RemoteParticipant: BaseParticipant {
         }
     }
 
-    override func onLocalSdpSetSuccess(_ sdp: RTCSessionDescription) {
+    open override func onLocalSdpSetSuccess(_ sdp: RTCSessionDescription) {
         super.onLocalSdpSetSuccess(sdp)
         let offer = sdp.sdp
         guard let offerBase64 = offer.data(using: .utf8)?.base64EncodedString() else {
@@ -72,11 +72,11 @@ class RemoteParticipant: BaseParticipant {
 
     }
 
-    override func pushStreamKey() -> String? {
+    open override func pushStreamKey() -> String? {
         return subStreamKey
     }
 
-    override func playStreamKey() -> String? {
+    open override func playStreamKey() -> String? {
         return streamKey
     }
 }

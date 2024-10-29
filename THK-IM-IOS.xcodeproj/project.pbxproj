@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		08F4799AC88630CBD25DF832 /* Pods_THK_IM_IOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */; };
+		9A9D71D22CD0C98E00936EB6 /* LiveSignalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */; };
+		9A9D71D42CD0D04D00936EB6 /* RTCRoomProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D32CD0D04300936EB6 /* RTCRoomProtocol.swift */; };
+		9A9D71D72CD0DF2300936EB6 /* LiveSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */; };
 		A00425FD2C36882A00977DB2 /* ic_titlebar_back.svg in Resources */ = {isa = PBXBuildFile; fileRef = A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */; };
 		A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF52AFF18EC00896B87 /* DateUtils.swift */; };
 		A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF72AFFA9A900896B87 /* MediaViewController.swift */; };
@@ -120,7 +123,7 @@
 		A0B245812B502DDB00D48BE8 /* SessionMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */; };
 		A0C431E02A909C3100A84D4A /* IMLiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* IMLiveManager.swift */; };
 		A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DF2A909C3100A84D4A /* LiveController.swift */; };
-		A0C431E72A909CB200A84D4A /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E22A909CB100A84D4A /* Room.swift */; };
+		A0C431E72A909CB200A84D4A /* RTCRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E22A909CB100A84D4A /* RTCRoom.swift */; };
 		A0C431E82A909CB200A84D4A /* LiveDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E32A909CB100A84D4A /* LiveDefines.swift */; };
 		A0C431E92A909CB200A84D4A /* LocalParticipant.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E42A909CB100A84D4A /* LocalParticipant.swift */; };
 		A0C431EA2A909CB200A84D4A /* BaseParticipant.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E52A909CB200A84D4A /* BaseParticipant.swift */; };
@@ -343,6 +346,9 @@
 		00B256D621B64DD52DDF517D /* Pods-THK-IM-IOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.debug.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.debug.xcconfig"; sourceTree = "<group>"; };
 		12A71C20EF80882B33F43851 /* Pods-THK-IM-IOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.release.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.release.xcconfig"; sourceTree = "<group>"; };
 		34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_THK_IM_IOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSignalProtocol.swift; sourceTree = "<group>"; };
+		9A9D71D32CD0D04300936EB6 /* RTCRoomProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCRoomProtocol.swift; sourceTree = "<group>"; };
+		9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSignal.swift; sourceTree = "<group>"; };
 		A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_titlebar_back.svg; sourceTree = "<group>"; };
 		A018CDF52AFF18EC00896B87 /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		A018CDF72AFFA9A900896B87 /* MediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
@@ -464,7 +470,7 @@
 		A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMemberVo.swift; sourceTree = "<group>"; };
 		A0C431DE2A909C3000A84D4A /* IMLiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMLiveManager.swift; path = API/IMLiveManager.swift; sourceTree = "<group>"; };
 		A0C431DF2A909C3100A84D4A /* LiveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveController.swift; sourceTree = "<group>"; };
-		A0C431E22A909CB100A84D4A /* Room.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
+		A0C431E22A909CB100A84D4A /* RTCRoom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTCRoom.swift; sourceTree = "<group>"; };
 		A0C431E32A909CB100A84D4A /* LiveDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveDefines.swift; sourceTree = "<group>"; };
 		A0C431E42A909CB100A84D4A /* LocalParticipant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalParticipant.swift; sourceTree = "<group>"; };
 		A0C431E52A909CB200A84D4A /* BaseParticipant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseParticipant.swift; sourceTree = "<group>"; };
@@ -712,6 +718,15 @@
 				34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9A9D71D52CD0DF0A00936EB6 /* Signal */ = {
+			isa = PBXGroup;
+			children = (
+				9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */,
+				9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */,
+			);
+			path = Signal;
 			sourceTree = "<group>";
 		};
 		A018CDF42AFF18D400896B87 /* Utils */ = {
@@ -1078,6 +1093,7 @@
 		A0D68AC02A888678004D11A5 /* IMLive */ = {
 			isa = PBXGroup;
 			children = (
+				9A9D71D52CD0DF0A00936EB6 /* Signal */,
 				A0978E642B7223E00047E6A2 /* View */,
 				A0D68AC72A888678004D11A5 /* API */,
 				A0D68AC12A888678004D11A5 /* Room */,
@@ -1094,7 +1110,8 @@
 				A0C431E52A909CB200A84D4A /* BaseParticipant.swift */,
 				A0C431E42A909CB100A84D4A /* LocalParticipant.swift */,
 				A0C431E62A909CB200A84D4A /* RemoteParticipant.swift */,
-				A0C431E22A909CB100A84D4A /* Room.swift */,
+				9A9D71D32CD0D04300936EB6 /* RTCRoomProtocol.swift */,
+				A0C431E22A909CB100A84D4A /* RTCRoom.swift */,
 			);
 			path = Room;
 			sourceTree = "<group>";
@@ -1939,6 +1956,7 @@
 				A0D68BC72A888679004D11A5 /* IMBaseTableCell.swift in Sources */,
 				A033FAFC2B8A0E500053045E /* IMVideoMsgView.swift in Sources */,
 				A018CE012B00A00B00896B87 /* IMMessageOperator.swift in Sources */,
+				9A9D71D22CD0C98E00936EB6 /* LiveSignalProtocol.swift in Sources */,
 				A0FCA8D32B484A5B00FC6E47 /* WelcomeViewController.swift in Sources */,
 				A0589A4F2C21569E003419B8 /* ResourceUtils.swift in Sources */,
 				A03082E12AF7BFEC001B8373 /* UpdateSessionVo.swift in Sources */,
@@ -2026,7 +2044,7 @@
 				A033FB0C2B8A33F60053045E /* IMsgBodyView.swift in Sources */,
 				A0D68BB52A888679004D11A5 /* IMInputLayout.swift in Sources */,
 				A0D68B912A888679004D11A5 /* Session.swift in Sources */,
-				A0C431E72A909CB200A84D4A /* Room.swift in Sources */,
+				A0C431E72A909CB200A84D4A /* RTCRoom.swift in Sources */,
 				A0D68BCE2A888679004D11A5 /* DismissAnimator.swift in Sources */,
 				A0978E662B723CAB0047E6A2 /* CallingInfoLayout.swift in Sources */,
 				A0D51DC42B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift in Sources */,
@@ -2035,6 +2053,7 @@
 				A0E82F592B526780008DC681 /* SessionMemberCell.swift in Sources */,
 				A018CE042B00A3CD00896B87 /* IMMsgDeleteOperator.swift in Sources */,
 				A0D68BFE2A888679004D11A5 /* ImageCompress.swift in Sources */,
+				9A9D71D72CD0DF2300936EB6 /* LiveSignal.swift in Sources */,
 				A0D68B732A888679004D11A5 /* OggOpusAudioPlayer.swift in Sources */,
 				A0D68BA32A888679004D11A5 /* IMVideoMsgCell.swift in Sources */,
 				A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */,
@@ -2149,6 +2168,7 @@
 				A0D68B9F2A888679004D11A5 /* IMTimeLineMsgCellProvider.swift in Sources */,
 				A0D68B9B2A888679004D11A5 /* UIColor+HexString.swift in Sources */,
 				A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */,
+				9A9D71D42CD0D04D00936EB6 /* RTCRoomProtocol.swift in Sources */,
 				A0D68B9E2A888679004D11A5 /* IMBaseSessionCellProvider.swift in Sources */,
 				A0FCA92E2B498A7000FC6E47 /* DeleteGroupVo.swift in Sources */,
 				A0D68BA82A888679004D11A5 /* IMUnSupportMsgCell.swift in Sources */,

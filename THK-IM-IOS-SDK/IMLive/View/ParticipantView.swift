@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import WebRTC
 
-class ParticipantView: UIView {
+open class ParticipantView: UIView {
 
     var participant: BaseParticipant? = nil
     private var fullScreen = true
@@ -27,10 +27,10 @@ class ParticipantView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupView()
+        self.setupView()
     }
 
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -42,7 +42,7 @@ class ParticipantView: UIView {
         self.rtcVideoView.videoContentMode = .scaleAspectFill
     }
 
-    func setMirror(_ enable: Bool) {
+    public func setMirror(_ enable: Bool) {
         if enable {
             self.rtcVideoView.transform = CGAffineTransformMakeScale(-1.0, 1.0)
         } else {
@@ -50,21 +50,21 @@ class ParticipantView: UIView {
         }
     }
 
-    func setParticipant(p: BaseParticipant) {
+    public func setParticipant(p: BaseParticipant) {
         self.participant = p
         self.participant?.attachViewRender(self.rtcVideoView)
         self.participant?.initPeerConnection()
     }
 
-    func startPeerConnection() {
+    public func startPeerConnection() {
         self.participant?.startPeerConnection()
     }
 
-    func isFullScreen() -> Bool {
+    public func isFullScreen() -> Bool {
         return self.fullScreen
     }
 
-    func setFullScreen(_ fullScreen: Bool) {
+    public func setFullScreen(_ fullScreen: Bool) {
         if self.fullScreen == fullScreen {
             return
         }
@@ -76,7 +76,7 @@ class ParticipantView: UIView {
         }
     }
 
-    private func switchToFullScreen() {
+    open func switchToFullScreen() {
         UIView.animate(
             withDuration: 0.4,
             animations: { [weak self] in
@@ -87,7 +87,7 @@ class ParticipantView: UIView {
             })
     }
 
-    private func switchToDragView() {
+    open func switchToDragView() {
         UIView.animate(
             withDuration: 0.4,
             animations: { [weak self] in
@@ -105,7 +105,7 @@ class ParticipantView: UIView {
             })
     }
 
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if fullScreen {
             return
         }
@@ -126,39 +126,39 @@ class ParticipantView: UIView {
         self.transform.ty = translationY
     }
 
-    func currentCamera() -> Int {
-        if participant != nil && participant! is LocalParticipant {
+    public func currentCamera() -> Int {
+        if self.participant != nil && self.participant! is LocalParticipant {
             return (participant! as! LocalParticipant).currentCamera()
         }
         return 0
     }
 
-    func switchCamera() {
+    public func switchCamera() {
         if participant == nil {
             return
         }
         (participant! as? LocalParticipant)?.switchCamera()
     }
 
-    func isAudioMute() -> Bool {
+    public func isAudioMute() -> Bool {
         if participant == nil {
             return false
         }
         return participant!.getAudioMuted()
     }
 
-    func muteAudio(_ mute: Bool) {
+    public func muteAudio(_ mute: Bool) {
         participant?.setAudioMuted(mute)
     }
 
-    func isVideoMute() -> Bool {
+    public func isVideoMute() -> Bool {
         if participant == nil {
             return false
         }
         return participant!.getVideoMuted()
     }
 
-    func muteVideo(_ mute: Bool) {
+    public func muteVideo(_ mute: Bool) {
         participant?.setVideoMuted(mute)
     }
 

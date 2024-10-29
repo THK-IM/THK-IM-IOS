@@ -72,7 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
                 let liveApiEndpoint = "http://rtc-api.thkim.com"
                 let liveApi = DefaultLiveApi(token: token, endpoint: liveApiEndpoint)
-                IMLiveManager.shared.setLiveApi(api: liveApi)
+                IMLiveManager.shared.liveApi = liveApi
                 IMLiveManager.shared.setUId(uId: uId)
                 return Observable.just(it)
             })

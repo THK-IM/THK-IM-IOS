@@ -9,24 +9,20 @@ import Foundation
 
 public enum NotifyType: String {
     case NewStream = "NewStream"
-    case
-        RemoveStream = "RemoveStream"
-    case
-        DataChannelMsg = "DataChannelMsg"
+    case RemoveStream = "RemoveStream"
+    case DataChannelMsg = "DataChannelMsg"
 }
 
 public enum Role: Int {
     case Broadcaster = 1
-    case
-        Audience = 2
+    case Audience = 2
 }
 
 public enum Mode: Int {
     case Chat = 1
-    case
-        Audio = 2
-    case
-        Video = 3
+    case Audio = 2
+    case Video = 3
+    case VoiceRoom = 4
 }
 
 public class NotifyBean: Codable {
@@ -100,23 +96,4 @@ public class ParticipantVo: Codable {
         case joinTime = "join_time"
         case streamKey = "stream_key"
     }
-}
-
-protocol RoomDelegate: NSObject {
-
-    func onMemberHangup(uId: Int64)
-
-    func onCallEnd()
-
-    func join(_ p: BaseParticipant)
-
-    func leave(_ p: BaseParticipant)
-
-    func onTextMsgReceived(uId: Int64, text: String)
-
-    func onBufferMsgReceived(data: Data)
-}
-
-class RoomObserver: NSObject {
-    weak var delegate: RoomDelegate?
 }

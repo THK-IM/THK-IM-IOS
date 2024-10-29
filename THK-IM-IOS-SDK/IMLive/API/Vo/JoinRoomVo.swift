@@ -7,7 +7,7 @@
 
 import Foundation
 
-class JoinRoomReqVo: Codable {
+public class JoinRoomReqVo: Codable {
 
     let roomId: String
     let uId: Int64
@@ -26,7 +26,7 @@ class JoinRoomReqVo: Codable {
     }
 }
 
-class JoinRoomResVo: Codable {
+public class JoinRoomResVo: Codable {
 
     let id: String
     let mode: Int
@@ -45,7 +45,7 @@ class JoinRoomResVo: Codable {
     }
 }
 
-class RefuseJoinReqVo: Codable {
+public class RefuseJoinReqVo: Codable {
     let roomId: String
     let uId: Int64
 
@@ -60,7 +60,7 @@ class RefuseJoinReqVo: Codable {
     }
 }
 
-class DelRoomReqVo: Codable {
+public class DelRoomReqVo: Codable {
     let roomId: String
     let uId: Int64
 

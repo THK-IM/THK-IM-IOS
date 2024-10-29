@@ -11,13 +11,10 @@ import Moya
 import RxSwift
 import WebRTC
 
-class IMLiveManager {
-
+open class IMLiveManager {
     static let shared = IMLiveManager()
-
-    private let disposeBag = DisposeBag()
-    private var _liveApi: LiveApi? = nil
-    var liveApi: LiveApi {
+    public let factory: RTCPeerConnectionFactory
+    public var liveApi: LiveApi {
         set {
             self._liveApi = newValue
         }
@@ -25,10 +22,13 @@ class IMLiveManager {
             return self._liveApi!
         }
     }
-
-    private var room: Room?
+    public var liveSignalProtocol: LiveSignalProtocol? = nil
+    
+    private var disposeBag = DisposeBag()
+    private var _liveApi: LiveApi? = nil
+    private var room: RTCRoom?
     private var uId: Int64 = 0
-    let factory: RTCPeerConnectionFactory
+    
     private init() {
         RTCPeerConnectionFactory.initialize()
         let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
@@ -40,7 +40,7 @@ class IMLiveManager {
         self.initAudioSession()
     }
 
-    func initAudioSession() {
+    private func initAudioSession() {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
         audioSessionConfiguration.categoryOptions = [
@@ -55,13 +55,16 @@ class IMLiveManager {
             DDLogError("setConfiguration \(error)")
         }
     }
+    
+    public func setUId(uId: Int64) {
+        self.uId = uId
+    }
 
-    func isSpeakerMuted() -> Bool {
+    public func isSpeakerMuted() -> Bool {
         let audioSession = AVAudioSession.sharedInstance()
         let currentRoute = audioSession.currentRoute
         var isSpeakerOutput = false
         for output in currentRoute.outputs {
-            DDLogInfo("muteSpeaker: \(output.portName), \(output.portType)")
             if output.portType == AVAudioSession.Port.builtInSpeaker {
                 isSpeakerOutput = true
                 break
@@ -69,8 +72,79 @@ class IMLiveManager {
         }
         return !isSpeakerOutput
     }
+    
+    public func setRoom(room: RTCRoom) {
+        self.room = room
+    }
 
-    func muteSpeaker(_ muted: Bool) {
+    public func createRoom(ids: Set<Int64>, mode: Mode) -> Observable<RTCRoom> {
+        self.destroyRoom()
+        let uId = selfId()
+        return self.liveApi.createRoom(CreateRoomReqVo(uId: uId, mode: mode.rawValue, members: ids))
+            .flatMap { [weak self] resVo -> Observable<RTCRoom> in
+                let room = RTCRoom(
+                    id: resVo.id, ownerId: resVo.ownerId, uId: uId, mode: mode,
+                    members: resVo.members,
+                    role: Role.Broadcaster, createTime: resVo.createTime,
+                    participants: resVo.participants
+                )
+                self?.room = room
+                return Observable.just(room)
+            }
+    }
+
+    public func joinRoom(roomId: String, role: Role) -> Observable<RTCRoom> {
+        self.destroyRoom()
+        let uId = selfId()
+        return self.liveApi.joinRoom(JoinRoomReqVo(roomId: roomId, uId: uId, role: role.rawValue))
+            .flatMap { [weak self] res -> Observable<RTCRoom> in
+                var m = Mode.Chat
+                if res.mode == Mode.Audio.rawValue || res.mode == Mode.VoiceRoom.rawValue {
+                    m = Mode.Audio
+                } else if res.mode == Mode.Video.rawValue {
+                    m = Mode.Video
+                }
+                let room = RTCRoom(
+                    id: res.id, ownerId: res.ownerId, uId: uId, mode: m, members: res.members,
+                    role: Role.Broadcaster, createTime: res.createTime,
+                    participants: res.participants
+                )
+                self?.room = room
+                return Observable.just(room)
+            }
+    }
+
+    public func refuseJoinRoom(roomId: String) {
+        let uId = selfId()
+        self.liveApi.refuseJoinRoom(RefuseJoinReqVo(roomId: roomId, uId: uId))
+            .subscribe()
+            .disposed(by: self.disposeBag)
+    }
+    
+    public func onLiveSignalReceived(signal: LiveSignal) {
+        guard let delegate = self.liveSignalProtocol else { return }
+        if let s = signal.beingRequestedSignal() {
+            delegate.onCallBeingRequested(s)
+        } else if let s = signal.cancelRequestedSignal() {
+            delegate.onCallCancelRequested(s)
+        } else if  let s = signal.rejectRequestSignal() {
+            delegate.onCallRequsetBeRejected(s)
+        } else if let s = signal.hangupSignal() {
+            delegate.onCallingBeHangup(s)
+        } else if let s = signal.endCallSignal() {
+            delegate.onCallingBeEnded(s)
+        } 
+    }
+
+    public func selfId() -> Int64 {
+        return self.uId
+    }
+
+    public func getRoom() -> RTCRoom? {
+        return room
+    }
+
+    public func muteSpeaker(_ muted: Bool) {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         if muted {
             audioSessionConfiguration.categoryOptions = [
@@ -90,117 +164,9 @@ class IMLiveManager {
             DDLogError("setConfiguration \(error)")
         }
     }
-
-    func setUId(uId: Int64) {
-        self.uId = uId
-    }
-
-    func setLiveApi(api: LiveApi) {
-        self._liveApi = api
-    }
-
-    func setRoom(room: Room) {
-        self.room = room
-    }
-
-    func createRoom(ids: Set<Int64>, mode: Mode) -> Observable<Room> {
-        room?.destroy()
-        let uId = selfId()
-        return self.liveApi.createRoom(CreateRoomReqVo(uId: uId, mode: mode.rawValue, members: ids))
-            .flatMap { resVo -> Observable<Room> in
-                let room = Room(
-                    id: resVo.id, ownerId: resVo.ownerId, uId: uId, mode: mode,
-                    members: resVo.members,
-                    role: Role.Broadcaster, createTime: resVo.createTime,
-                    participants: resVo.participants
-                )
-                self.room = room
-                return Observable.just(room)
-            }
-    }
-
-    func joinRoom(roomId: String, role: Role) -> Observable<Room> {
-        room?.destroy()
-        let uId = selfId()
-        return self.liveApi.joinRoom(JoinRoomReqVo(roomId: roomId, uId: uId, role: role.rawValue))
-            .flatMap { [weak self] resVo -> Observable<Room> in
-                guard let sf = self else {
-                    return Observable.error(CocoaError.init(CocoaError.executableRuntimeMismatch))
-                }
-                var m = Mode.Chat
-                if resVo.mode == Mode.Audio.rawValue {
-                    m = Mode.Audio
-                } else if resVo.mode == Mode.Video.rawValue {
-                    m = Mode.Video
-                }
-                var participants = [ParticipantVo]()
-                if resVo.participants != nil {
-                    for p in resVo.participants! {
-                        if p.uId != sf.selfId() {
-                            participants.append(p)
-                        }
-                    }
-                }
-                let room = Room(
-                    id: resVo.id, ownerId: resVo.ownerId, uId: uId, mode: m, members: resVo.members,
-                    role: Role.Broadcaster, createTime: resVo.createTime,
-                    participants: resVo.participants
-                )
-                sf.room = room
-                return Observable.just(room)
-            }
-    }
-
-    func leaveRoom() {
-        let uId = selfId()
-        if let room = self.room {
-            if uId == room.ownerId {
-                self.liveApi.deleteRoom(DelRoomReqVo(roomId: room.id, uId: uId))
-                    .subscribe(
-                        onError: { [weak self] _ in
-                            self?.destroyRoom()
-                        },
-                        onCompleted: { [weak self] in
-                            self?.destroyRoom()
-                        }
-                    ).disposed(by: self.disposeBag)
-            } else {
-                self.liveApi.refuseJoinRoom(RefuseJoinReqVo(roomId: room.id, uId: uId))
-                    .subscribe(
-                        onError: { [weak self] _ in
-                            self?.destroyRoom()
-                        },
-                        onCompleted: { [weak self] in
-                            self?.destroyRoom()
-                        }
-                    ).disposed(by: self.disposeBag)
-            }
-        }
-    }
-
-    func onMemberHangup(roomId: String, uId: Int64) {
-        if let room = self.room {
-            if room.id == roomId {
-                room.onMemberHangup(uId: uId)
-            }
-        }
-    }
-
-    func onEndCall(roomId: String) {
-        if let room = self.room {
-            room.onCallEnd()
-        }
-    }
-
-    func selfId() -> Int64 {
-        return self.uId
-    }
-
-    func getRoom() -> Room? {
-        return room
-    }
-
-    func destroyRoom() {
+    
+    public func destroyRoom() {
+        disposeBag = DisposeBag()
         room?.destroy()
         room = nil
     }

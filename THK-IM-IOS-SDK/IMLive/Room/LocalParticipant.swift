@@ -9,7 +9,7 @@ import CocoaLumberjack
 import Foundation
 import WebRTC
 
-class LocalParticipant: BaseParticipant {
+open class LocalParticipant: BaseParticipant {
 
     private let audioEnable: Bool
     private let videoEnable: Bool
@@ -26,7 +26,7 @@ class LocalParticipant: BaseParticipant {
         super.init(uId: uId, roomId: roomId, role: role)
     }
 
-    override func initPeerConnection() {
+    open override func initPeerConnection() {
         super.initPeerConnection()
         guard let p = self.peerConnection else {
             return
@@ -97,7 +97,7 @@ class LocalParticipant: BaseParticipant {
         self.innerDataChannel?.delegate = self
     }
 
-    override func onLocalSdpSetSuccess(_ sdp: RTCSessionDescription) {
+    open override func onLocalSdpSetSuccess(_ sdp: RTCSessionDescription) {
         super.onLocalSdpSetSuccess(sdp)
         let offer = sdp.sdp
         guard let offerBase64 = offer.data(using: .utf8)?.base64EncodedString() else {
@@ -213,13 +213,13 @@ class LocalParticipant: BaseParticipant {
         return format
     }
 
-    override func onDisconnected() {
+    open override func onDisconnected() {
         self.innerDataChannel?.delegate = nil
         self.innerDataChannel?.close()
         self.innerDataChannel = nil
     }
 
-    override func leave() {
+    open override func leave() {
         self.videoCapturer?.stopCapture()
         self.videoCapturer = nil
         super.leave()

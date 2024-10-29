@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PublishStreamReqVo: Codable {
+public class PublishStreamReqVo: Codable {
     let uId: Int64
     let roomId: String
     let offerSdp: String
@@ -24,7 +24,7 @@ class PublishStreamReqVo: Codable {
     }
 }
 
-class PublishStreamResVo: Codable {
+public class PublishStreamResVo: Codable {
     let answerSdp: String
     let streamKey: String
 

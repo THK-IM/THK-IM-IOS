@@ -10,14 +10,14 @@ import Foundation
 import Moya
 import WebRTC
 
-class Room: NSObject {
+public class RTCRoom: NSObject {
     let id: String
     let uId: Int64
     let mode: Mode
     var members: Set<Int64>
     let ownerId: Int64
     let createTime: Int64
-    private var observers = [RoomObserver]()
+    weak var delegate: RTCRoomProtocol? = nil
     private var localParticipant: LocalParticipant? = nil
     private var remoteParticipants = [RemoteParticipant]()
 
@@ -75,7 +75,6 @@ class Room: NSObject {
     }
 
     func participantLeave(roomId: String, streamKey: String) {
-        DDLogInfo("participantLeave")
         if roomId == self.id {
             var p: BaseParticipant? = nil
             if localParticipant != nil && localParticipant!.pushStreamKey() == streamKey {
@@ -121,27 +120,19 @@ class Room: NSObject {
     }
 
     private func notifyJoin(_ p: BaseParticipant) {
-        for o in self.observers {
-            o.delegate?.join(p)
-        }
+        delegate?.onParticipantJoin(p)
     }
-
-    func onCallEnd() {
-        for o in self.observers {
-            o.delegate?.onCallEnd()
-        }
-    }
-
-    func onMemberHangup(uId: Int64) {
-        for o in self.observers {
-            o.delegate?.onMemberHangup(uId: uId)
-        }
-    }
-
+    
     private func notifyLeave(_ p: BaseParticipant) {
-        for o in self.observers {
-            o.delegate?.leave(p)
-        }
+        delegate?.onParticipantLeave(p)
+    }
+
+    func onDataMsgReceived(_ uId: Int64, _ data: Data) {
+        delegate?.onDataMsgReceived(uId, data)
+    }
+    
+    func onTextMsgReceived(_ uId: Int64, _ text: String) {
+        delegate?.onTextMsgReceived(uId, text)
     }
 
     func getAllParticipants() -> [BaseParticipant] {
@@ -180,28 +171,11 @@ class Room: NSObject {
         return self.localParticipant?.role
     }
 
-    func registerObserver(_ d: RoomDelegate) {
-        let o = RoomObserver()
-        o.delegate = d
-        if !observers.contains(o) {
-            observers.append(o)
-        }
-    }
-
-    func unRegisterObserver(_ d: RoomDelegate) {
-        observers.removeAll { ob in
-            return ob.delegate != nil && ob.delegate! == d
-        }
-    }
-
     func sendMessage(_ text: String) -> Bool {
         guard let lp = self.localParticipant else {
             return false
         }
         let success = lp.sendMessage(text: text)
-        if success {
-            self.receivedDcMsg(self.uId, text)
-        }
         return success
     }
 
@@ -212,24 +186,11 @@ class Room: NSObject {
         return lp.sendData(data: data)
     }
 
-    func receivedDcMsg(_ uId: Int64, _ text: String) {
-        observers.forEach { ob in
-            ob.delegate?.onTextMsgReceived(uId: uId, text: text)
-        }
-    }
-
-    func receiveDcData(_ data: Data) {
-        observers.forEach { ob in
-            ob.delegate?.onBufferMsgReceived(data: data)
-        }
-    }
-
     func switchCamera() {
         localParticipant?.switchCamera()
     }
 
     func destroy() {
-        self.observers.removeAll()
         self.localParticipant?.onDisconnected()
         self.localParticipant?.leave()
         self.localParticipant = nil
