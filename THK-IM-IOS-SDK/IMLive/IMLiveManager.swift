@@ -133,6 +133,15 @@ open class IMLiveManager {
             .disposed(by: self.disposeBag)
     }
     
+    public func destroyRoom() {
+        let uId = selfId()
+        guard let room = self.room else { return }
+        self.liveApi.deleteRoom(DelRoomReqVo(roomId: room.id, uId: uId))
+            .subscribe()
+            .disposed(by: self.disposeBag)
+    }
+
+    
     public func onLiveSignalReceived(signal: LiveSignal) {
         guard let delegate = self.liveSignalProtocol else { return }
         if let s = signal.beingRequestedSignal() {

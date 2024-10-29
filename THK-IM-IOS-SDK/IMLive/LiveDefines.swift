@@ -23,6 +23,7 @@ public enum Mode: Int {
     case Audio = 2
     case Video = 3
     case VoiceRoom = 4
+    case VideoRoom = 5
 }
 
 public class NotifyBean: Codable {
