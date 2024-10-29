@@ -138,13 +138,10 @@ open class IMLiveManager {
         guard let room = self.room else { return }
         if room.ownerId == uId {
             self.liveApi.deleteRoom(DelRoomReqVo(roomId: room.id, uId: uId))
-                .subscribe(onCompleted: { [weak self] in
-                    self?.destroyRoom()
-                })
+                .subscribe()
                 .disposed(by: self.disposeBag)
-        } else {
-            self.destroyRoom()
         }
+        self.destroyRoom()
     }
 
     
