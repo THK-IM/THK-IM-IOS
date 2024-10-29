@@ -13,8 +13,12 @@ public protocol LiveApi {
     func getEndpoint() -> String
 
     func createRoom(_ req: CreateRoomReqVo) -> Observable<CreateRoomResVo>
+    
+    func callMembers(_ req: CallRoomMemberReqVo) -> Observable<Void>
 
     func joinRoom(_ req: JoinRoomReqVo) -> Observable<JoinRoomResVo>
+    
+    func inviteMembers(_ req: InviteMemberReqVo) -> Observable<Void>
 
     func refuseJoinRoom(_ req: RefuseJoinReqVo) -> Observable<Void>
 

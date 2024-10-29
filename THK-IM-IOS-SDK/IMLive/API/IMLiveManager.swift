@@ -92,6 +92,12 @@ open class IMLiveManager {
                 return Observable.just(room)
             }
     }
+    
+    public func callMembers() -> Observable<Void>? {
+        guard let room = self.room else { return nil }
+        let req = CallRoomMemberReqVo(uId: selfId(), roomId: room.id, msg: "", duration: 5)
+        return self.liveApi.callMembers(req)
+    }
 
     public func joinRoom(roomId: String, role: Role) -> Observable<RTCRoom> {
         self.destroyRoom()
@@ -112,6 +118,12 @@ open class IMLiveManager {
                 self?.room = room
                 return Observable.just(room)
             }
+    }
+    
+    public func inviteMember(uIds: Set<Int64>) -> Observable<Void>? {
+        guard let room = self.room else { return nil }
+        let req = InviteMemberReqVo(uId: selfId(), roomId: room.id, msg: "", duration: 5, inviteUIds: uIds)
+        return self.liveApi.inviteMembers(req)
     }
 
     public func refuseJoinRoom(roomId: String) {
