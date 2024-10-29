@@ -13,6 +13,7 @@
 		9A9D71D72CD0DF2300936EB6 /* LiveSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */; };
 		9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */; };
 		9A9D71DB2CD0F1DB00936EB6 /* InviteMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */; };
+		9A9D71DD2CD0F64D00936EB6 /* IMLiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DC2CD0F64D00936EB6 /* IMLiveManager.swift */; };
 		A00425FD2C36882A00977DB2 /* ic_titlebar_back.svg in Resources */ = {isa = PBXBuildFile; fileRef = A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */; };
 		A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF52AFF18EC00896B87 /* DateUtils.swift */; };
 		A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF72AFFA9A900896B87 /* MediaViewController.swift */; };
@@ -123,7 +124,6 @@
 		A0B2457D2B50240400D48BE8 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B2457C2B50240400D48BE8 /* GroupViewController.swift */; };
 		A0B2457F2B502C0700D48BE8 /* IMSessionApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B2457E2B502C0700D48BE8 /* IMSessionApi.swift */; };
 		A0B245812B502DDB00D48BE8 /* SessionMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */; };
-		A0C431E02A909C3100A84D4A /* IMLiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DE2A909C3000A84D4A /* IMLiveManager.swift */; };
 		A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431DF2A909C3100A84D4A /* LiveController.swift */; };
 		A0C431E72A909CB200A84D4A /* RTCRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E22A909CB100A84D4A /* RTCRoom.swift */; };
 		A0C431E82A909CB200A84D4A /* LiveDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C431E32A909CB100A84D4A /* LiveDefines.swift */; };
@@ -353,6 +353,7 @@
 		9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSignal.swift; sourceTree = "<group>"; };
 		9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteMemberVo.swift; sourceTree = "<group>"; };
+		9A9D71DC2CD0F64D00936EB6 /* IMLiveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLiveManager.swift; sourceTree = "<group>"; };
 		A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_titlebar_back.svg; sourceTree = "<group>"; };
 		A018CDF52AFF18EC00896B87 /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		A018CDF72AFFA9A900896B87 /* MediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
@@ -472,7 +473,6 @@
 		A0B2457C2B50240400D48BE8 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
 		A0B2457E2B502C0700D48BE8 /* IMSessionApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSessionApi.swift; sourceTree = "<group>"; };
 		A0B245802B502DDB00D48BE8 /* SessionMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMemberVo.swift; sourceTree = "<group>"; };
-		A0C431DE2A909C3000A84D4A /* IMLiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMLiveManager.swift; path = API/IMLiveManager.swift; sourceTree = "<group>"; };
 		A0C431DF2A909C3100A84D4A /* LiveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveController.swift; sourceTree = "<group>"; };
 		A0C431E22A909CB100A84D4A /* RTCRoom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTCRoom.swift; sourceTree = "<group>"; };
 		A0C431E32A909CB100A84D4A /* LiveDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveDefines.swift; sourceTree = "<group>"; };
@@ -1103,8 +1103,8 @@
 				A0978E642B7223E00047E6A2 /* View */,
 				A0D68AC72A888678004D11A5 /* API */,
 				A0D68AC12A888678004D11A5 /* Room */,
-				A0C431DE2A909C3000A84D4A /* IMLiveManager.swift */,
 				A0C431E32A909CB100A84D4A /* LiveDefines.swift */,
+				9A9D71DC2CD0F64D00936EB6 /* IMLiveManager.swift */,
 				A02578C52AA4269B00A66CEF /* LiveApi.swift */,
 			);
 			path = IMLive;
@@ -1968,6 +1968,7 @@
 				9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */,
 				A03082E12AF7BFEC001B8373 /* UpdateSessionVo.swift in Sources */,
 				A0E8ED482AEDED23004163BD /* IMPreviewer.swift in Sources */,
+				9A9D71DD2CD0F64D00936EB6 /* IMLiveManager.swift in Sources */,
 				A0D68BA92A888679004D11A5 /* IMUnSupportMsgCellProvider.swift in Sources */,
 				A033FB132B92F8A10053045E /* IMMsgEditOperator.swift in Sources */,
 				A0D68BD42A888679004D11A5 /* VideoController.swift in Sources */,
@@ -2002,7 +2003,6 @@
 				A0FCA8DA2B48E66000FC6E47 /* DataRepository.swift in Sources */,
 				A0EF35522B5BFA7700940F54 /* IMAtSessionMemberController.swift in Sources */,
 				A0D68BE72A888679004D11A5 /* MessageModule.swift in Sources */,
-				A0C431E02A909C3100A84D4A /* IMLiveManager.swift in Sources */,
 				A0FCA8D72B484AB300FC6E47 /* BaseViewController.swift in Sources */,
 				A0D68BB32A888679004D11A5 /* IMBaseFunctionCellProvider.swift in Sources */,
 				A0D68BAD2A888679004D11A5 /* IMUnicodeEmojiCell.swift in Sources */,
