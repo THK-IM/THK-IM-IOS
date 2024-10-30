@@ -217,7 +217,7 @@ open class BaseParticipant: NSObject {
             return
         }
         if room.id != self.roomId { return }
-        room.onDataMsgReceived(self.uId, data)
+        room.onDataMsgReceived(data)
     }
 
     private func onNewMessage(data: Data) {
@@ -325,6 +325,9 @@ extension BaseParticipant: RTCPeerConnectionDelegate {
         default:
             break
         }
+        guard let room = IMLiveManager.shared.getRoom() else { return }
+        if room.id != self.roomId { return }
+        room.delegate?.onConnectStatus(self.uId, newState.rawValue)
     }
 
     /**

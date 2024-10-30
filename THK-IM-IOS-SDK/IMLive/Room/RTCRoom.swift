@@ -132,8 +132,8 @@ public class RTCRoom: NSObject {
         delegate?.onParticipantLeave(p)
     }
 
-    func onDataMsgReceived(_ uId: Int64, _ data: Data) {
-        delegate?.onDataMsgReceived(uId, data)
+    func onDataMsgReceived(_ data: Data) {
+        delegate?.onDataMsgReceived(data)
     }
     
     func onTextMsgReceived(_ uId: Int64, _ text: String) {
@@ -159,20 +159,21 @@ public class RTCRoom: NSObject {
         return remoteParticipants
     }
 
-    func setRole(role: Int) {
-        if self.localParticipant != nil {
-            if self.localParticipant!.role != role {
-                self.localParticipant!.leave()
-                self.localParticipant!.onDisconnected()
-            } else {
+    func updateMyRole(role: Int) {
+        if let p = self.localParticipant {
+            if p.role == role {
                 return
             }
+            p.leave()
+            p.onDisconnected()
         }
         self.initLocalParticipant(role)
-        participantJoin(p: self.localParticipant!)
+        if let p = self.localParticipant {
+            self.participantJoin(p: p)
+        }
     }
 
-    func getRole() -> Int? {
+    func getMyRole() -> Int? {
         return self.localParticipant?.role
     }
 

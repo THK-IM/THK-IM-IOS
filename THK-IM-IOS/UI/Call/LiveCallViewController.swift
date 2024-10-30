@@ -299,6 +299,7 @@ class LiveCallViewController: BaseViewController {
 }
 
 extension LiveCallViewController: RTCRoomProtocol {
+    
     func onError(_ function: String, _ err: any Error) {
     }
 
@@ -310,10 +311,6 @@ extension LiveCallViewController: RTCRoomProtocol {
         self.leave(p)
     }
 
-    func onDataMsgReceived(_ uId: Int64, _ data: Data) {
-
-    }
-
     func onParticipantVoice(_ uId: Int64, _ volume: Double) {
 
     }
@@ -321,6 +318,14 @@ extension LiveCallViewController: RTCRoomProtocol {
     func onTextMsgReceived(_ uId: Int64, _ text: String) {
 
     }
+    
+    func onDataMsgReceived(_ data: Data) {
+        
+    }
+    
+    func onConnectStatus(_ uId: Int64, _ status: Int) {
+    }
+    
 
 }
 

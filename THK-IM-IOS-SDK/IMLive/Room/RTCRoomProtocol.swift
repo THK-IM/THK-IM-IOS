@@ -31,12 +31,18 @@ public protocol RTCRoomProtocol: NSObject {
     /**
      * RTC 数据消息
      */
-    func onDataMsgReceived(_ uId: Int64, _ data: Data)
+    func onDataMsgReceived(_ data: Data)
     
     /**
      * RTC 语音音量
      */
     func onParticipantVoice(_ uId: Int64, _ volume: Double)
+    
+    
+    /**
+     * RTC 连接状态
+     */
+    func onConnectStatus(_ uId: Int64, _ status: Int)
     
     
     /**
