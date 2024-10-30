@@ -15,7 +15,7 @@ open class BaseParticipant: NSObject {
 
     let uId: Int64
     let roomId: String
-    let role: Role
+    let role: Int
     let disposeBag = DisposeBag()
     var peerConnection: RTCPeerConnection?
     private var audioTracks = [RTCAudioTrack]()
@@ -25,7 +25,7 @@ open class BaseParticipant: NSObject {
     private var audioMuted: Bool = false
     private var videoMuted: Bool = false
 
-    init(uId: Int64, roomId: String, role: Role) {
+    init(uId: Int64, roomId: String, role: Int) {
         self.uId = uId
         self.roomId = roomId
         self.role = role
@@ -233,16 +233,13 @@ open class BaseParticipant: NSObject {
                     NewStreamNotify.self,
                     from: notify.message.data(using: .utf8) ?? Data()
                 )
-                let role =  newStream.role == Role.Broadcaster.rawValue ? Role.Broadcaster : Role.Audience
-                let audioEnable = (role == Role.Broadcaster) && room.audioEnable()
-                let videoEnable = (role == Role.Broadcaster) && room.videoEnable()
                 let participant = RemoteParticipant(
                     uId: newStream.uId,
                     roomId: newStream.roomId,
-                    role: role,
+                    role: newStream.role,
                     subStreamKey: newStream.streamKey,
-                    audioEnable: audioEnable,
-                    videoEnable: videoEnable
+                    audioEnable: room.audioEnable(),
+                    videoEnable: room.videoEnable()
                 )
                 DispatchQueue.main.async {
                     room.participantJoin(p: participant)
@@ -271,7 +268,7 @@ open class BaseParticipant: NSObject {
             DDLogError("Participant: onNewMessage \(error)")
         }
     }
-    
+
     open func onError(_ function: String, _ err: Error) {
         guard let room = IMLiveManager.shared.getRoom() else {
             return
@@ -282,8 +279,8 @@ open class BaseParticipant: NSObject {
 
 }
 
-extension BaseParticipant : RTCPeerConnectionDelegate {
-    
+extension BaseParticipant: RTCPeerConnectionDelegate {
+
     /**
      * RTC协商回调
      */
@@ -411,11 +408,11 @@ extension BaseParticipant : RTCPeerConnectionDelegate {
     ) {
         DDLogInfo("peerConnection didRemove RTCIceCandidate: \(candidates)")
     }
-    
+
 }
 
-extension BaseParticipant : RTCDataChannelDelegate {
-    
+extension BaseParticipant: RTCDataChannelDelegate {
+
     /**
      * RTC DataChannel打开回调
      */
@@ -425,7 +422,6 @@ extension BaseParticipant : RTCDataChannelDelegate {
         self.dataChannels[dataChannel.label] = dataChannel
         dataChannel.delegate = self
     }
-    
 
     open func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
         if dataChannel.readyState == .closed {
@@ -447,5 +443,5 @@ extension BaseParticipant : RTCDataChannelDelegate {
             }
         }
     }
-    
+
 }

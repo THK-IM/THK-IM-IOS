@@ -84,7 +84,7 @@ open class IMLiveManager {
             .flatMap { [weak self] resVo -> Observable<RTCRoom> in
                 let room = RTCRoom(
                     id: resVo.id, ownerId: resVo.ownerId, uId: uId, mode: mode.rawValue,
-                    role: Role.Broadcaster, createTime: resVo.createTime,
+                    role: Role.Broadcaster.rawValue, createTime: resVo.createTime,
                     participants: resVo.participants
                 )
                 self?.room = room
@@ -98,14 +98,14 @@ open class IMLiveManager {
         return self.liveApi.callMembers(req)
     }
 
-    public func joinRoom(roomId: String, role: Role) -> Observable<RTCRoom> {
+    public func joinRoom(roomId: String, role: Int) -> Observable<RTCRoom> {
         self.destroyRoom()
         let uId = selfId()
-        return self.liveApi.joinRoom(JoinRoomReqVo(roomId: roomId, uId: uId, role: role.rawValue))
+        return self.liveApi.joinRoom(JoinRoomReqVo(roomId: roomId, uId: uId, role: role))
             .flatMap { [weak self] res -> Observable<RTCRoom> in
                 let room = RTCRoom(
                     id: res.id, ownerId: res.ownerId, uId: uId, mode: res.mode,
-                    role: Role.Broadcaster, createTime: res.createTime,
+                    role: role, createTime: res.createTime,
                     participants: res.participants
                 )
                 self?.room = room

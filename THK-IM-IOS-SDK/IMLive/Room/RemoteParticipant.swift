@@ -16,7 +16,7 @@ open class RemoteParticipant: BaseParticipant {
     private var streamKey: String? = nil
 
     init(
-        uId: Int64, roomId: String, role: Role, subStreamKey: String,
+        uId: Int64, roomId: String, role: Int, subStreamKey: String,
         audioEnable: Bool, videoEnable: Bool
     ) {
         self.subStreamKey = subStreamKey
@@ -30,12 +30,12 @@ open class RemoteParticipant: BaseParticipant {
         guard let p = self.peerConnection else {
             return
         }
-        if self.audioEnable && role == Role.Broadcaster {
+        if self.audioEnable && role == Role.Broadcaster.rawValue {
             let audioTransceiver = RTCRtpTransceiverInit()
             audioTransceiver.direction = .recvOnly
             p.addTransceiver(of: .audio, init: audioTransceiver)
         }
-        if self.videoEnable && role == Role.Broadcaster {
+        if self.videoEnable && role == Role.Broadcaster.rawValue  {
             let videoTransceiver = RTCRtpTransceiverInit()
             videoTransceiver.direction = .recvOnly
             p.addTransceiver(of: .video, init: videoTransceiver)

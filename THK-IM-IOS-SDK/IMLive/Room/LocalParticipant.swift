@@ -19,7 +19,7 @@ open class LocalParticipant: BaseParticipant {
     private var currentDevice: AVCaptureDevice?
     private var fps = 30
 
-    init(uId: Int64, roomId: String, role: Role, audioEnable: Bool = true, videoEnable: Bool = true)
+    init(uId: Int64, roomId: String, role: Int, audioEnable: Bool = true, videoEnable: Bool = true)
     {
         self.audioEnable = audioEnable
         self.videoEnable = videoEnable
@@ -32,7 +32,7 @@ open class LocalParticipant: BaseParticipant {
             return
         }
 
-        if self.audioEnable && role == Role.Broadcaster {
+        if self.audioEnable && self.role == Role.Broadcaster.rawValue {
             var mandatoryConstraints = [String: String]()
             mandatoryConstraints["googEchoCancellation"] = "true"
             mandatoryConstraints["googNoiseSuppression"] = "true"
@@ -52,7 +52,7 @@ open class LocalParticipant: BaseParticipant {
             self.addAudioTrack(track: audioTrack)
         }
 
-        if self.videoEnable && role == Role.Broadcaster {
+        if self.videoEnable && self.role == Role.Broadcaster.rawValue {
             self.currentDevice = self.getFrontCameraDevice()
             if self.currentDevice == nil {
                 return

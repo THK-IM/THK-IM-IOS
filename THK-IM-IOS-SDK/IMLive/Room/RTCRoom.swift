@@ -21,7 +21,7 @@ public class RTCRoom: NSObject {
     private var remoteParticipants = [RemoteParticipant]()
 
     init(
-        id: String, ownerId: Int64, uId: Int64, mode: Int, role: Role,
+        id: String, ownerId: Int64, uId: Int64, mode: Int, role: Int,
         createTime: Int64, participants: [ParticipantVo]?
     ) {
         self.id = id
@@ -34,7 +34,7 @@ public class RTCRoom: NSObject {
         self.initRemoteParticipants(participants)
     }
 
-    private func initLocalParticipant(_ role: Role) {
+    private func initLocalParticipant(_ role: Int) {
         localParticipant = LocalParticipant(
             uId: self.uId, roomId: self.id, role: role,
             audioEnable: self.audioEnable(),
@@ -55,11 +55,10 @@ public class RTCRoom: NSObject {
             return
         }
         for p in participants! {
-            let role = p.role == Role.Broadcaster.rawValue ? Role.Broadcaster : Role.Audience
             let audioEnable = self.audioEnable()
             let videoEnable = self.videoEnable()
             let p = RemoteParticipant(
-                uId: p.uId, roomId: id, role: role, subStreamKey: p.streamKey,
+                uId: p.uId, roomId: id, role: p.role, subStreamKey: p.streamKey,
                 audioEnable: audioEnable, videoEnable: videoEnable
             )
             self.remoteParticipants.append(p)
@@ -160,7 +159,7 @@ public class RTCRoom: NSObject {
         return remoteParticipants
     }
 
-    func setRole(role: Role) {
+    func setRole(role: Int) {
         if self.localParticipant != nil {
             if self.localParticipant!.role != role {
                 self.localParticipant!.leave()
@@ -173,7 +172,7 @@ public class RTCRoom: NSObject {
         participantJoin(p: self.localParticipant!)
     }
 
-    func getRole() -> Role? {
+    func getRole() -> Int? {
         return self.localParticipant?.role
     }
 
