@@ -18,7 +18,7 @@ open class IMLiveAudioRenderProxy: NSObject, RTCAudioCustomProcessingDelegate {
     }
 
     open func audioProcessingProcess(audioBuffer: RTCAudioBuffer) {
-        let data = IMLiveMediaPlayer.shared.cachedPCMBufffer()
+        let data = IMLiveMediaPlayer.shared.cachedPCMBuffer()
         let sampleRate = IMLiveMediaPlayer.shared.sampleRate()
         for i in (0..<audioBuffer.channels) {
             if (data != nil) {

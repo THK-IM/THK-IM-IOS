@@ -122,7 +122,7 @@ public class IMLiveMediaPlayer {
         bufferQueue.clear()
     }
     
-    func fetchPcmBuffer(_ frameLength: UInt32) -> [Float]? {
+    func fetchPCMBuffer(_ frameLength: UInt32) -> [Float]? {
         if (isPlaying) {
             if avAudioPCMBuffer == nil {
                 avAudioPCMBuffer = bufferQueue.dequeue()
@@ -166,7 +166,7 @@ public class IMLiveMediaPlayer {
         self.needPlayPCMBuffer.enqueue(data)
     }
     
-    func cachedPCMBufffer() -> [Float]? {
+    func cachedPCMBuffer() -> [Float]? {
         locker.lock()
         defer {locker.unlock()}
         return needPlayPCMBuffer.dequeue()
