@@ -114,12 +114,12 @@ public class IMLiveRTCEngine: NSObject {
 
     public func updateAudioCaptureDelegate(_ delegate: RTCAudioCustomProcessingDelegate) {
         self.audioCaptureDelegate = delegate
-        self.audioProccessingMoudle.capturePostProcessingDelegate = delegate
+        self.audioProcessingModule.capturePostProcessingDelegate = delegate
     }
 
     public func updateAudioRenderDelegate(_ delegate: RTCAudioCustomProcessingDelegate) {
         self.audioRenderDelegate = delegate
-        self.audioProccessingMoudle.renderPreProcessingDelegate = delegate
+        self.audioProcessingModule.renderPreProcessingDelegate = delegate
     }
 
     public func onAudioCapture(_ samples: [Float], _ channel: Int) {
