@@ -80,11 +80,10 @@ open class IMLiveManager {
     public func createRoom(ids: Set<Int64>, mode: Mode) -> Observable<RTCRoom> {
         self.destroyRoom()
         let uId = selfId()
-        return self.liveApi.createRoom(CreateRoomReqVo(uId: uId, mode: mode.rawValue, members: ids))
+        return self.liveApi.createRoom(CreateRoomReqVo(uId: uId, mode: mode.rawValue))
             .flatMap { [weak self] resVo -> Observable<RTCRoom> in
                 let room = RTCRoom(
-                    id: resVo.id, ownerId: resVo.ownerId, uId: uId, mode: mode,
-                    members: resVo.members,
+                    id: resVo.id, ownerId: resVo.ownerId, uId: uId, mode: mode.rawValue,
                     role: Role.Broadcaster, createTime: resVo.createTime,
                     participants: resVo.participants
                 )
@@ -93,9 +92,9 @@ open class IMLiveManager {
             }
     }
     
-    public func callMembers(_ msg: String, _ duration: Int64) -> Observable<Void>? {
+    public func callMembers(_ msg: String, _ duration: Int64, _ members: Set<Int64>) -> Observable<Void>? {
         guard let room = self.room else { return nil }
-        let req = CallRoomMemberReqVo(uId: selfId(), roomId: room.id, msg: msg, duration: duration)
+        let req = CallRoomMemberReqVo(uId: selfId(), roomId: room.id, msg: msg, duration: duration, members: members)
         return self.liveApi.callMembers(req)
     }
 
@@ -104,14 +103,8 @@ open class IMLiveManager {
         let uId = selfId()
         return self.liveApi.joinRoom(JoinRoomReqVo(roomId: roomId, uId: uId, role: role.rawValue))
             .flatMap { [weak self] res -> Observable<RTCRoom> in
-                var m = Mode.Chat
-                if res.mode == Mode.Audio.rawValue || res.mode == Mode.VoiceRoom.rawValue {
-                    m = Mode.Audio
-                } else if res.mode == Mode.Video.rawValue {
-                    m = Mode.Video
-                }
                 let room = RTCRoom(
-                    id: res.id, ownerId: res.ownerId, uId: uId, mode: m, members: res.members,
+                    id: res.id, ownerId: res.ownerId, uId: uId, mode: res.mode,
                     role: Role.Broadcaster, createTime: res.createTime,
                     participants: res.participants
                 )
@@ -126,11 +119,16 @@ open class IMLiveManager {
         return self.liveApi.inviteMembers(req)
     }
 
-    public func refuseJoinRoom(roomId: String) {
+    public func refuseJoinRoom(roomId: String, reason: String) {
         let uId = selfId()
-        self.liveApi.refuseJoinRoom(RefuseJoinReqVo(roomId: roomId, uId: uId))
+        self.liveApi.refuseJoinRoom(RefuseJoinReqVo(roomId: roomId, uId: uId, msg: reason))
             .subscribe()
             .disposed(by: self.disposeBag)
+    }
+    
+    public func kickoffMembers(roomId: String, reason: String, members: Set<Int64>) -> Observable<Void> {
+        let req = KickoffMemberReqVo(uId: selfId(), roomId: roomId, msg: reason, kickoffUIds: members)
+        return self.liveApi.kickoffMember(req)
     }
     
     public func leveaRoom() {
@@ -192,8 +190,8 @@ open class IMLiveManager {
     }
     
     public func destroyRoom() {
-        disposeBag = DisposeBag()
-        room?.destroy()
-        room = nil
+        self.disposeBag = DisposeBag()
+        self.room?.destroy()
+        self.room = nil
     }
 }

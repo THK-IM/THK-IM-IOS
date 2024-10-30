@@ -19,6 +19,8 @@ enum RoomApi {
     case inviteMembers(_ vo: InviteMemberReqVo)
     ///  拒绝加入房间
     case refuseJoinRoom(_ vo: RefuseJoinReqVo)
+    /// 踢出用户
+    case kickoffRoomMember(_ vo: KickoffMemberReqVo)
     ///  删除房间
     case delRoom(_ vo: DelRoomReqVo)
 }
@@ -41,6 +43,8 @@ extension RoomApi: TargetType {
             return "/member/invite"
         case .refuseJoinRoom:
             return "/member/refuse_join"
+        case .kickoffRoomMember:
+            return "/member/kick"
         case .delRoom:
             return ""
         }
@@ -58,6 +62,8 @@ extension RoomApi: TargetType {
             return .post
         case .refuseJoinRoom:
             return .post
+        case .kickoffRoomMember:
+            return .post
         case .delRoom:
             return .delete
         }
@@ -74,6 +80,8 @@ extension RoomApi: TargetType {
         case let .inviteMembers(vo):
             return .requestJSONEncodable(vo)
         case let .refuseJoinRoom(vo):
+            return .requestJSONEncodable(vo)
+        case let .kickoffRoomMember(vo):
             return .requestJSONEncodable(vo)
         case let .delRoom(vo):
             return .requestJSONEncodable(vo)

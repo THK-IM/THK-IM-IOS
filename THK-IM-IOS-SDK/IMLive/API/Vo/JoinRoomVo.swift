@@ -30,7 +30,6 @@ public class JoinRoomResVo: Codable {
 
     let id: String
     let mode: Int
-    let members: Set<Int64>
     let ownerId: Int64
     let createTime: Int64
     let participants: [ParticipantVo]?
@@ -39,7 +38,6 @@ public class JoinRoomResVo: Codable {
         case id = "id"
         case mode = "mode"
         case ownerId = "owner_id"
-        case members = "members"
         case createTime = "create_time"
         case participants = "participants"
     }
@@ -48,15 +46,18 @@ public class JoinRoomResVo: Codable {
 public class RefuseJoinReqVo: Codable {
     let roomId: String
     let uId: Int64
+    let msg: String
 
-    init(roomId: String, uId: Int64) {
+    init(roomId: String, uId: Int64, msg: String) {
         self.roomId = roomId
         self.uId = uId
+        self.msg = msg
     }
 
     enum CodingKeys: String, CodingKey {
         case roomId = "room_id"
         case uId = "u_id"
+        case msg = "msg"
     }
 }
 

@@ -13,8 +13,7 @@ import WebRTC
 public class RTCRoom: NSObject {
     let id: String
     let uId: Int64
-    let mode: Mode
-    var members: Set<Int64>
+    let mode: Int
     let ownerId: Int64
     let createTime: Int64
     weak var delegate: RTCRoomProtocol? = nil
@@ -22,14 +21,13 @@ public class RTCRoom: NSObject {
     private var remoteParticipants = [RemoteParticipant]()
 
     init(
-        id: String, ownerId: Int64, uId: Int64, mode: Mode, members: Set<Int64>, role: Role,
+        id: String, ownerId: Int64, uId: Int64, mode: Int, role: Role,
         createTime: Int64, participants: [ParticipantVo]?
     ) {
         self.id = id
         self.ownerId = ownerId
         self.uId = uId
         self.mode = mode
-        self.members = members
         self.createTime = createTime
         super.init()
         self.initLocalParticipant(role)
@@ -39,9 +37,17 @@ public class RTCRoom: NSObject {
     private func initLocalParticipant(_ role: Role) {
         localParticipant = LocalParticipant(
             uId: self.uId, roomId: self.id, role: role,
-            audioEnable: mode.rawValue >= Mode.Audio.rawValue,
-            videoEnable: mode.rawValue >= Mode.Video.rawValue
+            audioEnable: self.audioEnable(),
+            videoEnable: self.videoEnable()
         )
+    }
+    
+    private func audioEnable() -> Bool {
+        return self.mode >= Mode.Audio.rawValue
+    }
+    
+    private func videoEnable() -> Bool {
+        return self.mode == Mode.Video.rawValue || self.mode == Mode.VideoRoom.rawValue
     }
 
     private func initRemoteParticipants(_ participants: [ParticipantVo]?) {
@@ -50,8 +56,8 @@ public class RTCRoom: NSObject {
         }
         for p in participants! {
             let role = p.role == Role.Broadcaster.rawValue ? Role.Broadcaster : Role.Audience
-            let audioEnable = mode == Mode.Audio || mode == Mode.Video
-            let videoEnable = mode == Mode.Video
+            let audioEnable = self.audioEnable()
+            let videoEnable = self.videoEnable()
             let p = RemoteParticipant(
                 uId: p.uId, roomId: id, role: role, subStreamKey: p.streamKey,
                 audioEnable: audioEnable, videoEnable: videoEnable

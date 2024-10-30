@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08F4799AC88630CBD25DF832 /* Pods_THK_IM_IOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */; };
+		9A090E1D2CD1CEBE00ED7F86 /* KickoffMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E1C2CD1CEB900ED7F86 /* KickoffMemberVo.swift */; };
 		9A9D71D22CD0C98E00936EB6 /* LiveSignalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */; };
 		9A9D71D42CD0D04D00936EB6 /* RTCRoomProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D32CD0D04300936EB6 /* RTCRoomProtocol.swift */; };
 		9A9D71D72CD0DF2300936EB6 /* LiveSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */; };
@@ -348,6 +349,7 @@
 		00B256D621B64DD52DDF517D /* Pods-THK-IM-IOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.debug.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.debug.xcconfig"; sourceTree = "<group>"; };
 		12A71C20EF80882B33F43851 /* Pods-THK-IM-IOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.release.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.release.xcconfig"; sourceTree = "<group>"; };
 		34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_THK_IM_IOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A090E1C2CD1CEB900ED7F86 /* KickoffMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KickoffMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSignalProtocol.swift; sourceTree = "<group>"; };
 		9A9D71D32CD0D04300936EB6 /* RTCRoomProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCRoomProtocol.swift; sourceTree = "<group>"; };
 		9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSignal.swift; sourceTree = "<group>"; };
@@ -937,6 +939,7 @@
 		A0C431EE2A909CCE00A84D4A /* Vo */ = {
 			isa = PBXGroup;
 			children = (
+				9A090E1C2CD1CEB900ED7F86 /* KickoffMemberVo.swift */,
 				9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */,
 				9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */,
 				A0C431EF2A909CCE00A84D4A /* PublishStreamVo.swift */,
@@ -1998,6 +2001,7 @@
 				A027E3F52BE10E7F000FE77F /* PreviewDelegate.swift in Sources */,
 				A033FAFE2B8A11BA0053045E /* IMImageMsgView.swift in Sources */,
 				A0D68BEA2A888679004D11A5 /* IMVideoMsgProcessor.swift in Sources */,
+				9A090E1D2CD1CEBE00ED7F86 /* KickoffMemberVo.swift in Sources */,
 				A0C431F52A909CCE00A84D4A /* PublishStreamVo.swift in Sources */,
 				A024BA532C2404E6009030D2 /* LanguageUtils.swift in Sources */,
 				A0FCA8DA2B48E66000FC6E47 /* DataRepository.swift in Sources */,

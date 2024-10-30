@@ -208,9 +208,9 @@ class LiveCallViewController: BaseViewController {
         guard let room = IMLiveManager.shared.getRoom() else {
             return
         }
-        for m in room.members {
-            if m != IMLiveManager.shared.selfId() {
-                IMCoreManager.shared.userModule.queryUser(id: m)
+        for m in room.getAllParticipants() {
+            if m.uId != IMLiveManager.shared.selfId() {
+                IMCoreManager.shared.userModule.queryUser(id: m.uId)
                     .compose(RxTransformer.shared.io2Main())
                     .subscribe(onNext: { [weak self] user in
                         self?.callingInfoLayout.setUserInfo(user: user)
@@ -391,7 +391,7 @@ extension LiveCallViewController: LiveCallProtocol {
         guard let room = IMLiveManager.shared.getRoom() else {
             return
         }
-        IMLiveManager.shared.refuseJoinRoom(roomId: room.id)
+        IMLiveManager.shared.refuseJoinRoom(roomId: room.id, reason: "")
         self.exit()
     }
 

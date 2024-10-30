@@ -10,7 +10,6 @@ import Moya
 import RxSwift
 
 class DefaultLiveApi: LiveApi {
-    
 
     private var endpoint: String
     private var token: String
@@ -46,7 +45,7 @@ class DefaultLiveApi: LiveApi {
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(CreateRoomResVo.self))
     }
-    
+
     func callMembers(_ req: CallRoomMemberReqVo) -> RxSwift.Observable<Void> {
         return roomApi.rx
             .request(.callRoomMember(req))
@@ -60,7 +59,7 @@ class DefaultLiveApi: LiveApi {
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(JoinRoomResVo.self))
     }
-    
+
     func inviteMembers(_ req: InviteMemberReqVo) -> RxSwift.Observable<Void> {
         return roomApi.rx
             .request(.inviteMembers(req))
@@ -71,6 +70,13 @@ class DefaultLiveApi: LiveApi {
     public func refuseJoinRoom(_ req: RefuseJoinReqVo) -> RxSwift.Observable<Void> {
         return roomApi.rx
             .request(.refuseJoinRoom(req))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Void())
+    }
+
+    func kickoffMember(_ req: KickoffMemberReqVo) -> RxSwift.Observable<Void> {
+        return roomApi.rx
+            .request(.kickoffRoomMember(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }
