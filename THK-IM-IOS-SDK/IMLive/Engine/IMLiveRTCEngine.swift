@@ -15,7 +15,7 @@ public class IMLiveRTCEngine: NSObject {
     public static let shared = IMLiveRTCEngine()
 
     var factory: RTCPeerConnectionFactory
-    private var audioProccessingMoudle: RTCDefaultAudioProcessingModule
+    private var audioProcessingModule: RTCDefaultAudioProcessingModule
     private var audioCaptureDelegate: RTCAudioCustomProcessingDelegate
     private var audioRenderDelegate: RTCAudioCustomProcessingDelegate
     private var videoCaptureDelegate: IMLiveVideoCapturerProxy?
@@ -30,8 +30,8 @@ public class IMLiveRTCEngine: NSObject {
         // 录制时处理音频
         module.capturePostProcessingDelegate = self.audioCaptureDelegate
         // 播放时处理音频
-        module.renderPreProcessingDelegate = audioRenderDelegate
-        self.audioProccessingMoudle = module
+        module.renderPreProcessingDelegate = self.audioRenderDelegate
+        self.audioProcessingModule = module
         
         let videoProxy = IMLiveVideoCapturerProxy()
         self.videoCaptureDelegate = videoProxy
@@ -45,7 +45,6 @@ public class IMLiveRTCEngine: NSObject {
             decoderFactory: videoDecoderFactory,
             audioProcessingModule: module
         )
-
         super.init()
     }
     
