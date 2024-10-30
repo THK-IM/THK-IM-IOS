@@ -26,12 +26,12 @@ public protocol LiveSignalProtocol: NSObject {
     /**
      *  主动呼叫被拒绝
      */
-    func onCallRequsetBeRejected(_ signal: RejectRequestSignal)
+    func onCallRequestBeRejected(_ signal: RejectRequestSignal)
     
     /**
      *  主动呼叫被接受
      */
-    func onCallRequsetBeAccepted(_ signal: AcceptRequestSignal)
+    func onCallRequestBeAccepted(_ signal: AcceptRequestSignal)
     
     /**
      *  通话中挂断

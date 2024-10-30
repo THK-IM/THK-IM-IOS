@@ -93,9 +93,9 @@ open class IMLiveManager {
             }
     }
     
-    public func callMembers() -> Observable<Void>? {
+    public func callMembers(_ msg: String, _ duration: Int64) -> Observable<Void>? {
         guard let room = self.room else { return nil }
-        let req = CallRoomMemberReqVo(uId: selfId(), roomId: room.id, msg: "", duration: 5)
+        let req = CallRoomMemberReqVo(uId: selfId(), roomId: room.id, msg: msg, duration: duration)
         return self.liveApi.callMembers(req)
     }
 
@@ -120,9 +120,9 @@ open class IMLiveManager {
             }
     }
     
-    public func inviteMember(uIds: Set<Int64>) -> Observable<Void>? {
+    public func inviteMember(_ uIds: Set<Int64>, _ msg: String, _ duration: Int64) -> Observable<Void>? {
         guard let room = self.room else { return nil }
-        let req = InviteMemberReqVo(uId: selfId(), roomId: room.id, msg: "", duration: 5, inviteUIds: uIds)
+        let req = InviteMemberReqVo(uId: selfId(), roomId: room.id, msg: msg, duration: duration, inviteUIds: uIds)
         return self.liveApi.inviteMembers(req)
     }
 
@@ -152,7 +152,9 @@ open class IMLiveManager {
         } else if let s = signal.cancelRequestedSignal() {
             delegate.onCallCancelRequested(s)
         } else if  let s = signal.rejectRequestSignal() {
-            delegate.onCallRequsetBeRejected(s)
+            delegate.onCallRequestBeRejected(s)
+        } else if  let s = signal.acceptRequestSignal() {
+            delegate.onCallRequestBeAccepted(s)
         } else if let s = signal.hangupSignal() {
             delegate.onCallingBeHangup(s)
         } else if let s = signal.endCallSignal() {
