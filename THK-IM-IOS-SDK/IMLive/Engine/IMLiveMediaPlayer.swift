@@ -100,7 +100,7 @@ public class IMLiveMediaPlayer {
     }
     
     func sampleRate() -> Double {
-        return self.outputSettingsFormat?.sampleRate ?? 1.0
+        return self.outputSettingsFormat?.sampleRate ?? 0.0
     }
     
     func start(_ path: String) -> Bool {
