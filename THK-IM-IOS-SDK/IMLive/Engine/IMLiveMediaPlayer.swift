@@ -21,17 +21,17 @@ public class IMLiveMediaPlayer {
     private var isPlaying = false
     private let locker = NSLock()
     private var currentFramePos: UInt32 = 0
-    private var avAudioPCMBuffer: AVAudioPCMBuffer?
+    private var audioPCMBuffer: AVAudioPCMBuffer?
     private var needPlayPCMBuffer = IMLiveCacheQueue<[Float]>()
     private var mediaPath = ""
-    private var totalLenth: UInt32 = 0
+    private var totalLength: UInt32 = 0
     private var currentPos: UInt32 = 0
         
     private init() {}
     
     private func play(path: String) -> Bool {
         do {
-            self.totalLenth = 0
+            self.totalLength = 0
             self.bufferQueue.clear()
             let inputFile = try AVAudioFile(forReading: path.asURL())
             guard let outputSettingsFormat = self.outputSettingsFormat else {
@@ -60,14 +60,14 @@ public class IMLiveMediaPlayer {
                 // 处理出错情况
                 if status == .error || error != nil {
                     self.bufferQueue.clear()
-                    self.totalLenth = 0
+                    self.totalLength = 0
                     return false
                 }
                 
                 // 写入转换后的音频数据到输出文件
                 if status != .error && error == nil {
                     if outputBuffer.frameLength > 0 {
-                        self.totalLenth += outputBuffer.frameLength
+                        self.totalLength += outputBuffer.frameLength
                         self.bufferQueue.enqueue(outputBuffer)
                     }
                 }
@@ -124,30 +124,30 @@ public class IMLiveMediaPlayer {
     
     func fetchPCMBuffer(_ frameLength: UInt32) -> [Float]? {
         if (isPlaying) {
-            if avAudioPCMBuffer == nil {
-                avAudioPCMBuffer = bufferQueue.dequeue()
+            if audioPCMBuffer == nil {
+                audioPCMBuffer = bufferQueue.dequeue()
             }
-            if avAudioPCMBuffer == nil {
+            if audioPCMBuffer == nil {
                 return nil
             }
             var data = [Float]()
-            let remainLength = avAudioPCMBuffer!.frameLength - currentFramePos
+            let remainLength = audioPCMBuffer!.frameLength - currentFramePos
             if remainLength >= frameLength {
                 for i in 0 ..< frameLength {
-                    data.append(avAudioPCMBuffer!.floatChannelData!.pointee[Int(i + currentFramePos)])
+                    data.append(audioPCMBuffer!.floatChannelData!.pointee[Int(i + currentFramePos)])
                 }
                 currentFramePos = currentFramePos + frameLength
             } else {
                 for i in 0 ..< remainLength {
-                    data.append(avAudioPCMBuffer!.floatChannelData!.pointee[Int(i + currentFramePos)])
+                    data.append(audioPCMBuffer!.floatChannelData!.pointee[Int(i + currentFramePos)])
                 }
                 currentFramePos = 0
                 let needLength = frameLength - remainLength
-                avAudioPCMBuffer = bufferQueue.dequeue()
-                if avAudioPCMBuffer != nil  {
-                    if (avAudioPCMBuffer!.frameLength >= needLength) {
+                audioPCMBuffer = bufferQueue.dequeue()
+                if audioPCMBuffer != nil  {
+                    if (audioPCMBuffer!.frameLength >= needLength) {
                         for i in 0 ..< needLength {
-                            data.append(avAudioPCMBuffer!.floatChannelData!.pointee[Int(i + currentFramePos)])
+                            data.append(audioPCMBuffer!.floatChannelData!.pointee[Int(i + currentFramePos)])
                         }
                         currentFramePos = needLength
                     }
