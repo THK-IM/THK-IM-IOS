@@ -31,7 +31,6 @@ open class LocalParticipant: BaseParticipant {
         guard let p = self.peerConnection else {
             return
         }
-
         if self.audioEnable && self.role == Role.Broadcaster.rawValue {
             var mandatoryConstraints = [String: String]()
             mandatoryConstraints["googEchoCancellation"] = "true"
@@ -43,51 +42,60 @@ open class LocalParticipant: BaseParticipant {
                 mandatoryConstraints: mandatoryConstraints,
                 optionalConstraints: nil
             )
-            let audioSource = IMLiveManager.shared.factory.audioSource(with: mediaConstraints)
-            let audioTrack = IMLiveManager.shared.factory.audioTrack(
-                with: audioSource, trackId: "/Audio/\(self.roomId)/\(self.uId)")
+            let audioSource = IMLiveRTCEngine.shared.factory.audioSource(with: mediaConstraints)
+            let audioTrack = IMLiveRTCEngine.shared.factory.audioTrack(
+                with: audioSource, trackId: "/Audio/\(self.roomId)/\(self.uId)"
+            )
             let transceiver = RTCRtpTransceiverInit()
             transceiver.direction = .sendOnly
             p.addTransceiver(with: audioTrack, init: transceiver)
             self.addAudioTrack(track: audioTrack)
-        }
-
-        if self.videoEnable && self.role == Role.Broadcaster.rawValue {
-            self.currentDevice = self.getFrontCameraDevice()
-            if self.currentDevice == nil {
-                return
-            }
-
-            let videoSource = IMLiveManager.shared.factory.videoSource()
-            self.videoCapturer = RTCCameraVideoCapturer()
-            self.videoCapturer?.delegate = videoSource
-
-            let format = chooseFormat(currentDevice!)
-            if format == nil {
-                return
-            }
-            if format != nil {
-                self.videoCapturer?.startCapture(
-                    with: currentDevice!, format: format!, fps: Int(fps))
-            }
-            let videoTrack = IMLiveManager.shared.factory.videoTrack(
-                with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)")
-            let transceiver = RTCRtpTransceiverInit()
-            transceiver.direction = .sendOnly
-            p.addTransceiver(with: videoTrack, init: transceiver)
-            self.addVideoTrack(track: videoTrack)
-
             p.senders.forEach({ sender in
-                if sender.track?.kind == "video" {
+                if sender.track?.kind == audioTrack.kind {
                     let parameters = sender.parameters
                     for e in parameters.encodings {
-                        let minBitrate = 1024 * 1024
-                        e.maxBitrateBps = (4 * minBitrate) as NSNumber
-                        e.minBitrateBps = (minBitrate) as NSNumber
+                        let minBitrate = 8 * 10 * 1024
+                        e.maxBitrateBps = (5 * minBitrate) as NSNumber  // 50KB
+                        e.minBitrateBps = (minBitrate) as NSNumber  // 10KB
                     }
                     sender.parameters = parameters
                 }
             })
+        }
+
+        if self.videoEnable && self.role == Role.Broadcaster.rawValue {
+            if let device = self.getFrontCameraDevice() {
+                self.currentDevice = device
+                let videoSource = IMLiveRTCEngine.shared.factory.videoSource()
+                self.videoCapturer = RTCCameraVideoCapturer()
+                if let videoProxy = IMLiveRTCEngine.shared.videoCaptureProxy(videoSource) {
+                    self.videoCapturer?.delegate = videoProxy
+                }
+
+                if let format = self.chooseFormat(device) {
+                    self.videoCapturer?.startCapture(
+                        with: device, format: format, fps: Int(fps))
+                    let videoTrack = IMLiveRTCEngine.shared.factory.videoTrack(
+                        with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)"
+                    )
+                    let transceiver = RTCRtpTransceiverInit()
+                    transceiver.direction = .sendOnly
+                    p.addTransceiver(with: videoTrack, init: transceiver)
+                    self.addVideoTrack(track: videoTrack)
+
+                    p.senders.forEach({ sender in
+                        if sender.track?.kind == videoTrack.kind {
+                            let parameters = sender.parameters
+                            for e in parameters.encodings {
+                                let minBitrate = 8 * 50 * 1024
+                                e.maxBitrateBps = (10 * minBitrate) as NSNumber  // 500KB
+                                e.minBitrateBps = (minBitrate) as NSNumber  // 50KB
+                            }
+                            sender.parameters = parameters
+                        }
+                    })
+                }
+            }
         }
 
         let dcConfig = RTCDataChannelConfiguration()
@@ -103,7 +111,6 @@ open class LocalParticipant: BaseParticipant {
         guard let offerBase64 = offer.data(using: .utf8)?.base64EncodedString() else {
             return
         }
-
         IMLiveManager.shared.liveApi
             .publishStream(
                 PublishStreamReqVo(uId: self.uId, roomId: self.roomId, offerSdp: offerBase64)
@@ -121,6 +128,15 @@ open class LocalParticipant: BaseParticipant {
                 }
             ).disposed(by: self.disposeBag)
 
+    }
+
+    func sendVolume(volume: Double) {
+        let volumeMsg = VolumeMsg(uId: self.uId, volume: volume)
+        if let d = try? JSONEncoder().encode(volumeMsg) {
+            if let text = String(data: d, encoding: .utf8) {
+                _ = self.sendMessage(text: text)
+            }
+        }
     }
 
     func sendMessage(text: String) -> Bool {
@@ -194,22 +210,22 @@ open class LocalParticipant: BaseParticipant {
 
     private func chooseFormat(_ device: AVCaptureDevice) -> AVCaptureDevice.Format? {
         var format = RTCCameraVideoCapturer.supportedFormats(for: device).first
-        let formats = RTCCameraVideoCapturer.supportedFormats(for: device)
-        for f in formats {
-            if #available(iOS 16.0, *) {
-                for p in f.supportedMaxPhotoDimensions {
-                    DDLogInfo(
-                        "LocalParticipant, device format \(p.width), \(p.height), \(f.maxISO), \(f.minISO)"
-                    )
-                    if p.width == 960 && p.height == 540 {
-                        format = f
-                        break
-                    }
-                }
-            } else {
-                DDLogInfo("LocalParticipant, device format \(f.maxISO), \(f.minISO)")
-            }
-        }
+        //        let formats = RTCCameraVideoCapturer.supportedFormats(for: device)
+        //        for f in formats {
+        //            if #available(iOS 16.0, *) {
+        //                for p in f.supportedMaxPhotoDimensions {
+        //                    DDLogInfo(
+        //                        "LocalParticipant, device format \(p.width), \(p.height), \(f.maxISO), \(f.minISO)"
+        //                    )
+        //                    if p.width == 960 && p.height == 540 {
+        //                        format = f
+        //                        break
+        //                    }
+        //                }
+        //            } else {
+        //                DDLogInfo("LocalParticipant, device format \(f.maxISO), \(f.minISO)")
+        //            }
+        //        }
         return format
     }
 
@@ -220,6 +236,7 @@ open class LocalParticipant: BaseParticipant {
     }
 
     open override func leave() {
+        IMLiveRTCEngine.shared.clearVideoProxy()
         self.videoCapturer?.stopCapture()
         self.videoCapturer = nil
         super.leave()

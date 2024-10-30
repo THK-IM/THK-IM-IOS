@@ -13,7 +13,6 @@ import WebRTC
 
 open class IMLiveManager {
     static let shared = IMLiveManager()
-    public let factory: RTCPeerConnectionFactory
     public var liveApi: LiveApi {
         set {
             self._liveApi = newValue
@@ -30,47 +29,11 @@ open class IMLiveManager {
     private var uId: Int64 = 0
     
     private init() {
-        RTCPeerConnectionFactory.initialize()
-        let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
-        let videoDecoderFactory = RTCDefaultVideoDecoderFactory()
-        self.factory = RTCPeerConnectionFactory.init(
-            encoderFactory: videoEncoderFactory,
-            decoderFactory: videoDecoderFactory
-        )
-        self.initAudioSession()
-    }
-
-    private func initAudioSession() {
-        let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
-        audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
-        audioSessionConfiguration.categoryOptions = [
-            .defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
-        ]
-        do {
-            RTCAudioSession.sharedInstance().lockForConfiguration()
-            try RTCAudioSession.sharedInstance().setConfiguration(
-                audioSessionConfiguration, active: true)
-            RTCAudioSession.sharedInstance().unlockForConfiguration()
-        } catch {
-            DDLogError("setConfiguration \(error)")
-        }
+        IMLiveRTCEngine.shared.initAudioSession()
     }
     
     public func setUId(uId: Int64) {
         self.uId = uId
-    }
-
-    public func isSpeakerMuted() -> Bool {
-        let audioSession = AVAudioSession.sharedInstance()
-        let currentRoute = audioSession.currentRoute
-        var isSpeakerOutput = false
-        for output in currentRoute.outputs {
-            if output.portType == AVAudioSession.Port.builtInSpeaker {
-                isSpeakerOutput = true
-                break
-            }
-        }
-        return !isSpeakerOutput
     }
     
     public func setRoom(room: RTCRoom) {
@@ -154,27 +117,6 @@ open class IMLiveManager {
 
     public func getRoom() -> RTCRoom? {
         return room
-    }
-
-    public func muteSpeaker(_ muted: Bool) {
-        let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
-        if muted {
-            audioSessionConfiguration.categoryOptions = [
-                .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
-            ]
-        } else {
-            audioSessionConfiguration.categoryOptions = [
-                .defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
-            ]
-        }
-        do {
-            RTCAudioSession.sharedInstance().lockForConfiguration()
-            try RTCAudioSession.sharedInstance().setConfiguration(
-                audioSessionConfiguration, active: true)
-            RTCAudioSession.sharedInstance().unlockForConfiguration()
-        } catch {
-            DDLogError("setConfiguration \(error)")
-        }
     }
     
     public func destroyRoom() {

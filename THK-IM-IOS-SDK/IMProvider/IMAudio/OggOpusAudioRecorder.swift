@@ -202,7 +202,7 @@ public class OggOpusAudioRecorder {
         if _callback != nil && _filePath != nil {
             if (now - lastCallbackTime) > callbackInterval {
                 // 计算分贝并回调
-                let db = calculateDecibel(from: audioPCMData.subdata(in: 0..<256))
+                let db = AudioUtils.calculateDecibel(from: audioPCMData.subdata(in: 0..<256))
                 self._callback!(db, Int(now - _startTimestamp!), _filePath!, false)
                 lastCallbackTime = now
             }

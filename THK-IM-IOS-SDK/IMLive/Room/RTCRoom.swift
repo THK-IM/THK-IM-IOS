@@ -137,7 +137,11 @@ public class RTCRoom: NSObject {
     }
     
     func onTextMsgReceived(_ uId: Int64, _ text: String) {
-        delegate?.onTextMsgReceived(uId, text)
+        if let volumeMsg = try? JSONDecoder().decode(VolumeMsg.self, from: text.data(using: .utf8) ?? Data()) {
+            delegate?.onParticipantVoice(volumeMsg.uId, volumeMsg.volume)
+        } else {
+            delegate?.onTextMsgReceived(uId, text)
+        }
     }
 
     func getAllParticipants() -> [BaseParticipant] {
@@ -190,6 +194,13 @@ public class RTCRoom: NSObject {
             return false
         }
         return lp.sendData(data: data)
+    }
+    
+    func sendMyVolume(_ volume: Double) {
+        guard let lp = self.localParticipant else {
+            return
+        }
+        lp.sendVolume(volume: volume)
     }
 
     func switchCamera() {

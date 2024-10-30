@@ -332,11 +332,11 @@ extension LiveCallViewController: RTCRoomProtocol {
 extension LiveCallViewController: LiveCallProtocol {
 
     func isSpeakerMuted() -> Bool {
-        return IMLiveManager.shared.isSpeakerMuted()
+        return IMLiveRTCEngine.shared.isSpeakerMuted()
     }
 
     func muteSpeaker(mute: Bool) {
-        return IMLiveManager.shared.muteSpeaker(mute)
+        return IMLiveRTCEngine.shared.muteSpeaker(mute)
     }
 
     func muteLocalVideo(mute: Bool) {

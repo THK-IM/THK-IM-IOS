@@ -98,3 +98,20 @@ public class ParticipantVo: Codable {
         case streamKey = "stream_key"
     }
 }
+
+public class VolumeMsg: Codable {
+    
+    let uId: Int64
+    let volume: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case uId = "u_id"
+        case volume = "volume"
+    }
+    
+    init(uId: Int64, volume: Double) {
+        self.uId = uId
+        self.volume = volume
+    }
+    
+}

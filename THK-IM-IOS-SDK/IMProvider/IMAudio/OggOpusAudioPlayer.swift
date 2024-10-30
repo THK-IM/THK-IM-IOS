@@ -114,15 +114,11 @@ public class OggOpusAudioPlayer {
         }
         let queue = self._audioQueue
         if queue != nil {
-            DispatchQueue.global().asyncAfter(
-                deadline: .now() + 0.3,
-                execute: {
-                    let status = AudioQueueStop(queue!, true)
-                    if status == noErr {
-                        // 释放录音队列
-                        _ = AudioQueueDispose(queue!, true)
-                    }
-                })
+            let status = AudioQueueStop(queue!, true)
+            if status == noErr {
+                // 释放录音队列
+                _ = AudioQueueDispose(queue!, true)
+            }
         }
         _currentLen = 0
         _oggDecoder = nil
@@ -278,7 +274,7 @@ public class OggOpusAudioPlayer {
             }
             if (now - lastCallbackTime) > callbackInterval {
                 // 计算分贝并回调
-                let db = calculateDecibel(from: audioPCMData)
+                let db = AudioUtils.calculateDecibel(from: audioPCMData)
                 self._callback?(db, Int(now - self._startTimestamp!), self._filePath!, false)
                 lastCallbackTime = now
             }
