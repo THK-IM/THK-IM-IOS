@@ -230,11 +230,12 @@ open class BaseParticipant: NSObject {
             switch notify.type {
             case NotifyType.NewStream.rawValue:
                 let newStream = try JSONDecoder().decode(
-                    NewStreamNotify.self, from: notify.message.data(using: .utf8) ?? Data())
-                let role =
-                    newStream.role == Role.Broadcaster.rawValue ? Role.Broadcaster : Role.Audience
-                let audioEnable = room.mode == Mode.Audio || room.mode == Mode.Video
-                let videoEnable = room.mode == Mode.Video
+                    NewStreamNotify.self,
+                    from: notify.message.data(using: .utf8) ?? Data()
+                )
+                let role =  newStream.role == Role.Broadcaster.rawValue ? Role.Broadcaster : Role.Audience
+                let audioEnable = (role == Role.Broadcaster) && room.audioEnable()
+                let videoEnable = (role == Role.Broadcaster) && room.videoEnable()
                 let participant = RemoteParticipant(
                     uId: newStream.uId,
                     roomId: newStream.roomId,

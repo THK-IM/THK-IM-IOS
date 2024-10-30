@@ -42,11 +42,11 @@ public class RTCRoom: NSObject {
         )
     }
     
-    private func audioEnable() -> Bool {
+    func audioEnable() -> Bool {
         return self.mode >= Mode.Audio.rawValue
     }
     
-    private func videoEnable() -> Bool {
+    func videoEnable() -> Bool {
         return self.mode == Mode.Video.rawValue || self.mode == Mode.VideoRoom.rawValue
     }
 
