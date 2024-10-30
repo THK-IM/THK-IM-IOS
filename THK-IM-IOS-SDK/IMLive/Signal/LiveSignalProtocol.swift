@@ -16,32 +16,7 @@ public protocol LiveSignalProtocol: NSObject {
     /**
      *  被请求呼叫
      */
-    func onCallBeingRequested(_ signal: BeingRequestedSignal)
-    
-    /**
-     *  被请求呼叫结束
-     */
-    func onCallCancelRequested(_ signal: CancelRequestedSignal)
-    
-    /**
-     *  主动呼叫被拒绝
-     */
-    func onCallRequestBeRejected(_ signal: RejectRequestSignal)
-    
-    /**
-     *  主动呼叫被接受
-     */
-    func onCallRequestBeAccepted(_ signal: AcceptRequestSignal)
-    
-    /**
-     *  通话中挂断
-     */
-    func onCallingBeHangup(_ signal: HangupSignal)
-    
-    /**
-     *  通话结束
-     */
-    func onCallingBeEnded(_ signal: EndCallSignal)
+    func onSignalReceived(_ signal: LiveSignal)
     
 }
 

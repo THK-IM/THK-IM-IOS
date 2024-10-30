@@ -21,6 +21,8 @@ public enum LiveSignalType: Int {
     case Hangup = 5
     // 结束通话
     case EndCall = 6
+    // 踢出用户
+    case KickMember = 7
 }
 
 
@@ -76,6 +78,14 @@ public class LiveSignal : Codable {
     func endCallSignal() -> EndCallSignal? {
         if self.type == LiveSignalType.EndCall.rawValue {
             return try? JSONDecoder().decode(EndCallSignal.self, from: body.data(using: .utf8) ?? Data())
+        } else {
+            return nil
+        }
+    }
+    
+    func kickMemberSignal() -> KickMemberSignal? {
+        if self.type == LiveSignalType.KickMember.rawValue {
+            return try? JSONDecoder().decode(KickMemberSignal.self, from: body.data(using: .utf8) ?? Data())
         } else {
             return nil
         }
@@ -170,5 +180,21 @@ public class EndCallSignal: Codable {
         case msg = "msg"
         case uId = "u_id"
         case endCallTime = "end_call_time"
+    }
+}
+
+public class KickMemberSignal: Codable {
+    let roomId: String
+    let uId: Int64
+    let msg: String
+    let kickIds: Set<Int64>
+    let kickTime: Int64
+
+    enum CodingKeys: String, CodingKey {
+        case roomId = "room_id"
+        case msg = "msg"
+        case uId = "u_id"
+        case kickIds = "kick_ids"
+        case kickTime = "kick_time"
     }
 }

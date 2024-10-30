@@ -145,19 +145,7 @@ open class IMLiveManager {
     
     public func onLiveSignalReceived(signal: LiveSignal) {
         guard let delegate = self.liveSignalProtocol else { return }
-        if let s = signal.beingRequestedSignal() {
-            delegate.onCallBeingRequested(s)
-        } else if let s = signal.cancelRequestedSignal() {
-            delegate.onCallCancelRequested(s)
-        } else if  let s = signal.rejectRequestSignal() {
-            delegate.onCallRequestBeRejected(s)
-        } else if  let s = signal.acceptRequestSignal() {
-            delegate.onCallRequestBeAccepted(s)
-        } else if let s = signal.hangupSignal() {
-            delegate.onCallingBeHangup(s)
-        } else if let s = signal.endCallSignal() {
-            delegate.onCallingBeEnded(s)
-        } 
+        delegate.onSignalReceived(signal)
     }
 
     public func selfId() -> Int64 {

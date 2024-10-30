@@ -19,7 +19,7 @@ class ExternalPageRouter: IMPageRouter {
             var ids = Set<Int64>()
             ids.insert(IMLiveManager.shared.selfId())
             ids.insert(session.entityId)
-            IMLiveManager.shared.createRoom(ids: ids, mode: Mode.Video)
+            IMLiveManager.shared.createRoom(mode: Mode.Video)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { room in
                     if vc != nil {
