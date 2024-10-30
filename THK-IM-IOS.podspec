@@ -147,6 +147,7 @@ Pod::Spec.new do |spec|
     live.source_files = 'THK-IM-IOS-SDK/IMLive/**/*.swift'
     live.resource = 'THK-IM-IOS-SDK/IMLive/Resources/*.xcassets'
     live.dependency 'THK-IM-IOS/IMUI'
+    live.dependency 'WebRTC-SDK', '=125.6422.05'
   end
 
 end
