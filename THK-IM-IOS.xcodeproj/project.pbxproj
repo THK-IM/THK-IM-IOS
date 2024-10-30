@@ -738,7 +738,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		9A090E202CD2165C00ED7F86 /* engine */ = {
+		9A090E202CD2165C00ED7F86 /* Engine */ = {
 			isa = PBXGroup;
 			children = (
 				9A090E292CD220F400ED7F86 /* IMLiveCacheQueue.swift */,
@@ -748,7 +748,7 @@
 				9A090E2B2CD2368C00ED7F86 /* IMLiveVideoCapturerProxy.swift */,
 				9A090E1E2CD2159300ED7F86 /* IMLiveRTCEngine.swift */,
 			);
-			path = engine;
+			path = Engine;
 			sourceTree = "<group>";
 		};
 		9A9D71D52CD0DF0A00936EB6 /* Signal */ = {
@@ -1127,7 +1127,7 @@
 		A0D68AC02A888678004D11A5 /* IMLive */ = {
 			isa = PBXGroup;
 			children = (
-				9A090E202CD2165C00ED7F86 /* engine */,
+				9A090E202CD2165C00ED7F86 /* Engine */,
 				9A9D71D52CD0DF0A00936EB6 /* Signal */,
 				A0978E642B7223E00047E6A2 /* View */,
 				A0D68AC72A888678004D11A5 /* API */,
