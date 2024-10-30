@@ -63,16 +63,16 @@ public class RemoveStreamNotify: Codable {
 }
 
 public class DataChannelMsg: Codable {
-    let uId: Int64
+    let type: Int
     let text: String
 
-    init(uId: Int64, text: String) {
-        self.uId = uId
+    init(type: Int, text: String) {
+        self.type = type
         self.text = text
     }
 
     enum CodingKeys: String, CodingKey {
-        case uId = "u_id"
+        case type = "type"
         case text = "text"
     }
 }
@@ -98,6 +98,8 @@ public class ParticipantVo: Codable {
         case streamKey = "stream_key"
     }
 }
+
+let VolumeMsgType = 0
 
 public class VolumeMsg: Codable {
     

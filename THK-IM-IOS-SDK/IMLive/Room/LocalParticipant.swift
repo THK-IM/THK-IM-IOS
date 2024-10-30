@@ -134,16 +134,16 @@ open class LocalParticipant: BaseParticipant {
         let volumeMsg = VolumeMsg(uId: self.uId, volume: volume)
         if let d = try? JSONEncoder().encode(volumeMsg) {
             if let text = String(data: d, encoding: .utf8) {
-                _ = self.sendMessage(text: text)
+                _ = self.sendMessage(type: VolumeMsgType, text: text)
             }
         }
     }
 
-    func sendMessage(text: String) -> Bool {
+    func sendMessage(type: Int, text: String) -> Bool {
         guard let channel = innerDataChannel else {
             return false
         }
-        let msg = DataChannelMsg(uId: self.uId, text: text)
+        let msg = DataChannelMsg(type: type, text: text)
         do {
             let b = try JSONEncoder().encode(msg)
             let buffer = RTCDataBuffer(data: b, isBinary: false)

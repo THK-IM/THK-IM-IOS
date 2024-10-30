@@ -41,11 +41,11 @@ public class RTCRoom: NSObject {
             videoEnable: self.videoEnable()
         )
     }
-    
+
     func audioEnable() -> Bool {
         return self.mode >= Mode.Audio.rawValue
     }
-    
+
     func videoEnable() -> Bool {
         return self.mode == Mode.Video.rawValue || self.mode == Mode.VideoRoom.rawValue
     }
@@ -127,7 +127,7 @@ public class RTCRoom: NSObject {
     private func notifyJoin(_ p: BaseParticipant) {
         delegate?.onParticipantJoin(p)
     }
-    
+
     private func notifyLeave(_ p: BaseParticipant) {
         delegate?.onParticipantLeave(p)
     }
@@ -135,10 +135,14 @@ public class RTCRoom: NSObject {
     func onDataMsgReceived(_ data: Data) {
         delegate?.onDataMsgReceived(data)
     }
-    
-    func onTextMsgReceived(_ uId: Int64, _ text: String) {
-        if let volumeMsg = try? JSONDecoder().decode(VolumeMsg.self, from: text.data(using: .utf8) ?? Data()) {
-            delegate?.onParticipantVoice(volumeMsg.uId, volumeMsg.volume)
+
+    func onTextMsgReceived(_ type: Int, _ text: String) {
+        if type == VolumeMsgType {
+            if let volumeMsg = try? JSONDecoder().decode(
+                VolumeMsg.self, from: text.data(using: .utf8) ?? Data())
+            {
+                delegate?.onParticipantVoice(volumeMsg.uId, volumeMsg.volume)
+            }
         } else {
             delegate?.onTextMsgReceived(uId, text)
         }
@@ -181,11 +185,11 @@ public class RTCRoom: NSObject {
         return self.localParticipant?.role
     }
 
-    func sendMessage(_ text: String) -> Bool {
+    func sendMessage(_ type: Int, _ text: String) -> Bool {
         guard let lp = self.localParticipant else {
             return false
         }
-        let success = lp.sendMessage(text: text)
+        let success = lp.sendMessage(type: type, text: text)
         return success
     }
 
@@ -195,7 +199,7 @@ public class RTCRoom: NSObject {
         }
         return lp.sendData(data: data)
     }
-    
+
     func sendMyVolume(_ volume: Double) {
         guard let lp = self.localParticipant else {
             return

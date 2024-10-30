@@ -257,7 +257,7 @@ open class BaseParticipant: NSObject {
                 let dataChannelMsg = try JSONDecoder().decode(
                     DataChannelMsg.self, from: notify.message.data(using: .utf8) ?? Data())
                 DispatchQueue.main.async {
-                    room.onTextMsgReceived(dataChannelMsg.uId, dataChannelMsg.text)
+                    room.onTextMsgReceived(dataChannelMsg.type, dataChannelMsg.text)
                 }
                 break
             default:
