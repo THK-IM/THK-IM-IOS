@@ -77,7 +77,7 @@ open class IMLiveManager {
         self.room = room
     }
 
-    public func createRoom(ids: Set<Int64>, mode: Mode) -> Observable<RTCRoom> {
+    public func createRoom(mode: Mode) -> Observable<RTCRoom> {
         self.destroyRoom()
         let uId = selfId()
         return self.liveApi.createRoom(CreateRoomReqVo(uId: uId, mode: mode.rawValue))
