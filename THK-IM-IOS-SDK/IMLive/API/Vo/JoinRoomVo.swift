@@ -32,6 +32,7 @@ public class JoinRoomResVo: Codable {
     let mode: Int
     let ownerId: Int64
     let createTime: Int64
+    let mediaParams: MediaParams
     let participants: [ParticipantVo]?
 
     enum CodingKeys: String, CodingKey {
@@ -39,6 +40,7 @@ public class JoinRoomResVo: Codable {
         case mode = "mode"
         case ownerId = "owner_id"
         case createTime = "create_time"
+        case mediaParams = "media_params"
         case participants = "participants"
     }
 }

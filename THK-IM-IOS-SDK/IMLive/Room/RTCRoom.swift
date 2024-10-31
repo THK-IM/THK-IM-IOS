@@ -16,19 +16,21 @@ public class RTCRoom: NSObject {
     let mode: Int
     let ownerId: Int64
     let createTime: Int64
+    let mediaParams: MediaParams
     weak var delegate: RTCRoomProtocol? = nil
     private var localParticipant: LocalParticipant? = nil
     private var remoteParticipants = [RemoteParticipant]()
 
     init(
         id: String, ownerId: Int64, uId: Int64, mode: Int, role: Int,
-        createTime: Int64, participants: [ParticipantVo]?
+        createTime: Int64, mediaParams: MediaParams, participants: [ParticipantVo]?
     ) {
         self.id = id
         self.ownerId = ownerId
         self.uId = uId
         self.mode = mode
         self.createTime = createTime
+        self.mediaParams = mediaParams
         super.init()
         self.initLocalParticipant(role)
         self.initRemoteParticipants(participants)

@@ -40,15 +40,20 @@ open class IMLiveManager {
         self.room = room
     }
 
-    public func createRoom(mode: Mode) -> Observable<RTCRoom> {
+    public func createRoom(mode: Mode, mediaParams: MediaParams) -> Observable<RTCRoom> {
         self.destroyRoom()
         let uId = selfId()
-        return self.liveApi.createRoom(CreateRoomReqVo(uId: uId, mode: mode.rawValue))
-            .flatMap { [weak self] resVo -> Observable<RTCRoom> in
+        let req = CreateRoomReqVo(
+            uId: uId, mode: mode.rawValue, videoMaxBitrate: mediaParams.videoMaxBitrate,
+            audioMaxBitrate: mediaParams.audioMaxBitrate, videoWidth: mediaParams.videoWidth,
+            videoHeight: mediaParams.videoHeight, videoFps: mediaParams.videoFps
+        )
+        return self.liveApi.createRoom(req)
+            .flatMap { [weak self] res -> Observable<RTCRoom> in
                 let room = RTCRoom(
-                    id: resVo.id, ownerId: resVo.ownerId, uId: uId, mode: mode.rawValue,
-                    role: Role.Broadcaster.rawValue, createTime: resVo.createTime,
-                    participants: resVo.participants
+                    id: res.id, ownerId: res.ownerId, uId: uId, mode: mode.rawValue,
+                    role: Role.Broadcaster.rawValue, createTime: res.createTime, mediaParams: res.mediaParams,
+                    participants: res.participants
                 )
                 self?.room = room
                 return Observable.just(room)
@@ -68,7 +73,7 @@ open class IMLiveManager {
             .flatMap { [weak self] res -> Observable<RTCRoom> in
                 let room = RTCRoom(
                     id: res.id, ownerId: res.ownerId, uId: uId, mode: res.mode,
-                    role: role, createTime: res.createTime,
+                    role: role, createTime: res.createTime, mediaParams: res.mediaParams,
                     participants: res.participants
                 )
                 self?.room = room

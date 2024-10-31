@@ -11,16 +11,17 @@ import WebRTC
 
 open class LocalParticipant: BaseParticipant {
 
+    private let mediaParams: MediaParams
     private let audioEnable: Bool
     private let videoEnable: Bool
     var innerDataChannel: RTCDataChannel?
     private var pushStreamKey: String? = nil
     private var videoCapturer: RTCCameraVideoCapturer?
     private var currentDevice: AVCaptureDevice?
-    private var fps = 30
 
-    init(uId: Int64, roomId: String, role: Int, audioEnable: Bool = true, videoEnable: Bool = true)
+    init(uId: Int64, roomId: String, role: Int, mediaParams: MediaParams, audioEnable: Bool = true, videoEnable: Bool = true)
     {
+        self.mediaParams = mediaParams
         self.audioEnable = audioEnable
         self.videoEnable = videoEnable
         super.init(uId: uId, roomId: roomId, role: role)
@@ -50,13 +51,14 @@ open class LocalParticipant: BaseParticipant {
             transceiver.direction = .sendOnly
             p.addTransceiver(with: audioTrack, init: transceiver)
             self.addAudioTrack(track: audioTrack)
+            
+            let audioMaxBitrate = self.mediaParams.audioMaxBitrate
             p.senders.forEach({ sender in
                 if sender.track?.kind == audioTrack.kind {
                     let parameters = sender.parameters
                     for e in parameters.encodings {
-                        let minBitrate = 8 * 10 * 1024
-                        e.maxBitrateBps = (5 * minBitrate) as NSNumber  // 50KB
-                        e.minBitrateBps = (minBitrate) as NSNumber  // 10KB
+                        e.maxBitrateBps = audioMaxBitrate as NSNumber
+                        e.minBitrateBps = (10 * 8 * 1024) as NSNumber  // 10KB
                     }
                     sender.parameters = parameters
                 }
@@ -74,7 +76,7 @@ open class LocalParticipant: BaseParticipant {
 
                 if let format = self.chooseFormat(device) {
                     self.videoCapturer?.startCapture(
-                        with: device, format: format, fps: Int(fps))
+                        with: device, format: format, fps: Int(self.mediaParams.videoFps))
                     let videoTrack = IMLiveRTCEngine.shared.factory.videoTrack(
                         with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)"
                     )
@@ -82,14 +84,14 @@ open class LocalParticipant: BaseParticipant {
                     transceiver.direction = .sendOnly
                     p.addTransceiver(with: videoTrack, init: transceiver)
                     self.addVideoTrack(track: videoTrack)
-
+                    
+                    let videoMaxBitrate = self.mediaParams.videoMaxBitrate
                     p.senders.forEach({ sender in
                         if sender.track?.kind == videoTrack.kind {
                             let parameters = sender.parameters
                             for e in parameters.encodings {
-                                let minBitrate = 8 * 50 * 1024
-                                e.maxBitrateBps = (10 * minBitrate) as NSNumber  // 500KB
-                                e.minBitrateBps = (minBitrate) as NSNumber  // 50KB
+                                e.maxBitrateBps = videoMaxBitrate as NSNumber
+                                e.minBitrateBps = (10 * 8 * 1024) as NSNumber  // 10KB
                             }
                             sender.parameters = parameters
                         }
@@ -123,8 +125,8 @@ open class LocalParticipant: BaseParticipant {
                     let remoteSdp = RTCSessionDescription(type: .answer, sdp: answer)
                     self?.setRemoteSessionDescription(remoteSdp)
                 },
-                onError: { err in
-                    print(err)
+                onError: { [weak self] err in
+                    self?.onError("publishStream", err)
                 }
             ).disposed(by: self.disposeBag)
 
@@ -150,7 +152,7 @@ open class LocalParticipant: BaseParticipant {
             let buffer = RTCDataBuffer(data: b, isBinary: false)
             return channel.sendData(buffer)
         } catch {
-            DDLogInfo("sendMessage \(error)")
+            self.onError("sendMessage", error)
             return false
         }
     }
@@ -205,28 +207,37 @@ open class LocalParticipant: BaseParticipant {
             return
         }
         if format != nil {
-            videoCapturer?.startCapture(with: self.currentDevice!, format: format!, fps: Int(fps))
+            videoCapturer?.startCapture(with: self.currentDevice!, format: format!, fps: self.mediaParams.videoFps)
         }
     }
 
     private func chooseFormat(_ device: AVCaptureDevice) -> AVCaptureDevice.Format? {
         var format = RTCCameraVideoCapturer.supportedFormats(for: device).first
-        //        let formats = RTCCameraVideoCapturer.supportedFormats(for: device)
-        //        for f in formats {
-        //            if #available(iOS 16.0, *) {
-        //                for p in f.supportedMaxPhotoDimensions {
-        //                    DDLogInfo(
-        //                        "LocalParticipant, device format \(p.width), \(p.height), \(f.maxISO), \(f.minISO)"
-        //                    )
-        //                    if p.width == 960 && p.height == 540 {
-        //                        format = f
-        //                        break
-        //                    }
-        //                }
-        //            } else {
-        //                DDLogInfo("LocalParticipant, device format \(f.maxISO), \(f.minISO)")
-        //            }
-        //        }
+        let formats = RTCCameraVideoCapturer.supportedFormats(for: device)
+        for f in formats {
+            var supportDimension = false
+            var supportFps = false
+            if #available(iOS 16.0, *) {
+                for p in f.supportedMaxPhotoDimensions {
+                    if p.width == self.mediaParams.videoWidth && p.height == self.mediaParams.videoHeight {
+                        supportDimension = true
+                        break
+                    }
+                }
+                for p in f.videoSupportedFrameRateRanges {
+                    if p.maxFrameRate >= Double(self.mediaParams.videoFps) {
+                        supportFps = true
+                        break
+                    }
+                }
+            }
+            if supportFps {
+                format = f
+                if supportDimension {
+                    break
+                }
+            }
+        }
         return format
     }
 

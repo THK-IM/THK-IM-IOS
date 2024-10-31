@@ -15,6 +15,7 @@
 		9A090E282CD2209300ED7F86 /* IMLiveMediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E272CD2208B00ED7F86 /* IMLiveMediaPlayer.swift */; };
 		9A090E2A2CD2210400ED7F86 /* IMLiveCacheQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E292CD220F400ED7F86 /* IMLiveCacheQueue.swift */; };
 		9A090E2C2CD2369100ED7F86 /* IMLiveVideoCapturerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E2B2CD2368C00ED7F86 /* IMLiveVideoCapturerProxy.swift */; };
+		9A276B892CD3248C007B2CD5 /* MediaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A276B882CD32486007B2CD5 /* MediaParams.swift */; };
 		9A9D71D22CD0C98E00936EB6 /* LiveSignalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */; };
 		9A9D71D42CD0D04D00936EB6 /* RTCRoomProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D32CD0D04300936EB6 /* RTCRoomProtocol.swift */; };
 		9A9D71D72CD0DF2300936EB6 /* LiveSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */; };
@@ -362,6 +363,7 @@
 		9A090E272CD2208B00ED7F86 /* IMLiveMediaPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLiveMediaPlayer.swift; sourceTree = "<group>"; };
 		9A090E292CD220F400ED7F86 /* IMLiveCacheQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLiveCacheQueue.swift; sourceTree = "<group>"; };
 		9A090E2B2CD2368C00ED7F86 /* IMLiveVideoCapturerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLiveVideoCapturerProxy.swift; sourceTree = "<group>"; };
+		9A276B882CD32486007B2CD5 /* MediaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaParams.swift; sourceTree = "<group>"; };
 		9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSignalProtocol.swift; sourceTree = "<group>"; };
 		9A9D71D32CD0D04300936EB6 /* RTCRoomProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCRoomProtocol.swift; sourceTree = "<group>"; };
 		9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSignal.swift; sourceTree = "<group>"; };
@@ -965,6 +967,7 @@
 		A0C431EE2A909CCE00A84D4A /* Vo */ = {
 			isa = PBXGroup;
 			children = (
+				9A276B882CD32486007B2CD5 /* MediaParams.swift */,
 				9A090E1C2CD1CEB900ED7F86 /* KickoffMemberVo.swift */,
 				9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */,
 				9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */,
@@ -1963,6 +1966,7 @@
 				A0FCA9032B4952CD00FC6E47 /* Contact.swift in Sources */,
 				A0C431EB2A909CB200A84D4A /* RemoteParticipant.swift in Sources */,
 				A0978E6A2B73D1C70047E6A2 /* IMCustomModule.swift in Sources */,
+				9A276B892CD3248C007B2CD5 /* MediaParams.swift in Sources */,
 				A0D68BC62A888679004D11A5 /* IMMsgRightCellWrapper.swift in Sources */,
 				A0D68B782A888679004D11A5 /* OggOpusAudioRecorder.swift in Sources */,
 				A0D68BC42A888679004D11A5 /* IMMsgCellWrapper.swift in Sources */,
