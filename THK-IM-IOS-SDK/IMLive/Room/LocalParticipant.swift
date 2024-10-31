@@ -131,6 +131,7 @@ open class LocalParticipant: BaseParticipant {
     }
 
     func sendVolume(volume: Double) {
+        if self.role != Role.Broadcaster.rawValue { return }
         let volumeMsg = VolumeMsg(uId: self.uId, volume: volume)
         if let d = try? JSONEncoder().encode(volumeMsg) {
             if let text = String(data: d, encoding: .utf8) {
