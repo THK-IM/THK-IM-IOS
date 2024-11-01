@@ -27,7 +27,6 @@ public class Previewer: IMPreviewer {
                     AppUtils.getLanguage(), forHTTPHeaderField: APITokenInterceptor.languageKey)
                 request.addValue("IOS", forHTTPHeaderField: APITokenInterceptor.platformKey)
             }
-            return request
         }
     }
 

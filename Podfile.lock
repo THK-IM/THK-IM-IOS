@@ -7,9 +7,9 @@ PODS:
   - CocoaLumberjack/Core (3.8.2)
   - CocoaLumberjack/Swift (3.8.2):
     - CocoaLumberjack/Core
-  - CryptoSwift (1.8.1)
+  - CryptoSwift (1.8.3)
   - GDPerformanceView-Swift (2.1.1)
-  - JDStatusBarNotification (2.2.1)
+  - JDStatusBarNotification (2.2.2)
   - Kingfisher (7.10.0)
   - Masonry (1.1.0)
   - Moya/Core (15.0.0):
@@ -55,14 +55,14 @@ PODS:
     - SJUIKit/ObserverHelper
     - SJUIKit/Queues
     - SJUIKit/SQLite3
-  - SJMediaCacheServer (1.7.8):
-    - SJMediaCacheServer/Core (= 1.7.8)
-    - SJMediaCacheServer/KTVCocoaHTTPServer (= 1.7.8)
+  - SJMediaCacheServer (2.0.1):
+    - SJMediaCacheServer/Core (= 2.0.1)
+    - SJMediaCacheServer/KTVCocoaHTTPServer (= 2.0.1)
     - SJUIKit/SQLite3
-  - SJMediaCacheServer/Core (1.7.8):
+  - SJMediaCacheServer/Core (2.0.1):
     - SJMediaCacheServer/KTVCocoaHTTPServer
     - SJUIKit/SQLite3
-  - SJMediaCacheServer/KTVCocoaHTTPServer (1.7.8):
+  - SJMediaCacheServer/KTVCocoaHTTPServer (2.0.1):
     - CocoaAsyncSocket
     - SJUIKit/SQLite3
   - SJUIKit/AttributesFactory (0.0.0.59):
@@ -170,9 +170,9 @@ SPEC CHECKSUMS:
   BadgeSwift: a81547ffde1f462bb5fc02e3fa3fdcbc1b888354
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLumberjack: f8d89a516e7710fdb2e9b8f1560b16ec6040eef0
-  CryptoSwift: b9c701d6f5011df23794dbf7f2e480a77835d83d
+  CryptoSwift: 967f37cea5a3294d9cce358f78861652155be483
   GDPerformanceView-Swift: 22d964fe40b19e3d914dba2586237d064de8fd77
-  JDStatusBarNotification: d43e8481174a2c5f195d16ce65c611f4a12bf507
+  JDStatusBarNotification: 329fe1ab34808f865b8d1cb4dae3c8aff2695002
   Kingfisher: a18f05d3b6d37d8650ee4a3e61d57a28fc6207f6
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
@@ -182,7 +182,7 @@ SPEC CHECKSUMS:
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SJBaseVideoPlayer: b3122de12225b27b71bd9a8a1f08f4dcf2f4e5ec
-  SJMediaCacheServer: 95bebce42f281fccaff25a5e8284022478ff7ba5
+  SJMediaCacheServer: 73a55808560b388a5d428348976a1eae0e86ece8
   SJUIKit: a40111941e408cc17d4c1c23495aa92999e814b0
   SJVideoPlayer: 4f09814f58522e0975cb2dccfda925f6c8643467
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
