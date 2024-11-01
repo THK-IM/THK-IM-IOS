@@ -21,5 +21,13 @@ public class MediaParams: Codable {
         case videoHeight = "video_height"
         case videoFps = "video_fps"
     }
+    
+    init(videoMaxBitrate: Int, audioMaxBitrate: Int, videoWidth: Int, videoHeight: Int, videoFps: Int) {
+        self.videoMaxBitrate = videoMaxBitrate
+        self.audioMaxBitrate = audioMaxBitrate
+        self.videoWidth = videoWidth
+        self.videoHeight = videoHeight
+        self.videoFps = videoFps
+    }
 }
 

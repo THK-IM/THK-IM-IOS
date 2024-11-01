@@ -38,7 +38,7 @@ public class RTCRoom: NSObject {
 
     private func initLocalParticipant(_ role: Int) {
         localParticipant = LocalParticipant(
-            uId: self.uId, roomId: self.id, role: role,
+            uId: self.uId, roomId: self.id, role: role, mediaParams: self.mediaParams,
             audioEnable: self.audioEnable(),
             videoEnable: self.videoEnable()
         )
