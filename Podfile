@@ -41,8 +41,8 @@ target 'THK-IM-IOS' do
   
   ## Pods for THK-IM-IOS/IMProvider
   pod 'ZLPhotoBrowser', '4.4.6'
-  pod 'YbridOpus', '0.8.0'
-  pod 'YbridOgg', '0.8.0'
+#  pod 'YbridOpus', '0.8.0'
+#  pod 'YbridOgg', '0.8.0'
   
   pod 'SJVideoPlayer'
   pod 'SJUIKit/SQLite3'

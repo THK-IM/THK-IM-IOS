@@ -22,6 +22,8 @@
 		9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */; };
 		9A9D71DB2CD0F1DB00936EB6 /* InviteMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */; };
 		9A9D71DD2CD0F64D00936EB6 /* IMLiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DC2CD0F64D00936EB6 /* IMLiveManager.swift */; };
+		9AB6990B2CD4D4B5002E974C /* YbridOpus.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB6990A2CD4D4B5002E974C /* YbridOpus.xcframework */; };
+		9AB6990D2CD4D4C4002E974C /* YbridOgg.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB6990C2CD4D4C4002E974C /* YbridOgg.xcframework */; };
 		A00425FD2C36882A00977DB2 /* ic_titlebar_back.svg in Resources */ = {isa = PBXBuildFile; fileRef = A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */; };
 		A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF52AFF18EC00896B87 /* DateUtils.swift */; };
 		A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF72AFFA9A900896B87 /* MediaViewController.swift */; };
@@ -370,6 +372,8 @@
 		9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DC2CD0F64D00936EB6 /* IMLiveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLiveManager.swift; sourceTree = "<group>"; };
+		9AB6990A2CD4D4B5002E974C /* YbridOpus.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = YbridOpus.xcframework; sourceTree = "<group>"; };
+		9AB6990C2CD4D4C4002E974C /* YbridOgg.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = YbridOgg.xcframework; sourceTree = "<group>"; };
 		A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_titlebar_back.svg; sourceTree = "<group>"; };
 		A018CDF52AFF18EC00896B87 /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		A018CDF72AFFA9A900896B87 /* MediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
@@ -717,6 +721,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				08F4799AC88630CBD25DF832 /* Pods_THK_IM_IOS.framework in Frameworks */,
+				9AB6990D2CD4D4C4002E974C /* YbridOgg.xcframework in Frameworks */,
+				9AB6990B2CD4D4B5002E974C /* YbridOpus.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -735,6 +741,8 @@
 		7A83D3820151B4C52001F56B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9AB6990C2CD4D4C4002E974C /* YbridOgg.xcframework */,
+				9AB6990A2CD4D4B5002E974C /* YbridOpus.xcframework */,
 				34E8F0C6951979B3B8A73B75 /* Pods_THK_IM_IOS.framework */,
 			);
 			name = Frameworks;
