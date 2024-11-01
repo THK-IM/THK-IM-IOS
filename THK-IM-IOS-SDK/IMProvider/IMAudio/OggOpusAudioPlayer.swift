@@ -34,7 +34,6 @@ public class OggOpusAudioPlayer {
 
     private let _bufferCount: UInt32
     private init() {
-        // 配置录音格式 48KHz双声道
         _audioFormat.mSampleRate = 16000
         _audioFormat.mFormatID = kAudioFormatLinearPCM
         _audioFormat.mFormatFlags =
