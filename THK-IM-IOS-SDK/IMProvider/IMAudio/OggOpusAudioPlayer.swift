@@ -208,12 +208,13 @@ public class OggOpusAudioPlayer {
         } else {
             self._filePath = filePath
             self._callback = callback
-            DispatchQueue.global().async {
-                let ret = self.decodeAndPlay()
+            DispatchQueue.global().async { [weak self] in
+                guard let sf = self else { return }
+                let ret = sf.decodeAndPlay()
                 if !ret {
-                    self.stopPlaying()
+                    sf.stopPlaying()
                 } else {
-                    self.playPCMData()
+                    sf.playPCMData()
                 }
             }
             return true
