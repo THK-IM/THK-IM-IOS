@@ -139,7 +139,7 @@ Pod::Spec.new do |spec|
     provider.source_files = 'THK-IM-IOS-SDK/IMProvider/**/*.swift'
     provider.dependency 'THK-IM-IOS/IMUI'
     provider.dependency 'ZLPhotoBrowser', '4.4.6'
-    provider.vendored_frameworks = 'YBridOgg.xcframework', 'YBridOpus.xcframework'
+    provider.vendored_frameworks = 'Third/YBridOgg.xcframework', 'Third/YBridOpus.xcframework'
   end
 
   spec.subspec 'IMLive' do |live|
