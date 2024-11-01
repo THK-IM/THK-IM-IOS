@@ -93,7 +93,10 @@ public class PreviewVideoCellView: PreviewCellView {
         if sourceUrl != nil {
             let realUrlString = self.getRealUrl(url: sourceUrl!, message: message)
             guard let realUrl = URL(string: realUrlString) else { return }
-            player.urlAsset = SJVideoPlayerURLAsset.init(url: realUrl)
+            guard let cacheUrl = SJMediaCacheServer.shared().proxyURL(from: realUrl) else {
+                return
+            }
+            player.urlAsset = SJVideoPlayerURLAsset.init(url: cacheUrl)
             player.play()
         }
 
