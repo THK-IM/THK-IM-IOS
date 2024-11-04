@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "THK-IM-IOS"
-  spec.version      = "0.2.4"
+  spec.version      = "0.2.5"
   spec.summary      = "A short description of THK-IM-IOS."
 
   # This description is used to generate tags and improve search results.
@@ -138,7 +138,7 @@ Pod::Spec.new do |spec|
   spec.subspec 'IMProvider' do |provider|
     provider.source_files = 'THK-IM-IOS-SDK/IMProvider/**/*.swift'
     provider.dependency 'THK-IM-IOS/IMUI'
-    provider.dependency 'ZLPhotoBrowser', '4.4.6'
+    provider.dependency 'ZLPhotoBrowser', '4.5.6'
     provider.vendored_frameworks = 'Third/YBridOgg.xcframework', 'Third/YBridOpus.xcframework'
   end
 

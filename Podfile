@@ -40,7 +40,7 @@ target 'THK-IM-IOS' do
   ## Pods for THK-IM-IOS/IMPreviewer
   
   ## Pods for THK-IM-IOS/IMProvider
-  pod 'ZLPhotoBrowser', '4.4.6'
+  pod 'ZLPhotoBrowser', '4.5.6'
 #  pod 'YbridOpus', '0.8.0'
 #  pod 'YbridOgg', '0.8.0'
   
