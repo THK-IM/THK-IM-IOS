@@ -325,9 +325,11 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         let tableView = self.messageTableView
         let pos = findPosition(message)
         if pos != -1 {
+            UIView.setAnimationsEnabled(false)
             // 老消息，替换reload
             self.messages[pos] = message
             tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
+            UIView.setAnimationsEnabled(true)
             return
         }
         let insertPos = findInsertPosition(message)
@@ -364,9 +366,11 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         let tableView = self.messageTableView
         let pos = findPosition(message)
         if pos != -1 {
+            UIView.setAnimationsEnabled(false)
             // 老消息，替换reload
             self.messages[pos] = message
             tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
+            UIView.setAnimationsEnabled(true)
         }
     }
 
@@ -381,11 +385,13 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         if pos - 1 > 0 && self.messages[pos - 1].type == MsgType.TimeLine.rawValue {
             positions.append(pos - 1)
         }
+        UIView.setAnimationsEnabled(false)
         for pos in positions.sorted().reversed() {
             self.messages.remove(at: pos)
             deletePaths.append(IndexPath.init(row: pos, section: 0))
         }
         self.messageTableView.deleteRows(at: deletePaths, with: .none)
+        UIView.setAnimationsEnabled(true)
     }
 
     func deleteMessages(_ messages: [Message]) {
@@ -401,11 +407,13 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
                 positions.append(pos - 1)
             }
         }
+        UIView.setAnimationsEnabled(false)
         for pos in positions.sorted().reversed() {
             self.messages.remove(at: pos)
             deletePaths.append(IndexPath.init(row: pos, section: 0))
         }
         self.messageTableView.deleteRows(at: deletePaths, with: .none)
+        UIView.setAnimationsEnabled(true)
     }
 
     func clearMessage() {
