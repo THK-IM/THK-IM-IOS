@@ -306,10 +306,12 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
                 realInsertMsgs.append(m)
             } else {
                 if self.messages[pos].sendStatus != m.sendStatus {
+                    UIView.setAnimationsEnabled(false)
                     self.messages[pos].sendStatus = m.sendStatus
                     self.messages[pos].msgId = m.msgId
                     self.messageTableView.reloadRows(
                         at: [IndexPath.init(row: pos, section: 0)], with: .none)
+                    UIView.setAnimationsEnabled(true)
                 }
             }
         }
