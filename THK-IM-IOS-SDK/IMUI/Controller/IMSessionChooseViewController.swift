@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import UIKit
 
-class IMSessionChooseViewController: IMSessionViewController {
+open class IMSessionChooseViewController: IMSessionViewController {
 
     var forwardType: Int?
     var messages: [Message]?
@@ -30,13 +30,13 @@ class IMSessionChooseViewController: IMSessionViewController {
         vc.navigationController?.view.layer.add(transition, forKey: kCATransition)
         vc.navigationController?.pushViewController(choose, animated: false)
     }
-
-    override func viewDidLoad() {
+    
+    open override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = ResourceUtils.loadString("choose_one_session", comment: "")
     }
 
-    override func openSession(_ session: Session) {
+    open override func openSession(_ session: Session) {
         guard let forwardType = self.forwardType else {
             return
         }

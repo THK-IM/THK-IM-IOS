@@ -28,6 +28,13 @@ public class Stack<Element> {
         return storage.last
     }
 
+    // 查找
+    public func find(_ it: (Element) -> Bool) -> Element? {
+        self.storage.first { el in
+            return it(el)
+        }
+    }
+
     // 检查栈是否为空
     public var isEmpty: Bool {
         return storage.isEmpty
