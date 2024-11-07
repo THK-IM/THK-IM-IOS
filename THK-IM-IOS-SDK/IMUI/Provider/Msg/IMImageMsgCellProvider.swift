@@ -22,11 +22,8 @@ open class IMImageMsgCellProvider: IMBaseMessageCellProvider {
         return IMImageMsgCell(identifier, wrapper)
     }
 
-    open override func replyMsgView(
-        _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
-    ) -> IMsgBodyView {
+    open override func replyMsgView() -> IMsgBodyView {
         let view = IMImageMsgView(frame: .null)
-        view.setMessage(msg, session, delegate)
         return view
     }
 }

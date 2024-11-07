@@ -25,15 +25,12 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         return true
     }
 
-    open override func replyMsgView(
-        _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
-    ) -> IMsgBodyView {
+    open override func replyMsgView() -> IMsgBodyView {
         let view = IMTextMsgView(frame: .null)
         view.textColor = UIColor.darkGray
         view.font = UIFont.systemFont(ofSize: 12)
         view.textAlignment = .left
         view.numberOfLines = 0
-        view.setMessage(msg, session, delegate)
         return view
     }
 

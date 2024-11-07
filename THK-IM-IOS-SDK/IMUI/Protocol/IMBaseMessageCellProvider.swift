@@ -92,7 +92,7 @@ open class IMBaseMessageCellProvider {
         }
     }
 
-    open func replyMsgView(_ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?)
+    open func replyMsgView()
         -> IMsgBodyView
     {
         let view = IMTextMsgView()
