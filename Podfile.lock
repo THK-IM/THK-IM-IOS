@@ -106,9 +106,9 @@ PODS:
   - WCDBOptimizedSQLCipher (1.4.4)
   - WebRTC-SDK (125.6422.05)
   - YYModel (1.0.4)
-  - ZLPhotoBrowser (4.4.6):
-    - ZLPhotoBrowser/Core (= 4.4.6)
-  - ZLPhotoBrowser/Core (4.4.6)
+  - ZLPhotoBrowser (4.5.6):
+    - ZLPhotoBrowser/Core (= 4.5.6)
+  - ZLPhotoBrowser/Core (4.5.6)
 
 DEPENDENCIES:
   - Alamofire (= 5.8.1)
@@ -132,7 +132,7 @@ DEPENDENCIES:
   - SwiftEntryKit
   - WCDB.swift (= 2.1.1)
   - WebRTC-SDK (= 125.6422.05)
-  - ZLPhotoBrowser (= 4.4.6)
+  - ZLPhotoBrowser (= 4.5.6)
 
 SPEC REPOS:
   https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
@@ -193,8 +193,8 @@ SPEC CHECKSUMS:
   WCDBOptimizedSQLCipher: 7f03bb7c94ad164996f0fa87d0f76026f5ab0f92
   WebRTC-SDK: 1990a1a595bd0b59c17485ce13ff17f575732c12
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
-  ZLPhotoBrowser: 8b3653a677a858e158fedf870f211b1219bb4c0f
+  ZLPhotoBrowser: 9fdd801da47d5aaff778b8213fc711bbadab9cb2
 
-PODFILE CHECKSUM: 6f6d0b4d66585573ad0d52a6eb91a915edec3f29
+PODFILE CHECKSUM: 1ece7bde071e272de99eb3dd253a0a07858b00bc
 
 COCOAPODS: 1.16.2

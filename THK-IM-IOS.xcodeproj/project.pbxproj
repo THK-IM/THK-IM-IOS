@@ -22,8 +22,6 @@
 		9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */; };
 		9A9D71DB2CD0F1DB00936EB6 /* InviteMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */; };
 		9A9D71DD2CD0F64D00936EB6 /* IMLiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DC2CD0F64D00936EB6 /* IMLiveManager.swift */; };
-		9AB699102CD4D7EA002E974C /* YbridOgg.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB6990F2CD4D7EA002E974C /* YbridOgg.xcframework */; };
-		9AB699122CD4D7FA002E974C /* YbridOpus.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB699112CD4D7FA002E974C /* YbridOpus.xcframework */; };
 		A00425FD2C36882A00977DB2 /* ic_titlebar_back.svg in Resources */ = {isa = PBXBuildFile; fileRef = A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */; };
 		A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF52AFF18EC00896B87 /* DateUtils.swift */; };
 		A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF72AFFA9A900896B87 /* MediaViewController.swift */; };
@@ -349,10 +347,30 @@
 		A0FCA93C2B4A71A400FC6E47 /* IMUserModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA93B2B4A71A400FC6E47 /* IMUserModule.swift */; };
 		A0FCA93E2B4A738700FC6E47 /* IMContactModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA93D2B4A738700FC6E47 /* IMContactModule.swift */; };
 		A0FCA9402B4A782E00FC6E47 /* IMGroupModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCA93F2B4A782E00FC6E47 /* IMGroupModule.swift */; };
+		F54878712CDF36A900FDC7B1 /* YbridOgg.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB6990F2CD4D7EA002E974C /* YbridOgg.xcframework */; };
+		F54878722CDF36A900FDC7B1 /* YbridOgg.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB6990F2CD4D7EA002E974C /* YbridOgg.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F54878742CDF36AA00FDC7B1 /* YbridOpus.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB699112CD4D7FA002E974C /* YbridOpus.xcframework */; };
+		F54878752CDF36AA00FDC7B1 /* YbridOpus.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB699112CD4D7FA002E974C /* YbridOpus.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F54878772CDF3A5300FDC7B1 /* IMDemoResourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54878762CDF3A4700FDC7B1 /* IMDemoResourceProvider.swift */; };
 		F56BBFE32CBA262D00525A33 /* ic_audio_on.svg in Resources */ = {isa = PBXBuildFile; fileRef = F56BBFE22CBA262D00525A33 /* ic_audio_on.svg */; };
 		F56BBFE52CBA263900525A33 /* ic_audio_off.svg in Resources */ = {isa = PBXBuildFile; fileRef = F56BBFE42CBA263900525A33 /* ic_audio_off.svg */; };
 		F56BBFEA2CBA2AC700525A33 /* CircularProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56BBFE92CBA2AC700525A33 /* CircularProgressBarView.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F54878732CDF36A900FDC7B1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F54878722CDF36A900FDC7B1 /* YbridOgg.xcframework in Embed Frameworks */,
+				F54878752CDF36AA00FDC7B1 /* YbridOpus.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00B256D621B64DD52DDF517D /* Pods-THK-IM-IOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THK-IM-IOS.debug.xcconfig"; path = "Target Support Files/Pods-THK-IM-IOS/Pods-THK-IM-IOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -710,6 +728,7 @@
 		A0FCA93B2B4A71A400FC6E47 /* IMUserModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUserModule.swift; sourceTree = "<group>"; };
 		A0FCA93D2B4A738700FC6E47 /* IMContactModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMContactModule.swift; sourceTree = "<group>"; };
 		A0FCA93F2B4A782E00FC6E47 /* IMGroupModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMGroupModule.swift; sourceTree = "<group>"; };
+		F54878762CDF3A4700FDC7B1 /* IMDemoResourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMDemoResourceProvider.swift; sourceTree = "<group>"; };
 		F56BBFE22CBA262D00525A33 /* ic_audio_on.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ic_audio_on.svg; sourceTree = "<group>"; };
 		F56BBFE42CBA263900525A33 /* ic_audio_off.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ic_audio_off.svg; sourceTree = "<group>"; };
 		F56BBFE92CBA2AC700525A33 /* CircularProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBarView.swift; sourceTree = "<group>"; };
@@ -720,8 +739,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9AB699122CD4D7FA002E974C /* YbridOpus.xcframework in Frameworks */,
-				9AB699102CD4D7EA002E974C /* YbridOgg.xcframework in Frameworks */,
+				F54878742CDF36AA00FDC7B1 /* YbridOpus.xcframework in Frameworks */,
+				F54878712CDF36A900FDC7B1 /* YbridOgg.xcframework in Frameworks */,
 				08F4799AC88630CBD25DF832 /* Pods_THK_IM_IOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1778,6 +1797,7 @@
 		A0FCA93A2B4A718900FC6E47 /* Module */ = {
 			isa = PBXGroup;
 			children = (
+				F54878762CDF3A4700FDC7B1 /* IMDemoResourceProvider.swift */,
 				A0FCA93B2B4A71A400FC6E47 /* IMUserModule.swift */,
 				A0FCA93D2B4A738700FC6E47 /* IMContactModule.swift */,
 				A0FCA93F2B4A782E00FC6E47 /* IMGroupModule.swift */,
@@ -1816,6 +1836,7 @@
 				A0D68A902A88838A004D11A5 /* Frameworks */,
 				A0D68A912A88838A004D11A5 /* Resources */,
 				FAC26390FEBF190B7F1B0C68 /* [CP] Embed Pods Frameworks */,
+				F54878732CDF36A900FDC7B1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2012,6 +2033,7 @@
 				A0D68BC72A888679004D11A5 /* IMBaseTableCell.swift in Sources */,
 				A033FAFC2B8A0E500053045E /* IMVideoMsgView.swift in Sources */,
 				A018CE012B00A00B00896B87 /* IMMessageOperator.swift in Sources */,
+				F54878772CDF3A5300FDC7B1 /* IMDemoResourceProvider.swift in Sources */,
 				9A9D71D22CD0C98E00936EB6 /* LiveSignalProtocol.swift in Sources */,
 				A0FCA8D32B484A5B00FC6E47 /* WelcomeViewController.swift in Sources */,
 				A0589A4F2C21569E003419B8 /* ResourceUtils.swift in Sources */,

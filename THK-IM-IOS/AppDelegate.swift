@@ -53,6 +53,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IMCoreManager.shared.customModule = IMCustomModule()
         IMUIManager.shared.pageRouter = ExternalPageRouter()
 
+        IMUIManager.shared.msgCellAvatarWidth = 42
+        IMUIManager.shared.msgCellAvatarLeft = 4
+        IMUIManager.shared.msgCellAvatarRight = 4
+        IMUIManager.shared.msgCellPadding = 20
+        IMUIManager.shared.uiResourceProvider = IMDemoResourceProvider()
     }
 
     func initIM(token: String, uId: Int64) -> Observable<Bool> {
