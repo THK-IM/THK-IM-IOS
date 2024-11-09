@@ -113,7 +113,7 @@ open class LocalParticipant: BaseParticipant {
         guard let offerBase64 = offer.data(using: .utf8)?.base64EncodedString() else {
             return
         }
-        IMLiveManager.shared.liveApi
+        RTCRoomManager.shared.liveApi
             .publishStream(
                 PublishStreamReqVo(uId: self.uId, roomId: self.roomId, offerSdp: offerBase64)
             )

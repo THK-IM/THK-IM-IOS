@@ -39,16 +39,28 @@ class DefaultLiveApi: LiveApi {
         self.apiInterceptor.updateToken(token: token)
     }
 
-    public func createRoom(_ req: CreateRoomReqVo) -> Observable<CreateRoomResVo> {
+    public func createRoom(_ req: CreateRoomReqVo) -> Observable<
+        CreateRoomResVo
+    > {
         return roomApi.rx
             .request(.createRoom(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Bean(CreateRoomResVo.self))
     }
 
-    func callMembers(_ req: CallRoomMemberReqVo) -> RxSwift.Observable<Void> {
+    func callRoomMembers(_ req: CallRoomMemberReqVo) -> RxSwift.Observable<Void>
+    {
         return roomApi.rx
-            .request(.callRoomMember(req))
+            .request(.callRoomMembers(req))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Void())
+    }
+
+    func cancelCallRoomMembers(_ req: CancelCallRoomMemberReqVo)
+        -> RxSwift.Observable<Void>
+    {
+        return roomApi.rx
+            .request(.cancelCallRoomMembers(req))
             .asObservable()
             .compose(RxTransformer.shared.response2Void())
     }
@@ -67,7 +79,9 @@ class DefaultLiveApi: LiveApi {
             .compose(RxTransformer.shared.response2Void())
     }
 
-    public func refuseJoinRoom(_ req: RefuseJoinReqVo) -> RxSwift.Observable<Void> {
+    public func refuseJoinRoom(_ req: RefuseJoinReqVo)
+        -> RxSwift.Observable<Void>
+    {
         return roomApi.rx
             .request(.refuseJoinRoom(req))
             .asObservable()
@@ -88,14 +102,19 @@ class DefaultLiveApi: LiveApi {
             .compose(RxTransformer.shared.response2Void())
     }
 
-    public func publishStream(_ req: PublishStreamReqVo) -> Observable<PublishStreamResVo> {
+    public func publishStream(_ req: PublishStreamReqVo) -> Observable<
+        PublishStreamResVo
+    > {
         return streamApi.rx
             .request(.requestPublish(req))
             .asObservable()
-            .compose(RxTransformer.shared.response2Bean(PublishStreamResVo.self))
+            .compose(
+                RxTransformer.shared.response2Bean(PublishStreamResVo.self))
     }
 
-    public func playStream(_ req: PlayStreamReqVo) -> Observable<PlayStreamResVo> {
+    public func playStream(_ req: PlayStreamReqVo) -> Observable<
+        PlayStreamResVo
+    > {
         return streamApi.rx
             .request(.requestPlay(req))
             .asObservable()

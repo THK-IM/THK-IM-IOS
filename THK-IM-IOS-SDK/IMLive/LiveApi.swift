@@ -14,7 +14,9 @@ public protocol LiveApi {
 
     func createRoom(_ req: CreateRoomReqVo) -> Observable<CreateRoomResVo>
     
-    func callMembers(_ req: CallRoomMemberReqVo) -> Observable<Void>
+    func callRoomMembers(_ req: CallRoomMemberReqVo) -> Observable<Void>
+    
+    func cancelCallRoomMembers(_ req: CancelCallRoomMemberReqVo) -> Observable<Void>
 
     func joinRoom(_ req: JoinRoomReqVo) -> Observable<JoinRoomResVo>
     

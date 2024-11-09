@@ -23,7 +23,7 @@ class IMCustomModule: DefaultCustomModule {
                 LiveSignal.self, from: body.data(using: .utf8) ?? Data())
             {
                 DDLogInfo("IMLiveManager: onSignalReceived \(signal)")
-                IMLiveManager.shared.onLiveSignalReceived(signal: signal)
+                LiveManager.shared.onLiveSignalReceived(signal: signal)
             }
         }
     }

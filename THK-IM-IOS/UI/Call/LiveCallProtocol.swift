@@ -35,6 +35,9 @@ protocol LiveCallProtocol: AnyObject {
      */
     func muteLocalVideo(mute: Bool)
 
+    /**
+     * 本地摄像头是否关闭
+     */
     func isLocalVideoMuted() -> Bool
 
     /**
@@ -68,13 +71,23 @@ protocol LiveCallProtocol: AnyObject {
     func isRemoteVideoMuted(uId: Int64) -> Bool
 
     /**
-     * 接听
+     * 取消通话
      */
-    func accept()
+    func cancelCalling()
 
     /**
-     * 挂断
+     * 接听通话
      */
-    func hangup()
+    func acceptCalling()
+
+    /**
+     * 拒绝通话
+     */
+    func rejectCalling()
+
+    /**
+     * 挂断通话
+     */
+    func hangupCalling()
 
 }

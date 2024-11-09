@@ -12,7 +12,7 @@ public enum LiveSignalType: Int {
     // 正在被请求通话
     case BeingRequested = 1
     // 取消被请求通话
-    case CancelRequested = 2
+    case CancelRequesting = 2
     // 拒绝请求通话
     case RejectRequest = 3
     // 接受请求通话
@@ -43,9 +43,9 @@ public class LiveSignal : Codable {
         }
     }
     
-    func cancelRequestedSignal() -> CancelRequestedSignal? {
-        if self.type == LiveSignalType.CancelRequested.rawValue {
-            return try? JSONDecoder().decode(CancelRequestedSignal.self, from: body.data(using: .utf8) ?? Data())
+    func cancelRequestingSignal() -> CancelRequestingSignal? {
+        if self.type == LiveSignalType.CancelRequesting.rawValue {
+            return try? JSONDecoder().decode(CancelRequestingSignal.self, from: body.data(using: .utf8) ?? Data())
         } else {
             return nil
         }
@@ -113,7 +113,7 @@ public class BeingRequestedSignal: Codable {
     }
 }
 
-public class CancelRequestedSignal: Codable {
+public class CancelRequestingSignal: Codable {
     let roomId: String
     let msg: String
     let createTime: Int64

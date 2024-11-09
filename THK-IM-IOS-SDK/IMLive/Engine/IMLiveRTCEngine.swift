@@ -124,7 +124,7 @@ public class IMLiveRTCEngine: NSObject {
 
     public func onAudioCapture(_ samples: [Float], _ channel: Int) {
         let db = AudioUtils.calculateDecibel(from: samples)
-        guard let room = IMLiveManager.shared.getRoom() else { return }
+        guard let room = RTCRoomManager.shared.currentRoom() else { return }
         room.sendMyVolume(db)
     }
 }

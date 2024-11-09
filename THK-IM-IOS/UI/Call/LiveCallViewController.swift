@@ -11,12 +11,16 @@ import UIKit
 
 class LiveCallViewController: BaseViewController {
 
-    static func pushLiveCallViewController(_ from: UIViewController, _ room: RTCRoom) {
+    static func pushLiveCallViewController(
+        _ from: UIViewController, _ room: RTCRoom
+    ) {
         let vc = LiveCallViewController()
         from.navigationController?.pushViewController(vc, animated: true)
     }
 
-    static func presentLiveCallViewController(_ from: UIViewController, _ room: RTCRoom) {
+    static func presentLiveCallViewController(
+        _ from: UIViewController, _ room: RTCRoom
+    ) {
         let vc = LiveCallViewController()
         vc.modalPresentationStyle = .overFullScreen
         from.present(vc, animated: true)
@@ -116,8 +120,10 @@ class LiveCallViewController: BaseViewController {
             make.right.equalToSuperview()
         }
 
-        self.participantLocalView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
-            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+        self.participantLocalView.rx.tapGesture(configuration: {
+            gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom {
+                gestureRecognizer, touches in
                 return true
             }
             delegate.otherFailureRequirementPolicy = .custom {
@@ -132,8 +138,10 @@ class LiveCallViewController: BaseViewController {
         })
         .disposed(by: disposeBag)
 
-        self.participantRemoteView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
-            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+        self.participantRemoteView.rx.tapGesture(configuration: {
+            gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom {
+                gestureRecognizer, touches in
                 return true
             }
             delegate.otherFailureRequirementPolicy = .custom {
@@ -147,7 +155,7 @@ class LiveCallViewController: BaseViewController {
         })
         .disposed(by: disposeBag)
 
-        if let room = IMLiveManager.shared.getRoom() {
+        if let room = RTCRoomManager.shared.currentRoom() {
             room.delegate = self
             self.setupView(room)
         }
@@ -196,7 +204,7 @@ class LiveCallViewController: BaseViewController {
         if remoteParticipantCount > 0 {
             showCallingView()
         } else {
-            if room.ownerId == IMLiveManager.shared.selfId() {
+            if room.ownerId == RTCRoomManager.shared.currentRoom()?.ownerId {
                 showRequestCallView()
             } else {
                 showBeCallingView()
@@ -205,11 +213,11 @@ class LiveCallViewController: BaseViewController {
     }
 
     private func showUserInfo() {
-        guard let room = IMLiveManager.shared.getRoom() else {
+        guard let room = RTCRoomManager.shared.currentRoom() else {
             return
         }
         for m in room.getAllParticipants() {
-            if m.uId != IMLiveManager.shared.selfId() {
+            if m.uId != RTCRoomManager.shared.myUId {
                 IMCoreManager.shared.userModule.queryUser(id: m.uId)
                     .compose(RxTransformer.shared.io2Main())
                     .subscribe(onNext: { [weak self] user in
@@ -247,8 +255,8 @@ class LiveCallViewController: BaseViewController {
     private func initParticipantView(_ p: BaseParticipant) {
         if p is LocalParticipant {
             self.participantLocalView.setParticipant(p: p)
-            if let room = IMLiveManager.shared.getRoom() {
-                if room.ownerId == IMLiveManager.shared.selfId() {
+            if let room = RTCRoomManager.shared.currentRoom() {
+                if room.ownerId == RTCRoomManager.shared.myUId {
                     self.participantLocalView.startPeerConnection()
                 }
             }
@@ -288,7 +296,7 @@ class LiveCallViewController: BaseViewController {
     }
 
     func exit() {
-        IMLiveManager.shared.destroyRoom()
+        RTCRoomManager.shared.destroyRoom()
         if self.navigationController == nil {
             self.dismiss(animated: true)
         } else {
@@ -299,7 +307,7 @@ class LiveCallViewController: BaseViewController {
 }
 
 extension LiveCallViewController: RTCRoomProtocol {
-    
+
     func onError(_ function: String, _ err: any Error) {
     }
 
@@ -315,17 +323,16 @@ extension LiveCallViewController: RTCRoomProtocol {
 
     }
 
-    func onTextMsgReceived(_ uId: Int64, _ text: String) {
+    func onTextMsgReceived(_ type: Int, _ text: String) {
 
     }
-    
+
     func onDataMsgReceived(_ data: Data) {
-        
+
     }
-    
+
     func onConnectStatus(_ uId: Int64, _ status: Int) {
     }
-    
 
 }
 
@@ -378,9 +385,17 @@ extension LiveCallViewController: LiveCallProtocol {
     func switchLocalCamera() {
         self.participantLocalView.switchCamera()
     }
+    
+    func cancelCalling() {
+        guard let room = RTCRoomManager.shared.currentRoom() else {
+            return
+        }
+        RTCRoomManager.shared.leveaRoom()
+        self.exit()
+    }
 
-    func accept() {
-        guard let room = IMLiveManager.shared.getRoom() else {
+    func acceptCalling() {
+        guard let room = RTCRoomManager.shared.currentRoom() else {
             return
         }
         self.participantLocalView.startPeerConnection()
@@ -392,11 +407,19 @@ extension LiveCallViewController: LiveCallProtocol {
         self.showCallingView()
     }
 
-    func hangup() {
-        guard let room = IMLiveManager.shared.getRoom() else {
+    func rejectCalling() {
+        guard let room = RTCRoomManager.shared.currentRoom() else {
             return
         }
-        IMLiveManager.shared.refuseJoinRoom(roomId: room.id, reason: "")
+        RTCRoomManager.shared.refuseJoinRoom(roomId: room.id, reason: "")
+        self.exit()
+    }
+
+    func hangupCalling() {
+        guard let room = RTCRoomManager.shared.currentRoom() else {
+            return
+        }
+        RTCRoomManager.shared.leveaRoom()
         self.exit()
     }
 

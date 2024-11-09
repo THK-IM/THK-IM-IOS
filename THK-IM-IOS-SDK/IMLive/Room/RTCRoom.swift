@@ -12,7 +12,6 @@ import WebRTC
 
 public class RTCRoom: NSObject {
     let id: String
-    let uId: Int64
     let mode: Int
     let ownerId: Int64
     let createTime: Int64
@@ -22,12 +21,12 @@ public class RTCRoom: NSObject {
     private var remoteParticipants = [RemoteParticipant]()
 
     init(
-        id: String, ownerId: Int64, uId: Int64, mode: Int, role: Int,
-        createTime: Int64, mediaParams: MediaParams, participants: [ParticipantVo]?
+        id: String, ownerId: Int64, mode: Int, role: Int,
+        createTime: Int64, mediaParams: MediaParams,
+        participants: [ParticipantVo]?
     ) {
         self.id = id
         self.ownerId = ownerId
-        self.uId = uId
         self.mode = mode
         self.createTime = createTime
         self.mediaParams = mediaParams
@@ -38,9 +37,9 @@ public class RTCRoom: NSObject {
 
     private func initLocalParticipant(_ role: Int) {
         localParticipant = LocalParticipant(
-            uId: self.uId, roomId: self.id, role: role, mediaParams: self.mediaParams,
-            audioEnable: self.audioEnable(),
-            videoEnable: self.videoEnable()
+            uId: RTCRoomManager.shared.myUId, roomId: self.id, role: role,
+            mediaParams: self.mediaParams,
+            audioEnable: self.audioEnable(), videoEnable: self.videoEnable()
         )
     }
 
@@ -49,7 +48,8 @@ public class RTCRoom: NSObject {
     }
 
     func videoEnable() -> Bool {
-        return self.mode == Mode.Video.rawValue || self.mode == Mode.VideoRoom.rawValue
+        return self.mode == Mode.Video.rawValue
+            || self.mode == Mode.VideoRoom.rawValue
     }
 
     private func initRemoteParticipants(_ participants: [ParticipantVo]?) {
@@ -84,7 +84,9 @@ public class RTCRoom: NSObject {
     func participantLeave(roomId: String, streamKey: String) {
         if roomId == self.id {
             var p: BaseParticipant? = nil
-            if localParticipant != nil && localParticipant!.pushStreamKey() == streamKey {
+            if localParticipant != nil
+                && localParticipant!.pushStreamKey() == streamKey
+            {
                 p = localParticipant
             }
             if p == nil {
@@ -146,7 +148,7 @@ public class RTCRoom: NSObject {
                 delegate?.onParticipantVoice(volumeMsg.uId, volumeMsg.volume)
             }
         } else {
-            delegate?.onTextMsgReceived(uId, text)
+            delegate?.onTextMsgReceived(type, text)
         }
     }
 

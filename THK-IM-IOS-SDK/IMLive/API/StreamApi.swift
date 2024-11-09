@@ -18,7 +18,7 @@ enum StreamApi {
 extension StreamApi: TargetType {
 
     var baseURL: URL {
-        return URL.init(string: "\(IMLiveManager.shared.liveApi.getEndpoint())/stream")!
+        return URL.init(string: "\(RTCRoomManager.shared.liveApi.getEndpoint())/stream")!
     }
 
     var path: String {

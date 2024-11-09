@@ -50,12 +50,12 @@ open class RemoteParticipant: BaseParticipant {
         }
 
         let req = PlayStreamReqVo(
-            uId: IMLiveManager.shared.selfId(),
+            uId: RTCRoomManager.shared.myUId,
             roomId: self.roomId,
             offerSdp: offerBase64,
             streamKey: self.subStreamKey
         )
-        IMLiveManager.shared.liveApi.playStream(req)
+        RTCRoomManager.shared.liveApi.playStream(req)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(
                 onNext: { [weak self] bean in

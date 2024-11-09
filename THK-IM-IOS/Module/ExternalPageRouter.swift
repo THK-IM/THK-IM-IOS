@@ -17,13 +17,13 @@ class ExternalPageRouter: IMPageRouter {
         if session.type == SessionType.Single.rawValue {
             weak var vc = controller
             var ids = Set<Int64>()
-            ids.insert(IMLiveManager.shared.selfId())
+            ids.insert(IMCoreManager.shared.uId)
             ids.insert(session.entityId)
             let mediaParams = MediaParams(
                 videoMaxBitrate: 500 * 1024 * 8, audioMaxBitrate: 50 * 1024 * 8,
                 videoWidth: 540, videoHeight: 960, videoFps: 20
             )
-            IMLiveManager.shared.createRoom(mode: Mode.Video, mediaParams: mediaParams)
+            RTCRoomManager.shared.createRoom(mode: Mode.Video, mediaParams: mediaParams)
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { room in
                     if vc != nil {

@@ -213,7 +213,7 @@ open class BaseParticipant: NSObject {
     }
 
     private func onNewBufferMessage(data: Data) {
-        guard let room = IMLiveManager.shared.getRoom() else {
+        guard let room = RTCRoomManager.shared.currentRoom() else {
             return
         }
         if room.id != self.roomId { return }
@@ -221,7 +221,7 @@ open class BaseParticipant: NSObject {
     }
 
     private func onNewMessage(data: Data) {
-        guard let room = IMLiveManager.shared.getRoom() else {
+        guard let room = RTCRoomManager.shared.currentRoom() else {
             return
         }
         if room.id != self.roomId { return }
@@ -270,7 +270,7 @@ open class BaseParticipant: NSObject {
     }
 
     open func onError(_ function: String, _ err: Error) {
-        guard let room = IMLiveManager.shared.getRoom() else {
+        guard let room = RTCRoomManager.shared.currentRoom() else {
             return
         }
         if room.id != self.roomId { return }
@@ -325,7 +325,7 @@ extension BaseParticipant: RTCPeerConnectionDelegate {
         default:
             break
         }
-        guard let room = IMLiveManager.shared.getRoom() else { return }
+        guard let room = RTCRoomManager.shared.currentRoom() else { return }
         if room.id != self.roomId { return }
         room.delegate?.onConnectStatus(self.uId, newState.rawValue)
     }
@@ -435,7 +435,7 @@ extension BaseParticipant: RTCDataChannelDelegate {
     public func dataChannel(
         _ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer
     ) {
-        guard let room = IMLiveManager.shared.getRoom() else {
+        guard let room = RTCRoomManager.shared.currentRoom() else {
             return
         }
         if self.roomId == room.id {

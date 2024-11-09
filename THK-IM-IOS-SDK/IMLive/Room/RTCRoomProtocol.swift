@@ -8,9 +8,7 @@
 
 import Foundation
 
-/**
- * RTC协议
- */
+/// RTC协议
 public protocol RTCRoomProtocol: NSObject {
 
     /**
@@ -26,30 +24,26 @@ public protocol RTCRoomProtocol: NSObject {
     /**
      * RTC 文本消息
      */
-    func onTextMsgReceived(_ uId: Int64, _ text: String)
+    func onTextMsgReceived(_ type: Int, _ text: String)
 
     /**
      * RTC 数据消息
      */
     func onDataMsgReceived(_ data: Data)
-    
+
     /**
      * RTC 语音音量
      */
     func onParticipantVoice(_ uId: Int64, _ volume: Double)
-    
-    
+
     /**
      * RTC 连接状态
      */
     func onConnectStatus(_ uId: Int64, _ status: Int)
-    
-    
+
     /**
      *  RTC error
      */
     func onError(_ function: String, _ err: Error)
-    
-    
-}
 
+}

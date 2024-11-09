@@ -12,7 +12,9 @@ enum RoomApi {
     ///  创建房间
     case createRoom(_ vo: CreateRoomReqVo)
     ///  拨通
-    case callRoomMember(_ vo: CallRoomMemberReqVo)
+    case callRoomMembers(_ vo: CallRoomMemberReqVo)
+    ///  取消拨通
+    case cancelCallRoomMembers(_ vo: CancelCallRoomMemberReqVo)
     ///  加入房间
     case joinRoom(_ vo: JoinRoomReqVo)
     ///  邀请加入房间
@@ -28,15 +30,17 @@ enum RoomApi {
 extension RoomApi: TargetType {
 
     var baseURL: URL {
-        return URL.init(string: "\(IMLiveManager.shared.liveApi.getEndpoint())/room")!
+        return URL.init(string: "\(RTCRoomManager.shared.liveApi.getEndpoint())/room")!
     }
 
     var path: String {
         switch self {
         case .createRoom:
             return ""
-        case .callRoomMember:
+        case .callRoomMembers:
             return "/call"
+        case .cancelCallRoomMembers:
+            return "/cancel_call"
         case .joinRoom:
             return "/member/join"
         case .inviteMembers:
@@ -54,7 +58,9 @@ extension RoomApi: TargetType {
         switch self {
         case .createRoom:
             return .post
-        case .callRoomMember:
+        case .callRoomMembers:
+            return .post
+        case .cancelCallRoomMembers:
             return .post
         case .joinRoom:
             return .post
@@ -73,7 +79,9 @@ extension RoomApi: TargetType {
         switch self {
         case let .createRoom(vo):
             return .requestJSONEncodable(vo)
-        case let .callRoomMember(vo):
+        case let .callRoomMembers(vo):
+            return .requestJSONEncodable(vo)
+        case let .cancelCallRoomMembers(vo):
             return .requestJSONEncodable(vo)
         case let .joinRoom(vo):
             return .requestJSONEncodable(vo)
