@@ -40,5 +40,30 @@ protocol LiveCallProtocol: AnyObject {
      * 挂断通话
      */
     func hangupCalling()
+    
+    /**
+     * 对方接听
+     */
+    func onRemoteAcceptedCallingBySignal(roomId: String, uId: Int64)
+
+    /**
+     * 对方拒绝接听
+     */
+    func onRemoteRejectedCallingBySignal(roomId: String, uId: Int64, msg: String)
+
+    /**
+     * 对方挂断电话
+     */
+    func onRemoteHangupCallingBySignal(roomId: String, uId: Int64, msg: String)
+
+    /**
+     * 被踢下
+     */
+    func onMemberKickedOffBySignal(roomId: String, uIds: Set<Int64>)
+
+    /**
+     * 房间通话结束
+     */
+    func onCallEndedBySignal(roomId: String)
 
 }

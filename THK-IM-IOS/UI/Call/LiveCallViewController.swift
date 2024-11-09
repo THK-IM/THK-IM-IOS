@@ -381,5 +381,25 @@ extension LiveCallViewController: LiveCallProtocol {
     func hangupCalling() {
         self.exit()
     }
+    
+    func onRemoteAcceptedCallingBySignal(roomId: String, uId: Int64) {
+        
+    }
+    
+    func onRemoteRejectedCallingBySignal(roomId: String, uId: Int64, msg: String) {
+        
+    }
+    
+    func onRemoteHangupCallingBySignal(roomId: String, uId: Int64, msg: String) {
+        
+    }
+    
+    func onMemberKickedOffBySignal(roomId: String, uIds: Set<Int64>) {
+        
+    }
+    
+    func onCallEndedBySignal(roomId: String) {
+        
+    }
 
 }
