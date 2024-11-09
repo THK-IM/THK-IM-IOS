@@ -213,18 +213,16 @@ open class BaseParticipant: NSObject {
     }
 
     private func onNewBufferMessage(data: Data) {
-        guard let room = RTCRoomManager.shared.currentRoom() else {
+        guard let room = RTCRoomManager.shared.getRoomById(self.roomId) else {
             return
         }
-        if room.id != self.roomId { return }
         room.onDataMsgReceived(data)
     }
 
     private func onNewMessage(data: Data) {
-        guard let room = RTCRoomManager.shared.currentRoom() else {
+        guard let room = RTCRoomManager.shared.getRoomById(self.roomId) else {
             return
         }
-        if room.id != self.roomId { return }
         do {
             let notify = try JSONDecoder().decode(NotifyBean.self, from: data)
             switch notify.type {
@@ -270,11 +268,10 @@ open class BaseParticipant: NSObject {
     }
 
     open func onError(_ function: String, _ err: Error) {
-        guard let room = RTCRoomManager.shared.currentRoom() else {
+        guard let room = RTCRoomManager.shared.getRoomById(self.roomId) else {
             return
         }
-        if room.id != self.roomId { return }
-        room.delegate?.onError(function, err)
+        room.rtcCallback?.onError(function, err)
     }
 
 }
@@ -325,9 +322,8 @@ extension BaseParticipant: RTCPeerConnectionDelegate {
         default:
             break
         }
-        guard let room = RTCRoomManager.shared.currentRoom() else { return }
-        if room.id != self.roomId { return }
-        room.delegate?.onConnectStatus(self.uId, newState.rawValue)
+        guard let room = RTCRoomManager.shared.getRoomById(self.roomId) else { return }
+        room.rtcCallback?.onConnectStatus(self.uId, newState.rawValue)
     }
 
     /**
@@ -435,15 +431,13 @@ extension BaseParticipant: RTCDataChannelDelegate {
     public func dataChannel(
         _ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer
     ) {
-        guard let room = RTCRoomManager.shared.currentRoom() else {
+        guard let room = RTCRoomManager.shared.getRoomById(self.roomId) else {
             return
         }
-        if self.roomId == room.id {
-            if buffer.isBinary {
-                self.onNewBufferMessage(data: buffer.data)
-            } else {
-                self.onNewMessage(data: buffer.data)
-            }
+        if buffer.isBinary {
+            self.onNewBufferMessage(data: buffer.data)
+        } else {
+            self.onNewMessage(data: buffer.data)
         }
     }
 
