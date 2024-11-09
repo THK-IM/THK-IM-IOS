@@ -199,7 +199,7 @@ class CallingLayout: UIView {
         })
         .when(.ended)
         .subscribe(onNext: { [weak self] _ in
-            self?.liveProtocol?.hangup()
+            self?.liveProtocol?.hangupCalling()
         })
         .disposed(by: disposeBag)
 

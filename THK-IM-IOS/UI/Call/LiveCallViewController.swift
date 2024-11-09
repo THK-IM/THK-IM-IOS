@@ -387,9 +387,6 @@ extension LiveCallViewController: LiveCallProtocol {
     }
     
     func cancelCalling() {
-        guard let room = RTCRoomManager.shared.currentRoom() else {
-            return
-        }
         RTCRoomManager.shared.leveaRoom()
         self.exit()
     }

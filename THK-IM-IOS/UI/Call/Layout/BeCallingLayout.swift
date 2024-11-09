@@ -152,7 +152,7 @@ class BeCallingLayout: UIView {
         })
         .when(.ended)
         .subscribe(onNext: { [weak self] _ in
-            self?.liveProtocol?.hangup()
+            self?.liveProtocol?.rejectCalling()
         })
         .disposed(by: disposeBag)
 
@@ -167,7 +167,7 @@ class BeCallingLayout: UIView {
         })
         .when(.ended)
         .subscribe(onNext: { [weak self] _ in
-            self?.liveProtocol?.accept()
+            self?.liveProtocol?.acceptCalling()
         })
         .disposed(by: disposeBag)
     }
