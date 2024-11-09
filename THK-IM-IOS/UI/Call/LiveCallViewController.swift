@@ -306,7 +306,7 @@ class LiveCallViewController: BaseViewController {
 
 }
 
-extension LiveCallViewController: RTCRoomProtocol {
+extension LiveCallViewController: RTCRoomCallBack {
 
     func onError(_ function: String, _ err: any Error) {
     }
@@ -337,54 +337,6 @@ extension LiveCallViewController: RTCRoomProtocol {
 }
 
 extension LiveCallViewController: LiveCallProtocol {
-
-    func isSpeakerMuted() -> Bool {
-        return IMLiveRTCEngine.shared.isSpeakerMuted()
-    }
-
-    func muteSpeaker(mute: Bool) {
-        return IMLiveRTCEngine.shared.muteSpeaker(mute)
-    }
-
-    func muteLocalVideo(mute: Bool) {
-        self.participantLocalView.muteVideo(mute)
-    }
-
-    func isLocalVideoMuted() -> Bool {
-        return self.participantLocalView.isVideoMute()
-    }
-
-    func muteLocalAudio(mute: Bool) {
-        self.participantLocalView.muteAudio(mute)
-    }
-
-    func isLocalAudioMuted() -> Bool {
-        return self.participantLocalView.isAudioMute()
-    }
-
-    func muteRemoteAudio(uId: Int64, mute: Bool) {
-        self.participantRemoteView.muteAudio(mute)
-    }
-
-    func isRemoteAudioMuted(uId: Int64) -> Bool {
-        return self.participantRemoteView.isAudioMute()
-    }
-
-    func muteRemoteVideo(uId: Int64, mute: Bool) {
-        self.participantRemoteView.muteVideo(mute)
-    }
-
-    func isRemoteVideoMuted(uId: Int64) -> Bool {
-        self.participantRemoteView.isVideoMute()
-    }
-
-    func currentLocalCamera() -> Int {
-        return self.participantLocalView.currentCamera()
-    }
-
-    func switchLocalCamera() {
-        self.participantLocalView.switchCamera()
-    }
     
     func cancelCalling() {
         RTCRoomManager.shared.leveaRoom()

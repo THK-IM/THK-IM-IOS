@@ -39,13 +39,18 @@ class DefaultLiveApi: LiveApi {
         self.apiInterceptor.updateToken(token: token)
     }
 
-    public func createRoom(_ req: CreateRoomReqVo) -> Observable<
-        CreateRoomResVo
-    > {
+    public func createRoom(_ req: CreateRoomReqVo) -> Observable<RoomResVo> {
         return roomApi.rx
             .request(.createRoom(req))
             .asObservable()
-            .compose(RxTransformer.shared.response2Bean(CreateRoomResVo.self))
+            .compose(RxTransformer.shared.response2Bean(RoomResVo.self))
+    }
+
+    public func queryRoom(_ id: String) -> Observable<RoomResVo> {
+        return roomApi.rx
+            .request(.queryRoom(id))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Bean(RoomResVo.self))
     }
 
     func callRoomMembers(_ req: CallRoomMemberReqVo) -> RxSwift.Observable<Void>
@@ -121,3 +126,4 @@ class DefaultLiveApi: LiveApi {
             .compose(RxTransformer.shared.response2Bean(PlayStreamResVo.self))
     }
 }
+

@@ -16,7 +16,7 @@ public class RTCRoom: NSObject {
     let ownerId: Int64
     let createTime: Int64
     let mediaParams: MediaParams
-    weak var delegate: RTCRoomProtocol? = nil
+    weak var delegate: RTCRoomCallBack? = nil
     private var localParticipant: LocalParticipant? = nil
     private var remoteParticipants = [RemoteParticipant]()
 
@@ -214,7 +214,130 @@ public class RTCRoom: NSObject {
     func switchCamera() {
         localParticipant?.switchCamera()
     }
+    
+    
+    /**
+     * 扬声器是否打开
+     */
+    func isSpeakerMuted() -> Bool {
+        return IMLiveRTCEngine.shared.isSpeakerMuted()
+    }
 
+    /**
+     * 打开/关闭扬声器
+     */
+    func muteSpeaker(mute: Bool) {
+        return IMLiveRTCEngine.shared.muteSpeaker(mute)
+    }
+
+    /**
+     * 获取本地摄像头: 0 未知, 1 后置, 2 前置
+     */
+    func currentLocalCamera() -> Int {
+        return self.localParticipant?.currentCamera() ?? 0
+    }
+
+    /**
+     * 切换本地摄像头
+     */
+    func switchLocalCamera() {
+        self.localParticipant?.switchCamera()
+    }
+
+    /**
+     * 打开/关闭本地摄像头
+     */
+    func muteLocalVideo(mute: Bool) {
+        self.localParticipant?.setVideoMuted(mute)
+    }
+
+    /**
+     * 本地摄像头是否关闭
+     */
+    func isLocalVideoMuted() -> Bool {
+        return self.localParticipant?.getVideoMuted() ?? true
+    }
+
+    /**
+     * 打开/关闭本地音频
+     */
+    func muteLocalAudio(mute: Bool) {
+        self.localParticipant?.setAudioMuted(mute)
+    }
+
+    /**
+     * 本地音频是否关闭
+     */
+    func isLocalAudioMuted() -> Bool {
+        return self.localParticipant?.getAudioMuted() ?? true
+    }
+
+    /**
+     * 打开/关闭远端音频
+     */
+    func muteRemoteAudio(uId: Int64, mute: Bool) {
+        for p in self.remoteParticipants {
+            if (p.uId == uId) {
+                p.setAudioMuted(mute)
+            }
+        }
+    }
+    
+    /**
+     * 打开/关闭远端音频
+     */
+    func muteAllRemoteAudio(mute: Bool) {
+        for p in self.remoteParticipants {
+            p.setAudioMuted(mute)
+        }
+    }
+
+    /**
+     * 远端音频是否关闭
+     */
+    func isRemoteAudioMuted(uId: Int64) -> Bool {
+        for p in self.remoteParticipants {
+            if p.uId == uId {
+                return p.getAudioMuted()
+            }
+        }
+        return true
+    }
+
+    /**
+     * 打开/关闭远端视频
+     */
+    func muteRemoteVideo(uId: Int64, mute: Bool) {
+        for p in self.remoteParticipants {
+            p.setVideoMuted(mute)
+        }
+    }
+    
+    /**
+     * 打开/关闭所有远端视频
+     */
+    func muteAllRemoteVideo(mute: Bool) {
+        for p in self.remoteParticipants {
+            p.setVideoMuted(mute)
+        }
+    }
+    
+    /**
+     * 远端视频是否关闭
+     */
+    func isRemoteVideoMuted(uId: Int64) -> Bool {
+        for p in self.remoteParticipants {
+            if p.uId == uId {
+                return p.getVideoMuted()
+            }
+        }
+        return true
+    }
+    
+    
+    /**
+     * 销毁房间
+     */
     func destroy() {
         self.localParticipant?.onDisconnected()
         self.localParticipant?.leave()
@@ -225,4 +348,5 @@ public class RTCRoom: NSObject {
         }
         remoteParticipants.removeAll()
     }
+    
 }

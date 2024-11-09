@@ -1,5 +1,5 @@
 //
-//  RTCRoomProtocol.swift
+//  RTCRoomCallBack.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/10/29.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-/// RTC协议
-public protocol RTCRoomProtocol: NSObject {
+/// RTC事件回调
+public protocol RTCRoomCallBack: NSObject {
 
     /**
      * RTC 用户加入

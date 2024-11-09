@@ -10,66 +10,17 @@ import Foundation
 
 protocol LiveCallProtocol: AnyObject {
 
+    
     /**
-     * 扬声器是否打开
+     * 当前房间
      */
-    func isSpeakerMuted() -> Bool
+    func room() -> RTCRoom
 
     /**
-     * 打开/关闭扬声器
+     * 发起通话
      */
-    func muteSpeaker(mute: Bool)
-
-    /**
-     * 获取本地摄像头: 0 未知, 1 后置, 2 前置
-     */
-    func currentLocalCamera() -> Int
-
-    /**
-     * 切换本地摄像头
-     */
-    func switchLocalCamera()
-
-    /**
-     * 打开本地摄像头
-     */
-    func muteLocalVideo(mute: Bool)
-
-    /**
-     * 本地摄像头是否关闭
-     */
-    func isLocalVideoMuted() -> Bool
-
-    /**
-     * 打开/关闭本地音频
-     */
-    func muteLocalAudio(mute: Bool)
-
-    /**
-     * 本地音频是否关闭
-     */
-    func isLocalAudioMuted() -> Bool
-
-    /**
-     * 打开/关闭远端音频
-     */
-    func muteRemoteAudio(uId: Int64, mute: Bool)
-
-    /**
-     * 远端音频是否关闭
-     */
-    func isRemoteAudioMuted(uId: Int64) -> Bool
-
-    /**
-     * 打开/关闭远端视频
-     */
-    func muteRemoteVideo(uId: Int64, mute: Bool)
-
-    /**
-     * 远端视频是否关闭
-     */
-    func isRemoteVideoMuted(uId: Int64) -> Bool
-
+    func requestCalling(mode: Mode, members: Set<Int64>)
+    
     /**
      * 取消通话
      */

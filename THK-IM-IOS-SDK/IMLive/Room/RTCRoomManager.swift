@@ -9,6 +9,7 @@
 import RxSwift
 
 open class RTCRoomManager {
+    
     static let shared = RTCRoomManager()
 
     public var liveApi: LiveApi {
@@ -19,22 +20,28 @@ open class RTCRoomManager {
             return self._liveApi!
         }
     }
+    public var myUId: Int64 = 0
 
     private var disposeBag = DisposeBag()
     private var _liveApi: LiveApi? = nil
-    private var room: RTCRoom?
-    var myUId: Int64 = 0
+    
+    private var rtcRooms = [RTCRoom]()
 
-    public func setRoom(room: RTCRoom) {
-        self.room = room
+    public func allRooms() -> [RTCRoom] {
+        return self.rtcRooms
     }
 
-    public func currentRoom() -> RTCRoom? {
-        return self.room
+    public func addRoom(_ room: RTCRoom) {
+        self.rtcRooms.append(room)
+    }
+
+    public func getRoomById(_ id: String) -> RTCRoom? {
+        return self.rtcRooms.first { r in
+            r.id == id
+        }
     }
 
     public func createRoom(mode: Mode, mediaParams: MediaParams) -> Observable<RTCRoom> {
-        self.destroyRoom()
         let req = CreateRoomReqVo(
             uId: myUId, mode: mode.rawValue,
             videoMaxBitrate: mediaParams.videoMaxBitrate,
@@ -43,7 +50,7 @@ open class RTCRoomManager {
             videoHeight: mediaParams.videoHeight, videoFps: mediaParams.videoFps
         )
         return self.liveApi.createRoom(req)
-            .flatMap { [weak self] res -> Observable<RTCRoom> in
+            .flatMap { res -> Observable<RTCRoom> in
                 let room = RTCRoom(
                     id: res.id, ownerId: res.ownerId,
                     mode: mode.rawValue,
@@ -51,61 +58,59 @@ open class RTCRoomManager {
                     mediaParams: res.mediaParams,
                     participants: res.participants
                 )
-                self?.room = room
                 return Observable.just(room)
             }
     }
-
-    public func callRoomMembers(
-        _ msg: String, _ duration: Int64, _ members: Set<Int64>
-    ) -> Observable<Void>? {
-        guard let room = self.room else { return nil }
-        let req = CallRoomMemberReqVo(
-            uId: myUId, roomId: room.id, msg: msg, duration: duration,
-            members: members)
-        return self.liveApi.callRoomMembers(req)
-    }
-
-    public func cancelCallRoomMembers(_ msg: String, _ members: Set<Int64>)
-        -> Observable<Void>?
-    {
-        guard let room = self.room else { return nil }
-        let req = CancelCallRoomMemberReqVo(
-            uId: myUId, roomId: room.id, msg: msg, members: members)
-        return self.liveApi.cancelCallRoomMembers(req)
-    }
-
+    
     public func joinRoom(roomId: String, role: Int) -> Observable<RTCRoom> {
-        self.destroyRoom()
         return self.liveApi.joinRoom(
             JoinRoomReqVo(roomId: roomId, uId: myUId, role: role)
         )
-        .flatMap { [weak self] res -> Observable<RTCRoom> in
+        .flatMap { res -> Observable<RTCRoom> in
             let room = RTCRoom(
                 id: res.id, ownerId: res.ownerId, mode: res.mode,
                 role: role, createTime: res.createTime,
                 mediaParams: res.mediaParams,
                 participants: res.participants
             )
-            self?.room = room
             return Observable.just(room)
         }
     }
 
-    public func inviteMember(
+    public func callRoomMembers(
+        _ id: String, _ msg: String, _ duration: Int64, _ members: Set<Int64>
+    ) {
+        let req = CallRoomMemberReqVo(
+            uId: myUId, roomId: id, msg: msg, duration: duration,
+            members: members)
+        self.liveApi.callRoomMembers(req)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe().disposed(by: self.disposeBag)
+    }
+
+    public func cancelCallRoomMembers(_ id: String, _ msg: String, _ members: Set<Int64>) {
+        let req = CancelCallRoomMemberReqVo(
+            uId: myUId, roomId: id, msg: msg, members: members)
+        self.liveApi.cancelCallRoomMembers(req)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe().disposed(by: self.disposeBag)
+    }
+
+    public func inviteNewMembers( _ id: String,
         _ uIds: Set<Int64>, _ msg: String, _ duration: Int64
-    ) -> Observable<Void>? {
-        guard let room = self.room else { return nil }
+    ) {
         let req = InviteMemberReqVo(
-            uId: myUId, roomId: room.id, msg: msg, duration: duration,
+            uId: myUId, roomId: id, msg: msg, duration: duration,
             inviteUIds: uIds)
-        return self.liveApi.inviteMembers(req)
+        self.liveApi.inviteMembers(req)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe().disposed(by: self.disposeBag)
     }
 
     public func refuseJoinRoom(roomId: String, reason: String) {
-        self.liveApi.refuseJoinRoom(
-            RefuseJoinReqVo(roomId: roomId, uId: myUId, msg: reason)
-        )
+        let req = RefuseJoinReqVo(roomId: roomId, uId: myUId, msg: reason)
+        self.liveApi.refuseJoinRoom(req)
+        .compose(RxTransformer.shared.io2Main())
         .subscribe()
         .disposed(by: self.disposeBag)
     }
@@ -118,20 +123,19 @@ open class RTCRoomManager {
         return self.liveApi.kickoffMember(req)
     }
 
-    public func destroyRoom() {
-        guard let room = self.room else { return }
-        if room.ownerId == myUId {
-            self.liveApi.deleteRoom(DelRoomReqVo(roomId: room.id, uId: myUId))
-                .subscribe()
-                .disposed(by: self.disposeBag)
+    /**
+     * 离开房间, 如果是房主，在删除房间
+     */
+    func leaveRoom(id: String, delRoom: Bool) {
+        guard let room = self.getRoomById(id) else { return }
+        if (room.ownerId == myUId && delRoom) {
+            self.liveApi.delRoom(DelRoomVo(id, myUId)).compose(RxTransform.flowableToMain())
+                .subscribe(subscriber)
+            disposes.add(subscriber)
         }
-        self.leveaRoom()
-    }
-
-    public func leveaRoom() {
-        self.disposeBag = DisposeBag()
-        self.room?.destroy()
-        self.room = nil
+        rtcRooms.removeAll {
+            it.id == id
+        }
     }
 
 }

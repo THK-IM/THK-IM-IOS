@@ -38,7 +38,7 @@ public class CreateRoomReqVo: Codable {
     }
 }
 
-public class CreateRoomResVo: Codable {
+public class RoomResVo: Codable {
     let id: String
     let mode: Int
     let ownerId: Int64

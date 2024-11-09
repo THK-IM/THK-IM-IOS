@@ -12,7 +12,9 @@ public protocol LiveApi {
 
     func getEndpoint() -> String
 
-    func createRoom(_ req: CreateRoomReqVo) -> Observable<CreateRoomResVo>
+    func createRoom(_ req: CreateRoomReqVo) -> Observable<RoomResVo>
+    
+    func queryRoom(_ id: String) -> Observable<RoomResVo>
     
     func callRoomMembers(_ req: CallRoomMemberReqVo) -> Observable<Void>
     

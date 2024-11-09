@@ -11,6 +11,8 @@ import Moya
 enum RoomApi {
     ///  创建房间
     case createRoom(_ vo: CreateRoomReqVo)
+    /// 查询房间
+    case queryRoom(_ id: String)
     ///  拨通
     case callRoomMembers(_ vo: CallRoomMemberReqVo)
     ///  取消拨通
@@ -37,6 +39,8 @@ extension RoomApi: TargetType {
         switch self {
         case .createRoom:
             return ""
+        case let .queryRoom(id):
+            return "/\(id)"
         case .callRoomMembers:
             return "/call"
         case .cancelCallRoomMembers:
@@ -58,6 +62,8 @@ extension RoomApi: TargetType {
         switch self {
         case .createRoom:
             return .post
+        case .queryRoom:
+            return .get
         case .callRoomMembers:
             return .post
         case .cancelCallRoomMembers:
@@ -79,6 +85,8 @@ extension RoomApi: TargetType {
         switch self {
         case let .createRoom(vo):
             return .requestJSONEncodable(vo)
+        case .queryRoom:
+            return .requestPlain
         case let .callRoomMembers(vo):
             return .requestJSONEncodable(vo)
         case let .cancelCallRoomMembers(vo):
