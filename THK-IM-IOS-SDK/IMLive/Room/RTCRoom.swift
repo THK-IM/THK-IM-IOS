@@ -16,7 +16,7 @@ public class RTCRoom: NSObject {
     let ownerId: Int64
     let createTime: Int64
     let mediaParams: MediaParams
-    weak var delegate: RTCRoomCallBack? = nil
+    weak var rtcCallback: RTCRoomCallBack? = nil
     private var localParticipant: LocalParticipant? = nil
     private var remoteParticipants = [RemoteParticipant]()
 
@@ -129,15 +129,15 @@ public class RTCRoom: NSObject {
     }
 
     private func notifyJoin(_ p: BaseParticipant) {
-        delegate?.onParticipantJoin(p)
+        rtcCallback?.onParticipantJoin(p)
     }
 
     private func notifyLeave(_ p: BaseParticipant) {
-        delegate?.onParticipantLeave(p)
+        rtcCallback?.onParticipantLeave(p)
     }
 
     func onDataMsgReceived(_ data: Data) {
-        delegate?.onDataMsgReceived(data)
+        rtcCallback?.onDataMsgReceived(data)
     }
 
     func onTextMsgReceived(_ type: Int, _ text: String) {
@@ -145,10 +145,10 @@ public class RTCRoom: NSObject {
             if let volumeMsg = try? JSONDecoder().decode(
                 VolumeMsg.self, from: text.data(using: .utf8) ?? Data())
             {
-                delegate?.onParticipantVoice(volumeMsg.uId, volumeMsg.volume)
+                rtcCallback?.onParticipantVoice(volumeMsg.uId, volumeMsg.volume)
             }
         } else {
-            delegate?.onTextMsgReceived(type, text)
+            rtcCallback?.onTextMsgReceived(type, text)
         }
     }
 
@@ -347,6 +347,7 @@ public class RTCRoom: NSObject {
             remoteParticipant.leave()
         }
         remoteParticipants.removeAll()
+        RTCRoomManager.shared.leaveRoom(id: id, delRoom: true)
     }
     
 }

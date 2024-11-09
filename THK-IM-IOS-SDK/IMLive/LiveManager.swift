@@ -28,7 +28,7 @@ open class LiveManager {
     }
 
     public func onLiveSignalReceived(signal: LiveSignal) {
-        guard let delegate = self.liveSignalProtocol else { return }
-        delegate.onSignalReceived(signal)
+        guard let liveSignalProtocol = self.liveSignalProtocol else { return }
+        liveSignalProtocol.onSignalReceived(signal)
     }
 }

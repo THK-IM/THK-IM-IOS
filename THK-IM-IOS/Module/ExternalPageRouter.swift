@@ -27,7 +27,7 @@ class ExternalPageRouter: IMPageRouter {
                 .compose(RxTransformer.shared.io2Main())
                 .subscribe(onNext: { room in
                     if vc != nil {
-                        LiveCallViewController.presentLiveCallViewController(vc!, room)
+                        LiveCallViewController.presentLiveCallViewController(vc!, room, CallType.RequestCalling, ids)
                     }
                 }).disposed(by: self.disposeBag)
         }

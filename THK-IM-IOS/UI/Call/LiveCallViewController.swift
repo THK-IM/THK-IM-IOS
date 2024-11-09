@@ -12,20 +12,35 @@ import UIKit
 class LiveCallViewController: BaseViewController {
 
     static func pushLiveCallViewController(
-        _ from: UIViewController, _ room: RTCRoom
+        _ from: UIViewController, _ room: RTCRoom, _ callType: CallType, _ members: Set<Int64>
     ) {
         let vc = LiveCallViewController()
+        vc.rTCRoom = room
+        vc.callType = callType.rawValue
+        for m in members {
+            vc.members.insert(m)
+        }
         from.navigationController?.pushViewController(vc, animated: true)
     }
 
     static func presentLiveCallViewController(
-        _ from: UIViewController, _ room: RTCRoom
+        _ from: UIViewController, _ room: RTCRoom, _ callType: CallType, _ members: Set<Int64>
     ) {
         let vc = LiveCallViewController()
+        vc.rTCRoom = room
+        vc.callType = callType.rawValue
+        for m in members {
+            vc.members.insert(m)
+        }
         vc.modalPresentationStyle = .overFullScreen
         from.present(vc, animated: true)
     }
-
+    
+    var rTCRoom: RTCRoom? = nil
+    var callType = CallType.RequestCalling.rawValue
+    var members = Set<Int64>()
+    
+    
     private var callStats = LiveCallStatus.Init
 
     private let callingInfoLayout: CallingInfoLayout = {
@@ -154,11 +169,8 @@ class LiveCallViewController: BaseViewController {
             self?.fullRemoveParticipantView()
         })
         .disposed(by: disposeBag)
-
-        if let room = RTCRoomManager.shared.currentRoom() {
-            room.delegate = self
-            self.setupView(room)
-        }
+        self.setupView()
+        self.rTCRoom!.rtcCallback = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -191,10 +203,10 @@ class LiveCallViewController: BaseViewController {
         }
     }
 
-    private func setupView(_ room: RTCRoom) {
+    private func setupView() {
         self.showUserInfo()
         var remoteParticipantCount = 0
-        room.getAllParticipants().forEach({ p in
+        self.rTCRoom?.getAllParticipants().forEach({ p in
             initParticipantView(p)
             if p is RemoteParticipant {
                 remoteParticipantCount += 1
@@ -204,7 +216,7 @@ class LiveCallViewController: BaseViewController {
         if remoteParticipantCount > 0 {
             showCallingView()
         } else {
-            if room.ownerId == RTCRoomManager.shared.currentRoom()?.ownerId {
+            if self.callType == CallType.RequestCalling.rawValue {
                 showRequestCallView()
             } else {
                 showBeCallingView()
@@ -213,10 +225,7 @@ class LiveCallViewController: BaseViewController {
     }
 
     private func showUserInfo() {
-        guard let room = RTCRoomManager.shared.currentRoom() else {
-            return
-        }
-        for m in room.getAllParticipants() {
+        for m in self.rTCRoom!.getAllParticipants() {
             if m.uId != RTCRoomManager.shared.myUId {
                 IMCoreManager.shared.userModule.queryUser(id: m.uId)
                     .compose(RxTransformer.shared.io2Main())
@@ -255,11 +264,7 @@ class LiveCallViewController: BaseViewController {
     private func initParticipantView(_ p: BaseParticipant) {
         if p is LocalParticipant {
             self.participantLocalView.setParticipant(p: p)
-            if let room = RTCRoomManager.shared.currentRoom() {
-                if room.ownerId == RTCRoomManager.shared.myUId {
-                    self.participantLocalView.startPeerConnection()
-                }
-            }
+            self.participantLocalView.startPeerConnection()
         } else {
             self.participantRemoteView.isHidden = false
             self.participantRemoteView.setParticipant(p: p)
@@ -296,7 +301,7 @@ class LiveCallViewController: BaseViewController {
     }
 
     func exit() {
-        RTCRoomManager.shared.destroyRoom()
+        self.rTCRoom?.destroy()
         if self.navigationController == nil {
             self.dismiss(animated: true)
         } else {
@@ -338,37 +343,42 @@ extension LiveCallViewController: RTCRoomCallBack {
 
 extension LiveCallViewController: LiveCallProtocol {
     
+    func room() -> RTCRoom {
+        return self.rTCRoom!
+    }
+    
+    func requestCalling(mode: Mode, members: Set<Int64>) {
+        /// TODO
+    }
+    
+    
     func cancelCalling() {
-        RTCRoomManager.shared.leveaRoom()
-        self.exit()
+        RTCRoomManager.shared.cancelCallRoomMembers(self.rTCRoom!.id, "", self.members)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe { [weak self] _ in
+                self?.exit()
+            }.disposed(by: self.disposeBag)
     }
 
     func acceptCalling() {
-        guard let room = RTCRoomManager.shared.currentRoom() else {
-            return
-        }
+        self.showCallingView()
         self.participantLocalView.startPeerConnection()
-        room.getAllParticipants().forEach({ p in
+        self.rTCRoom!.getAllParticipants().forEach({ p in
             if p is RemoteParticipant {
                 initParticipantView(p)
             }
         })
-        self.showCallingView()
     }
 
     func rejectCalling() {
-        guard let room = RTCRoomManager.shared.currentRoom() else {
-            return
-        }
-        RTCRoomManager.shared.refuseJoinRoom(roomId: room.id, reason: "")
-        self.exit()
+        RTCRoomManager.shared.refuseJoinRoom(roomId: self.rTCRoom!.id, reason: "")
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe { [weak self] _ in
+                self?.exit()
+            }.disposed(by: self.disposeBag)
     }
 
     func hangupCalling() {
-        guard let room = RTCRoomManager.shared.currentRoom() else {
-            return
-        }
-        RTCRoomManager.shared.leveaRoom()
         self.exit()
     }
 

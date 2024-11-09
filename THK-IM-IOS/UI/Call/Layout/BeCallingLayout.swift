@@ -114,7 +114,7 @@ class BeCallingLayout: UIView {
         .when(.ended)
         .subscribe(onNext: { [weak self] _ in
             if let liveProtocol = self?.liveProtocol {
-                liveProtocol.switchLocalCamera()
+                liveProtocol.room().switchLocalCamera()
             }
         })
         .disposed(by: disposeBag)
@@ -132,10 +132,10 @@ class BeCallingLayout: UIView {
         .when(.ended)
         .subscribe(onNext: { [weak self] _ in
             if let liveProtocol = self?.liveProtocol {
-                if liveProtocol.isLocalVideoMuted() {
-                    liveProtocol.muteLocalVideo(mute: false)
+                if liveProtocol.room().isLocalVideoMuted() {
+                    liveProtocol.room().muteLocalVideo(mute: false)
                 } else {
-                    liveProtocol.muteLocalVideo(mute: true)
+                    liveProtocol.room().muteLocalVideo(mute: true)
                 }
             }
         })

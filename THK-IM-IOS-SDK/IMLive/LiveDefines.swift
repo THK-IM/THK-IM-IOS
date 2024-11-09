@@ -7,6 +7,11 @@
 
 import Foundation
 
+public enum CallType: Int {
+    case RequestCalling = 1
+    case BeCalling = 2
+}
+
 public enum NotifyType: String {
     case NewStream = "NewStream"
     case RemoveStream = "RemoveStream"
