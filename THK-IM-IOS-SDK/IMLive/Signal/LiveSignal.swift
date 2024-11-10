@@ -35,60 +35,12 @@ public class LiveSignal : Codable {
         case body = "body"
     }
     
-    func beingRequestedSignal() -> BeingRequestedSignal? {
-        if self.type == LiveSignalType.BeingRequested.rawValue {
-            return try? JSONDecoder().decode(BeingRequestedSignal.self, from: body.data(using: .utf8) ?? Data())
-        } else {
-            return nil
+    func signalForType<T: Decodable>(_ type: Int, _ classOfT: T.Type) -> T? {
+        if self.type == type {
+            let d = self.body.data(using: .utf8) ?? Data()
+            return try? JSONDecoder().decode(classOfT, from: d)
         }
-    }
-    
-    func cancelRequestingSignal() -> CancelRequestingSignal? {
-        if self.type == LiveSignalType.CancelRequesting.rawValue {
-            return try? JSONDecoder().decode(CancelRequestingSignal.self, from: body.data(using: .utf8) ?? Data())
-        } else {
-            return nil
-        }
-    }
-    
-    func rejectRequestSignal() -> RejectRequestSignal? {
-        if self.type == LiveSignalType.RejectRequest.rawValue {
-            return try? JSONDecoder().decode(RejectRequestSignal.self, from: body.data(using: .utf8) ?? Data())
-        } else {
-            return nil
-        }
-    }
-    
-    func acceptRequestSignal() -> AcceptRequestSignal? {
-        if self.type == LiveSignalType.AcceptRequest.rawValue {
-            return try? JSONDecoder().decode(AcceptRequestSignal.self, from: body.data(using: .utf8) ?? Data())
-        } else {
-            return nil
-        }
-    }
-    
-    func hangupSignal() -> HangupSignal? {
-        if self.type == LiveSignalType.Hangup.rawValue {
-            return try? JSONDecoder().decode(HangupSignal.self, from: body.data(using: .utf8) ?? Data())
-        } else {
-            return nil
-        }
-    }
-    
-    func endCallSignal() -> EndCallSignal? {
-        if self.type == LiveSignalType.EndCall.rawValue {
-            return try? JSONDecoder().decode(EndCallSignal.self, from: body.data(using: .utf8) ?? Data())
-        } else {
-            return nil
-        }
-    }
-    
-    func kickMemberSignal() -> KickMemberSignal? {
-        if self.type == LiveSignalType.KickMember.rawValue {
-            return try? JSONDecoder().decode(KickMemberSignal.self, from: body.data(using: .utf8) ?? Data())
-        } else {
-            return nil
-        }
+        return nil
     }
     
 }
