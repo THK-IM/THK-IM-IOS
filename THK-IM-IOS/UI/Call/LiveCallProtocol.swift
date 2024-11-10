@@ -19,12 +19,12 @@ protocol LiveCallProtocol: AnyObject {
     /**
      * 发起通话
      */
-    func requestCalling(mode: Mode, members: Set<Int64>)
+    func startRequestCalling()
     
     /**
      * 取消通话
      */
-    func cancelCalling()
+    func cancelRequestCalling()
 
     /**
      * 接听通话
@@ -59,7 +59,7 @@ protocol LiveCallProtocol: AnyObject {
     /**
      * 被踢下
      */
-    func onMemberKickedOffBySignal(roomId: String, uIds: Set<Int64>)
+    func onMemberKickedOffBySignal(roomId: String, uIds: Set<Int64>, msg: String)
 
     /**
      * 房间通话结束

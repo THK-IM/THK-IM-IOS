@@ -126,7 +126,7 @@ class RequestCallLayout: UIView {
         })
         .when(.ended)
         .subscribe(onNext: { [weak self] _ in
-            self?.liveProtocol?.cancelCalling()
+            self?.liveProtocol?.cancelRequestCalling()
         })
         .disposed(by: disposeBag)
     }

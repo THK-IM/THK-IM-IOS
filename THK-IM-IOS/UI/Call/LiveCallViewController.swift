@@ -12,7 +12,8 @@ import UIKit
 class LiveCallViewController: BaseViewController {
 
     static func pushLiveCallViewController(
-        _ from: UIViewController, _ room: RTCRoom, _ callType: CallType, _ members: Set<Int64>
+        _ from: UIViewController, _ room: RTCRoom, _ callType: CallType,
+        _ members: Set<Int64>
     ) {
         let vc = LiveCallViewController()
         vc.rTCRoom = room
@@ -24,7 +25,8 @@ class LiveCallViewController: BaseViewController {
     }
 
     static func presentLiveCallViewController(
-        _ from: UIViewController, _ room: RTCRoom, _ callType: CallType, _ members: Set<Int64>
+        _ from: UIViewController, _ room: RTCRoom, _ callType: CallType,
+        _ members: Set<Int64>
     ) {
         let vc = LiveCallViewController()
         vc.rTCRoom = room
@@ -35,12 +37,14 @@ class LiveCallViewController: BaseViewController {
         vc.modalPresentationStyle = .overFullScreen
         from.present(vc, animated: true)
     }
-    
+
     var rTCRoom: RTCRoom? = nil
     var callType = CallType.RequestCalling.rawValue
+
     var members = Set<Int64>()
-    
-    
+    var acceptMembers = Set<Int64>()
+    var rejectMembers = Set<Int64>()
+
     private var callStats = LiveCallStatus.Init
 
     private let callingInfoLayout: CallingInfoLayout = {
@@ -171,6 +175,44 @@ class LiveCallViewController: BaseViewController {
         .disposed(by: disposeBag)
         self.setupView()
         self.rTCRoom!.rtcCallback = self
+        self.initSignalEvent()
+    }
+
+    private func initSignalEvent() {
+        SwiftEventBus.onMainThread(self, name: liveSignalEvent) {
+            [weak self] vo in
+            guard let signal = vo?.object as? LiveSignal else { return }
+            guard let sf = self else { return }
+            if let acceptSignal = signal.signalForType(
+                LiveSignalType.AcceptRequest.rawValue, AcceptRequestSignal.self)
+            {
+                sf.onRemoteAcceptedCallingBySignal(
+                    roomId: acceptSignal.roomId, uId: acceptSignal.uId)
+            } else if let rejectSignal = signal.signalForType(
+                LiveSignalType.RejectRequest.rawValue, RejectRequestSignal.self)
+            {
+                sf.onRemoteRejectedCallingBySignal(
+                    roomId: rejectSignal.roomId, uId: rejectSignal.uId,
+                    msg: rejectSignal.msg)
+            } else if let hangupSignal = signal.signalForType(
+                LiveSignalType.Hangup.rawValue, HangupSignal.self)
+            {
+                sf.onRemoteHangupCallingBySignal(
+                    roomId: hangupSignal.roomId, uId: hangupSignal.uId,
+                    msg: hangupSignal.msg)
+            } else if let kickofMemberSignal = signal.signalForType(
+                LiveSignalType.KickMember.rawValue, KickMemberSignal.self)
+            {
+                sf.onMemberKickedOffBySignal(
+                    roomId: kickofMemberSignal.roomId,
+                    uIds: kickofMemberSignal.kickIds,
+                    msg: kickofMemberSignal.msg)
+            } else if let endCallSignal = signal.signalForType(
+                LiveSignalType.EndCall.rawValue, EndCallSignal.self)
+            {
+                sf.onCallEndedBySignal(roomId: endCallSignal.roomId)
+            }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -243,6 +285,7 @@ class LiveCallViewController: BaseViewController {
         self.beCallLayout.isHidden = true
 
         self.requestCallLayout.initCall(self)
+        self.startRequestCalling()
     }
 
     private func showCallingView() {
@@ -300,6 +343,18 @@ class LiveCallViewController: BaseViewController {
         exit()
     }
 
+    func needCallMembers() -> Set<Int64> {
+        var needCallMembers = Set<Int64>()
+        for m in self.members {
+            if !self.acceptMembers.contains(m)
+                && !self.rejectMembers.contains(m)
+            {
+                needCallMembers.insert(m)
+            }
+        }
+        return needCallMembers
+    }
+
     func exit() {
         self.rTCRoom?.destroy()
         if self.navigationController == nil {
@@ -342,22 +397,38 @@ extension LiveCallViewController: RTCRoomCallBack {
 }
 
 extension LiveCallViewController: LiveCallProtocol {
-    
+
     func room() -> RTCRoom {
         return self.rTCRoom!
     }
-    
-    func requestCalling(mode: Mode, members: Set<Int64>) {
-        /// TODO
-    }
-    
-    
-    func cancelCalling() {
-        RTCRoomManager.shared.cancelCallRoomMembers(self.rTCRoom!.id, "", self.members)
+
+    func startRequestCalling() {
+        let members = self.needCallMembers()
+        if members.count > 0 {
+            RTCRoomManager.shared.callRoomMembers(
+                self.rTCRoom!.id, "", 3, self.members
+            )
             .compose(RxTransformer.shared.io2Main())
-            .subscribe { [weak self] _ in
-                self?.exit()
+            .subscribe { _ in
+
             }.disposed(by: self.disposeBag)
+
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + 3,
+                execute: { [weak self] in
+                    self?.startRequestCalling()
+                })
+        }
+    }
+
+    func cancelRequestCalling() {
+        RTCRoomManager.shared.cancelCallRoomMembers(
+            self.rTCRoom!.id, "", self.members
+        )
+        .compose(RxTransformer.shared.io2Main())
+        .subscribe { [weak self] _ in
+            self?.exit()
+        }.disposed(by: self.disposeBag)
     }
 
     func acceptCalling() {
@@ -371,35 +442,49 @@ extension LiveCallViewController: LiveCallProtocol {
     }
 
     func rejectCalling() {
-        RTCRoomManager.shared.refuseJoinRoom(roomId: self.rTCRoom!.id, reason: "")
-            .compose(RxTransformer.shared.io2Main())
-            .subscribe { [weak self] _ in
-                self?.exit()
-            }.disposed(by: self.disposeBag)
+        RTCRoomManager.shared.refuseJoinRoom(
+            roomId: self.rTCRoom!.id, reason: ""
+        )
+        .compose(RxTransformer.shared.io2Main())
+        .subscribe { [weak self] _ in
+            self?.exit()
+        }.disposed(by: self.disposeBag)
     }
 
     func hangupCalling() {
         self.exit()
     }
-    
+
     func onRemoteAcceptedCallingBySignal(roomId: String, uId: Int64) {
-        
+        if roomId != self.room().id { return }
+        self.acceptMembers.insert(uId)
     }
-    
-    func onRemoteRejectedCallingBySignal(roomId: String, uId: Int64, msg: String) {
-        
+
+    func onRemoteRejectedCallingBySignal(
+        roomId: String, uId: Int64, msg: String
+    ) {
+        if roomId != self.room().id { return }
+        self.rejectMembers.insert(uId)
     }
-    
-    func onRemoteHangupCallingBySignal(roomId: String, uId: Int64, msg: String) {
-        
+
+    func onRemoteHangupCallingBySignal(roomId: String, uId: Int64, msg: String)
+    {
+        if roomId != self.room().id { return }
+        self.exit()
     }
-    
-    func onMemberKickedOffBySignal(roomId: String, uIds: Set<Int64>) {
-        
+
+    func onMemberKickedOffBySignal(
+        roomId: String, uIds: Set<Int64>, msg: String
+    ) {
+        if roomId != self.room().id { return }
+        if uIds.contains(RTCRoomManager.shared.myUId) {
+            self.exit()
+        }
     }
-    
+
     func onCallEndedBySignal(roomId: String) {
-        
+        if roomId != self.room().id { return }
+        self.exit()
     }
 
 }
