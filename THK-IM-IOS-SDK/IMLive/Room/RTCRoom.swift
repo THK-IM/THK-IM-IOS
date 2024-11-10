@@ -205,10 +205,10 @@ public class RTCRoom: NSObject {
     }
 
     func sendMyVolume(_ volume: Double) {
-        guard let lp = self.localParticipant else {
-            return
-        }
-        lp.sendVolume(volume: volume)
+//        guard let lp = self.localParticipant else {
+//            return
+//        }
+//        lp.sendVolume(volume: volume)
     }
 
     func switchCamera() {

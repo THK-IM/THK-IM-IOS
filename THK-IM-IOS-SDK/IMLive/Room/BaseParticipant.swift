@@ -161,6 +161,7 @@ open class BaseParticipant: NSObject {
         }
         p.setRemoteDescription(sdp) { [weak self] err in
             if err != nil {
+                DDLogError("Participant: setRemoteDescription \(err!.localizedDescription)")
                 self?.onError("setRemoteDescription", err!)
             }
         }
@@ -431,9 +432,6 @@ extension BaseParticipant: RTCDataChannelDelegate {
     public func dataChannel(
         _ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer
     ) {
-        guard let room = RTCRoomManager.shared.getRoomById(self.roomId) else {
-            return
-        }
         if buffer.isBinary {
             self.onNewBufferMessage(data: buffer.data)
         } else {

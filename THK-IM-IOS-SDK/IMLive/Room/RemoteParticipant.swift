@@ -62,7 +62,7 @@ open class RemoteParticipant: BaseParticipant {
                     let data = Data(base64Encoded: bean.answerSdp) ?? Data()
                     let answer = String(data: data, encoding: .utf8) ?? ""
                     self?.streamKey = bean.streamKey
-                    let remoteSdp = RTCSessionDescription(type: .answer, sdp: answer)
+                    let remoteSdp = RTCSessionDescription.init(type: .answer, sdp: answer)
                     self?.setRemoteSessionDescription(remoteSdp)
                 },
                 onError: { err in
