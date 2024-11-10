@@ -11,12 +11,5 @@ import Foundation
 /**
  * 信令通知协议
  */
-public protocol LiveSignalProtocol: NSObject {
-    
-    /**
-     *  被请求呼叫
-     */
-    func onSignalReceived(_ signal: LiveSignal)
-    
-}
+
 

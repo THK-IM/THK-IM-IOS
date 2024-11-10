@@ -15,7 +15,7 @@ open class LiveManager {
 
     static let shared = LiveManager()
 
-    public var liveSignalProtocol: LiveSignalProtocol? = nil
+    public var liveCallingProtocol: LiveCallingProtocol? = nil
 
     private init() {
         IMLiveRTCEngine.shared.initAudioSession()
@@ -28,7 +28,22 @@ open class LiveManager {
     }
 
     public func onLiveSignalReceived(signal: LiveSignal) {
-        guard let liveSignalProtocol = self.liveSignalProtocol else { return }
-        liveSignalProtocol.onSignalReceived(signal)
+        if signal.type == LiveSignalType.BeingRequested.rawValue {
+            if let request = signal.signalForType(
+                LiveSignalType.BeingRequested.rawValue,
+                BeingRequestedSignal.self)
+            {
+                self.liveCallingProtocol?.onBeingRequested(signal: request)
+            }
+        } else if signal.type == LiveSignalType.CancelBeingRequested.rawValue {
+            if let request = signal.signalForType(
+                LiveSignalType.CancelBeingRequested.rawValue,
+                CancelBeingRequestedSignal.self)
+            {
+                self.liveCallingProtocol?.onCancelBeingRequested(signal: request)
+            }
+        } else {
+            SwiftEventBus.post(liveSignalEvent, sender: signal)
+        }
     }
 }
