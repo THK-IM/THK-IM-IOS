@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "THK-IM-IOS"
-  spec.version      = "0.2.5"
+  spec.version      = "0.2.6"
   spec.summary      = "A short description of THK-IM-IOS."
 
   # This description is used to generate tags and improve search results.
@@ -101,10 +101,10 @@ Pod::Spec.new do |spec|
     core.source_files = 'THK-IM-IOS-SDK/IMCore/**/*.swift',
     core.frameworks = 'UIKit', 'Foundation', 'AVFoundation', 'MobileCoreServices', 'AVFoundation', 'ImageIO'
     core.dependency 'WCDB.swift', '2.1.1'
-    core.dependency 'RxSwift', '6.5.0'
-    core.dependency 'RxCocoa', '6.5.0'
+    core.dependency 'RxSwift', '6.8.0'
+    core.dependency 'RxCocoa', '6.8.0'
     core.dependency 'CocoaLumberjack/Swift', '3.8.2'
-    core.dependency 'Starscream', '4.0.6'
+    core.dependency 'Starscream', '4.0.8'
     core.dependency 'Moya/RxSwift', '15.0'
     core.dependency 'CryptoSwift', '~> 1.8.1'
   end
@@ -117,8 +117,8 @@ Pod::Spec.new do |spec|
     }
     ui.dependency 'Kingfisher', '7.10.0'
     ui.dependency 'RxGesture', '4.0.4'
-    ui.dependency 'SnapKit', '5.6.0'
-    ui.dependency 'Alamofire', '5.8.1'
+    ui.dependency 'SnapKit', '5.7.1'
+    ui.dependency 'Alamofire', '5.10.1'
     ui.dependency 'BadgeSwift', '8.0'
     ui.dependency 'THK-IM-IOS/IMCore'
     ui.dependency 'ProgressHUD'

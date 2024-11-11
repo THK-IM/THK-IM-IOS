@@ -16,9 +16,7 @@
 		9A090E2A2CD2210400ED7F86 /* IMLiveCacheQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E292CD220F400ED7F86 /* IMLiveCacheQueue.swift */; };
 		9A090E2C2CD2369100ED7F86 /* IMLiveVideoCapturerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E2B2CD2368C00ED7F86 /* IMLiveVideoCapturerProxy.swift */; };
 		9A276B892CD3248C007B2CD5 /* MediaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A276B882CD32486007B2CD5 /* MediaParams.swift */; };
-		9A9D71D22CD0C98E00936EB6 /* LiveSignalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */; };
 		9A9D71D42CD0D04D00936EB6 /* RTCRoomCallBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */; };
-		9A9D71D72CD0DF2300936EB6 /* LiveSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */; };
 		9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */; };
 		9A9D71DB2CD0F1DB00936EB6 /* InviteMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */; };
 		9A9D71DD2CD0F64D00936EB6 /* LiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DC2CD0F64D00936EB6 /* LiveManager.swift */; };
@@ -386,9 +384,7 @@
 		9A090E292CD220F400ED7F86 /* IMLiveCacheQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLiveCacheQueue.swift; sourceTree = "<group>"; };
 		9A090E2B2CD2368C00ED7F86 /* IMLiveVideoCapturerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLiveVideoCapturerProxy.swift; sourceTree = "<group>"; };
 		9A276B882CD32486007B2CD5 /* MediaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaParams.swift; sourceTree = "<group>"; };
-		9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSignalProtocol.swift; sourceTree = "<group>"; };
 		9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCRoomCallBack.swift; sourceTree = "<group>"; };
-		9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSignal.swift; sourceTree = "<group>"; };
 		9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DC2CD0F64D00936EB6 /* LiveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveManager.swift; sourceTree = "<group>"; };
@@ -782,15 +778,6 @@
 			path = Engine;
 			sourceTree = "<group>";
 		};
-		9A9D71D52CD0DF0A00936EB6 /* Signal */ = {
-			isa = PBXGroup;
-			children = (
-				9A9D71D62CD0DF1C00936EB6 /* LiveSignal.swift */,
-				9A9D71D12CD0C97600936EB6 /* LiveSignalProtocol.swift */,
-			);
-			path = Signal;
-			sourceTree = "<group>";
-		};
 		9AB6990E2CD4D7B8002E974C /* Third */ = {
 			isa = PBXGroup;
 			children = (
@@ -1171,7 +1158,6 @@
 			isa = PBXGroup;
 			children = (
 				9A090E202CD2165C00ED7F86 /* Engine */,
-				9A9D71D52CD0DF0A00936EB6 /* Signal */,
 				A0978E642B7223E00047E6A2 /* View */,
 				A0D68AC72A888678004D11A5 /* API */,
 				A0D68AC12A888678004D11A5 /* Room */,
@@ -2040,7 +2026,6 @@
 				A033FAFC2B8A0E500053045E /* IMVideoMsgView.swift in Sources */,
 				A018CE012B00A00B00896B87 /* IMMessageOperator.swift in Sources */,
 				F54878772CDF3A5300FDC7B1 /* IMDemoResourceProvider.swift in Sources */,
-				9A9D71D22CD0C98E00936EB6 /* LiveSignalProtocol.swift in Sources */,
 				A0FCA8D32B484A5B00FC6E47 /* WelcomeViewController.swift in Sources */,
 				A0589A4F2C21569E003419B8 /* ResourceUtils.swift in Sources */,
 				9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */,
@@ -2142,7 +2127,6 @@
 				A0E82F592B526780008DC681 /* SessionMemberCell.swift in Sources */,
 				A018CE042B00A3CD00896B87 /* IMMsgDeleteOperator.swift in Sources */,
 				A0D68BFE2A888679004D11A5 /* ImageCompress.swift in Sources */,
-				9A9D71D72CD0DF2300936EB6 /* LiveSignal.swift in Sources */,
 				A0D68B732A888679004D11A5 /* OggOpusAudioPlayer.swift in Sources */,
 				A0D68BA32A888679004D11A5 /* IMVideoMsgCell.swift in Sources */,
 				A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */,
