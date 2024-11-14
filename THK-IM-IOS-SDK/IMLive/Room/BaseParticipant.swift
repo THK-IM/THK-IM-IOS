@@ -161,7 +161,6 @@ open class BaseParticipant: NSObject {
         }
         p.setRemoteDescription(sdp) { [weak self] err in
             if err != nil {
-                DDLogError("Participant: setRemoteDescription \(err!.localizedDescription)")
                 self?.onError("setRemoteDescription", err!)
             }
         }

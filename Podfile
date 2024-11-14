@@ -49,7 +49,7 @@ target 'THK-IM-IOS' do
   pod 'SJMediaCacheServer'
   
   ## Pods for THK-IM-IOS/IMLive
-  pod 'WebRTC-SDK', '=125.6422.05'
+  pod 'WebRTC-SDK', '=114.5735.10'
   
   
   ## Pods for App

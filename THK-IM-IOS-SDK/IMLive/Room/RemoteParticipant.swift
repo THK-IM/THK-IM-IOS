@@ -7,6 +7,7 @@
 
 import Foundation
 import WebRTC
+import CocoaLumberjack
 
 open class RemoteParticipant: BaseParticipant {
 
@@ -65,8 +66,8 @@ open class RemoteParticipant: BaseParticipant {
                     let remoteSdp = RTCSessionDescription.init(type: .answer, sdp: answer)
                     self?.setRemoteSessionDescription(remoteSdp)
                 },
-                onError: { err in
-
+                onError: { [weak self] err in
+                    self?.onError("playStream", err)
                 }
             ).disposed(by: self.disposeBag)
 
