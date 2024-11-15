@@ -6,9 +6,9 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
+import CocoaLumberjack
 import RxSwift
 import UIKit
-import CocoaLumberjack
 
 open class IMMsgReplyView: UIView {
 
@@ -25,14 +25,16 @@ open class IMMsgReplyView: UIView {
         let view = UIView()
         view.layer.cornerRadius = 2
         view.backgroundColor =
-            IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
+            IMUIManager.shared.uiResourceProvider?.tintColor()
+            ?? UIColor.init(hex: "#ff08AAFF")
         return view
     }()
 
     lazy private var nickView: UILabel = {
         let view = UILabel()
         view.textColor =
-            IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
+            IMUIManager.shared.uiResourceProvider?.tintColor()
+            ?? UIColor.init(hex: "#ff08AAFF")
         view.font = UIFont.systemFont(ofSize: 13)
         view.textAlignment = .left
         view.numberOfLines = 1
@@ -52,7 +54,9 @@ open class IMMsgReplyView: UIView {
         var nickname: String? = nil
         if let sender = delegate?.msgSender() {
             if let info = sender.syncGetSessionMemberInfo(msg.fromUId) {
-                nickname = IMUIManager.shared.nicknameForSessionMember(info.0, info.1)
+                nickname = IMUIManager.shared.nicknameForSessionMember(
+                    info.0, info.1
+                )
             }
         }
         if nickname == nil {
@@ -70,9 +74,10 @@ open class IMMsgReplyView: UIView {
         }
         self.nickView.text = nickname
         let attributes = [NSAttributedString.Key.font: self.nickView.font]
-        let textSize = (self.nickView.text! as NSString).size(
+        let textSize = ((self.nickView.text ?? "") as NSString).size(
             withAttributes: attributes as [NSAttributedString.Key: Any])
-        let maxWidth = IMUIManager.shared.getMsgCellProvider(msg.type).cellMaxWidth() - 16
+        let maxWidth =
+            IMUIManager.shared.getMsgCellProvider(msg.type).cellMaxWidth() - 16
         self.snp.remakeConstraints { make in
             make.top.equalToSuperview()
             make.left.right.equalToSuperview()
@@ -104,7 +109,8 @@ open class IMMsgReplyView: UIView {
             make.right.equalToSuperview().offset(-6)
         }
 
-        let iMsgBodyView = IMUIManager.shared.getMsgCellProvider(msg.type).replyMsgView()
+        let iMsgBodyView = IMUIManager.shared.getMsgCellProvider(msg.type)
+            .replyMsgView()
         let view = iMsgBodyView.contentView()
         self.replyMsgView.addSubview(view)
         view.snp.makeConstraints { make in
@@ -134,11 +140,11 @@ open class IMMsgReplyView: UIView {
             v.removeFromSuperview()
         }
     }
-    
+
     func onViewDisappear() {
         self.msgBodyView?.onViewDisappear()
     }
-    
+
     func onViewAppear() {
         self.msgBodyView?.onViewAppear()
     }
