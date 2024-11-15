@@ -352,6 +352,8 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
         }
         UIView.setAnimationsEnabled(true)
+        self.referMessageUpdate(message)
+        
         let distance = self.distanceFromBottom()
         if distance < 200 || message.fromUId == IMCoreManager.shared.uId {
             self.scrollToBottom(0.2)
@@ -372,6 +374,7 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
             tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
             UIView.setAnimationsEnabled(true)
         }
+        self.referMessageUpdate(message)
     }
 
     func deleteMessage(_ message: Message) {
@@ -419,6 +422,23 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     func clearMessage() {
         self.messages.removeAll()
         self.messageTableView.reloadData()
+    }
+
+    private func referMessageUpdate(_ message: Message) {
+        var referIndexes = [IndexPath]()
+        var tempReferPos = 0
+        for m in self.messages {
+            if m.referMsgId == message.id {
+                m.referMsg = message
+                referIndexes.append(IndexPath.init(row: tempReferPos, section: 0))
+            }
+            tempReferPos += 1
+        }
+        if referIndexes.count > 0 {
+            UIView.setAnimationsEnabled(false)
+            self.messageTableView.reloadRows(at: referIndexes, with: .none)
+            UIView.setAnimationsEnabled(true)
+        }
     }
 
     private func findPosition(_ message: Message) -> Int {

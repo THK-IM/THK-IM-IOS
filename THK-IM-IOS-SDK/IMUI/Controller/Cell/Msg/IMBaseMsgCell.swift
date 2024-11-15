@@ -405,11 +405,13 @@ open class IMBaseMsgCell: IMBaseTableCell {
         self.cellWrapper.appear()
         self.onMessageShow()
         self.msgView().onViewAppear()
+        self.replyView.onViewAppear()
     }
 
     open override func disappear() {
         self.cellWrapper.disAppear()
         self.msgView().onViewDisappear()
+        self.replyView.onViewDisappear()
     }
 
     open func hasBubble() -> Bool {

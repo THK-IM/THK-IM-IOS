@@ -14,6 +14,7 @@ open class IMMsgReplyView: UIView {
     weak var sender: IMMsgSender? = nil
     private let disposeBag = DisposeBag()
     private var message: Message? = nil
+    private var msgBodyView: IMsgBodyView? = nil
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -91,6 +92,7 @@ open class IMMsgReplyView: UIView {
             make.right.lessThanOrEqualToSuperview()
         }
         iMsgBodyView.setMessage(msg, session, delegate, true)
+        self.msgBodyView = iMsgBodyView
     }
 
     func clearReplyContent() {
@@ -109,6 +111,14 @@ open class IMMsgReplyView: UIView {
         self.subviews.forEach { v in
             v.removeFromSuperview()
         }
+    }
+    
+    func onViewDisappear() {
+        self.msgBodyView?.onViewDisappear()
+    }
+    
+    func onViewAppear() {
+        self.msgBodyView?.onViewAppear()
     }
 
 }
