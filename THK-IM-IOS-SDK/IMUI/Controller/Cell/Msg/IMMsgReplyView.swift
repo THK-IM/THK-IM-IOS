@@ -105,6 +105,7 @@ open class IMMsgReplyView: UIView {
     }
 
     private func removeAllSubviews() {
+        self.msgBodyView = nil
         self.replyMsgView.subviews.forEach { v in
             v.removeFromSuperview()
         }

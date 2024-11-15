@@ -151,7 +151,7 @@ open class IMBaseMsgCell: IMBaseTableCell {
         self.message = messages[position]
         self.position = position
         self.session = session
-        layoutMessageView()
+        self.layoutMessageView()
     }
 
     override open func layoutSubviews() {
