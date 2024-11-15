@@ -189,43 +189,9 @@ open class IMBaseMsgCell: IMBaseTableCell {
         self.initMessageStatus()
     }
 
-    private func initReplyMsg() {
-        guard let msg = self.message?.referMsg else {
-            return
-        }
-        guard let delegate = self.delegate else {
-            return
-        }
-        if let sender = delegate.msgSender() {
-            if let info = sender.syncGetSessionMemberInfo(msg.fromUId) {
-                let showNickname = IMUIManager.shared.nicknameForSessionMember(info.0, info.1)
-                self.showReplyMsg(showNickname)
-            }
-        } else {
-            IMCoreManager.shared.userModule
-                .queryUser(id: msg.fromUId)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(
-                    onNext: { [weak self] user in
-                        self?.showReplyMsg(user.nickname)
-                    },
-                    onError: { err in
-                        DDLogError("initReplyMsg queryUser \(err)")
-                    }
-                ).disposed(by: disposeBag)
-        }
-    }
-
-    private func showReplyMsg(_ nickname: String) {
-        guard let msg = self.message?.referMsg else {
-            return
-        }
-        self.replyView.setRelyContent(nickname, msg, self.session, self.delegate)
-    }
-
     open func initMsgContent() {
-        if self.message?.referMsg != nil {
-            self.initReplyMsg()
+        if let referMsg = self.message?.referMsg  {
+            self.replyView.setRelyContent(referMsg, self.session, self.delegate)
         } else {
             self.replyView.clearReplyContent()
         }

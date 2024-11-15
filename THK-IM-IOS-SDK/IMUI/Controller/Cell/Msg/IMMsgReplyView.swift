@@ -45,9 +45,15 @@ open class IMMsgReplyView: UIView {
     }
 
     func setRelyContent(
-        _ nickname: String, _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
+        _ msg: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
         self.removeAllSubviews()
+        var nickname = ""
+        if let sender = delegate?.msgSender() {
+            if let info = sender.syncGetSessionMemberInfo(msg.fromUId) {
+                nickname = IMUIManager.shared.nicknameForSessionMember(info.0, info.1)
+            }
+        }
         self.nickView.text = nickname
         let attributes = [NSAttributedString.Key.font: self.nickView.font]
         let textSize = (self.nickView.text! as NSString).size(
