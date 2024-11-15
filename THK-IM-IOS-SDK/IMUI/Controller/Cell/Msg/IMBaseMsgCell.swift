@@ -27,11 +27,11 @@ open class IMBaseMsgCell: IMBaseTableCell {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         self.tintColor = IMUIManager.shared.uiResourceProvider?.tintColor()
         self.backgroundColor = UIColor.clear
-        cellWrapper.attach(contentView)
-        cellWrapper.layoutSubViews(self.isEditing)
-        cellWrapper.containerView.addSubview(self.replyView)
+        self.cellWrapper.attach(contentView)
+        self.cellWrapper.layoutSubViews(self.isEditing)
+        self.cellWrapper.containerView.addSubview(self.replyView)
         let msgView = self.msgView().contentView()
-        cellWrapper.containerView.addSubview(msgView)
+        self.cellWrapper.containerView.addSubview(msgView)
         self.setupEvent()
     }
 
