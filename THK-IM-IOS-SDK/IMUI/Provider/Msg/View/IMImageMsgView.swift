@@ -40,11 +40,11 @@ class IMImageMsgView: UIView, IMsgBodyView {
         _ isReply: Bool = false
     ) {
         self.imageView.isHidden = true
-        self.resetlayout(message, isReply)
+        self.resetLayout(message, isReply)
         self.showMessage(message)
     }
 
-    private func resetlayout(_ message: Message, _ isReply: Bool) {
+    private func resetLayout(_ message: Message, _ isReply: Bool) {
         var size = self.viewSize(message)
         if isReply {
             size = CGSize(width: size.width * 0.25, height: size.height * 0.25)
