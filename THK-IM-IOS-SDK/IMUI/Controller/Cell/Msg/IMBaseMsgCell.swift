@@ -239,7 +239,6 @@ open class IMBaseMsgCell: IMBaseTableCell {
     }
 
     open func initUser() {
-        self.initReplyMsg()
         let fromUId = self.message?.fromUId
         if self.showAvatar() && fromUId != nil && self.cellWrapper.avatarView() != nil {
             guard let delegate = self.delegate else {
@@ -296,9 +295,9 @@ open class IMBaseMsgCell: IMBaseTableCell {
                         borderColor: UIColor.init(hex: "BBBBBB"), width: 40, height: 24, pos: 0)
                 }
             }
-            updateUserBubble(image: image)
+            self.updateUserBubble(image: image)
         } else {
-            updateUserBubble(image: nil)
+            self.updateUserBubble(image: nil)
         }
     }
 
