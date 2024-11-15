@@ -224,7 +224,7 @@ open class IMBaseMsgCell: IMBaseTableCell {
     }
 
     open func initMsgContent() {
-        if let msg = message?.referMsg {
+        if self.message?.referMsg != nil {
             self.initReplyMsg()
         } else {
             self.replyView.clearReplyContent()
