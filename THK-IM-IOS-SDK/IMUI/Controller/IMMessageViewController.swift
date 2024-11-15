@@ -1121,7 +1121,10 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
 
     ///  预览消息
     public func previewMessage(_ msg: Message, _ position: Int, _ originView: UIView) {
-        self.onMsgClick(msg, position, originView)
+        let intercepted = IMUIManager.shared.getMsgCellProvider(msg.type).onMsgClick(self, msg, self.session, originView)
+        if !intercepted {
+            self.onMsgClick(msg, position, originView)
+        }
     }
 
 }

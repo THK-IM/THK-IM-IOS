@@ -75,16 +75,21 @@ class IMRecordMessageViewController: BaseViewController, IMMsgPreviewer {
     }
 
     func previewMessage(_ msg: Message, _ position: Int, _ originView: UIView) {
-        if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
-            if let messages = self.recordMessages {
-                let mediaMessages = messages.filter { m in
-                    return m.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue
+        let intercepted = IMUIManager.shared.getMsgCellProvider(msg.type).onMsgClick(
+            self, msg, self.session, originView)
+        if !intercepted {
+            if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
+                if let messages = self.recordMessages {
+                    let mediaMessages = messages.filter { m in
+                        return m.type == MsgType.Image.rawValue
+                            || msg.type == MsgType.Video.rawValue
+                    }
+                    IMUIManager.shared.contentPreviewer?.previewMessage(
+                        self, mediaMessages, originView, false, msg.msgId)
                 }
-                IMUIManager.shared.contentPreviewer?.previewMessage(
-                    self, mediaMessages, originView, false, msg.msgId)
+            } else if msg.type == MsgType.Record.rawValue {
+                IMUIManager.shared.contentPreviewer?.previewRecordMessage(self, originSession!, msg)
             }
-        } else if msg.type == MsgType.Record.rawValue {
-            IMUIManager.shared.contentPreviewer?.previewRecordMessage(self, originSession!, msg)
         }
     }
 
