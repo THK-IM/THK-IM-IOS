@@ -27,11 +27,11 @@ open class IMBaseMsgCell: IMBaseTableCell {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         self.tintColor = IMUIManager.shared.uiResourceProvider?.tintColor()
         self.backgroundColor = UIColor.clear
-        cellWrapper.attach(contentView)
-        cellWrapper.layoutSubViews(self.isEditing)
-        cellWrapper.containerView.addSubview(self.replyView)
+        self.cellWrapper.attach(contentView)
+        self.cellWrapper.layoutSubViews(self.isEditing)
+        self.cellWrapper.containerView.addSubview(self.replyView)
         let msgView = self.msgView().contentView()
-        cellWrapper.containerView.addSubview(msgView)
+        self.cellWrapper.containerView.addSubview(msgView)
         self.setupEvent()
     }
 
@@ -151,7 +151,7 @@ open class IMBaseMsgCell: IMBaseTableCell {
         self.message = messages[position]
         self.position = position
         self.session = session
-        layoutMessageView()
+        self.layoutMessageView()
     }
 
     override open func layoutSubviews() {
@@ -189,43 +189,9 @@ open class IMBaseMsgCell: IMBaseTableCell {
         self.initMessageStatus()
     }
 
-    private func initReplyMsg() {
-        guard let msg = self.message?.referMsg else {
-            return
-        }
-        guard let delegate = self.delegate else {
-            return
-        }
-        if let sender = delegate.msgSender() {
-            if let info = sender.syncGetSessionMemberInfo(msg.fromUId) {
-                let showNickname = IMUIManager.shared.nicknameForSessionMember(info.0, info.1)
-                self.showReplyMsg(showNickname)
-            }
-        } else {
-            IMCoreManager.shared.userModule
-                .queryUser(id: msg.fromUId)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(
-                    onNext: { [weak self] user in
-                        self?.showReplyMsg(user.nickname)
-                    },
-                    onError: { err in
-                        DDLogError("initReplyMsg queryUser \(err)")
-                    }
-                ).disposed(by: disposeBag)
-        }
-    }
-
-    private func showReplyMsg(_ nickname: String) {
-        guard let msg = self.message?.referMsg else {
-            return
-        }
-        self.replyView.setRelyContent(nickname, msg, self.session, self.delegate)
-    }
-
     open func initMsgContent() {
-        if let msg = message?.referMsg {
-            self.initReplyMsg()
+        if let referMsg = self.message?.referMsg  {
+            self.replyView.setRelyContent(referMsg, self.session, self.delegate)
         } else {
             self.replyView.clearReplyContent()
         }
@@ -239,7 +205,6 @@ open class IMBaseMsgCell: IMBaseTableCell {
     }
 
     open func initUser() {
-        self.initReplyMsg()
         let fromUId = self.message?.fromUId
         if self.showAvatar() && fromUId != nil && self.cellWrapper.avatarView() != nil {
             guard let delegate = self.delegate else {
@@ -296,9 +261,9 @@ open class IMBaseMsgCell: IMBaseTableCell {
                         borderColor: UIColor.init(hex: "BBBBBB"), width: 40, height: 24, pos: 0)
                 }
             }
-            updateUserBubble(image: image)
+            self.updateUserBubble(image: image)
         } else {
-            updateUserBubble(image: nil)
+            self.updateUserBubble(image: nil)
         }
     }
 
@@ -405,11 +370,13 @@ open class IMBaseMsgCell: IMBaseTableCell {
         self.cellWrapper.appear()
         self.onMessageShow()
         self.msgView().onViewAppear()
+        self.replyView.onViewAppear()
     }
 
     open override func disappear() {
         self.cellWrapper.disAppear()
         self.msgView().onViewDisappear()
+        self.replyView.onViewDisappear()
     }
 
     open func hasBubble() -> Bool {

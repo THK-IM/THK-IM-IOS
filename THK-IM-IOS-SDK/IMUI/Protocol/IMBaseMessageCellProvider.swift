@@ -102,4 +102,10 @@ open class IMBaseMessageCellProvider {
         return view
     }
 
+    open func onMsgClick(
+        _ vc: UIViewController, _ msg: Message, _ session: Session?, _ originView: UIView
+    ) -> Bool {
+        return false
+    }
+
 }

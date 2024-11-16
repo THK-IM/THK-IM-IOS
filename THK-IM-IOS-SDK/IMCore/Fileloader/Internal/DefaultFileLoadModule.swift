@@ -117,12 +117,12 @@ public class DefaultFileLoadModule: FileLoadModule {
     public func cancelDownload(url: String) {
         lock.lock()
         var taskTuple = downloadTaskMap[url]
-        lock.unlock()
         if taskTuple != nil {
             taskTuple!.1.removeAll()
             taskTuple!.0.cancel()
             downloadTaskMap.removeValue(forKey: url)
         }
+        lock.unlock()
     }
 
     public func cancelDownloadListener(url: String, listener: FileLoadListener) {

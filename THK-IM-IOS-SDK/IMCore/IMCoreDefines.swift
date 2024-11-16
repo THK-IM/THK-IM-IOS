@@ -103,3 +103,14 @@ public protocol Crypto {
     func encrypt(_ text: String) -> String?
     func decrypt(_ cipherText: String) -> String?
 }
+
+class IMCache {
+    
+    let time: Int64
+    let data: Any
+    
+    init(time: Int64, data: Any) {
+        self.time = time
+        self.data = data
+    }
+}

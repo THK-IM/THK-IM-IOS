@@ -13,6 +13,7 @@ open class IMCoreManager: SignalListener {
     public var env = "Debug"
     public static let shared = IMCoreManager()
     private var debug = false
+    private var cacheMap = [String: IMCache]()
     private var disposeBag = DisposeBag()
     private var _fileLoadModule: FileLoadModule?
     public var fileLoadModule: FileLoadModule {
@@ -157,7 +158,24 @@ open class IMCoreManager: SignalListener {
         }
     }
 
+    // 默认10分钟过期
+    public func setCache(key: String, data: Any, _ expiredTime: Int64 = 10 * 60 * 1000) {
+        self.cacheMap[key] = IMCache(time: self.severTime + expiredTime, data: data)
+    }
+
+    public func getCache<T>(key: String, classT: T.Type) -> T? {
+        if let data = self.cacheMap[key] {
+            if data.time >= self.severTime {
+                return data.data as? T
+            } else {
+                self.cacheMap.removeValue(forKey: key)
+            }
+        }
+        return nil
+    }
+
     public func shutDown() {
+        self.cacheMap.removeAll()
         fileLoadModule.reset()
         messageModule.reset()
         signalModule.disconnect("showdown")
