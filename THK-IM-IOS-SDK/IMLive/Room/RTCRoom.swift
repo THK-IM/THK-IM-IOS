@@ -347,7 +347,6 @@ public class RTCRoom: NSObject {
             remoteParticipant.leave()
         }
         remoteParticipants.removeAll()
-        RTCRoomManager.shared.leaveRoom(id: id, delRoom: true)
     }
     
 }

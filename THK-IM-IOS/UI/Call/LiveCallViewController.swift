@@ -326,7 +326,7 @@ class LiveCallViewController: BaseViewController {
     }
 
     func exit() {
-        self.rTCRoom?.destroy()
+        RTCRoomManager.shared.leaveRoom(id: self.rTCRoom!.id, delRoom: true)
         if self.navigationController == nil {
             self.dismiss(animated: true)
         } else {
