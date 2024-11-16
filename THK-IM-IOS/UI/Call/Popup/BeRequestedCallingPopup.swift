@@ -247,11 +247,13 @@ class BeRequestedCallingPopup: UIView {
             dismiss()
         }
     }
-    
+
     private func enterRoom(_ room: RTCRoom) {
+        RTCRoomManager.shared.addRoom(room)
         if let window = UIApplication.shared.windows.first {
-            if let vc = window.rootViewController  {
-                LiveCallViewController.popLiveCallViewController(vc, room, .BeCalling, Set())
+            if let vc = window.rootViewController {
+                LiveCallViewController.popLiveCallViewController(
+                    vc, room, .BeCalling, Set())
             }
         }
     }
