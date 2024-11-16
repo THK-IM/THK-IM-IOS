@@ -20,17 +20,20 @@ class ExternalPageRouter: IMPageRouter {
             ids.insert(IMCoreManager.shared.uId)
             ids.insert(session.entityId)
             let mediaParams = MediaParams(
-                videoMaxBitrate: 100 * 1024 * 1024 * 8, audioMaxBitrate: 50 * 1024 * 8,
-                videoWidth: 1200, videoHeight: 1200, videoFps: 30
+                videoMaxBitrate: 256 * 1024 * 8, audioMaxBitrate: 50 * 1024 * 8,
+                videoWidth: 480, videoHeight: 720, videoFps: 30
             )
-            RTCRoomManager.shared.createRoom(mode: Mode.Video, mediaParams: mediaParams)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { room in
-                    if vc != nil {
-                        RTCRoomManager.shared.addRoom(room)
-                        LiveCallViewController.presentLiveCallViewController(vc!, room, CallType.RequestCalling, ids)
-                    }
-                }).disposed(by: self.disposeBag)
+            RTCRoomManager.shared.createRoom(
+                mode: RoomMode.Video, mediaParams: mediaParams
+            )
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { room in
+                if vc != nil {
+                    RTCRoomManager.shared.addRoom(room)
+                    LiveCallViewController.popLiveCallViewController(
+                        vc!, room, CallType.RequestCalling, ids)
+                }
+            }).disposed(by: self.disposeBag)
         }
     }
 
@@ -38,18 +41,25 @@ class ExternalPageRouter: IMPageRouter {
         let messageController = IMMessageViewController()
         messageController.hidesBottomBarWhenPushed = true
         messageController.session = session
-        controller.navigationController?.pushViewController(messageController, animated: true)
+        controller.navigationController?.pushViewController(
+            messageController, animated: true)
     }
 
-    func openUserPage(controller: UIViewController, user: User, session: Session) {
+    func openUserPage(
+        controller: UIViewController, user: User, session: Session
+    ) {
         ContactUserViewController.open(controller, user)
     }
 
-    func openGroupPage(controller: UIViewController, group: Group, session: Session) {
+    func openGroupPage(
+        controller: UIViewController, group: Group, session: Session
+    ) {
         GroupViewController.open(controller, group, 1)
     }
 
-    func openMsgReadStatusPage(controller: UIViewController, session: Session, message: Message) {
+    func openMsgReadStatusPage(
+        controller: UIViewController, session: Session, message: Message
+    ) {
 
     }
 

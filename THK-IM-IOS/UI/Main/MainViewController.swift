@@ -18,9 +18,12 @@ class MainViewController: UITabBarController {
         self.view.backgroundColor = UIColor.init(hex: "dddddd")
 
         self.viewControllers = [
-            UINavigationController(rootViewController: SessionTabViewController()),
-            UINavigationController(rootViewController: ContactTabViewController()),
-            UINavigationController(rootViewController: GroupTabViewController()),
+            UINavigationController(
+                rootViewController: SessionTabViewController()),
+            UINavigationController(
+                rootViewController: ContactTabViewController()),
+            UINavigationController(
+                rootViewController: GroupTabViewController()),
             UINavigationController(rootViewController: MineTabViewController()),
         ]
 
@@ -38,11 +41,15 @@ class MainViewController: UITabBarController {
         let itemContact = UITabBarItem(
             title: "contact", image: imageContact, selectedImage: imageContact)
 
-        let imageGroup = UIImage(named: "ic_tab_group")?.scaledToSize(CGSize(width: 30, height: 30))
-        let itemGroup = UITabBarItem(title: "group", image: imageGroup, selectedImage: imageGroup)
+        let imageGroup = UIImage(named: "ic_tab_group")?.scaledToSize(
+            CGSize(width: 30, height: 30))
+        let itemGroup = UITabBarItem(
+            title: "group", image: imageGroup, selectedImage: imageGroup)
 
-        let imageMine = UIImage(named: "ic_tab_mine")?.scaledToSize(CGSize(width: 30, height: 30))
-        let itemMine = UITabBarItem(title: "mine", image: imageMine, selectedImage: imageMine)
+        let imageMine = UIImage(named: "ic_tab_mine")?.scaledToSize(
+            CGSize(width: 30, height: 30))
+        let itemMine = UITabBarItem(
+            title: "mine", image: imageMine, selectedImage: imageMine)
 
         self.viewControllers?[0].tabBarItem = itemMessage
         self.viewControllers?[1].tabBarItem = itemContact
@@ -51,7 +58,7 @@ class MainViewController: UITabBarController {
     }
 
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-
+        self.testPopup()
     }
 
     private func updateNewMessageCount(_ count: Int) {
@@ -62,6 +69,19 @@ class MainViewController: UITabBarController {
         } else {
             self.tabBar.items?[0].badgeValue = "99+"
         }
+    }
+
+    private func testPopup() {
+        let frame = CGRect(
+            x: 20, y: 60, width: UIScreen.main.bounds.width - 40, height: 100)
+        let beRequestedPopup = BeRequestedCallingPopup(frame: frame)
+        let signal = BeingRequestedSignal(
+            roomId: "1231", members: Set(), requestId: 1855133462856471628,
+            mode: RoomMode.Video.rawValue,
+            msg: "", createTime: IMCoreManager.shared.severTime,
+            timeoutTime: 3000
+        )
+        beRequestedPopup.show(signal)
     }
 
 }

@@ -44,7 +44,7 @@ open class RTCRoomManager {
     /**
     * 创建房间
     */
-    public func createRoom(mode: Mode, mediaParams: MediaParams) -> Observable<RTCRoom> {
+    public func createRoom(mode: RoomMode, mediaParams: MediaParams) -> Observable<RTCRoom> {
         let req = CreateRoomReqVo(
             uId: myUId, mode: mode.rawValue,
             videoMaxBitrate: mediaParams.videoMaxBitrate,
@@ -96,6 +96,12 @@ open class RTCRoomManager {
             )
             return Observable.just(room)
         }
+    }
+    
+    public func leaveRoom(roomId: String, msg: String) -> Observable<Void> {
+        return self.liveApi.leaveRoom(
+            LeaveRoomReqVo(uId: myUId, roomId: roomId, msg: msg)
+        )
     }
 
     /**

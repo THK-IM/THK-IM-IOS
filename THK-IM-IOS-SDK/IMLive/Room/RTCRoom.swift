@@ -44,12 +44,12 @@ public class RTCRoom: NSObject {
     }
 
     func audioEnable() -> Bool {
-        return self.mode >= Mode.Audio.rawValue
+        return self.mode >= RoomMode.Audio.rawValue
     }
 
     func videoEnable() -> Bool {
-        return self.mode == Mode.Video.rawValue
-            || self.mode == Mode.VideoRoom.rawValue
+        return self.mode == RoomMode.Video.rawValue
+            || self.mode == RoomMode.VideoRoom.rawValue
     }
 
     private func initRemoteParticipants(_ participants: [ParticipantVo]?) {

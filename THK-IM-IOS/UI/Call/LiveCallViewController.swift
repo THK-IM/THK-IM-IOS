@@ -24,7 +24,7 @@ class LiveCallViewController: BaseViewController {
         from.navigationController?.pushViewController(vc, animated: true)
     }
 
-    static func presentLiveCallViewController(
+    static func popLiveCallViewController(
         _ from: UIViewController, _ room: RTCRoom, _ callType: CallType,
         _ members: Set<Int64>
     ) {
@@ -49,12 +49,6 @@ class LiveCallViewController: BaseViewController {
 
     private let callingInfoLayout: CallingInfoLayout = {
         let view = CallingInfoLayout()
-        return view
-    }()
-
-    private let beCallLayout: BeCallingLayout = {
-        let view = BeCallingLayout()
-        view.isHidden = true
         return view
     }()
 
@@ -120,16 +114,6 @@ class LiveCallViewController: BaseViewController {
         }
         self.view.addSubview(self.callingLayout)
         self.callingLayout.snp.makeConstraints { [weak self] make in
-            guard let sf = self else {
-                return
-            }
-            make.top.equalTo(sf.callingInfoLayout.snp.bottom)
-            make.bottom.equalToSuperview()
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-        }
-        self.view.addSubview(self.beCallLayout)
-        self.beCallLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
             }
@@ -255,14 +239,10 @@ class LiveCallViewController: BaseViewController {
             }
         })
 
-        if remoteParticipantCount > 0 {
-            showCallingView()
+        if self.callType == CallType.RequestCalling.rawValue {
+            self.showRequestCallView()
         } else {
-            if self.callType == CallType.RequestCalling.rawValue {
-                showRequestCallView()
-            } else {
-                showBeCallingView()
-            }
+            self.showCallingView()
         }
     }
 
@@ -282,7 +262,6 @@ class LiveCallViewController: BaseViewController {
     private func showRequestCallView() {
         self.requestCallLayout.isHidden = false
         self.callingLayout.isHidden = true
-        self.beCallLayout.isHidden = true
 
         self.requestCallLayout.initCall(self)
         self.startRequestCalling()
@@ -291,17 +270,8 @@ class LiveCallViewController: BaseViewController {
     private func showCallingView() {
         self.requestCallLayout.isHidden = true
         self.callingLayout.isHidden = false
-        self.beCallLayout.isHidden = true
 
         self.callingLayout.initCall(self)
-    }
-
-    private func showBeCallingView() {
-        self.requestCallLayout.isHidden = true
-        self.callingLayout.isHidden = true
-        self.beCallLayout.isHidden = false
-
-        self.beCallLayout.initCall(self)
     }
 
     private func initParticipantView(_ p: BaseParticipant) {
@@ -413,11 +383,11 @@ extension LiveCallViewController: LiveCallProtocol {
 
             }.disposed(by: self.disposeBag)
 
-//            DispatchQueue.main.asyncAfter(
-//                deadline: .now() + 3,
-//                execute: { [weak self] in
-//                    self?.startRequestCalling()
-//                })
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + 3,
+                execute: { [weak self] in
+                    self?.startRequestCalling()
+                })
         }
     }
 

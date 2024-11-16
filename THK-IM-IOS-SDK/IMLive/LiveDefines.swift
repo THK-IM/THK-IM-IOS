@@ -9,7 +9,7 @@ import Foundation
 
 let liveSignalEvent = "LiveSignalEvent"
 
-public protocol LiveCallingProtocol: NSObject {
+public protocol LiveRequestProcessor: AnyObject {
 
     /**
      * 收到被呼叫请求
@@ -20,7 +20,7 @@ public protocol LiveCallingProtocol: NSObject {
      * 收到取消呼叫请求
      */
     func onCancelBeingRequested(signal: CancelBeingRequestedSignal)
-    
+
 }
 
 public enum LiveSignalType: Int {
@@ -77,6 +77,17 @@ public class BeingRequestedSignal: Codable {
         case createTime = "create_time"
         case timeoutTime = "timeout_time"
     }
+    
+    init(roomId: String, members: Set<Int64>, requestId: Int64, mode: Int, msg: String, createTime: Int64, timeoutTime: Int64) {
+        self.roomId = roomId
+        self.members = members
+        self.requestId = requestId
+        self.mode = mode
+        self.msg = msg
+        self.createTime = createTime
+        self.timeoutTime = timeoutTime
+    }
+    
 }
 
 public class CancelBeingRequestedSignal: Codable {
@@ -181,7 +192,7 @@ public enum Role: Int {
     case Audience = 2
 }
 
-public enum Mode: Int {
+public enum RoomMode: Int {
     case Chat = 1
     case Audio = 2
     case Video = 3

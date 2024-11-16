@@ -27,6 +27,8 @@ public protocol LiveApi {
     func refuseJoinRoom(_ req: RefuseJoinReqVo) -> Observable<Void>
     
     func kickoffMember(_ req: KickoffMemberReqVo) -> Observable<Void>
+    
+    func leaveRoom(_ req: LeaveRoomReqVo) -> Observable<Void>
 
     func deleteRoom(_ req: DelRoomReqVo) -> Observable<Void>
 

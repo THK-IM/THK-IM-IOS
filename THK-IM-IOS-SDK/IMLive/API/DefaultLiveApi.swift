@@ -77,6 +77,13 @@ class DefaultLiveApi: LiveApi {
             .compose(RxTransformer.shared.response2Bean(JoinRoomResVo.self))
     }
 
+    public func leaveRoom(_ req: LeaveRoomReqVo) -> Observable<Void> {
+        return roomApi.rx
+            .request(.leaveRoom(req))
+            .asObservable()
+            .compose(RxTransformer.shared.response2Void())
+    }
+
     func inviteMembers(_ req: InviteMemberReqVo) -> RxSwift.Observable<Void> {
         return roomApi.rx
             .request(.inviteMembers(req))
@@ -126,4 +133,3 @@ class DefaultLiveApi: LiveApi {
             .compose(RxTransformer.shared.response2Bean(PlayStreamResVo.self))
     }
 }
-
