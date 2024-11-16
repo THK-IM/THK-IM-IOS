@@ -413,11 +413,11 @@ extension LiveCallViewController: LiveCallProtocol {
 
             }.disposed(by: self.disposeBag)
 
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + 3,
-                execute: { [weak self] in
-                    self?.startRequestCalling()
-                })
+//            DispatchQueue.main.asyncAfter(
+//                deadline: .now() + 3,
+//                execute: { [weak self] in
+//                    self?.startRequestCalling()
+//                })
         }
     }
 

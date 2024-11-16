@@ -212,33 +212,53 @@ open class LocalParticipant: BaseParticipant {
     }
 
     private func chooseFormat(_ device: AVCaptureDevice) -> AVCaptureDevice.Format? {
-        var format = RTCCameraVideoCapturer.supportedFormats(for: device).first
+//        var format = RTCCameraVideoCapturer.supportedFormats(for: device).first
         let formats = RTCCameraVideoCapturer.supportedFormats(for: device)
-        for f in formats {
-            var supportDimension = false
-            var supportFps = false
-            if #available(iOS 16.0, *) {
-                for p in f.supportedMaxPhotoDimensions {
-                    if p.width == self.mediaParams.videoWidth && p.height == self.mediaParams.videoHeight {
-                        supportDimension = true
+//        for f in formats {
+//            var supportDimension = false
+//            var supportFps = false
+//            if #available(iOS 16.0, *) {
+//                for p in f.supportedMaxPhotoDimensions {
+//                    if p.width == self.mediaParams.videoWidth && p.height == self.mediaParams.videoHeight {
+//                        supportDimension = true
+//                        break
+//                    }
+//                }
+//                for p in f.videoSupportedFrameRateRanges {
+//                    if p.maxFrameRate >= Double(self.mediaParams.videoFps) {
+//                        supportFps = true
+//                        break
+//                    }
+//                }
+//            }
+//            if supportFps {
+//                format = f
+//                if supportDimension {
+//                    break
+//                }
+//            }
+//        }
+//        return format
+        var bestFormat: AVCaptureDevice.Format?
+        
+        for format in formats {
+            let description = format.formatDescription
+            let dimensions = CMVideoFormatDescriptionGetDimensions(description)
+            let formatResolution = dimensions.width * dimensions.height
+
+            
+            for range in format.videoSupportedFrameRateRanges {
+                print("Camera: \(dimensions.width), \(dimensions.width), \(range.minFrameRate), \(range.maxFrameRate)")
+                if Int(range.maxFrameRate) >= self.mediaParams.videoFps && Int(range.minFrameRate) <= self.mediaParams.videoFps {
+                    if formatResolution >= Int32(self.mediaParams.videoWidth * self.mediaParams.videoHeight) {
+                        bestFormat = format
                         break
                     }
-                }
-                for p in f.videoSupportedFrameRateRanges {
-                    if p.maxFrameRate >= Double(self.mediaParams.videoFps) {
-                        supportFps = true
-                        break
-                    }
-                }
-            }
-            if supportFps {
-                format = f
-                if supportDimension {
-                    break
                 }
             }
         }
-        return format
+
+        return bestFormat
     }
 
     open override func onDisconnected() {

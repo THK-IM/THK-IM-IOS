@@ -39,6 +39,20 @@ public class IMLiveRTCEngine: NSObject {
         
         let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
         let videoDecoderFactory = RTCDefaultVideoDecoderFactory()
+        
+        let encodes = videoEncoderFactory.supportedCodecs()
+        for c in encodes {
+            print("videoEncoderFactory \(c.name)")
+            if (c.name == "VP8") {
+                videoEncoderFactory.preferredCodec = c
+            }
+        }
+//        
+//        let decodes = videoDecoderFactory.supportedCodecs()
+//        for c in decodes {
+//            print("videoEncoderFactory \(c.name)")
+//        }
+        
         self.factory = RTCPeerConnectionFactory.init(
             bypassVoiceProcessing: true,
             encoderFactory: videoEncoderFactory,
