@@ -120,7 +120,6 @@
 		A06A13B42BA5B4F200CEFB4D /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06A13B32BA5B4F200CEFB4D /* Stack.swift */; };
 		A06A13F32BA9DE1800CEFB4D /* AESPK7Coder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06A13F22BA9DE1800CEFB4D /* AESPK7Coder.swift */; };
 		A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */; };
-		A0978E5D2B71CF7B0047E6A2 /* BeCallingLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5C2B71CF7B0047E6A2 /* BeCallingLayout.swift */; };
 		A0978E5F2B71CFDA0047E6A2 /* CallingLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E5E2B71CFDA0047E6A2 /* CallingLayout.swift */; };
 		A0978E612B71CFF50047E6A2 /* RequestCallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E602B71CFF50047E6A2 /* RequestCallLayout.swift */; };
 		A0978E632B71D2AB0047E6A2 /* LiveCallProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0978E622B71D2AB0047E6A2 /* LiveCallProtocol.swift */; };
@@ -502,7 +501,6 @@
 		A06A13B32BA5B4F200CEFB4D /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		A06A13F22BA9DE1800CEFB4D /* AESPK7Coder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AESPK7Coder.swift; sourceTree = "<group>"; };
 		A0978E5A2B71CE9A0047E6A2 /* LiveCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallViewController.swift; sourceTree = "<group>"; };
-		A0978E5C2B71CF7B0047E6A2 /* BeCallingLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeCallingLayout.swift; sourceTree = "<group>"; };
 		A0978E5E2B71CFDA0047E6A2 /* CallingLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallingLayout.swift; sourceTree = "<group>"; };
 		A0978E602B71CFF50047E6A2 /* RequestCallLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestCallLayout.swift; sourceTree = "<group>"; };
 		A0978E622B71D2AB0047E6A2 /* LiveCallProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCallProtocol.swift; sourceTree = "<group>"; };
@@ -971,7 +969,6 @@
 		A0978E592B71CE7B0047E6A2 /* Layout */ = {
 			isa = PBXGroup;
 			children = (
-				A0978E5C2B71CF7B0047E6A2 /* BeCallingLayout.swift */,
 				A0978E5E2B71CFDA0047E6A2 /* CallingLayout.swift */,
 				A0978E602B71CFF50047E6A2 /* RequestCallLayout.swift */,
 				A0978E652B723CAB0047E6A2 /* CallingInfoLayout.swift */,
@@ -2255,7 +2252,6 @@
 				A0E82F562B52209F008DC681 /* GroupTableCell.swift in Sources */,
 				A0D68BE92A888679004D11A5 /* BaseModule.swift in Sources */,
 				A0D68BE42A888679004D11A5 /* DefaultUserModule.swift in Sources */,
-				A0978E5D2B71CF7B0047E6A2 /* BeCallingLayout.swift in Sources */,
 				A0FCA8E22B48EC4200FC6E47 /* RegisterReq.swift in Sources */,
 				A03082CF2AF66BD7001B8373 /* IMReeditMsgProcessor.swift in Sources */,
 				A0F031012B220B940058B05B /* DefaultContactModule.swift in Sources */,
