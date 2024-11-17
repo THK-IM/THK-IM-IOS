@@ -77,6 +77,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
                 let liveApiEndpoint = "http://rtc-api.thkim.com"
                 LiveManager.shared.initUser(uId, token, liveApiEndpoint)
+                LiveManager.shared.liveRequestProcessor = IMLiveRequestProcessor()
                 return Observable.just(it)
             })
     }

@@ -18,10 +18,12 @@ class IMLiveRequestProcessor: LiveRequestProcessor {
         }
         processedRoomIds.insert(signal.roomId)
 
-        let frame = CGRect(
-            x: 20, y: 60, width: UIScreen.main.bounds.width - 40, height: 100)
-        let beRequestedPopup = BeRequestedCallingPopup(frame: frame)
-        beRequestedPopup.show(signal)
+        DispatchQueue.main.async {
+            let frame = CGRect(
+                x: 20, y: 60, width: UIScreen.main.bounds.width - 40, height: 100)
+            let beRequestedPopup = BeRequestedCallingPopup(frame: frame)
+            beRequestedPopup.show(signal)
+        }
     }
 
     func onCancelBeingRequested(signal: CancelBeingRequestedSignal) {

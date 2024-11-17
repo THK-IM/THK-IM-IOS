@@ -231,12 +231,8 @@ class LiveCallViewController: BaseViewController {
 
     private func setupView() {
         self.showUserInfo()
-        var remoteParticipantCount = 0
         self.rTCRoom?.getAllParticipants().forEach({ p in
             initParticipantView(p)
-            if p is RemoteParticipant {
-                remoteParticipantCount += 1
-            }
         })
 
         if self.callType == CallType.RequestCalling.rawValue {
@@ -270,7 +266,6 @@ class LiveCallViewController: BaseViewController {
     private func showCallingView() {
         self.requestCallLayout.isHidden = true
         self.callingLayout.isHidden = false
-
         self.callingLayout.initCall(self)
     }
 
@@ -289,28 +284,11 @@ class LiveCallViewController: BaseViewController {
     }
 
     func join(_ p: BaseParticipant) {
-        DDLogInfo("BaseParticipant join \(p.uId)")
         self.initParticipantView(p)
-        self.showCallingView()
     }
 
     func leave(_ p: BaseParticipant) {
-        if p is LocalParticipant {
-            showToast("通话已中断")
-        } else {
-            showToast("对方已挂断")
-        }
         self.exit()
-    }
-
-    func onMemberHangup(uId: Int64) {
-        showToast("对方已挂断")
-        exit()
-    }
-
-    func onCallEnd() {
-        showToast("对方已挂断")
-        exit()
     }
 
     func needCallMembers() -> Set<Int64> {
@@ -318,6 +296,7 @@ class LiveCallViewController: BaseViewController {
         for m in self.members {
             if !self.acceptMembers.contains(m)
                 && !self.rejectMembers.contains(m)
+                && m != RTCRoomManager.shared.myUId
             {
                 needCallMembers.insert(m)
             }
@@ -336,9 +315,7 @@ class LiveCallViewController: BaseViewController {
     }
 
     func exit() {
-
         RTCRoomManager.shared.destroyRoom(id: room().id)
-
         if self.navigationController == nil {
             self.dismiss(animated: true)
         } else {
@@ -388,7 +365,7 @@ extension LiveCallViewController: LiveCallProtocol {
         let members = self.needCallMembers()
         if members.count > 0 {
             RTCRoomManager.shared.callRoomMembers(
-                self.rTCRoom!.id, "", 3, self.members
+                self.rTCRoom!.id, "", 3, members
             )
             .compose(RxTransformer.shared.io2Main())
             .subscribe { _ in
@@ -400,6 +377,10 @@ extension LiveCallViewController: LiveCallProtocol {
                 execute: { [weak self] in
                     self?.startRequestCalling()
                 })
+        } else {
+            if rejectMembers.count > 0 {
+                self.exitRoom()
+            }
         }
     }
 
@@ -412,7 +393,6 @@ extension LiveCallViewController: LiveCallProtocol {
             self?.exit()
         }.disposed(by: self.disposeBag)
     }
-
 
     func hangupCalling() {
         RTCRoomManager.shared.leaveRoom(id: self.rTCRoom!.id, delRoom: true)

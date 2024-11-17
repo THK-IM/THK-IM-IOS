@@ -141,12 +141,12 @@ class BeRequestedCallingPopup: UIView {
 
         self.acceptView.rx.tapGesture().when(.ended)
             .subscribe { [weak self] _ in
-                self?.dismiss()
+                self?.acceptCalling()
             }.disposed(by: self.disposeBag)
 
         self.rejectView.rx.tapGesture().when(.ended)
             .subscribe { [weak self] _ in
-                self?.dismiss()
+                self?.rejectCalling()
             }.disposed(by: self.disposeBag)
     }
 
