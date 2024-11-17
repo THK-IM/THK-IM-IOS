@@ -111,6 +111,12 @@ class BeRequestedCallingPopup: UIView {
         self.addSubview(self.contentView)
         self.contentView.frame = frame
         self.initViews()
+        SwiftEventBus.onMainThread(self, name: liveSignalEvent) {
+            [weak self] vo in
+            guard let sf = self else { return }
+            guard let liveSignal = vo?.object as? LiveSignal else { return }
+            sf.onNewSignal(liveSignal)
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -146,11 +152,6 @@ class BeRequestedCallingPopup: UIView {
 
     func show(_ signal: BeingRequestedSignal) {
         self.beCallingSignal = signal
-        SwiftEventBus.onMainThread(self, name: liveSignalEvent) {
-            [weak self] vo in
-            guard let sf = self else { return }
-            guard let liveSignal = vo?.object as? LiveSignal else { return }
-        }
         if signal.mode == RoomMode.Video.rawValue {
             self.messageView.text = "邀请你视频通话"
         } else if signal.mode == RoomMode.Audio.rawValue {
