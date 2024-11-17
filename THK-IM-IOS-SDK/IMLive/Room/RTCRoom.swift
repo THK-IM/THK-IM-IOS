@@ -205,17 +205,16 @@ public class RTCRoom: NSObject {
     }
 
     func sendMyVolume(_ volume: Double) {
-//        guard let lp = self.localParticipant else {
-//            return
-//        }
-//        lp.sendVolume(volume: volume)
+        //        guard let lp = self.localParticipant else {
+        //            return
+        //        }
+        //        lp.sendVolume(volume: volume)
     }
 
     func switchCamera() {
         localParticipant?.switchCamera()
     }
-    
-    
+
     /**
      * 扬声器是否打开
      */
@@ -277,12 +276,12 @@ public class RTCRoom: NSObject {
      */
     func muteRemoteAudio(uId: Int64, mute: Bool) {
         for p in self.remoteParticipants {
-            if (p.uId == uId) {
+            if p.uId == uId {
                 p.setAudioMuted(mute)
             }
         }
     }
-    
+
     /**
      * 打开/关闭远端音频
      */
@@ -312,7 +311,7 @@ public class RTCRoom: NSObject {
             p.setVideoMuted(mute)
         }
     }
-    
+
     /**
      * 打开/关闭所有远端视频
      */
@@ -321,7 +320,7 @@ public class RTCRoom: NSObject {
             p.setVideoMuted(mute)
         }
     }
-    
+
     /**
      * 远端视频是否关闭
      */
@@ -333,8 +332,7 @@ public class RTCRoom: NSObject {
         }
         return true
     }
-    
-    
+
     /**
      * 销毁房间
      */
@@ -348,5 +346,5 @@ public class RTCRoom: NSObject {
         }
         remoteParticipants.removeAll()
     }
-    
+
 }

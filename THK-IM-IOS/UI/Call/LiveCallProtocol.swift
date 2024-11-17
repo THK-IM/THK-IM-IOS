@@ -10,7 +10,6 @@ import Foundation
 
 protocol LiveCallProtocol: AnyObject {
 
-    
     /**
      * 当前房间
      */
@@ -20,27 +19,17 @@ protocol LiveCallProtocol: AnyObject {
      * 发起通话
      */
     func startRequestCalling()
-    
+
     /**
      * 取消通话
      */
     func cancelRequestCalling()
 
     /**
-     * 接听通话
-     */
-    func acceptCalling()
-
-    /**
-     * 拒绝通话
-     */
-    func rejectCalling()
-
-    /**
      * 挂断通话
      */
     func hangupCalling()
-    
+
     /**
      * 对方接听
      */
@@ -49,7 +38,8 @@ protocol LiveCallProtocol: AnyObject {
     /**
      * 对方拒绝接听
      */
-    func onRemoteRejectedCallingBySignal(roomId: String, uId: Int64, msg: String)
+    func onRemoteRejectedCallingBySignal(
+        roomId: String, uId: Int64, msg: String)
 
     /**
      * 对方挂断电话
@@ -59,7 +49,8 @@ protocol LiveCallProtocol: AnyObject {
     /**
      * 被踢下
      */
-    func onMemberKickedOffBySignal(roomId: String, uIds: Set<Int64>, msg: String)
+    func onMemberKickedOffBySignal(
+        roomId: String, uIds: Set<Int64>, msg: String)
 
     /**
      * 房间通话结束

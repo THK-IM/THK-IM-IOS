@@ -161,26 +161,25 @@ open class RTCRoomManager {
     /**
      * 离开房间, 如果是房主，在删除房间
      */
-    public func leaveRoom(id: String, delRoom: Bool) {
+    public func leaveRoom(id: String, delRoom: Bool) -> Observable<Void> {
+        if self.getRoomById(id)?.ownerId == myUId && delRoom {
+            let delReq = DelRoomReqVo(roomId: id, uId: myUId)
+            return self.liveApi.deleteRoom(delReq).compose(
+                RxTransformer.shared.io2Main()
+            )
+        } else {
+            return self.liveApi.leaveRoom(
+                LeaveRoomReqVo(uId: myUId, roomId: id, msg: "")
+            )
+        }
+    }
+
+    public func destroyRoom(id: String) {
         guard let room = self.getRoomById(id) else { return }
         self.rtcRooms.removeAll { r in
             r.id == id
         }
         room.destroy()
-        if room.ownerId == myUId && delRoom {
-            let delReq = DelRoomReqVo(roomId: id, uId: myUId)
-            self.liveApi.deleteRoom(delReq).compose(
-                RxTransformer.shared.io2Main()
-            )
-            .subscribe()
-            .disposed(by: self.disposeBag)
-        } else {
-            self.liveApi.leaveRoom(
-                LeaveRoomReqVo(uId: myUId, roomId: id, msg: "")
-            ).compose(RxTransformer.shared.io2Main())
-                .subscribe()
-                .disposed(by: self.disposeBag)
-        }
     }
 
 }

@@ -325,8 +325,20 @@ class LiveCallViewController: BaseViewController {
         return needCallMembers
     }
 
-    func exit() {
+    func exitRoom() {
         RTCRoomManager.shared.leaveRoom(id: self.rTCRoom!.id, delRoom: true)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe {
+            } onCompleted: { [weak self] in
+                self?.exit()
+            }.disposed(by: self.disposeBag)
+
+    }
+
+    func exit() {
+
+        RTCRoomManager.shared.destroyRoom(id: room().id)
+
         if self.navigationController == nil {
             self.dismiss(animated: true)
         } else {
@@ -401,28 +413,13 @@ extension LiveCallViewController: LiveCallProtocol {
         }.disposed(by: self.disposeBag)
     }
 
-    func acceptCalling() {
-        self.showCallingView()
-        self.participantLocalView.startPeerConnection()
-        self.rTCRoom!.getAllParticipants().forEach({ p in
-            if p is RemoteParticipant {
-                initParticipantView(p)
-            }
-        })
-    }
-
-    func rejectCalling() {
-        RTCRoomManager.shared.refuseJoinRoom(
-            roomId: self.rTCRoom!.id, reason: ""
-        )
-        .compose(RxTransformer.shared.io2Main())
-        .subscribe { [weak self] _ in
-            self?.exit()
-        }.disposed(by: self.disposeBag)
-    }
 
     func hangupCalling() {
-        self.exit()
+        RTCRoomManager.shared.leaveRoom(id: self.rTCRoom!.id, delRoom: true)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe { [weak self] _ in
+                self?.exit()
+            }.disposed(by: self.disposeBag)
     }
 
     func onRemoteAcceptedCallingBySignal(roomId: String, uId: Int64) {
