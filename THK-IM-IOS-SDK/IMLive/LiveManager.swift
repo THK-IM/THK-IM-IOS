@@ -44,6 +44,6 @@ open class LiveManager {
                     signal: request)
             }
         }
-        SwiftEventBus.post(liveSignalEvent, sender: signal)
+        SwiftEventBus.post(LiveSignal.Event, sender: signal)
     }
 }

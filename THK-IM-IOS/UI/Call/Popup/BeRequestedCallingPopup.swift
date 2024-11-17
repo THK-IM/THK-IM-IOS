@@ -111,7 +111,7 @@ class BeRequestedCallingPopup: UIView {
         self.addSubview(self.contentView)
         self.contentView.frame = frame
         self.initViews()
-        SwiftEventBus.onMainThread(self, name: liveSignalEvent) {
+        SwiftEventBus.onMainThread(self, name: LiveSignal.Event) {
             [weak self] vo in
             guard let sf = self else { return }
             guard let liveSignal = vo?.object as? LiveSignal else { return }
@@ -186,14 +186,12 @@ class BeRequestedCallingPopup: UIView {
 
     private func notifyNewCall() {
         guard let signal = self.beCallingSignal else { return }
-        if signal.createTime + signal.timeoutTime
-            < IMCoreManager.shared.severTime
-        {
+        if signal.timeoutTime < IMCoreManager.shared.severTime {
             // 对方呼叫信号超时
             dismiss()
         } else {
             AppUtils.newMessageNotify()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
                 self?.notifyNewCall()
             }
         }

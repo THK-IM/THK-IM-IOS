@@ -7,7 +7,8 @@
 
 import Foundation
 
-let liveSignalEvent = "LiveSignalEvent"
+
+
 
 public protocol LiveRequestProcessor: AnyObject {
 
@@ -41,6 +42,10 @@ public enum LiveSignalType: Int {
 }
 
 public class LiveSignal: Codable {
+    
+    static let Event = "LiveSignalEvent"
+    static let TimeoutSecond = 3
+    
     let type: Int
     let body: String
 

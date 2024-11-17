@@ -13,7 +13,7 @@ protocol LiveCallProtocol: AnyObject {
     /**
      * 当前房间
      */
-    func room() -> RTCRoom
+    func room() -> RTCRoom?
 
     /**
      * 发起通话

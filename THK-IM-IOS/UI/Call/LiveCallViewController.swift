@@ -12,11 +12,11 @@ import UIKit
 class LiveCallViewController: BaseViewController {
 
     static func pushLiveCallViewController(
-        _ from: UIViewController, _ room: RTCRoom, _ callType: CallType,
+        _ from: UIViewController, _ roomId: String, _ callType: CallType,
         _ members: Set<Int64>
     ) {
         let vc = LiveCallViewController()
-        vc.rTCRoom = room
+        vc.roomId = roomId
         vc.callType = callType.rawValue
         for m in members {
             vc.members.insert(m)
@@ -25,11 +25,11 @@ class LiveCallViewController: BaseViewController {
     }
 
     static func popLiveCallViewController(
-        _ from: UIViewController, _ room: RTCRoom, _ callType: CallType,
+        _ from: UIViewController, _ roomId: String, _ callType: CallType,
         _ members: Set<Int64>
     ) {
         let vc = LiveCallViewController()
-        vc.rTCRoom = room
+        vc.roomId = roomId
         vc.callType = callType.rawValue
         for m in members {
             vc.members.insert(m)
@@ -38,12 +38,13 @@ class LiveCallViewController: BaseViewController {
         from.present(vc, animated: true)
     }
 
-    var rTCRoom: RTCRoom? = nil
     var callType = CallType.RequestCalling.rawValue
 
+    var roomId = ""
     var members = Set<Int64>()
     var acceptMembers = Set<Int64>()
     var rejectMembers = Set<Int64>()
+    var hangupMembers = Set<Int64>()
 
     private var callStats = LiveCallStatus.Init
 
@@ -158,12 +159,11 @@ class LiveCallViewController: BaseViewController {
         })
         .disposed(by: disposeBag)
         self.setupView()
-        self.rTCRoom!.rtcCallback = self
         self.initSignalEvent()
     }
 
     private func initSignalEvent() {
-        SwiftEventBus.onMainThread(self, name: liveSignalEvent) {
+        SwiftEventBus.onMainThread(self, name: LiveSignal.Event) {
             [weak self] vo in
             guard let signal = vo?.object as? LiveSignal else { return }
             guard let sf = self else { return }
@@ -231,7 +231,7 @@ class LiveCallViewController: BaseViewController {
 
     private func setupView() {
         self.showUserInfo()
-        self.rTCRoom?.getAllParticipants().forEach({ p in
+        RTCRoomManager.shared.getRoomById(self.roomId)?.getAllParticipants().forEach({ p in
             initParticipantView(p)
         })
 
@@ -243,14 +243,16 @@ class LiveCallViewController: BaseViewController {
     }
 
     private func showUserInfo() {
-        for m in self.rTCRoom!.getAllParticipants() {
-            if m.uId != RTCRoomManager.shared.myUId {
-                IMCoreManager.shared.userModule.queryUser(id: m.uId)
-                    .compose(RxTransformer.shared.io2Main())
-                    .subscribe(onNext: { [weak self] user in
-                        self?.callingInfoLayout.setUserInfo(user: user)
-                        self?.callingInfoLayout.isHidden = false
-                    }).disposed(by: self.disposeBag)
+        if let remoteParticipants = RTCRoomManager.shared.getRoomById(self.roomId)?.getRemoteParticipants() {
+            for m in remoteParticipants {
+                if m.uId != RTCRoomManager.shared.myUId {
+                    IMCoreManager.shared.userModule.queryUser(id: m.uId)
+                        .compose(RxTransformer.shared.io2Main())
+                        .subscribe(onNext: { [weak self] user in
+                            self?.callingInfoLayout.setUserInfo(user: user)
+                            self?.callingInfoLayout.isHidden = false
+                        }).disposed(by: self.disposeBag)
+                }
             }
         }
     }
@@ -283,14 +285,6 @@ class LiveCallViewController: BaseViewController {
         }
     }
 
-    func join(_ p: BaseParticipant) {
-        self.initParticipantView(p)
-    }
-
-    func leave(_ p: BaseParticipant) {
-        self.exit()
-    }
-
     func needCallMembers() -> Set<Int64> {
         var needCallMembers = Set<Int64>()
         for m in self.members {
@@ -305,7 +299,7 @@ class LiveCallViewController: BaseViewController {
     }
 
     func exitRoom() {
-        RTCRoomManager.shared.leaveRoom(id: self.rTCRoom!.id, delRoom: true)
+        RTCRoomManager.shared.leaveRoom(id: self.roomId, delRoom: true)
             .compose(RxTransformer.shared.io2Main())
             .subscribe {
             } onCompleted: { [weak self] in
@@ -315,7 +309,7 @@ class LiveCallViewController: BaseViewController {
     }
 
     func exit() {
-        RTCRoomManager.shared.destroyRoom(id: room().id)
+        RTCRoomManager.shared.destroyRoom(id: self.roomId)
         if self.navigationController == nil {
             self.dismiss(animated: true)
         } else {
@@ -331,11 +325,11 @@ extension LiveCallViewController: RTCRoomCallBack {
     }
 
     func onParticipantJoin(_ p: BaseParticipant) {
-        self.join(p)
+        self.initParticipantView(p)
+        self.showCallingView()
     }
 
     func onParticipantLeave(_ p: BaseParticipant) {
-        self.leave(p)
     }
 
     func onParticipantVoice(_ uId: Int64, _ volume: Double) {
@@ -357,15 +351,16 @@ extension LiveCallViewController: RTCRoomCallBack {
 
 extension LiveCallViewController: LiveCallProtocol {
 
-    func room() -> RTCRoom {
-        return self.rTCRoom!
+    func room() -> RTCRoom? {
+        return RTCRoomManager.shared.getRoomById(self.roomId)
     }
 
     func startRequestCalling() {
         let members = self.needCallMembers()
         if members.count > 0 {
             RTCRoomManager.shared.callRoomMembers(
-                self.rTCRoom!.id, "", 3, members
+                self.roomId, "", Int64(LiveSignal.TimeoutSecond + 2),
+                members
             )
             .compose(RxTransformer.shared.io2Main())
             .subscribe { _ in
@@ -373,7 +368,8 @@ extension LiveCallViewController: LiveCallProtocol {
             }.disposed(by: self.disposeBag)
 
             DispatchQueue.main.asyncAfter(
-                deadline: .now() + 3,
+                deadline: .now()
+                    + DispatchTimeInterval.seconds(LiveSignal.TimeoutSecond),
                 execute: { [weak self] in
                     self?.startRequestCalling()
                 })
@@ -386,7 +382,7 @@ extension LiveCallViewController: LiveCallProtocol {
 
     func cancelRequestCalling() {
         RTCRoomManager.shared.cancelCallRoomMembers(
-            self.rTCRoom!.id, "", self.members
+            self.roomId, "", self.members
         )
         .compose(RxTransformer.shared.io2Main())
         .subscribe { [weak self] _ in
@@ -395,7 +391,7 @@ extension LiveCallViewController: LiveCallProtocol {
     }
 
     func hangupCalling() {
-        RTCRoomManager.shared.leaveRoom(id: self.rTCRoom!.id, delRoom: true)
+        RTCRoomManager.shared.leaveRoom(id: self.roomId, delRoom: true)
             .compose(RxTransformer.shared.io2Main())
             .subscribe { [weak self] _ in
                 self?.exit()
@@ -403,34 +399,40 @@ extension LiveCallViewController: LiveCallProtocol {
     }
 
     func onRemoteAcceptedCallingBySignal(roomId: String, uId: Int64) {
-        if roomId != self.room().id { return }
+        if roomId != self.roomId { return }
         self.acceptMembers.insert(uId)
+        self.rejectMembers.remove(uId)
     }
 
     func onRemoteRejectedCallingBySignal(
         roomId: String, uId: Int64, msg: String
     ) {
-        if roomId != self.room().id { return }
+        if roomId != self.roomId { return }
         self.rejectMembers.insert(uId)
+        self.acceptMembers.remove(uId)
+        if self.acceptMembers.count == 0 && self.needCallMembers().count == 0 {
+            self.exit()
+        }
     }
 
     func onRemoteHangupCallingBySignal(roomId: String, uId: Int64, msg: String)
     {
-        if roomId != self.room().id { return }
+        if roomId != self.roomId { return }
+        self.hangupMembers.insert(uId)
         self.exit()
     }
 
     func onMemberKickedOffBySignal(
         roomId: String, uIds: Set<Int64>, msg: String
     ) {
-        if roomId != self.room().id { return }
+        if roomId != self.roomId { return }
         if uIds.contains(RTCRoomManager.shared.myUId) {
             self.exit()
         }
     }
 
     func onCallEndedBySignal(roomId: String) {
-        if roomId != self.room().id { return }
+        if roomId != self.roomId { return }
         self.exit()
     }
 
