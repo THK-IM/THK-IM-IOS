@@ -252,7 +252,7 @@ class BeRequestedCallingPopup: UIView {
         if let window = UIApplication.shared.windows.first {
             if let vc = window.rootViewController {
                 LiveCallViewController.popLiveCallViewController(
-                    vc, room, .BeCalling, Set())
+                    vc, room.id, .BeCalling, Set())
             }
         }
     }

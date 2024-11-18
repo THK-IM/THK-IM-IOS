@@ -31,7 +31,7 @@ class ExternalPageRouter: IMPageRouter {
                 if vc != nil {
                     RTCRoomManager.shared.addRoom(room)
                     LiveCallViewController.popLiveCallViewController(
-                        vc!, room, CallType.RequestCalling, ids)
+                        vc!, room.id, CallType.RequestCalling, ids)
                 }
             }).disposed(by: self.disposeBag)
         }

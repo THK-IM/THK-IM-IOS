@@ -139,8 +139,8 @@ class CallingLayout: UIView {
                 guard let liveProtocol = sf.liveProtocol else {
                     return
                 }
-                liveProtocol.room().muteLocalAudio(mute: !sf.switchMicro.isSelected)
-                sf.switchMicro.isSelected = liveProtocol.room().isLocalAudioMuted()
+                liveProtocol.room()?.muteLocalAudio(mute: !sf.switchMicro.isSelected)
+                sf.switchMicro.isSelected = liveProtocol.room()?.isLocalAudioMuted() ?? true
             }).disposed(by: self.disposeBag)
 
         self.addSubview(self.switchSpeaker)
@@ -158,8 +158,8 @@ class CallingLayout: UIView {
                 guard let liveProtocol = sf.liveProtocol else {
                     return
                 }
-                liveProtocol.room().muteSpeaker(mute: !sf.switchSpeaker.isSelected)
-                sf.switchSpeaker.isSelected = liveProtocol.room().isSpeakerMuted()
+                liveProtocol.room()?.muteSpeaker(mute: !sf.switchSpeaker.isSelected)
+                sf.switchSpeaker.isSelected = liveProtocol.room()?.isSpeakerMuted() ?? true
             }).disposed(by: self.disposeBag)
 
         self.addSubview(self.openOrCloseCamera)
@@ -177,8 +177,8 @@ class CallingLayout: UIView {
                 guard let liveProtocol = sf.liveProtocol else {
                     return
                 }
-                liveProtocol.room().muteLocalVideo(mute: !sf.openOrCloseCamera.isSelected)
-                sf.openOrCloseCamera.isSelected = liveProtocol.room().isLocalVideoMuted()
+                liveProtocol.room()?.muteLocalVideo(mute: !sf.openOrCloseCamera.isSelected)
+                sf.openOrCloseCamera.isSelected = liveProtocol.room()?.isLocalVideoMuted() ?? true
             }).disposed(by: self.disposeBag)
 
         self.addSubview(self.hungUpView)
@@ -221,15 +221,15 @@ class CallingLayout: UIView {
                 guard let liveProtocol = sf.liveProtocol else {
                     return
                 }
-                liveProtocol.room().switchLocalCamera()
+                liveProtocol.room()?.switchLocalCamera()
             }).disposed(by: self.disposeBag)
 
     }
 
     func initCall(_ callProtocol: LiveCallProtocol) {
         self.liveProtocol = callProtocol
-        self.switchMicro.isSelected = callProtocol.room().isLocalAudioMuted()
-        self.switchSpeaker.isSelected = callProtocol.room().isSpeakerMuted()
-        self.openOrCloseCamera.isSelected = callProtocol.room().isLocalVideoMuted()
+        self.switchMicro.isSelected = callProtocol.room()?.isLocalAudioMuted() ?? true
+        self.switchSpeaker.isSelected = callProtocol.room()?.isSpeakerMuted() ?? true
+        self.openOrCloseCamera.isSelected = callProtocol.room()?.isLocalVideoMuted() ?? true
     }
 }
