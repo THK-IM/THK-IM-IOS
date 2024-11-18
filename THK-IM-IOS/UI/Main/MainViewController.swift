@@ -58,7 +58,6 @@ class MainViewController: UITabBarController {
     }
 
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-        self.testPopup()
     }
 
     private func updateNewMessageCount(_ count: Int) {
@@ -69,19 +68,6 @@ class MainViewController: UITabBarController {
         } else {
             self.tabBar.items?[0].badgeValue = "99+"
         }
-    }
-
-    private func testPopup() {
-        let frame = CGRect(
-            x: 20, y: 60, width: UIScreen.main.bounds.width - 40, height: 100)
-        let beRequestedPopup = BeRequestedCallingPopup(frame: frame)
-        let signal = BeingRequestedSignal(
-            roomId: "1231", members: Set(), requestId: 1855133462856471628,
-            mode: RoomMode.Video.rawValue,
-            msg: "", createTime: IMCoreManager.shared.severTime,
-            timeoutTime: 3000
-        )
-        beRequestedPopup.show(signal)
     }
 
 }
