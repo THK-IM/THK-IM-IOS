@@ -163,6 +163,7 @@ class LiveCallViewController: BaseViewController {
     }
 
     private func initSignalEvent() {
+        RTCRoomManager.shared.getRoomById(self.roomId)?.rtcCallback = self
         SwiftEventBus.onMainThread(self, name: LiveSignal.Event) {
             [weak self] vo in
             guard let signal = vo?.object as? LiveSignal else { return }
