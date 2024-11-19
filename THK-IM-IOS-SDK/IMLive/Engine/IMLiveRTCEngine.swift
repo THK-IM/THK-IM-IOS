@@ -6,9 +6,9 @@
 //  Copyright © 2024 THK. All rights reserved.
 //
 
+import CocoaLumberjack
 import Foundation
 import WebRTC
-import CocoaLumberjack
 
 public class IMLiveRTCEngine: NSObject {
 
@@ -22,7 +22,6 @@ public class IMLiveRTCEngine: NSObject {
 
     private override init() {
         RTCPeerConnectionFactory.initialize()
-
         self.audioRenderDelegate = IMLiveAudioRenderProxy()
         self.audioCaptureDelegate = IMLiveAudioCapturerProxy()
 
@@ -32,26 +31,19 @@ public class IMLiveRTCEngine: NSObject {
         // 播放时处理音频
         module.renderPreProcessingDelegate = self.audioRenderDelegate
         self.audioProcessingModule = module
-        
+
         let videoProxy = IMLiveVideoCapturerProxy()
         self.videoCaptureDelegate = videoProxy
-        
-        
+
         let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
         let videoDecoderFactory = RTCDefaultVideoDecoderFactory()
-        
+
         let encodes = videoEncoderFactory.supportedCodecs()
         for c in encodes {
-            print("videoEncoderFactory \(c.name)")
-            if (c.name == "VP8") {
+            if c.name == "VP8" {
                 videoEncoderFactory.preferredCodec = c
             }
         }
-//        
-//        let decodes = videoDecoderFactory.supportedCodecs()
-//        for c in decodes {
-//            print("videoEncoderFactory \(c.name)")
-//        }
         
         self.factory = RTCPeerConnectionFactory.init(
             bypassVoiceProcessing: true,
@@ -59,9 +51,11 @@ public class IMLiveRTCEngine: NSObject {
             decoderFactory: videoDecoderFactory,
             audioProcessingModule: module
         )
+        let option = RTCPeerConnectionFactoryOptions.init()
+        self.factory.setOptions(option)
         super.init()
     }
-    
+
     public func initAudioSession() {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
@@ -78,7 +72,7 @@ public class IMLiveRTCEngine: NSObject {
             DDLogError("setConfiguration \(error)")
         }
     }
-    
+
     public func isSpeakerMuted() -> Bool {
         let audioSession = AVAudioSession.sharedInstance()
         let currentRoute = audioSession.currentRoute
@@ -91,7 +85,7 @@ public class IMLiveRTCEngine: NSObject {
         }
         return !isSpeakerOutput
     }
-    
+
     public func muteSpeaker(_ muted: Bool) {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         if muted {
@@ -112,16 +106,16 @@ public class IMLiveRTCEngine: NSObject {
             DDLogError("setConfiguration \(error)")
         }
     }
-    
+
     public func videoCaptureProxy(_ source: RTCVideoSource) -> RTCVideoCapturerDelegate? {
         self.videoCaptureDelegate?.videoSource = source
         return self.videoCaptureDelegate
     }
-    
+
     public func clearVideoProxy() {
         self.videoCaptureDelegate?.videoSource = nil
     }
-    
+
     public func updateVideoProxy(_ proxy: IMLiveVideoCapturerProxy?) {
         self.videoCaptureDelegate = proxy
     }

@@ -104,7 +104,7 @@ PODS:
   - WCDB.swift (2.1.1):
     - WCDBOptimizedSQLCipher (= 1.4.4)
   - WCDBOptimizedSQLCipher (1.4.4)
-  - WebRTC-SDK (114.5735.10)
+  - WebRTC-SDK (125.6422.06)
   - YYModel (1.0.4)
   - ZLPhotoBrowser (4.5.6):
     - ZLPhotoBrowser/Core (= 4.5.6)
@@ -131,7 +131,7 @@ DEPENDENCIES:
   - SVGKit
   - SwiftEntryKit
   - WCDB.swift (= 2.1.1)
-  - WebRTC-SDK (= 114.5735.10)
+  - WebRTC-SDK (= 125.6422.06)
   - ZLPhotoBrowser (= 4.5.6)
 
 SPEC REPOS:
@@ -191,10 +191,10 @@ SPEC CHECKSUMS:
   SwiftEntryKit: 61b5fa36f34a97dd8013e48a7345bc4c4720be9a
   WCDB.swift: 2eb345ae28984eebd6479177d1ee8a0af52536f1
   WCDBOptimizedSQLCipher: 7f03bb7c94ad164996f0fa87d0f76026f5ab0f92
-  WebRTC-SDK: 8c0edd05b880a39648118192c252667ea06dea51
+  WebRTC-SDK: 79942c006ea64f6fb48d7da8a4786dfc820bc1db
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   ZLPhotoBrowser: 9fdd801da47d5aaff778b8213fc711bbadab9cb2
 
-PODFILE CHECKSUM: 59453d29c6e7efd092855a40f972fc4cf20455a4
+PODFILE CHECKSUM: 6a3ddf11f9948bda8aef7ff99ee0aaef9fac1855
 
 COCOAPODS: 1.16.2
