@@ -19,10 +19,7 @@ class ExternalPageRouter: IMPageRouter {
             var ids = Set<Int64>()
             ids.insert(IMCoreManager.shared.uId)
             ids.insert(session.entityId)
-            let mediaParams = MediaParams(
-                videoMaxBitrate: 2048 * 1024 * 8, audioMaxBitrate: 50 * 1024 * 8,
-                videoWidth: 480, videoHeight: 720, videoFps: 30
-            )
+            let mediaParams = MediaParams.H43_H480
             RTCRoomManager.shared.createRoom(
                 mode: RoomMode.Video, mediaParams: mediaParams
             )

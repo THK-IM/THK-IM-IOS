@@ -334,7 +334,7 @@ extension LiveCallViewController: RTCRoomCallBack {
     }
 
     func onParticipantVoice(_ uId: Int64, _ volume: Double) {
-
+        print("onParticipantVoice uId: \(uId),  volume: \(volume))")
     }
 
     func onTextMsgReceived(_ type: Int, _ text: String) {
