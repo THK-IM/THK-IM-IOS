@@ -130,10 +130,14 @@ public class IMLiveRTCEngine: NSObject {
         self.audioProcessingModule.renderPreProcessingDelegate = delegate
     }
 
-    public func onAudioCapture(_ samples: [Float], _ channel: Int) {
-        let db = AudioUtils.calculateDecibel(from: samples)
+    public func captureOriginAudio(_ samples: [[Float]], _ channel: Int) {
+        var db: Float = 0.0
+        for s in samples {
+            db += Float(AudioUtils.calculateDecibel(from: s))
+        }
+        db = db / Float(channel)
         for r in RTCRoomManager.shared.allRooms() {
-            r.sendMyVolume(db)
+            r.sendMyVolume(Double(db))
         }
     }
 }

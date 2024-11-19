@@ -39,7 +39,7 @@ public class AudioUtils {
         }
         return 20 * log10(averageAmplitude)
     }
-    
+
     public static func calculateDecibel(from samples: [Float]) -> Double {
         var totalAmplitude: Double = 0
         let numSamples = samples.count
@@ -64,4 +64,14 @@ public class AudioUtils {
         (data as NSData).getBytes(&int8Array, length: count * MemoryLayout<Int8>.size)
         return int8Array
     }
+
+//    public static func calculateRMS2(_ data: [Float]) -> Float {
+//        var sum: Float = 0.0
+//        for i in 0..<data.count {
+//            sum += data[i] * data[i]
+//        }
+//        let rms = sqrt(sum / Float(data.count))
+//        return 20 * log10(rms)
+//    }
+    
 }
