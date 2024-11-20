@@ -237,7 +237,6 @@ public class RTCRoom: NSObject {
      * 扬声器是否打开
      */
     func isSpeakerOn() -> Bool {
-        print("1111", "isSpeakerOn \(LiveRTCEngine.shared.isSpeakerOn())")
         return LiveRTCEngine.shared.isSpeakerOn()
     }
 
@@ -245,7 +244,6 @@ public class RTCRoom: NSObject {
      * 打开/关闭扬声器
      */
     func setSpeakerOn(_ on: Bool) {
-        print("1111", "setSpeakerOn \(on)")
         return LiveRTCEngine.shared.setSpeakerOn(on)
     }
 

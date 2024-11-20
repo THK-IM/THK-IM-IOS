@@ -187,76 +187,51 @@ open class LocalParticipant: BaseParticipant {
     }
 
     func switchCamera() {
-        guard let currentDevice = self.currentDevice else {
-            return
+        var newDevice = self.getFrontCameraDevice()
+        if self.currentDevice?.position == .front {
+            newDevice = self.getBackCameraDevice()
         }
-        if currentDevice.position == .front {
-            self.currentDevice = self.getBackCameraDevice()
-        } else {
-            self.currentDevice = self.getFrontCameraDevice()
-        }
-        if self.currentDevice == nil {
-            return
-        }
-        let format = chooseFormat(self.currentDevice!)
-        if format == nil {
-            return
-        }
-        if format != nil {
-            videoCapturer?.startCapture(
-                with: self.currentDevice!, format: format!, fps: self.mediaParams.videoFps)
+        if newDevice != nil {
+            if let format = self.chooseFormat(newDevice!) {
+                self.videoCapturer?.stopCapture(completionHandler: { [weak self] in
+                    guard let sf = self else { return }
+                    sf.videoCapturer?.startCapture(
+                        with: newDevice!, format: format, fps: sf.mediaParams.videoFps)
+                })
+            }
+            self.currentDevice = newDevice
         }
     }
 
     private func chooseFormat(_ device: AVCaptureDevice) -> AVCaptureDevice.Format? {
-        //        var format = RTCCameraVideoCapturer.supportedFormats(for: device).first
         let formats = RTCCameraVideoCapturer.supportedFormats(for: device)
-        //        for f in formats {
-        //            var supportDimension = false
-        //            var supportFps = false
-        //            if #available(iOS 16.0, *) {
-        //                for p in f.supportedMaxPhotoDimensions {
-        //                    if p.width == self.mediaParams.videoWidth && p.height == self.mediaParams.videoHeight {
-        //                        supportDimension = true
-        //                        break
-        //                    }
-        //                }
-        //                for p in f.videoSupportedFrameRateRanges {
-        //                    if p.maxFrameRate >= Double(self.mediaParams.videoFps) {
-        //                        supportFps = true
-        //                        break
-        //                    }
-        //                }
-        //            }
-        //            if supportFps {
-        //                format = f
-        //                if supportDimension {
-        //                    break
-        //                }
-        //            }
-        //        }
-        //        return format
         var bestFormat: AVCaptureDevice.Format?
 
         for format in formats {
-            let description = format.formatDescription
-            let dimensions = CMVideoFormatDescriptionGetDimensions(description)
-            let formatResolution = dimensions.width * dimensions.height
-
+            var supportFps = false
             for range in format.videoSupportedFrameRateRanges {
-                print(
-                    "Camera: \(dimensions.width), \(dimensions.width), \(range.minFrameRate), \(range.maxFrameRate)"
-                )
                 if Int(range.maxFrameRate) >= self.mediaParams.videoFps
                     && Int(range.minFrameRate) <= self.mediaParams.videoFps
                 {
-                    if formatResolution
-                        >= Int32(self.mediaParams.videoWidth * self.mediaParams.videoHeight)
-                    {
-                        bestFormat = format
-                        break
-                    }
+                    supportFps = true
+                    break
                 }
+            }
+
+            if !supportFps {
+                continue
+            }
+
+            let description = format.formatDescription
+            let dimensions = CMVideoFormatDescriptionGetDimensions(description)
+            if dimensions.width >= Int32(self.mediaParams.videoWidth)
+                && dimensions.height >= Int32(self.mediaParams.videoHeight)
+            {
+                print(
+                    "Camera: \(dimensions.width), \(dimensions.width), \(self.mediaParams.videoFps), \(self.mediaParams.videoWidth) \(self.mediaParams.videoHeight)"
+                )
+                bestFormat = format
+                break
             }
         }
 

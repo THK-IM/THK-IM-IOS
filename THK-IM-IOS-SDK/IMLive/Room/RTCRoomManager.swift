@@ -49,7 +49,7 @@ open class RTCRoomManager {
     {
         let req = CreateRoomReqVo(
             uId: myUId, mode: mode.rawValue,
-            mediaParams: .H43_H1080
+            mediaParams: mediaParams
         )
         return self.liveApi.createRoom(req)
             .flatMap { res -> Observable<RTCRoom> in
