@@ -110,8 +110,8 @@ class RequestCallLayout: UIView {
                 guard let liveProtocol = sf.liveProtocol else {
                     return
                 }
-                liveProtocol.room()?.muteLocalVideo(mute: !sf.openOrCloseCamera.isSelected)
-                sf.openOrCloseCamera.isSelected = liveProtocol.room()?.isLocalVideoMuted() ?? true
+                liveProtocol.room()?.muteLocalVideoStream(mute: !sf.openOrCloseCamera.isSelected)
+                sf.openOrCloseCamera.isSelected = liveProtocol.room()?.isLocalVideoStreamMuted() ?? true
             })
             .disposed(by: disposeBag)
 
@@ -133,7 +133,7 @@ class RequestCallLayout: UIView {
 
     func initCall(_ callProtocol: LiveCallProtocol) {
         self.liveProtocol = callProtocol
-        self.openOrCloseCamera.isSelected = callProtocol.room()?.isLocalVideoMuted() ?? true
+        self.openOrCloseCamera.isSelected = callProtocol.room()?.isLocalVideoStreamMuted() ?? true
     }
 
 }

@@ -19,8 +19,10 @@ open class LocalParticipant: BaseParticipant {
     private var videoCapturer: RTCCameraVideoCapturer?
     private var currentDevice: AVCaptureDevice?
 
-    init(uId: Int64, roomId: String, role: Int, mediaParams: MediaParams, audioEnable: Bool = true, videoEnable: Bool = true)
-    {
+    init(
+        uId: Int64, roomId: String, role: Int, mediaParams: MediaParams, audioEnable: Bool = true,
+        videoEnable: Bool = true
+    ) {
         self.mediaParams = mediaParams
         self.audioEnable = audioEnable
         self.videoEnable = videoEnable
@@ -33,25 +35,18 @@ open class LocalParticipant: BaseParticipant {
             return
         }
         if self.audioEnable && self.role == Role.Broadcaster.rawValue {
-            var mandatoryConstraints = [String: String]()
-            mandatoryConstraints["googEchoCancellation"] = "true"
-            mandatoryConstraints["googNoiseSuppression"] = "true"
-            mandatoryConstraints["googHighpassFilter"] = "true"
-            mandatoryConstraints["googCpuOveruseDetection"] = "true"
-            mandatoryConstraints["googAutoGainControl"] = "true"
-            let mediaConstraints = RTCMediaConstraints(
-                mandatoryConstraints: mandatoryConstraints,
-                optionalConstraints: nil
+            let constraints = LiveMediaConstraints.build(
+                enable3a: true, enableCpu: true, enableGainControl: true
             )
-            let audioSource = IMLiveRTCEngine.shared.factory.audioSource(with: mediaConstraints)
-            let audioTrack = IMLiveRTCEngine.shared.factory.audioTrack(
+            let audioSource = LiveRTCEngine.shared.factory.audioSource(with: constraints)
+            let audioTrack = LiveRTCEngine.shared.factory.audioTrack(
                 with: audioSource, trackId: "/Audio/\(self.roomId)/\(self.uId)"
             )
             let transceiver = RTCRtpTransceiverInit()
             transceiver.direction = .sendOnly
             p.addTransceiver(with: audioTrack, init: transceiver)
             self.addAudioTrack(track: audioTrack)
-            
+
             let audioMaxBitrate = self.mediaParams.audioMaxBitrate
             p.senders.forEach({ sender in
                 if sender.track?.kind == audioTrack.kind {
@@ -68,23 +63,23 @@ open class LocalParticipant: BaseParticipant {
         if self.videoEnable && self.role == Role.Broadcaster.rawValue {
             if let device = self.getFrontCameraDevice() {
                 self.currentDevice = device
-                let videoSource = IMLiveRTCEngine.shared.factory.videoSource()
+                let videoSource = LiveRTCEngine.shared.factory.videoSource()
                 self.videoCapturer = RTCCameraVideoCapturer()
-                if let videoProxy = IMLiveRTCEngine.shared.videoCaptureProxy(videoSource) {
+                if let videoProxy = LiveRTCEngine.shared.videoCaptureProxy(videoSource) {
                     self.videoCapturer?.delegate = videoProxy
                 }
 
                 if let format = self.chooseFormat(device) {
                     self.videoCapturer?.startCapture(
                         with: device, format: format, fps: Int(self.mediaParams.videoFps))
-                    let videoTrack = IMLiveRTCEngine.shared.factory.videoTrack(
+                    let videoTrack = LiveRTCEngine.shared.factory.videoTrack(
                         with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)"
                     )
                     let transceiver = RTCRtpTransceiverInit()
                     transceiver.direction = .sendOnly
                     p.addTransceiver(with: videoTrack, init: transceiver)
                     self.addVideoTrack(track: videoTrack)
-                    
+
                     let videoMaxBitrate = self.mediaParams.videoMaxBitrate
                     p.senders.forEach({ sender in
                         if sender.track?.kind == videoTrack.kind {
@@ -132,14 +127,15 @@ open class LocalParticipant: BaseParticipant {
 
     }
 
-    func sendVolume(volume: Double) {
-        if self.role != Role.Broadcaster.rawValue { return }
+    func sendVolume(volume: Double) -> Bool {
+        if self.role != Role.Broadcaster.rawValue { return false }
         let volumeMsg = VolumeMsg(uId: self.uId, volume: volume)
         if let d = try? JSONEncoder().encode(volumeMsg) {
             if let text = String(data: d, encoding: .utf8) {
-                _ = self.sendMessage(type: VolumeMsgType, text: text)
+                return self.sendMessage(type: VolumeMsgType, text: text)
             }
         }
+        return false
     }
 
     func sendMessage(type: Int, text: String) -> Bool {
@@ -207,50 +203,56 @@ open class LocalParticipant: BaseParticipant {
             return
         }
         if format != nil {
-            videoCapturer?.startCapture(with: self.currentDevice!, format: format!, fps: self.mediaParams.videoFps)
+            videoCapturer?.startCapture(
+                with: self.currentDevice!, format: format!, fps: self.mediaParams.videoFps)
         }
     }
 
     private func chooseFormat(_ device: AVCaptureDevice) -> AVCaptureDevice.Format? {
-//        var format = RTCCameraVideoCapturer.supportedFormats(for: device).first
+        //        var format = RTCCameraVideoCapturer.supportedFormats(for: device).first
         let formats = RTCCameraVideoCapturer.supportedFormats(for: device)
-//        for f in formats {
-//            var supportDimension = false
-//            var supportFps = false
-//            if #available(iOS 16.0, *) {
-//                for p in f.supportedMaxPhotoDimensions {
-//                    if p.width == self.mediaParams.videoWidth && p.height == self.mediaParams.videoHeight {
-//                        supportDimension = true
-//                        break
-//                    }
-//                }
-//                for p in f.videoSupportedFrameRateRanges {
-//                    if p.maxFrameRate >= Double(self.mediaParams.videoFps) {
-//                        supportFps = true
-//                        break
-//                    }
-//                }
-//            }
-//            if supportFps {
-//                format = f
-//                if supportDimension {
-//                    break
-//                }
-//            }
-//        }
-//        return format
+        //        for f in formats {
+        //            var supportDimension = false
+        //            var supportFps = false
+        //            if #available(iOS 16.0, *) {
+        //                for p in f.supportedMaxPhotoDimensions {
+        //                    if p.width == self.mediaParams.videoWidth && p.height == self.mediaParams.videoHeight {
+        //                        supportDimension = true
+        //                        break
+        //                    }
+        //                }
+        //                for p in f.videoSupportedFrameRateRanges {
+        //                    if p.maxFrameRate >= Double(self.mediaParams.videoFps) {
+        //                        supportFps = true
+        //                        break
+        //                    }
+        //                }
+        //            }
+        //            if supportFps {
+        //                format = f
+        //                if supportDimension {
+        //                    break
+        //                }
+        //            }
+        //        }
+        //        return format
         var bestFormat: AVCaptureDevice.Format?
-        
+
         for format in formats {
             let description = format.formatDescription
             let dimensions = CMVideoFormatDescriptionGetDimensions(description)
             let formatResolution = dimensions.width * dimensions.height
 
-            
             for range in format.videoSupportedFrameRateRanges {
-                print("Camera: \(dimensions.width), \(dimensions.width), \(range.minFrameRate), \(range.maxFrameRate)")
-                if Int(range.maxFrameRate) >= self.mediaParams.videoFps && Int(range.minFrameRate) <= self.mediaParams.videoFps {
-                    if formatResolution >= Int32(self.mediaParams.videoWidth * self.mediaParams.videoHeight) {
+                print(
+                    "Camera: \(dimensions.width), \(dimensions.width), \(range.minFrameRate), \(range.maxFrameRate)"
+                )
+                if Int(range.maxFrameRate) >= self.mediaParams.videoFps
+                    && Int(range.minFrameRate) <= self.mediaParams.videoFps
+                {
+                    if formatResolution
+                        >= Int32(self.mediaParams.videoWidth * self.mediaParams.videoHeight)
+                    {
                         bestFormat = format
                         break
                     }
@@ -268,7 +270,7 @@ open class LocalParticipant: BaseParticipant {
     }
 
     open override func leave() {
-        IMLiveRTCEngine.shared.clearVideoProxy()
+        LiveRTCEngine.shared.clearVideoProxy()
         self.videoCapturer?.stopCapture()
         self.videoCapturer = nil
         super.leave()

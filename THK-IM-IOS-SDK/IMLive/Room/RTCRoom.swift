@@ -204,29 +204,49 @@ public class RTCRoom: NSObject {
         return lp.sendData(data: data)
     }
 
-    func sendMyVolume(_ volume: Double) {
+    func sendMyVolume(_ volume: Double) -> Bool {
         guard let lp = self.localParticipant else {
-            return
+            return false
         }
-        lp.sendVolume(volume: volume)
+        let success = lp.sendVolume(volume: volume)
+        if success {
+            self.rtcCallback?.onParticipantVoice(RTCRoomManager.shared.myUId, volume)
+        }
+        return success
     }
 
     func switchCamera() {
         localParticipant?.switchCamera()
     }
+    
+    /**
+     * rtc音频输入是否禁止
+     */
+    func isMicrophoneMuted() -> Bool {
+        return LiveRTCEngine.shared.isMicrophoneMuted()
+    }
+
+    /**
+     * 打开/关闭rtc音频输入
+     */
+    func muteMicrophone(_ mute: Bool) {
+        LiveRTCEngine.shared.setMicrophoneMuted(mute)
+    }
 
     /**
      * 扬声器是否打开
      */
-    func isSpeakerMuted() -> Bool {
-        return IMLiveRTCEngine.shared.isSpeakerMuted()
+    func isSpeakerOn() -> Bool {
+        print("1111", "isSpeakerOn \(LiveRTCEngine.shared.isSpeakerOn())")
+        return LiveRTCEngine.shared.isSpeakerOn()
     }
 
     /**
      * 打开/关闭扬声器
      */
-    func muteSpeaker(mute: Bool) {
-        return IMLiveRTCEngine.shared.muteSpeaker(mute)
+    func setSpeakerOn(_ on: Bool) {
+        print("1111", "setSpeakerOn \(on)")
+        return LiveRTCEngine.shared.setSpeakerOn(on)
     }
 
     /**
@@ -246,35 +266,35 @@ public class RTCRoom: NSObject {
     /**
      * 打开/关闭本地摄像头
      */
-    func muteLocalVideo(mute: Bool) {
+    func muteLocalVideoStream(mute: Bool) {
         self.localParticipant?.setVideoMuted(mute)
     }
 
     /**
      * 本地摄像头是否关闭
      */
-    func isLocalVideoMuted() -> Bool {
+    func isLocalVideoStreamMuted() -> Bool {
         return self.localParticipant?.getVideoMuted() ?? true
     }
 
     /**
      * 打开/关闭本地音频
      */
-    func muteLocalAudio(mute: Bool) {
+    func muteLocalAudioStream(mute: Bool) {
         self.localParticipant?.setAudioMuted(mute)
     }
 
     /**
      * 本地音频是否关闭
      */
-    func isLocalAudioMuted() -> Bool {
+    func isLocalAudioStreamMuted() -> Bool {
         return self.localParticipant?.getAudioMuted() ?? true
     }
 
     /**
      * 打开/关闭远端音频
      */
-    func muteRemoteAudio(uId: Int64, mute: Bool) {
+    func muteRemoteAudioStream(uId: Int64, mute: Bool) {
         for p in self.remoteParticipants {
             if p.uId == uId {
                 p.setAudioMuted(mute)
@@ -285,7 +305,7 @@ public class RTCRoom: NSObject {
     /**
      * 打开/关闭远端音频
      */
-    func muteAllRemoteAudio(mute: Bool) {
+    func muteAllRemoteAudioStream(mute: Bool) {
         for p in self.remoteParticipants {
             p.setAudioMuted(mute)
         }
@@ -294,7 +314,7 @@ public class RTCRoom: NSObject {
     /**
      * 远端音频是否关闭
      */
-    func isRemoteAudioMuted(uId: Int64) -> Bool {
+    func isRemoteAudioStreamMuted(uId: Int64) -> Bool {
         for p in self.remoteParticipants {
             if p.uId == uId {
                 return p.getAudioMuted()
@@ -306,7 +326,7 @@ public class RTCRoom: NSObject {
     /**
      * 打开/关闭远端视频
      */
-    func muteRemoteVideo(uId: Int64, mute: Bool) {
+    func muteRemoteVideoStream(uId: Int64, mute: Bool) {
         for p in self.remoteParticipants {
             p.setVideoMuted(mute)
         }
@@ -315,7 +335,7 @@ public class RTCRoom: NSObject {
     /**
      * 打开/关闭所有远端视频
      */
-    func muteAllRemoteVideo(mute: Bool) {
+    func muteAllRemoteVideoStream(mute: Bool) {
         for p in self.remoteParticipants {
             p.setVideoMuted(mute)
         }
@@ -324,7 +344,7 @@ public class RTCRoom: NSObject {
     /**
      * 远端视频是否关闭
      */
-    func isRemoteVideoMuted(uId: Int64) -> Bool {
+    func isRemoteVideoStreamMuted(uId: Int64) -> Bool {
         for p in self.remoteParticipants {
             if p.uId == uId {
                 return p.getVideoMuted()

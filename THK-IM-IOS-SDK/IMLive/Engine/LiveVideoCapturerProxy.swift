@@ -1,5 +1,5 @@
 //
-//  IMLiveVideoCapturerProxy.swift
+//  LiveVideoCapturerProxy.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/10/30.
@@ -11,7 +11,7 @@ import CoreImage
 import Foundation
 import WebRTC
 
-open class IMLiveVideoCapturerProxy: NSObject, RTCVideoCapturerDelegate {
+open class LiveVideoCapturerProxy: NSObject, RTCVideoCapturerDelegate {
 
     public var videoSource: RTCVideoSource?
 

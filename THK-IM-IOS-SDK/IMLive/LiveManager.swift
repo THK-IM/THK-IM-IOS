@@ -18,7 +18,7 @@ open class LiveManager {
     public var liveRequestProcessor: LiveRequestProcessor? = nil
 
     private init() {
-        IMLiveRTCEngine.shared.initAudioSession()
+        LiveRTCEngine.shared.initAudioSession()
     }
 
     func initUser(_ id: Int64, _ token: String, _ serverURL: String) {

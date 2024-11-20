@@ -1,5 +1,5 @@
 //
-//  IMLiveAudioRenderProxy.swift
+//  LiveAudioRenderProxy.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/10/30.
@@ -10,7 +10,7 @@ import Foundation
 import WebRTC
 
 // 音频播放重处理器
-open class IMLiveAudioRenderProxy: NSObject, RTCAudioCustomProcessingDelegate {
+open class LiveAudioRenderProxy: NSObject, RTCAudioCustomProcessingDelegate {
     
 
     open func audioProcessingInitialize(sampleRate sampleRateHz: Int, channels: Int) {
@@ -18,8 +18,8 @@ open class IMLiveAudioRenderProxy: NSObject, RTCAudioCustomProcessingDelegate {
     }
 
     open func audioProcessingProcess(audioBuffer: RTCAudioBuffer) {
-        let data = IMLiveMediaPlayer.shared.cachedPCMBuffer()
-        let sampleRate = IMLiveMediaPlayer.shared.sampleRate()
+        let data = LiveMediaPlayer.shared.cachedPCMBuffer()
+        let sampleRate = LiveMediaPlayer.shared.sampleRate()
         for i in (0..<audioBuffer.channels) {
             if (data != nil) {
                 let buffer = audioBuffer.rawBuffer(forChannel: i)

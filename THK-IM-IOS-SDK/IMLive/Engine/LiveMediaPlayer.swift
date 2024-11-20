@@ -1,5 +1,5 @@
 //
-//  IMLiveMediaPlayer.swift
+//  LiveMediaPlayer.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/10/30.
@@ -9,11 +9,11 @@
 import Foundation
 import AVFoundation
 
-public class IMLiveMediaPlayer {
+public class LiveMediaPlayer {
     
-    static let shared = IMLiveMediaPlayer()
+    static let shared = LiveMediaPlayer()
     
-    private var bufferQueue = IMLiveCacheQueue<AVAudioPCMBuffer>()
+    private var bufferQueue = LiveCacheQueue<AVAudioPCMBuffer>()
     private let audioEngine = AVAudioEngine()
     private let audioPlayerNode = AVAudioPlayerNode()
     
@@ -22,7 +22,7 @@ public class IMLiveMediaPlayer {
     private let locker = NSLock()
     private var currentFramePos: UInt32 = 0
     private var audioPCMBuffer: AVAudioPCMBuffer?
-    private var needPlayPCMBuffer = IMLiveCacheQueue<[Float]>()
+    private var needPlayPCMBuffer = LiveCacheQueue<[Float]>()
     private var mediaPath = ""
     private var totalLength: UInt32 = 0
     private var currentPos: UInt32 = 0

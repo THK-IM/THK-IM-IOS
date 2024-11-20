@@ -1,5 +1,5 @@
 //
-//  IMLiveRTCEngine.swift
+//  LiveRTCEngine.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/10/30.
@@ -10,46 +10,40 @@ import CocoaLumberjack
 import Foundation
 import WebRTC
 
-public class IMLiveRTCEngine: NSObject {
+public class LiveRTCEngine: NSObject {
 
-    public static let shared = IMLiveRTCEngine()
+    public static let shared = LiveRTCEngine()
 
     var factory: RTCPeerConnectionFactory
     private var audioProcessingModule: RTCDefaultAudioProcessingModule
     private var audioCaptureDelegate: RTCAudioCustomProcessingDelegate
     private var audioRenderDelegate: RTCAudioCustomProcessingDelegate
-    private var videoCaptureDelegate: IMLiveVideoCapturerProxy?
+    private var videoCaptureDelegate: LiveVideoCapturerProxy?
 
     private override init() {
         RTCPeerConnectionFactory.initialize()
-        self.audioRenderDelegate = IMLiveAudioRenderProxy()
-        self.audioCaptureDelegate = IMLiveAudioCapturerProxy()
+        self.audioRenderDelegate = LiveAudioRenderProxy()
+        self.audioCaptureDelegate = LiveAudioCapturerProxy()
 
-        let module = RTCDefaultAudioProcessingModule.init()
-        // 录制时处理音频
-        module.capturePostProcessingDelegate = self.audioCaptureDelegate
-        // 播放时处理音频
-        module.renderPreProcessingDelegate = self.audioRenderDelegate
-        self.audioProcessingModule = module
+        self.audioProcessingModule = RTCDefaultAudioProcessingModule.init()
+        self.audioProcessingModule.capturePostProcessingDelegate = self.audioCaptureDelegate
+        self.audioProcessingModule.renderPreProcessingDelegate = self.audioRenderDelegate
 
-        let videoProxy = IMLiveVideoCapturerProxy()
+        let videoProxy = LiveVideoCapturerProxy()
         self.videoCaptureDelegate = videoProxy
-
         let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
         let videoDecoderFactory = RTCDefaultVideoDecoderFactory()
-
         let encodes = videoEncoderFactory.supportedCodecs()
         for c in encodes {
             if c.name == "VP8" {
                 videoEncoderFactory.preferredCodec = c
             }
         }
-        
         self.factory = RTCPeerConnectionFactory.init(
-            bypassVoiceProcessing: true,
+            bypassVoiceProcessing: false,
             encoderFactory: videoEncoderFactory,
             decoderFactory: videoDecoderFactory,
-            audioProcessingModule: module
+            audioProcessingModule: self.audioProcessingModule
         )
         let option = RTCPeerConnectionFactoryOptions.init()
         self.factory.setOptions(option)
@@ -73,7 +67,10 @@ public class IMLiveRTCEngine: NSObject {
         }
     }
 
-    public func isSpeakerMuted() -> Bool {
+    /**
+     * 扬声器外放是否打开
+    */
+    public func isSpeakerOn() -> Bool {
         let audioSession = AVAudioSession.sharedInstance()
         let currentRoute = audioSession.currentRoute
         var isSpeakerOutput = false
@@ -83,18 +80,21 @@ public class IMLiveRTCEngine: NSObject {
                 break
             }
         }
-        return !isSpeakerOutput
+        return isSpeakerOutput
     }
 
-    public func muteSpeaker(_ muted: Bool) {
+    /**
+     * 打开扬声器外放
+    */
+    public func setSpeakerOn(_ on: Bool) {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
-        if muted {
+        if on {
             audioSessionConfiguration.categoryOptions = [
-                .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
+                .defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
             ]
         } else {
             audioSessionConfiguration.categoryOptions = [
-                .defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
+                .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
             ]
         }
         do {
@@ -107,6 +107,44 @@ public class IMLiveRTCEngine: NSObject {
         }
     }
 
+    /**
+     * rtc音频外放是否禁止
+    */
+    public func isSpeakerMuted() -> Bool {
+        return self.factory.audioDeviceModule.playing
+    }
+
+    /**
+     * 禁止/打开rtc音频外放
+    */
+    public func muteSpeaker(mute: Bool) {
+        if mute {
+            self.factory.audioDeviceModule.stopPlayout()
+        } else {
+            self.factory.audioDeviceModule.initPlayout()
+            self.factory.audioDeviceModule.startPlayout()
+        }
+    }
+
+    /**
+     * rtc音频输入是否禁止
+    */
+    public func isMicrophoneMuted() -> Bool {
+        return !self.factory.audioDeviceModule.recording
+    }
+
+    /**
+     * 禁止/打开rtc音频输入
+    */
+    public func setMicrophoneMuted(_ mute: Bool) {
+        if mute {
+            self.factory.audioDeviceModule.stopRecording()
+        } else {
+            self.factory.audioDeviceModule.initRecording()
+            self.factory.audioDeviceModule.startRecording()
+        }
+    }
+
     public func videoCaptureProxy(_ source: RTCVideoSource) -> RTCVideoCapturerDelegate? {
         self.videoCaptureDelegate?.videoSource = source
         return self.videoCaptureDelegate
@@ -116,7 +154,7 @@ public class IMLiveRTCEngine: NSObject {
         self.videoCaptureDelegate?.videoSource = nil
     }
 
-    public func updateVideoProxy(_ proxy: IMLiveVideoCapturerProxy?) {
+    public func updateVideoProxy(_ proxy: LiveVideoCapturerProxy?) {
         self.videoCaptureDelegate = proxy
     }
 
@@ -136,8 +174,10 @@ public class IMLiveRTCEngine: NSObject {
             db += Float(AudioUtils.calculateDecibel(from: s))
         }
         db = db / Float(channel)
-        for r in RTCRoomManager.shared.allRooms() {
-            r.sendMyVolume(Double(db))
+        if db > 0 {
+            for r in RTCRoomManager.shared.allRooms() {
+                _ = r.sendMyVolume(Double(db))
+            }
         }
     }
 }

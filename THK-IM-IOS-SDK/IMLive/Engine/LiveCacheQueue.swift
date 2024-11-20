@@ -1,5 +1,5 @@
 //
-//  IMLiveCacheQueue.swift
+//  LiveCacheQueue.swift
 //  THK-IM-IOS
 //
 //  Created by vizoss on 2024/10/30.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct IMLiveCacheQueue<T> {
+public struct LiveCacheQueue<T> {
     
     fileprivate var array = [T?]()
     fileprivate var head = 0

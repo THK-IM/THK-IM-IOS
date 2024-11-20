@@ -84,7 +84,7 @@ open class BaseParticipant: NSObject {
         // Unified plan is more superior than planB
         config.sdpSemantics = .unifiedPlan
         let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
-        let p = IMLiveRTCEngine.shared.factory.peerConnection(
+        let p = LiveRTCEngine.shared.factory.peerConnection(
             with: config,
             constraints: constraints,
             delegate: self
