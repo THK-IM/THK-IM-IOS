@@ -52,13 +52,13 @@ class CallingLayout: UIView {
                 radius: 30, borderWidth: 0,
                 backgroundColor: UIColor.init(hex: "#80ffffff"),
                 borderColor: UIColor.init(hex: "#80ffffff"),
-                width: 60, height: 60), for: .selected)
+                width: 60, height: 60), for: .normal)
         v.setBackgroundImage(
             Bubble().drawRectWithRoundedCorner(
                 radius: 30, borderWidth: 0,
                 backgroundColor: UIColor.init(hex: "#ffffffff"),
                 borderColor: UIColor.init(hex: "#ffffffff"),
-                width: 60, height: 60), for: .normal)
+                width: 60, height: 60), for: .selected)
         return v
     }()
 
