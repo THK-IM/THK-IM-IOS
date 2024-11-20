@@ -61,37 +61,30 @@ open class LocalParticipant: BaseParticipant {
         }
 
         if self.videoEnable && self.role == Role.Broadcaster.rawValue {
-            if let device = self.getFrontCameraDevice() {
-                let videoSource = LiveRTCEngine.shared.factory.videoSource()
-                self.videoCapturer = RTCCameraVideoCapturer()
-                if let videoProxy = LiveRTCEngine.shared.videoCaptureProxy(videoSource) {
-                    self.videoCapturer?.delegate = videoProxy
-                }
-                let videoTrack = LiveRTCEngine.shared.factory.videoTrack(
-                    with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)"
-                )
-                let transceiver = RTCRtpTransceiverInit()
-                transceiver.direction = .sendOnly
-                p.addTransceiver(with: videoTrack, init: transceiver)
-                self.addVideoTrack(track: videoTrack)
-                let videoMaxBitrate = self.mediaParams.videoMaxBitrate
-                p.senders.forEach({ sender in
-                    if sender.track?.kind == videoTrack.kind {
-                        let parameters = sender.parameters
-                        for e in parameters.encodings {
-                            e.maxBitrateBps = videoMaxBitrate as NSNumber
-                            e.minBitrateBps = (10 * 8 * 1024) as NSNumber  // 10KB
-                        }
-                        sender.parameters = parameters
-                    }
-                })
-                
-                if let format = self.chooseFormat(device) {
-                    self.videoCapturer?.startCapture(
-                        with: device, format: format, fps: Int(self.mediaParams.videoFps))
-                    self.currentDevice = device
-                }
+            let videoSource = LiveRTCEngine.shared.factory.videoSource()
+            self.videoCapturer = RTCCameraVideoCapturer()
+            if let videoProxy = LiveRTCEngine.shared.videoCaptureProxy(videoSource) {
+                self.videoCapturer?.delegate = videoProxy
             }
+            let videoTrack = LiveRTCEngine.shared.factory.videoTrack(
+                with: videoSource, trackId: "/Video/\(self.roomId)/\(self.uId)"
+            )
+            let transceiver = RTCRtpTransceiverInit()
+            transceiver.direction = .sendOnly
+            p.addTransceiver(with: videoTrack, init: transceiver)
+            self.addVideoTrack(track: videoTrack)
+            let videoMaxBitrate = self.mediaParams.videoMaxBitrate
+            p.senders.forEach({ sender in
+                if sender.track?.kind == videoTrack.kind {
+                    let parameters = sender.parameters
+                    for e in parameters.encodings {
+                        e.maxBitrateBps = videoMaxBitrate as NSNumber
+                        e.minBitrateBps = (10 * 8 * 1024) as NSNumber  // 10KB
+                    }
+                    sender.parameters = parameters
+                }
+            })
+            self.startCaptureVideo()
         }
 
         let dcConfig = RTCDataChannelConfiguration()
@@ -99,6 +92,26 @@ open class LocalParticipant: BaseParticipant {
         dcConfig.maxRetransmits = 3
         self.innerDataChannel = p.dataChannel(forLabel: "", configuration: dcConfig)
         self.innerDataChannel?.delegate = self
+    }
+    
+    private func startCaptureVideo() {
+        // 设置设备
+        if let device = self.getFrontCameraDevice()  {
+            if let format = self.chooseFormat(device) {
+                self.videoCapturer?.startCapture(
+                    with: device, format: format, fps: Int(self.mediaParams.videoFps))
+                self.currentDevice = device
+                return
+            }
+        }
+        if let device = self.getBackCameraDevice() {
+            if let format = self.chooseFormat(device) {
+                self.videoCapturer?.startCapture(
+                    with: device, format: format, fps: Int(self.mediaParams.videoFps))
+                self.currentDevice = device
+                return
+            }
+        }
     }
 
     open override func onLocalSdpSetSuccess(_ sdp: RTCSessionDescription) {
@@ -185,7 +198,7 @@ open class LocalParticipant: BaseParticipant {
         return currentDevice.position.rawValue
     }
 
-    func switchCamera() {
+    func switchCamera() -> Bool {
         var newDevice = self.getBackCameraDevice()
         if self.currentDevice?.position == .back {
             newDevice = self.getFrontCameraDevice()
@@ -203,8 +216,10 @@ open class LocalParticipant: BaseParticipant {
                         with: newDevice!, format: format, fps: self.mediaParams.videoFps)
                 }
                 self.currentDevice = newDevice
+                return true
             }
         }
+        return false
     }
 
     private func chooseFormat(_ device: AVCaptureDevice) -> AVCaptureDevice.Format? {
