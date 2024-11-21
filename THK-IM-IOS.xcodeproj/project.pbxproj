@@ -16,6 +16,12 @@
 		9A090E2A2CD2210400ED7F86 /* LiveCacheQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E292CD220F400ED7F86 /* LiveCacheQueue.swift */; };
 		9A090E2C2CD2369100ED7F86 /* LiveVideoCapturerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E2B2CD2368C00ED7F86 /* LiveVideoCapturerProxy.swift */; };
 		9A276B892CD3248C007B2CD5 /* MediaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A276B882CD32486007B2CD5 /* MediaParams.swift */; };
+		9A64597B2CEF4B3800D952F6 /* IMCallMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A64597A2CEF4B3300D952F6 /* IMCallMsg.swift */; };
+		9A64597D2CEF4C0D00D952F6 /* IMCallMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */; };
+		9A6459832CEF4D4C00D952F6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459822CEF4D4900D952F6 /* Constant.swift */; };
+		9A6459852CEF4DAB00D952F6 /* IMCallMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */; };
+		9A6459872CEF4E2700D952F6 /* IMCallMsgProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */; };
+		9A6459892CEF4E8F00D952F6 /* IMCallMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */; };
 		9A9D71D42CD0D04D00936EB6 /* RTCRoomCallBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */; };
 		9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */; };
 		9A9D71DB2CD0F1DB00936EB6 /* InviteMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */; };
@@ -387,6 +393,12 @@
 		9A090E292CD220F400ED7F86 /* LiveCacheQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCacheQueue.swift; sourceTree = "<group>"; };
 		9A090E2B2CD2368C00ED7F86 /* LiveVideoCapturerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoCapturerProxy.swift; sourceTree = "<group>"; };
 		9A276B882CD32486007B2CD5 /* MediaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaParams.swift; sourceTree = "<group>"; };
+		9A64597A2CEF4B3300D952F6 /* IMCallMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsg.swift; sourceTree = "<group>"; };
+		9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgView.swift; sourceTree = "<group>"; };
+		9A6459822CEF4D4900D952F6 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgProcessor.swift; sourceTree = "<group>"; };
+		9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgProvider.swift; sourceTree = "<group>"; };
+		9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgCell.swift; sourceTree = "<group>"; };
 		9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCRoomCallBack.swift; sourceTree = "<group>"; };
 		9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteMemberVo.swift; sourceTree = "<group>"; };
@@ -785,6 +797,18 @@
 			path = Engine;
 			sourceTree = "<group>";
 		};
+		9A6459792CEF4B2E00D952F6 /* msg */ = {
+			isa = PBXGroup;
+			children = (
+				9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */,
+				9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */,
+				9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */,
+				9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */,
+				9A64597A2CEF4B3300D952F6 /* IMCallMsg.swift */,
+			);
+			path = msg;
+			sourceTree = "<group>";
+		};
 		9AB6990E2CD4D7B8002E974C /* Third */ = {
 			isa = PBXGroup;
 			children = (
@@ -1094,6 +1118,7 @@
 		A0D68A952A88838A004D11A5 /* THK-IM-IOS */ = {
 			isa = PBXGroup;
 			children = (
+				9A6459822CEF4D4900D952F6 /* Constant.swift */,
 				A0FCA93A2B4A718900FC6E47 /* Module */,
 				A0FCA8D82B48E63600FC6E47 /* Data */,
 				A0FCA8D42B484A7A00FC6E47 /* UI */,
@@ -1797,6 +1822,7 @@
 		A0FCA93A2B4A718900FC6E47 /* Module */ = {
 			isa = PBXGroup;
 			children = (
+				9A6459792CEF4B2E00D952F6 /* msg */,
 				F5F1F9C62CE8BFA20034EF5A /* IMLiveRequestProcessor.swift */,
 				F54878762CDF3A4700FDC7B1 /* IMDemoResourceProvider.swift */,
 				A0FCA93B2B4A71A400FC6E47 /* IMUserModule.swift */,
@@ -2069,6 +2095,7 @@
 				A0D68BB82A888679004D11A5 /* IMMessageSelectedLayout.swift in Sources */,
 				A0EA42F12A94B3BE00F64A90 /* FileLoadState.swift in Sources */,
 				A0D68C072A888679004D11A5 /* SignalModule.swift in Sources */,
+				9A64597D2CEF4C0D00D952F6 /* IMCallMsgView.swift in Sources */,
 				A033FB062B8A1CC50053045E /* IMUnSupportMsgView.swift in Sources */,
 				A0F031052B220C6C0058B05B /* DefaultCustomModule.swift in Sources */,
 				A0D68BBC2A888679004D11A5 /* IMFunctionCell.swift in Sources */,
@@ -2125,10 +2152,12 @@
 				A0D68B982A888679004D11A5 /* UserDao.swift in Sources */,
 				A0D68C042A888679004D11A5 /* StorageModule.swift in Sources */,
 				9A9D71DB2CD0F1DB00936EB6 /* InviteMemberVo.swift in Sources */,
+				9A64597B2CEF4B3800D952F6 /* IMCallMsg.swift in Sources */,
 				A0B2457D2B50240400D48BE8 /* GroupViewController.swift in Sources */,
 				A0D68BAB2A888679004D11A5 /* IMImageMsgCellProvider.swift in Sources */,
 				A0C431F82A909CCE00A84D4A /* JoinRoomVo.swift in Sources */,
 				A025290F2AC6D7DB001561A0 /* UploadParams.swift in Sources */,
+				9A6459832CEF4D4C00D952F6 /* Constant.swift in Sources */,
 				A0EA42F52A94B49100F64A90 /* GroupModule.swift in Sources */,
 				A0D68BB92A888679004D11A5 /* IMBottomPanelLayout.swift in Sources */,
 				A0C431F42A909CCE00A84D4A /* RoomApi.swift in Sources */,
@@ -2154,6 +2183,7 @@
 				F56BBFEA2CBA2AC700525A33 /* CircularProgressBarView.swift in Sources */,
 				A0EF35542B5BFFFB00940F54 /* IMSessionMemberAtDelegate.swift in Sources */,
 				A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */,
+				9A6459892CEF4E8F00D952F6 /* IMCallMsgCell.swift in Sources */,
 				A033FB112B918BF80053045E /* IMEmojiPanelContentCell.swift in Sources */,
 				A0FCA90F2B496D3800FC6E47 /* DefaultContactDao.swift in Sources */,
 				A0C431EA2A909CB200A84D4A /* BaseParticipant.swift in Sources */,
@@ -2177,6 +2207,7 @@
 				A0FCA91C2B49844200FC6E47 /* ApplyFriendVo.swift in Sources */,
 				A0C431F62A909CCE00A84D4A /* CreateRoomVo.swift in Sources */,
 				A02529092AC6CB82001561A0 /* DownloadTask.swift in Sources */,
+				9A6459872CEF4E2700D952F6 /* IMCallMsgProvider.swift in Sources */,
 				F54878792CDF6C8C00FDC7B1 /* CancelCallRoomMemberVo.swift in Sources */,
 				A0E8ED4C2AEDF23B004163BD /* PreviewCellView.swift in Sources */,
 				A0D68BC82A888679004D11A5 /* IMBaseMsgCell.swift in Sources */,
@@ -2289,6 +2320,7 @@
 				A0EA42E92A94920300F64A90 /* DefaultMessageDao.swift in Sources */,
 				A0D68BA72A888679004D11A5 /* IMTextMsgCell.swift in Sources */,
 				A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */,
+				9A6459852CEF4DAB00D952F6 /* IMCallMsgProcessor.swift in Sources */,
 				A0D68BE02A888679004D11A5 /* CommonModule.swift in Sources */,
 				A018CE0A2B00A48C00896B87 /* IMMsgRevokeOperator.swift in Sources */,
 				A0D68B7C2A888679004D11A5 /* CreateSessionVo.swift in Sources */,

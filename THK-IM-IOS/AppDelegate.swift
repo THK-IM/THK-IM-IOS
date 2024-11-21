@@ -51,13 +51,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IMCoreManager.shared.contactModule = IMContactModule()
         IMCoreManager.shared.groupModule = IMGroupModule()
         IMCoreManager.shared.customModule = IMCustomModule()
-        IMUIManager.shared.pageRouter = ExternalPageRouter()
+        IMCoreManager.shared.messageModule.registerMsgProcessor(IMCallMsgProcessor())
 
         IMUIManager.shared.msgCellAvatarWidth = 42
         IMUIManager.shared.msgCellAvatarLeft = 4
         IMUIManager.shared.msgCellAvatarRight = 4
         IMUIManager.shared.msgCellPadding = 20
         IMUIManager.shared.uiResourceProvider = IMDemoResourceProvider()
+        IMUIManager.shared.registerMsgCellProviders(IMCallMsgProvider())
+        IMUIManager.shared.pageRouter = ExternalPageRouter()
     }
 
     func initIM(token: String, uId: Int64) -> Observable<Bool> {
