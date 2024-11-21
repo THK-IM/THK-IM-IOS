@@ -50,7 +50,7 @@ public class LiveRTCEngine: NSObject {
         super.init()
     }
 
-    public func initAudioSession() {
+    public func initAudioConfig() {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
         audioSessionConfiguration.categoryOptions = [
@@ -61,6 +61,7 @@ public class LiveRTCEngine: NSObject {
             try RTCAudioSession.sharedInstance().setConfiguration(
                 audioSessionConfiguration, active: true
             )
+            try RTCAudioSession.sharedInstance().setMode(AVAudioSession.Mode.voiceChat)
             RTCAudioSession.sharedInstance().unlockForConfiguration()
         } catch {
             DDLogError("setConfiguration \(error)")
@@ -87,16 +88,23 @@ public class LiveRTCEngine: NSObject {
     */
     public func setSpeakerOn(_ on: Bool) {
         RTCAudioSession.sharedInstance().lockForConfiguration()
+        let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
+        audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
         do {
             if on {
-                try RTCAudioSession.sharedInstance().setCategory(
-                    AVAudioSession.Category.playAndRecord)
-                try RTCAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-                try RTCAudioSession.sharedInstance().setActive(true)
+                audioSessionConfiguration.categoryOptions = [
+                    .defaultToSpeaker
+                ]
+                try RTCAudioSession.sharedInstance().setConfiguration(
+                    audioSessionConfiguration, active: true
+                )
             } else {
-                try RTCAudioSession.sharedInstance().setCategory(
-                    AVAudioSession.Category.playAndRecord)
-                try RTCAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+                audioSessionConfiguration.categoryOptions = [
+                    .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
+                ]
+                try RTCAudioSession.sharedInstance().setConfiguration(
+                    audioSessionConfiguration, active: true
+                )
             }
         } catch let error {
             debugPrint("Couldn't force audio to speaker: \(error)")
