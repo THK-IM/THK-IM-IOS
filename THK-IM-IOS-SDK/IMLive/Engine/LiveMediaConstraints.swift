@@ -19,11 +19,15 @@ public class LiveMediaConstraints {
         if enable3a { enable3aStr = "true" } else { enable3aStr = "false" }
         var mandatoryConstraints = [String: String]()
         //回声消除
-        mandatoryConstraints["googEchoCancellation"] = enable3aStr
+        mandatoryConstraints["googEchoCancellation2"] = enable3aStr
         //高音过滤
-        mandatoryConstraints["googHighpassFilter"] = enable3aStr
+        mandatoryConstraints["googHighpassFilter2"] = enable3aStr
         //噪音处理
-        mandatoryConstraints["googNoiseSuppression"] = enable3aStr
+        mandatoryConstraints["googNoiseSuppression2"] = enable3aStr
+        //噪音处理
+        mandatoryConstraints["googAudioMirroring"] = enable3aStr
+        //噪音处理
+        mandatoryConstraints["googNoiseSuppression2"] = enable3aStr
 
         var enableCpuStr = ""
         if enableCpu { enableCpuStr = "true" } else { enableCpuStr = "false" }
@@ -36,7 +40,7 @@ public class LiveMediaConstraints {
         } else {
             enableGainControlStr = "false"
         }
-        mandatoryConstraints["googCpuOveruseDetection"] = enableGainControlStr
+        mandatoryConstraints["googAutoGainControl2"] = enableGainControlStr
 
         let constraints = RTCMediaConstraints.init(
             mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
