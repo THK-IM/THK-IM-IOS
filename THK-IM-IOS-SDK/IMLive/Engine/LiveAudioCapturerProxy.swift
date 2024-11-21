@@ -19,18 +19,6 @@ open class LiveAudioCapturerProxy: NSObject, RTCAudioCustomProcessingDelegate {
     }
 
     open func audioProcessingProcess(audioBuffer: RTCAudioBuffer) {
-        //        let data = IMLiveMediaPlayer.shared.fetchPCMBuffer(UInt32(audioBuffer.frames))
-        //        let sampleRate = IMLiveMediaPlayer.shared.sampleRate()
-        //        for i in (0..<audioBuffer.channels) {
-        //            let buffer = audioBuffer.rawBuffer(forChannel: i)
-        //            var samples = [Float]()
-        //            for i in 0..<audioBuffer.frames {
-        //                if data != nil && data!.count > i {
-        //                    buffer[i] = buffer[i] * 0.5 + data![i] * Float(sampleRate) * 0.5
-        //                }
-        //                samples.append(buffer[i])
-        //            }
-        //        }
         let current = Date().timeMilliStamp
         if current - self.lastCal > 500 {
             // ex: 480 audioBuffer.frames 3 audioBuffer.bands 160 audioBuffer.framesPerBand
@@ -38,7 +26,7 @@ open class LiveAudioCapturerProxy: NSObject, RTCAudioCustomProcessingDelegate {
             for i in (0..<audioBuffer.channels) {
                 let originBuffer = audioBuffer.rawBuffer(forChannel: i)
                 let buffer = Array(
-                    UnsafeBufferPointer(start: originBuffer, count: audioBuffer.frames)
+                    UnsafeBufferPointer(start: originBuffer, count: min(audioBuffer.frames, 256))
                 )
                 channelBuffers.append(buffer)
             }

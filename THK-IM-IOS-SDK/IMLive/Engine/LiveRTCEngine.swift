@@ -166,14 +166,16 @@ public class LiveRTCEngine: NSObject {
     }
 
     public func captureOriginAudio(_ samples: [[Float]], _ channel: Int) {
-        var db: Float = 0.0
-        for s in samples {
-            db += Float(AudioUtils.calculateDecibel(from: s))
-        }
-        db = db / Float(channel)
-        if db > 0 {
-            for r in RTCRoomManager.shared.allRooms() {
-                _ = r.sendMyVolume(Double(db))
+        DispatchQueue.main.async {
+            var db: Float = 0.0
+            for s in samples {
+                db += Float(AudioUtils.calculateDecibel(from: s))
+            }
+            db = db / Float(channel)
+            if db > 0 {
+                for r in RTCRoomManager.shared.allRooms() {
+                    _ = r.sendMyVolume(Double(db))
+                }
             }
         }
     }
