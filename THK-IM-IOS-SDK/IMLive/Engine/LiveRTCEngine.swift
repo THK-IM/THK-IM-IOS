@@ -71,8 +71,7 @@ public class LiveRTCEngine: NSObject {
      * 扬声器外放是否打开
     */
     public func isSpeakerOn() -> Bool {
-        let audioSession = AVAudioSession.sharedInstance()
-        let currentRoute = audioSession.currentRoute
+        let currentRoute = RTCAudioSession.sharedInstance().currentRoute
         var isSpeakerOutput = false
         for output in currentRoute.outputs {
             if output.portType == AVAudioSession.Port.builtInSpeaker {
@@ -87,24 +86,22 @@ public class LiveRTCEngine: NSObject {
      * 打开扬声器外放
     */
     public func setSpeakerOn(_ on: Bool) {
-        let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
-        if on {
-            audioSessionConfiguration.categoryOptions = [
-                .defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
-            ]
-        } else {
-            audioSessionConfiguration.categoryOptions = [
-                .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
-            ]
-        }
+        RTCAudioSession.sharedInstance().lockForConfiguration()
         do {
-            RTCAudioSession.sharedInstance().lockForConfiguration()
-            try RTCAudioSession.sharedInstance().setConfiguration(
-                audioSessionConfiguration, active: true)
-            RTCAudioSession.sharedInstance().unlockForConfiguration()
-        } catch {
-            DDLogError("setConfiguration \(error)")
+            if on {
+                try RTCAudioSession.sharedInstance().setCategory(
+                    AVAudioSession.Category.playAndRecord)
+                try RTCAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+                try RTCAudioSession.sharedInstance().setActive(true)
+            } else {
+                try RTCAudioSession.sharedInstance().setCategory(
+                    AVAudioSession.Category.playAndRecord)
+                try RTCAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+            }
+        } catch let error {
+            debugPrint("Couldn't force audio to speaker: \(error)")
         }
+        RTCAudioSession.sharedInstance().unlockForConfiguration()
     }
 
     /**
