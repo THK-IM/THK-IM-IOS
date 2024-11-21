@@ -215,8 +215,8 @@ public class RTCRoom: NSObject {
         return success
     }
 
-    func switchCamera() {
-        localParticipant?.switchCamera()
+    func switchCamera() -> Bool {
+        return localParticipant?.switchCamera() ?? false
     }
     
     /**

@@ -108,7 +108,7 @@ public class LiveRTCEngine: NSObject {
      * rtc音频外放是否禁止
     */
     public func isSpeakerMuted() -> Bool {
-        return self.factory.audioDeviceModule.playing
+        return !self.factory.audioDeviceModule.playing
     }
 
     /**
