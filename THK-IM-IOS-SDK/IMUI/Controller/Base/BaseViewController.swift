@@ -404,8 +404,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     open func showToast(_ toast: String, _ success: Bool = true) {
-        NotificationPresenter.shared.present(toast)
-        NotificationPresenter.shared.dismiss(after: 1)
+        DispatchQueue.main.async {
+            NotificationPresenter.shared.present(toast)
+            NotificationPresenter.shared.dismiss(after: 1)
+        }
     }
 
 }

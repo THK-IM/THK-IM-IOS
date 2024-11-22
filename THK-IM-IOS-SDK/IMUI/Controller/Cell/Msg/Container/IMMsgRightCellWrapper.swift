@@ -47,9 +47,8 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
 
     lazy var _resendButton: UIButton = {
         let v = UIButton()
-        v.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        let failedImage = ResourceUtils.loadImage(named: "ic_msg_failed")?.scaledToSize(
-            CGSize(width: 20, height: 20))
+        v.frame = CGRect()
+        let failedImage = ResourceUtils.loadImage(named: "ic_msg_failed")
         v.setImage(failedImage, for: .normal)
         return v
     }()
@@ -63,14 +62,14 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
     }()
 
     lazy var _readStatusView: IMReadStatusView = {
-        let v = IMReadStatusView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        let v = IMReadStatusView()
         return v
     }()
 
     lazy var _stateStack: UIStackView = {
         let v = UIStackView(arrangedSubviews: [_readStatusView, _resendButton, _indicatorView])
         _readStatusView.snp.makeConstraints { make in
-            make.size.equalTo(20)
+            make.size.equalToSuperview()
         }
         v.axis = .horizontal
         v.alignment = .trailing
@@ -106,7 +105,7 @@ open class IMMsgRightCellWrapper: IMMsgCellWrapper {
         }
         _stateStack.snp.remakeConstraints { make in
             make.right.equalTo(_messageStack.snp.left).offset(-4)
-            make.size.equalTo(20)
+            make.size.equalTo(18)
             make.bottom.equalTo(containerView)
         }
         bubbleView.snp.remakeConstraints { make in
