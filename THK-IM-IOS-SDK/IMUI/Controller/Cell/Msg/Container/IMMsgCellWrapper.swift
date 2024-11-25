@@ -10,7 +10,7 @@ import UIKit
 open class IMMsgCellWrapper {
 
     // cellWrapper类型 单聊/群聊,不同的类型有细微差别，如单聊不显示昵称
-    let type: Int
+    let sessionType: Int
 
     /// 包裹消息体的容器视图
     let containerView: UIView = {
@@ -21,8 +21,8 @@ open class IMMsgCellWrapper {
 
     let bubbleView = UIImageView()
 
-    public init(type: Int) {
-        self.type = type
+    public init(sessionType: Int) {
+        self.sessionType = sessionType
     }
 
     /**

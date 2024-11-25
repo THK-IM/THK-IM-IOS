@@ -19,7 +19,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
         v.distribution = .fill
         v.spacing = 6
 
-        if self.type != SessionType.Single.rawValue {
+        if self.sessionType != SessionType.Single.rawValue {
             _nickView = UILabel()
             _nickView?.textColor = UIColor.init(hex: "999999")
             _nickView?.font = UIFont.systemFont(ofSize: 12)
@@ -88,7 +88,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     open override func layoutSubViews(_ isEditing: Bool) {
         let editingWidth = isEditing ? 0 : IMUIManager.shared.msgCellAvatarWidth
         var top = 10
-        if self.type != SessionType.Single.rawValue {
+        if self.sessionType != SessionType.Single.rawValue {
             top = 0
         }
         _avatarView.snp.remakeConstraints { make in

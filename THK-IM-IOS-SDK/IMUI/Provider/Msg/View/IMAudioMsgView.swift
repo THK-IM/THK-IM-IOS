@@ -74,10 +74,14 @@ class IMAudioMsgView: UIView, IMsgBodyView {
             make.centerY.equalToSuperview()
         }
     }
+    
+    
+    func setViewPosition(_ position: IMMsgPosType) {
+        
+    }
 
     func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
-        _ isReply: Bool = false
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
         if message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0 {
             self.statusView.isHidden = false

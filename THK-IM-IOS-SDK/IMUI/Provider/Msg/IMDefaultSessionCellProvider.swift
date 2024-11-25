@@ -8,6 +8,7 @@
 import Foundation
 
 open class IMDefaultSessionCellProvider: IMBaseSessionCellProvider {
+
     open override func sessionType() -> Int {
         return 0
     }

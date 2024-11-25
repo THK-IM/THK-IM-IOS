@@ -15,20 +15,14 @@ public class IMRecordMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.Record.rawValue
     }
 
-    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper)
-        -> IMBaseMsgCell
-    {
-        let identifier = self.identifier(viewType)
-        return IMRecordMsgCell(identifier, wrapper)
+    open override func msgBodyView(_ viewPosition: IMMsgPosType) -> any IMsgBodyView {
+        let v = IMRecordMsgView()
+        v.setViewPosition(viewPosition)
+        return v
     }
 
     open override func hasBubble() -> Bool {
         return true
-    }
-
-    open override func replyMsgView() -> IMsgBodyView {
-        let view = IMRecordMsgView(frame: .null)
-        return view
     }
 
 }

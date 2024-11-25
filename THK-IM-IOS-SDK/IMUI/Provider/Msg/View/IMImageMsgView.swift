@@ -34,19 +34,23 @@ class IMImageMsgView: UIView, IMsgBodyView {
             make.edges.equalToSuperview()
         }
     }
+    
+    private var position = IMMsgPosType.Left
+    func setViewPosition(_ position: IMMsgPosType) {
+        self.position = position
+    }
 
     func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
-        _ isReply: Bool = false
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
         self.imageView.isHidden = true
-        self.resetLayout(message, isReply)
+        self.resetLayout(message)
         self.showMessage(message)
     }
 
-    private func resetLayout(_ message: Message, _ isReply: Bool) {
+    private func resetLayout(_ message: Message) {
         var size = self.viewSize(message)
-        if isReply {
+        if self.position == IMMsgPosType.Reply {
             size = CGSize(width: size.width * 0.25, height: size.height * 0.25)
         }
         self.snp.makeConstraints { make in

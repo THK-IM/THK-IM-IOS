@@ -110,14 +110,14 @@ open class IMMsgReplyView: UIView {
         }
 
         let iMsgBodyView = IMUIManager.shared.getMsgCellProvider(msg.type)
-            .replyMsgView()
+            .msgBodyView(IMMsgPosType.Reply)
         let view = iMsgBodyView.contentView()
         self.replyMsgView.addSubview(view)
         view.snp.makeConstraints { make in
             make.left.top.bottom.equalToSuperview()
             make.right.lessThanOrEqualToSuperview()
         }
-        iMsgBodyView.setMessage(msg, session, delegate, true)
+        iMsgBodyView.setMessage(msg, session, delegate)
         self.msgBodyView = iMsgBodyView
     }
 

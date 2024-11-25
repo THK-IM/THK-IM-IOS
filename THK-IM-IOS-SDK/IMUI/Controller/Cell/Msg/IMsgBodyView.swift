@@ -10,8 +10,11 @@ import UIKit
 
 public protocol IMsgBodyView: AnyObject {
 
+    func setViewPosition(_ position: IMMsgPosType)
+
     func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?, _ isReply: Bool)
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
+    )
 
     func contentView() -> UIView
 

@@ -27,10 +27,13 @@ class IMUnSupportMsgView: IMMsgLabelView, IMsgBodyView {
         self.font = UIFont.systemFont(ofSize: 14)
         self.padding = UIEdgeInsets.init(top: 4, left: 4, bottom: 4, right: 4)
     }
+    
+    func setViewPosition(_ position: IMMsgPosType) {
+        
+    }
 
     func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
-        _ isReply: Bool = false
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
         self.text = ResourceUtils.loadString("not_support_msg_update_client", comment: "")
     }

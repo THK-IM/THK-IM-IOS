@@ -14,18 +14,37 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
 
     private var disposeBag = DisposeBag()
     private weak var delegate: IMMsgCellOperator?
+    private let fontSize: CGFloat = 16
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.numberOfLines = 0
+        self.padding = UIEdgeInsets.init(top: 4, left: 8, bottom: 4, right: 8)
     }
 
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    public func setViewPosition(_ position: IMMsgPosType) {
+        if position == IMMsgPosType.Mid {
+            self.textAlignment = .left
+            self.textColor = UIColor.white
+            self.font = UIFont.systemFont(ofSize: fontSize - 4)
+        } else if position == IMMsgPosType.Reply {
+            self.textColor = UIColor.darkGray
+            self.font = UIFont.systemFont(ofSize: 12)
+            self.textAlignment = .left
+            self.numberOfLines = 3
+        } else {
+            self.font = UIFont.systemFont(ofSize: fontSize)
+            self.textAlignment = .left
+            self.textColor = UIColor.init(hex: "0A0E10")
+        }
+    }
+
     public func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
-        _ isReply: Bool = false
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
         self.delegate = delegate
         guard var content = message.content else {
@@ -35,7 +54,7 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         if message.atUsers != nil && message.atUsers!.length > 0 {
             content = self.replaceIdToNickname(content, message.getAtUIds())
         }
-        render(content, updated)
+        self.render(content, updated)
     }
 
     private func replaceIdToNickname(_ content: String, _ atUIds: Set<Int64>) -> String {

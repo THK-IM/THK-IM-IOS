@@ -10,13 +10,12 @@ import CocoaLumberjack
 import UIKit
 
 class IMVideoMsgView: UIView, IMsgBodyView {
-    
+
     private lazy var imageView: UIImageView = {
         let v = UIImageView()
         v.contentMode = .scaleAspectFill
         return v
     }()
-
 
     private lazy var durationLabel: IMMsgLabelView = {
         let v = IMMsgLabelView()
@@ -63,18 +62,22 @@ class IMVideoMsgView: UIView, IMsgBodyView {
         }
     }
 
+    private var position = IMMsgPosType.Left
+    func setViewPosition(_ position: IMMsgPosType) {
+        self.position = position
+    }
+
     func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
-        _ isReply: Bool = false
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
         self.imageView.isHidden = true
-        self.resetLayout(message, isReply)
+        self.resetLayout(message)
         self.showMessage(message)
     }
 
-    private func resetLayout(_ message: Message, _ isReply: Bool) {
+    private func resetLayout(_ message: Message) {
         var size = self.viewSize(message)
-        if isReply {
+        if self.position == IMMsgPosType.Reply {
             size = CGSize(width: size.width * 0.25, height: size.height * 0.25)
         }
         self.snp.makeConstraints { make in
@@ -82,13 +85,13 @@ class IMVideoMsgView: UIView, IMsgBodyView {
             make.height.equalTo(size.height)
         }
         self.playView.snp.updateConstraints { make in
-            if isReply {
+            if self.position == IMMsgPosType.Reply {
                 make.size.equalTo(10)
             } else {
                 make.size.equalTo(40)
             }
         }
-        self.durationLabel.isHidden = isReply
+        self.durationLabel.isHidden = self.position == IMMsgPosType.Reply
     }
 
     private func viewSize(_ message: Message) -> CGSize {

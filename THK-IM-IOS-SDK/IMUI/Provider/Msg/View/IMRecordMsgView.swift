@@ -60,9 +60,13 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         self.addSubview(self.descView)
     }
 
+    private var position = IMMsgPosType.Left
+    func setViewPosition(_ position: IMMsgPosType) {
+        self.position = position
+    }
+
     func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
-        _ isReply: Bool = false
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
         guard let content = message.content else {
             return
@@ -73,7 +77,7 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         else {
             return
         }
-        let padding = isReply ? 4 : 8
+        let padding = self.position == IMMsgPosType.Reply ? 4 : 8
         self.recordTitleView.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(padding)
             make.left.equalToSuperview().offset(padding)
@@ -104,7 +108,7 @@ class IMRecordMsgView: UIView, IMsgBodyView {
         self.recordContentView.text = recordBody.content
         self.descView.text = ResourceUtils.loadString("chat_record", comment: "")
 
-        if isReply {
+        if self.position == IMMsgPosType.Reply {
             self.recordTitleView.font = UIFont.boldSystemFont(ofSize: 12)
             self.recordTitleView.textColor = UIColor.init(hex: "999999")
             self.recordContentView.font = UIFont.boldSystemFont(ofSize: 12)

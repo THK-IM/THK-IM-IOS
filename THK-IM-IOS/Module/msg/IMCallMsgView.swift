@@ -50,10 +50,13 @@ class IMCallMsgView: UIView, IMsgBodyView {
             make.right.lessThanOrEqualToSuperview().offset(-10)
         }
     }
+    
+    func setViewPosition(_ position: IMMsgPosType) {
+    }
+    
 
     func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
-        _ isReply: Bool = false
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
         guard let d = message.content?.data(using: .utf8) else { return }
         guard let callMsg = try? JSONDecoder().decode(IMCallMsg.self, from: d) else {

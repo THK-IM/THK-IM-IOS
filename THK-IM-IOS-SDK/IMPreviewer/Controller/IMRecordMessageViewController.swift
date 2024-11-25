@@ -75,7 +75,7 @@ class IMRecordMessageViewController: BaseViewController, IMMsgPreviewer {
     }
 
     func previewMessage(_ msg: Message, _ position: Int, _ originView: UIView) {
-        let intercepted = IMUIManager.shared.getMsgCellProvider(msg.type).onMsgClick(
+        let intercepted = IMUIManager.shared.getMsgCellProvider(msg.type).onMsgContentClick(
             self, msg, self.session, originView)
         if !intercepted {
             if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {

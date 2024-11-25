@@ -14,19 +14,13 @@ open class IMUnSupportMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.UnSupport.rawValue
     }
 
-    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper)
-        -> IMBaseMsgCell
-    {
-        let identifier = self.identifier(viewType)
-        return IMUnSupportMsgCell(identifier, wrapper)
+    open override func msgBodyView(_ viewPosition: IMMsgPosType) -> any IMsgBodyView {
+        let v = IMUnSupportMsgView()
+        v.setViewPosition(viewPosition)
+        return v
     }
-
+    
     open override func hasBubble() -> Bool {
         return true
-    }
-
-    open override func replyMsgView() -> IMsgBodyView {
-        let view = IMUnSupportMsgView(frame: .null)
-        return view
     }
 }
