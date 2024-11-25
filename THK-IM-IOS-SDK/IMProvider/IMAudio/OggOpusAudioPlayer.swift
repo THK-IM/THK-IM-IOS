@@ -111,12 +111,10 @@ public class OggOpusAudioPlayer {
         } catch {
             DDLogError("\(error)")
         }
-        let queue = self._audioQueue
-        if queue != nil {
-            let status = AudioQueueStop(queue!, true)
+        if let queue = self._audioQueue {
+            let status = AudioQueueStop(queue, false)
             if status == noErr {
-                // 释放录音队列
-                _ = AudioQueueDispose(queue!, true)
+                _ = AudioQueueDispose(queue, false)
             }
         }
         _currentLen = 0
