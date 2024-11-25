@@ -19,7 +19,6 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.numberOfLines = 0
-        self.padding = UIEdgeInsets.init(top: 4, left: 8, bottom: 4, right: 8)
     }
 
     required public init?(coder: NSCoder) {
@@ -27,16 +26,19 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     }
 
     public func setViewPosition(_ position: IMMsgPosType) {
-        if position == IMMsgPosType.Mid {
-            self.textAlignment = .left
-            self.textColor = UIColor.white
-            self.font = UIFont.systemFont(ofSize: fontSize - 4)
-        } else if position == IMMsgPosType.Reply {
+        if position == IMMsgPosType.Reply {
             self.textColor = UIColor.darkGray
             self.font = UIFont.systemFont(ofSize: 12)
             self.textAlignment = .left
             self.numberOfLines = 3
+            self.padding = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
+        } else if position == IMMsgPosType.Mid {
+            self.padding = UIEdgeInsets.init(top: 4, left: 8, bottom: 4, right: 8)
+            self.textAlignment = .left
+            self.textColor = UIColor.white
+            self.font = UIFont.systemFont(ofSize: fontSize - 4)
         } else {
+            self.padding = UIEdgeInsets.init(top: 4, left: 8, bottom: 4, right: 8)
             self.font = UIFont.systemFont(ofSize: fontSize)
             self.textAlignment = .left
             self.textColor = UIColor.init(hex: "0A0E10")

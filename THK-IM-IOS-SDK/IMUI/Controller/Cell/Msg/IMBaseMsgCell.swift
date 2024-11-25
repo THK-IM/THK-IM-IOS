@@ -17,12 +17,12 @@ open class IMBaseMsgCell: IMBaseTableCell {
 
     open weak var delegate: IMMsgCellOperator? = nil
     open var msgBodyView: IMsgBodyView
+    open var replyView = IMMsgReplyView()
     open var messageType = 0
     open var cellWrapper: IMMsgCellWrapper
     open var message: Message? = nil
     open var session: Session? = nil
     open var position: Int? = nil
-    open var replyView = IMMsgReplyView()
 
     public init(_ reuseIdentifier: String, _ messageType: Int, _ wrapper: IMMsgCellWrapper) {
         self.cellWrapper = wrapper
@@ -209,10 +209,10 @@ open class IMBaseMsgCell: IMBaseTableCell {
         }
         let msgView = self.msgBodyView.contentView()
         msgView.snp.remakeConstraints { make in
-            make.top.equalTo(self.replyView.snp.bottom)
-            make.left.equalToSuperview()
-            make.right.lessThanOrEqualToSuperview()
-            make.bottom.equalToSuperview()
+            make.top.equalTo(self.replyView.snp.bottom).offset(2)
+            make.left.equalToSuperview().offset(2)
+            make.right.lessThanOrEqualToSuperview().offset(-2)
+            make.bottom.equalToSuperview().offset(-2)
         }
         if let msg = self.message {
             self.msgBodyView.setMessage(msg, self.session, self.delegate)

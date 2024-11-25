@@ -68,7 +68,7 @@ open class IMBaseMessageCellProvider {
     open func cellMaxWidth() -> CGFloat {
         return UIScreen.main.bounds.width - IMUIManager.shared.msgCellAvatarLeft
             - IMUIManager.shared.msgCellAvatarWidth
-            - IMUIManager.shared.msgCellAvatarRight - 24.0 - IMUIManager.shared.msgCellPadding
+            - IMUIManager.shared.msgCellAvatarRight - 20 - IMUIManager.shared.msgCellPadding
     }
 
     open func msgBodyView(_ viewPosition: IMMsgPosType) -> IMsgBodyView {
