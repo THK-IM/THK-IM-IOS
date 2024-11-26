@@ -526,16 +526,11 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         if session.type == SessionType.Single.rawValue {
             return
         }
-        if let memberInfo = self.sender?.syncGetSessionMemberInfo(message.fromUId) {
-            self.sender?.addAtUser(user: memberInfo.0, sessionMember: memberInfo.1)
-        } else {
-            IMCoreManager.shared.userModule.queryUser(id: message.fromUId)
-                .compose(RxTransformer.shared.io2Main())
-                .subscribe(onNext: { [weak self] user in
-                    self?.sender?.addAtUser(user: user, sessionMember: nil)
-                }).disposed(by: self.disposeBag)
-        }
-
+        self.sender?.asyncGetSessionMemberInfo(message.fromUId)
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe(onNext: { [weak self] res in
+                self?.sender?.addAtUser(user: res.0, sessionMember: res.1)
+            }).disposed(by: self.disposeBag)
     }
 
     public func onMsgCellLongClick(message: Message, position: Int, view: UIView) {

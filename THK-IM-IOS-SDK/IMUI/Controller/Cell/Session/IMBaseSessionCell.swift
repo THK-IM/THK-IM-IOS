@@ -263,7 +263,7 @@ open class IMBaseSessionCell: IMBaseTableCell {
             }
         }
         // @人视图
-        if message.isAtMe() && (message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) {
+        if session?.unreadCount ?? 0 > 0 && message.isAtMe() && (message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) {
             self.atInfoView.text = ResourceUtils.loadString("someone_at_me")
         } else {
             self.atInfoView.text = nil
