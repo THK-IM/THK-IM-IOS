@@ -89,7 +89,7 @@ open class IMBaseSessionCell: IMBaseTableCell {
 
         self.msgView.snp.makeConstraints { make in
             make.left.equalTo(self.senderView.snp.right)
-            make.right.equalToSuperview()
+            make.right.lessThanOrEqualToSuperview()
             make.centerY.equalToSuperview()
         }
 
@@ -279,9 +279,7 @@ open class IMBaseSessionCell: IMBaseTableCell {
                     let replaceContent = AtStringUtils.replaceAtUIdsToNickname(
                         msg.content!, msg.getAtUIds()
                     ) { id in
-                        let name =
-                            IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
-                            .getUserSessionName(msg.sessionId, id) ?? ""
+                        let name = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).getUserSessionName(msg.sessionId, id) ?? ""
                         return name
                     }
                     return Observable.just(replaceContent)
@@ -291,8 +289,9 @@ open class IMBaseSessionCell: IMBaseTableCell {
                     }.disposed(by: self.disposeBag)
             }
         } else {
-            self.msgView.text = IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
+            let msgDesc = IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
                 .msgDesc(msg: message)
+            self.renderMessage(msgDesc)
         }
     }
 
@@ -308,11 +307,17 @@ open class IMBaseSessionCell: IMBaseTableCell {
     open func renderSenderName(_ message: Message) {
         Observable.just(message).flatMap { msg in
             let name = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
-                .getUserSessionName(msg.sessionId, msg.fromUId)
+                .getUserSessionName(msg.sessionId, msg.fromUId) ?? ""
             return Observable.just(name)
         }.compose(RxTransformer.shared.io2Main())
             .subscribe { [weak self] name in
-                self?.senderView.text = name
+                if name.count > 0 {
+                    self?.senderView.text = "\(name): "
+                } else {
+                    self?.senderView.text = name
+                }
+            } onError: { [weak self] err in
+                self?.senderView.text = nil
             }.disposed(by: self.disposeBag)
     }
 

@@ -44,6 +44,19 @@ open class DefaultSessionMemberDao: SessionMemberDao {
         )
     }
 
+    public func findSessionMembers(_ sessionId: Int64, _ userIds: Set<Int64>) -> [SessionMember] {
+        var uIds = [Int64]()
+        for id in userIds {
+            uIds.append(id)
+        }
+        let members: [SessionMember]? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: SessionMember.Properties.sessionId == sessionId
+                && SessionMember.Properties.userId.in(uIds)
+        )
+        return members ?? [SessionMember]()
+    }
+
     public func findBySessionId(_ sessionId: Int64) -> [SessionMember] {
         let members: [SessionMember]? = try? self.database?.getObjects(
             fromTable: self.tableName,
