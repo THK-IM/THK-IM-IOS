@@ -79,6 +79,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         textView.isScrollEnabled = true
         textView.textColor = UIColor.init(hex: "#333333")
         textView.font = inputFont
+        textView.tintColor = IMUIManager.shared.uiResourceProvider?.tintColor()
         textView.returnKeyType = .send
         textView.keyboardType = .default
         textView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
