@@ -35,11 +35,65 @@ open class IMBaseSessionCell: IMBaseTableCell {
         return view
     }()
 
+    public lazy var senderStatusView: UIImageView = {
+        let v = UIImageView()
+        return v
+    }()
+
+    public lazy var atInfoView: UILabel = {
+        let view = UILabel()
+        view.font = UIFont.systemFont(ofSize: 12)
+        view.textColor = UIColor.red
+        view.numberOfLines = 1
+        return view
+    }()
+
+    public lazy var senderView: UILabel = {
+        let view = UILabel()
+        view.font = UIFont.systemFont(ofSize: 12)
+        view.textColor = UIColor.gray
+        view.numberOfLines = 1
+        return view
+    }()
+
     public lazy var msgView: UILabel = {
         let view = UILabel()
         view.font = UIFont.systemFont(ofSize: 12)
         view.textColor = UIColor.gray
+        view.numberOfLines = 1
         return view
+    }()
+
+    public lazy var msgLayout: UIView = {
+        let v = UIView()
+        v.addSubview(self.senderStatusView)
+        v.addSubview(self.atInfoView)
+        v.addSubview(self.senderView)
+        v.addSubview(self.msgView)
+
+        self.senderStatusView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview()
+            make.size.equalTo(0)
+        }
+
+        self.atInfoView.snp.makeConstraints { make in
+            make.left.equalTo(self.senderStatusView.snp.right)
+            make.centerY.equalToSuperview()
+        }
+
+        self.senderView.snp.makeConstraints { make in
+            make.left.equalTo(self.atInfoView.snp.right)
+            make.centerY.equalToSuperview()
+        }
+
+        self.msgView.snp.makeConstraints { make in
+            make.left.equalTo(self.senderView.snp.right)
+            make.right.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+
+        return v
     }()
 
     public lazy var lastTimeView: UILabel = {
@@ -55,6 +109,8 @@ open class IMBaseSessionCell: IMBaseTableCell {
         return view
     }()
 
+    public var session: Session? = nil
+
     deinit {
         DDLogDebug("BaseSessionCell deinit")
     }
@@ -65,7 +121,7 @@ open class IMBaseSessionCell: IMBaseTableCell {
         selectionStyle = .none
         contentView.addSubview(self.avatarView)
         contentView.addSubview(self.nickView)
-        contentView.addSubview(self.msgView)
+        contentView.addSubview(self.msgLayout)
         contentView.addSubview(self.lastTimeView)
         contentView.addSubview(self.unreadCountView)
         contentView.addSubview(self.silenceView)
@@ -84,11 +140,12 @@ open class IMBaseSessionCell: IMBaseTableCell {
             make.left.equalTo(sf.avatarView.snp.right).offset(5)
             make.right.equalTo(sf.lastTimeView.snp.left).offset(-5)
         }
-        msgView.snp.makeConstraints { [weak self] make in
+        msgLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
             }
             make.top.equalTo(sf.nickView.snp.bottom).offset(10)
+            make.bottom.equalToSuperview().offset(-8)
             make.left.equalTo(sf.avatarView.snp.right).offset(5)
             make.right.equalTo(sf.lastTimeView.snp.left).offset(-5)
         }
@@ -133,7 +190,17 @@ open class IMBaseSessionCell: IMBaseTableCell {
     }
 
     open func updateSession(_ session: Session) {
-        self.msgView.text = session.lastMsg
+        self.session = session
+        self.renderSessionStatus()
+        self.renderSessionEntityInfo()
+        self.renderSessionMessage()
+    }
+
+    open func renderSessionEntityInfo() {
+    }
+
+    open func renderSessionStatus() {
+        guard let session = self.session else { return }
         let dateString = DateUtils.timeToMsgTime(
             ms: session.mTime, now: IMCoreManager.shared.severTime)
         self.lastTimeView.text = dateString
@@ -158,11 +225,95 @@ open class IMBaseSessionCell: IMBaseTableCell {
         } else {
             self.contentView.backgroundColor = .clear
         }
-        self.showSessionEntityInfo(session)
     }
 
-    open func showSessionEntityInfo(_ session: Session) {
+    open func renderSessionMessage() {
+        if let session = self.session {
+            let d = session.lastMsg?.data(using: .utf8) ?? Data()
+            if let msg = try? JSONDecoder().decode(Message.self, from: d) {
+                self.renderMessage(msg)
+            } else {
+                self.renderMessage(session.lastMsg)
+            }
+        } else {
+            self.senderStatusView.image = nil
+            self.senderStatusView.snp.updateConstraints { make in
+                make.size.equalTo(0)
+            }
+            self.atInfoView.text = nil
+        }
+    }
 
+    open func renderMessage(_ message: Message) {
+        // 消息发送状态
+        if message.sendStatus == MsgSendStatus.Failed.rawValue {
+            self.senderStatusView.image = ResourceUtils.loadImage(named: "ic_msg_failed")
+            self.senderStatusView.snp.updateConstraints { make in
+                make.size.equalTo(16)
+            }
+        } else if message.sendStatus == MsgSendStatus.Success.rawValue {
+            self.senderStatusView.image = nil
+            self.senderStatusView.snp.updateConstraints { make in
+                make.size.equalTo(0)
+            }
+        } else {
+            self.senderStatusView.image = ResourceUtils.loadImage(named: "ic_sending")
+            self.senderStatusView.snp.updateConstraints { make in
+                make.size.equalTo(16)
+            }
+        }
+        // @人视图
+        if message.isAtMe() && (message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) {
+            self.atInfoView.text = ResourceUtils.loadString("someone_at_me")
+        } else {
+            self.atInfoView.text = nil
+        }
+        // 消息发件人姓名展示
+        self.renderSenderName(message)
+        // 消息内容展示
+        if message.type == MsgType.Text.rawValue {
+            if message.getAtUIds().isEmpty || message.content == nil {
+                self.msgView.text = message.content
+            } else {
+                Observable.just(message).flatMap { msg in
+                    let replaceContent = AtStringUtils.replaceAtUIdsToNickname(
+                        msg.content!, msg.getAtUIds()
+                    ) { id in
+                        let name =
+                            IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
+                            .getUserSessionName(msg.sessionId, id) ?? ""
+                        return name
+                    }
+                    return Observable.just(replaceContent)
+                }.compose(RxTransformer.shared.io2Main())
+                    .subscribe { [weak self] content in
+                        self?.msgView.text = content
+                    }.disposed(by: self.disposeBag)
+            }
+        } else {
+            self.msgView.text = IMCoreManager.shared.messageModule.getMsgProcessor(message.type)
+                .msgDesc(msg: message)
+        }
+    }
+
+    open func renderMessage(_ msg: String?) {
+        self.senderStatusView.image = nil
+        self.senderStatusView.snp.updateConstraints { make in
+            make.size.equalTo(0)
+        }
+        self.atInfoView.text = nil
+        self.msgView.text = msg
+    }
+
+    open func renderSenderName(_ message: Message) {
+        Observable.just(message).flatMap { msg in
+            let name = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
+                .getUserSessionName(msg.sessionId, msg.fromUId)
+            return Observable.just(name)
+        }.compose(RxTransformer.shared.io2Main())
+            .subscribe { [weak self] name in
+                self?.senderView.text = name
+            }.disposed(by: self.disposeBag)
     }
 
 }

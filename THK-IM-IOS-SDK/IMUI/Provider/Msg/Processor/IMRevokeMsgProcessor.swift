@@ -44,16 +44,16 @@ public class IMRevokeMsgProcessor: IMBaseMsgProcessor {
         }
     }
 
-    public override func getSenderName(msg: Message) -> String {
-        if msg.fromUId == IMCoreManager.shared.uId {
+    public override func getUserSessionName(_ sessionId: Int64, _ userId: Int64) -> String {
+        if userId == IMCoreManager.shared.uId {
             return ResourceUtils.loadString("your_self")
         } else {
-            return super.getSenderName(msg: msg) ?? "xxx"
+            return super.getUserSessionName(sessionId, userId) ?? "xxx"
         }
     }
 
     open func processRevokeMsg(msg: Message) {
-        let senderName = self.getSenderName(msg: msg)
+        let senderName = self.getUserSessionName(msg.sessionId, msg.fromUId)
         let data = IMRevokeMsgData(nick: senderName)
         var existed = false
         if msg.referMsgId != nil {

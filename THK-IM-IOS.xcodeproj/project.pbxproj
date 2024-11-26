@@ -22,6 +22,7 @@
 		9A6459852CEF4DAB00D952F6 /* IMCallMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */; };
 		9A6459872CEF4E2700D952F6 /* IMCallMsgProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */; };
 		9A6459892CEF4E8F00D952F6 /* IMCallMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */; };
+		9A64598F2CF55E7200D952F6 /* ic_sending.svg in Resources */ = {isa = PBXBuildFile; fileRef = 9A64598E2CF55E7200D952F6 /* ic_sending.svg */; };
 		9A9D71D42CD0D04D00936EB6 /* RTCRoomCallBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */; };
 		9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */; };
 		9A9D71DB2CD0F1DB00936EB6 /* InviteMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */; };
@@ -392,6 +393,7 @@
 		9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgProcessor.swift; sourceTree = "<group>"; };
 		9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgProvider.swift; sourceTree = "<group>"; };
 		9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgCell.swift; sourceTree = "<group>"; };
+		9A64598E2CF55E7200D952F6 /* ic_sending.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ic_sending.svg; sourceTree = "<group>"; };
 		9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCRoomCallBack.swift; sourceTree = "<group>"; };
 		9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteMemberVo.swift; sourceTree = "<group>"; };
@@ -1268,6 +1270,7 @@
 		A0D68AE32A888678004D11A5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9A64598E2CF55E7200D952F6 /* ic_sending.svg */,
 				F56BBFE42CBA263900525A33 /* ic_audio_off.svg */,
 				F56BBFE22CBA262D00525A33 /* ic_audio_on.svg */,
 				A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */,
@@ -1923,6 +1926,7 @@
 				A0589A4C2C21557D003419B8 /* ic_msg_more.svg in Resources */,
 				A0589A132C21557D003419B8 /* ic_msg_audio.svg in Resources */,
 				A0589A2F2C21557D003419B8 /* ic_msg_opr_revoke.svg in Resources */,
+				9A64598F2CF55E7200D952F6 /* ic_sending.svg in Resources */,
 				A0589A4A2C21557D003419B8 /* icon_msg_silence.svg in Resources */,
 				A0589A292C21557D003419B8 /* ic_close.svg in Resources */,
 				A0589A3F2C21557D003419B8 /* icon_video_play.svg in Resources */,

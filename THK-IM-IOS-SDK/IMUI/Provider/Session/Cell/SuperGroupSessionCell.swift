@@ -10,7 +10,8 @@ import Foundation
 
 open class SuperGroupSessionCell: IMBaseSessionCell {
 
-    override open func showSessionEntityInfo(_ session: Session) {
+    open override func renderSessionEntityInfo() {
+        guard let session = self.session else { return }
         IMCoreManager.shared.groupModule.findById(id: session.entityId)
             .subscribe(onNext: { [weak self] group in
                 self?.avatarView.renderImageByUrlWithCorner(url: group.avatar, radius: 10)

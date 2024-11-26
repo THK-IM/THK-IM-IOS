@@ -641,28 +641,9 @@ open class DefaultMessageModule: MessageModule {
                         if forceNotify || s.mTime <= msg.mTime || s.unreadCount != unReadCount
                             || s.lastMsg == nil || (s.lastMsg!.isEmpty)
                         {
-                            let processor = self?.getMsgProcessor(msg.type)
-                            var statusText = ""
-                            if msg.sendStatus == MsgSendStatus.Sending.rawValue
-                                || msg.sendStatus == MsgSendStatus.Init.rawValue
-                                || msg.sendStatus == MsgSendStatus.Uploading.rawValue
-                            {
-                                statusText = "➡️"
-                            } else if msg.sendStatus == MsgSendStatus.Failed.rawValue {
-                                statusText = "❗"
+                            if let d = try? JSONEncoder().encode(msg) {
+                                s.lastMsg = String.init(data: d, encoding: .utf8)
                             }
-                            var sender: String? = nil
-                            if s.type != SessionType.Single.rawValue {
-                                if msg.fromUId > 0 {
-                                    sender = processor?.getSenderName(msg: msg)
-                                }
-                            }
-                            var senderText = ""
-                            if sender != nil {
-                                senderText = "\(sender!):"
-                            }
-                            s.lastMsg =
-                                statusText + senderText + (processor?.sessionDesc(msg: msg) ?? "")
                             s.unreadCount = unReadCount
                             if s.mTime < msg.cTime {
                                 s.mTime = msg.cTime
