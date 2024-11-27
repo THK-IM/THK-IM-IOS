@@ -153,6 +153,17 @@ public protocol MessageDao {
      * 查询session中At我的未读消息
      */
     func findSessionAtMeUnreadMessages(_ sessionId: Int64) -> [Message]
+    
+    /**
+     * 查询session下的所有未读消息
+     */
+    func findAllUnreadMessagesBySessionId(_ sessionId: Int64) -> [Message]
+    
+    /**
+     * 查询所有未读消息
+     */
+    func findAllUnreadMessages() -> [Message]
+    
 
     /**
      * 根据消息类型查询消息

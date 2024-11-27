@@ -799,11 +799,12 @@ open class DefaultMessageModule: MessageModule {
      */
     open func setAllMessageRead() -> Observable<Void> {
         return Observable.create({ observer -> Disposable in
-            do {
-                try IMCoreManager.shared.database.messageDao().updateAllMsgReaded()
-                try IMCoreManager.shared.database.sessionDao().updateAllSessionReaded()
-            } catch {
-                observer.onError(error)
+            let unReadMessages = IMCoreManager.shared.database.messageDao()
+                .findAllUnreadMessages()
+            for m in unReadMessages {
+                IMCoreManager.shared.messageModule
+                    .sendMessage(
+                        m.sessionId, MsgType.Read.rawValue, nil, nil, nil, m.msgId, nil)
             }
             observer.onCompleted()
             return Disposables.create()

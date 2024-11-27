@@ -345,6 +345,31 @@ open class DefaultMessageDao: MessageDao {
         return atMeMsgs
     }
 
+    /**
+     * 查询session下的所有未读消息
+     */
+    public func findAllUnreadMessagesBySessionId(_ sessionId: Int64) -> [Message] {
+        let message: [Message]? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId && Message.Properties.type >= 0
+                && Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0,
+            orderBy: [Message.Properties.cTime.order(Order.ascending)]
+        )
+        return message ?? [Message]()
+    }
+
+    /**
+     * 查询所有未读消息
+     */
+    public func findAllUnreadMessages() -> [Message] {
+        let message: [Message]? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: Message.Properties.type >= 0
+                && Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0
+        )
+        return message ?? [Message]()
+    }
+
     public func findLatestMessagesByType(_ type: Int, _ offset: Int, _ count: Int) -> [Message] {
         let message: [Message]? = try? self.database?.getObjects(
             fromTable: self.tableName,
