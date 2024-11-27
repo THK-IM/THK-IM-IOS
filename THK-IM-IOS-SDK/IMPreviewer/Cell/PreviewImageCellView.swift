@@ -106,8 +106,8 @@ public class PreviewImageCellView: PreviewCellView {
                         IMImageMsgData.self,
                         from: message.data!.data(using: .utf8) ?? Data())
                     data.path = loadProgress.path
-                    let newdata = try JSONEncoder().encode(data)
-                    message.data = String.init(data: newdata, encoding: .utf8)
+                    let newData = try JSONEncoder().encode(data)
+                    message.data = String.init(data: newData, encoding: .utf8)
                     self.setImagePath(loadProgress.path)
                 } catch {
                     DDLogError("\(error)")
@@ -115,8 +115,8 @@ public class PreviewImageCellView: PreviewCellView {
             } else {
                 let data = IMImageMsgData()
                 data.path = loadProgress.path
-                let newdata = try? JSONEncoder().encode(data)
-                message.data = String.init(data: newdata ?? Data(), encoding: .utf8)
+                let newData = try? JSONEncoder().encode(data)
+                message.data = String.init(data: newData ?? Data(), encoding: .utf8)
                 self.setImagePath(loadProgress.path)
             }
         } else if loadProgress.state == FileLoadState.Ing.rawValue

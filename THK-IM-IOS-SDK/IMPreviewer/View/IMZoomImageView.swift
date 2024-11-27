@@ -43,9 +43,9 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
 
     public func setImagePath(_ path: String) {
         if path.starts(with: "http") {
-            _zoomImageView.renderImageByUrlWithCorner(url: path, radius: 0)
+            _zoomImageView.renderImageByUrlWithCorner(url: path, radius: 0, placeHolderImage: _zoomImageView.image)
         } else {
-            _zoomImageView.renderImageByPath(path: path)
+            _zoomImageView.renderImageByPath(path: path, placeHolderImage: _zoomImageView.image)
         }
     }
 
