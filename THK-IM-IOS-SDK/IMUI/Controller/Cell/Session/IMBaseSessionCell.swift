@@ -263,7 +263,9 @@ open class IMBaseSessionCell: IMBaseTableCell {
             }
         }
         // @人视图
-        if session?.unreadCount ?? 0 > 0 && message.isAtMe() && (message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0) {
+        if session?.unreadCount ?? 0 > 0 && message.isAtMe()
+            && (message.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0)
+        {
             self.atInfoView.text = ResourceUtils.loadString("someone_at_me")
         } else {
             self.atInfoView.text = nil
@@ -279,7 +281,9 @@ open class IMBaseSessionCell: IMBaseTableCell {
                     let replaceContent = AtStringUtils.replaceAtUIdsToNickname(
                         msg.content!, msg.getAtUIds()
                     ) { id in
-                        let name = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type).getUserSessionName(msg.sessionId, id) ?? ""
+                        let name =
+                            IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
+                            .getUserSessionName(msg.sessionId, id) ?? ""
                         return name
                     }
                     return Observable.just(replaceContent)
@@ -305,20 +309,23 @@ open class IMBaseSessionCell: IMBaseTableCell {
     }
 
     open func renderSenderName(_ message: Message) {
-        Observable.just(message).flatMap { msg in
-            let name = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
-                .getUserSessionName(msg.sessionId, msg.fromUId) ?? ""
-            return Observable.just(name)
-        }.compose(RxTransformer.shared.io2Main())
-            .subscribe { [weak self] name in
-                if name.count > 0 {
-                    self?.senderView.text = "\(name): "
-                } else {
-                    self?.senderView.text = name
-                }
-            } onError: { [weak self] err in
-                self?.senderView.text = nil
-            }.disposed(by: self.disposeBag)
+        if message.fromUId > 0 {
+            Observable.just(message).flatMap { msg in
+                let name =
+                    IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
+                    .getUserSessionName(msg.sessionId, msg.fromUId) ?? ""
+                return Observable.just(name)
+            }.compose(RxTransformer.shared.io2Main())
+                .subscribe { [weak self] name in
+                    if name.count > 0 {
+                        self?.senderView.text = "\(name): "
+                    } else {
+                        self?.senderView.text = name
+                    }
+                } onError: { [weak self] err in
+                    self?.senderView.text = nil
+                }.disposed(by: self.disposeBag)
+        }
     }
 
 }
