@@ -140,6 +140,11 @@ public protocol MessageModule: BaseModule {
     func syncSessionMembers(_ sessionId: Int64)
 
     /**
+     * 设置session下所有消息已读
+     */
+    func setAllMessageReadBySessionId(_ sessionId: Int64) -> Observable<Void>
+
+    /**
      * 设置所有消息已读
      */
     func setAllMessageRead() -> Observable<Void>

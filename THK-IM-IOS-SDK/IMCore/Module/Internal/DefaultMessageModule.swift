@@ -793,6 +793,23 @@ open class DefaultMessageModule: MessageModule {
 
             }).disposed(by: self.disposeBag)
     }
+    
+    /**
+     * 设置session下所有消息已读
+     */
+    open func setAllMessageReadBySessionId(_ sessionId: Int64) -> Observable<Void> {
+        return Observable.create({ observer -> Disposable in
+            let unReadMessages = IMCoreManager.shared.database.messageDao()
+                .findAllUnreadMessagesBySessionId(sessionId)
+            for m in unReadMessages {
+                IMCoreManager.shared.messageModule
+                    .sendMessage(
+                        m.sessionId, MsgType.Read.rawValue, nil, nil, nil, m.msgId, nil)
+            }
+            observer.onCompleted()
+            return Disposables.create()
+        })
+    }
 
     /**
      * 设置所有消息已读
