@@ -53,6 +53,17 @@ public class PreviewImageCellView: PreviewCellView {
         self.imageView.previewDelegate = delegate
         self.showImage()
     }
+    
+    private func updateMediaHeight(_ width: Int?, _ height: Int?) {
+        let w = width ?? Int(UIScreen.main.bounds.width)
+        let h = height ?? Int(UIScreen.main.bounds.height)
+        
+        let mediaHeight = min(
+            UIScreen.main.bounds.height,
+            UIScreen.main.bounds.width * CGFloat(h) / CGFloat(w)
+        )
+        self.imageView.updateZoomHeight(mediaHeight)
+    }
 
     public func showImage() {
         guard let message = self.message else {
@@ -63,6 +74,7 @@ public class PreviewImageCellView: PreviewCellView {
                 let data = try JSONDecoder().decode(
                     IMImageMsgData.self,
                     from: message.data!.data(using: .utf8) ?? Data())
+                self.updateMediaHeight(data.width, data.height)
                 if data.path != nil {
                     self.setImagePath(data.path!)
                 } else {
@@ -84,11 +96,15 @@ public class PreviewImageCellView: PreviewCellView {
         guard let message = self.message else {
             return
         }
+        var width: Int? = nil
+        var height: Int? = nil
         if message.content != nil {
             do {
                 let content = try JSONDecoder().decode(
                     IMImageMsgBody.self,
                     from: message.content!.data(using: .utf8) ?? Data())
+                width = content.width
+                height = content.height
                 if content.url != loadProgress.url {
                     self.progressView.isHidden = true
                     return
@@ -108,15 +124,19 @@ public class PreviewImageCellView: PreviewCellView {
                     data.path = loadProgress.path
                     let newData = try JSONEncoder().encode(data)
                     message.data = String.init(data: newData, encoding: .utf8)
+                    self.updateMediaHeight(data.width, data.height)
                     self.setImagePath(loadProgress.path)
                 } catch {
                     DDLogError("\(error)")
                 }
             } else {
                 let data = IMImageMsgData()
+                data.width = width
+                data.height = height
                 data.path = loadProgress.path
                 let newData = try? JSONEncoder().encode(data)
                 message.data = String.init(data: newData ?? Data(), encoding: .utf8)
+                self.updateMediaHeight(data.width, data.height)
                 self.setImagePath(loadProgress.path)
             }
         } else if loadProgress.state == FileLoadState.Ing.rawValue

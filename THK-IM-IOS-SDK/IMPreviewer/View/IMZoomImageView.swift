@@ -11,7 +11,7 @@ import UIKit
 public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
 
     open weak var previewDelegate: PreviewDelegate? = nil
-    lazy var _zoomImageView: UIImageView = {
+    lazy var zoomView: UIImageView = {
         let view = UIImageView()
         view.isUserInteractionEnabled = true
         view.isMultipleTouchEnabled = true
@@ -24,7 +24,8 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        self.createZoomScrollView()
+        zoomView.frame = self.bounds
+        self.addSubview(zoomView)
         self.minimumZoomScale = 1.0
         self.maximumZoomScale = 3.0
         self.showsVerticalScrollIndicator = false
@@ -36,17 +37,19 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func createZoomScrollView() {
-        _zoomImageView.frame = self.frame
-        self.addSubview(_zoomImageView)
-    }
-
     public func setImagePath(_ path: String) {
         if path.starts(with: "http") {
-            _zoomImageView.renderImageByUrlWithCorner(url: path, radius: 0, placeHolderImage: _zoomImageView.image)
+            zoomView.renderImageByUrlWithCorner(url: path, radius: 0, placeHolderImage: zoomView.image)
         } else {
-            _zoomImageView.renderImageByPath(path: path, placeHolderImage: _zoomImageView.image)
+            zoomView.renderImageByPath(path: path, placeHolderImage: zoomView.image)
         }
+    }
+    
+    public func updateZoomHeight(_ height: CGFloat) {
+        self.zoomView.frame = CGRectMake(
+            0, (self.bounds.size.height - height) / 2,
+            self.bounds.width, height
+        )
     }
 
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {
@@ -56,7 +59,7 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
         } else {
             self.isScrollEnabled = true
         }
-        var rect = _zoomImageView.frame
+        var rect = zoomView.frame
         rect.origin.x = 0
         rect.origin.y = 0
 
@@ -66,17 +69,17 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
         if rect.size.height < self.frame.size.height {
             rect.origin.y = CGFloat((self.frame.size.height - rect.size.height) / 2.0)
         }
-        _zoomImageView.frame = rect
+        zoomView.frame = rect
     }
 
     public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return self._zoomImageView
+        return self.zoomView
     }
 
     public func addVideoLayer(_ playLayer: AVPlayerLayer) {
         playLayer.videoGravity = .resizeAspect
-        playLayer.frame = self._zoomImageView.frame
-        self._zoomImageView.layer.addSublayer(playLayer)
+        playLayer.frame = self.zoomView.frame
+        self.zoomView.layer.addSublayer(playLayer)
     }
 
     @objc func imageTapped() {
@@ -89,6 +92,6 @@ public class IMZoomImageView: UIScrollView, UIScrollViewDelegate {
     }
     
     func clearImage() {
-        self._zoomImageView.image = nil
+        self.zoomView.image = nil
     }
 }
