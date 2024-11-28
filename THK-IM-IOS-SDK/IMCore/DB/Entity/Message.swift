@@ -124,7 +124,7 @@ public final class Message: TableCodable, Hashable {
             let uIdStrs = atUsers.split(separator: "#")
             for uIdStr in uIdStrs {
                 if let uId = Int64(uIdStr) {
-                    if uId == -1 || uId == IMCoreManager.shared.uId {
+                    if uId == User.all.id || uId == IMCoreManager.shared.uId {
                         return true
                     }
                 }
