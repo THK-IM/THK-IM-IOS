@@ -77,7 +77,7 @@ open class IMMsgReplyView: UIView {
         let textSize = ((self.nickView.text ?? "") as NSString).size(
             withAttributes: attributes as [NSAttributedString.Key: Any])
         let maxWidth =
-            IMUIManager.shared.getMsgCellProvider(msg.type).cellMaxWidth() - 16
+            IMUIManager.shared.getMsgCellProvider(msg.type).cellMaxWidth()
         self.snp.remakeConstraints { make in
             make.top.equalToSuperview()
             make.left.right.equalToSuperview()
