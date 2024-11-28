@@ -25,6 +25,7 @@ open class IMMessageViewController: BaseViewController {
     public var msgSelectedLayout = IMMessageSelectedLayout()
     public var atMsgTipsView = IMMsgLabelView()
     public var newMsgTipsView = IMMsgLabelView()
+    public var unReadMsgTipsView = IMMsgLabelView()
     public var keyboardShow = false
     public var memberMap = [Int64: (User, SessionMember?)]()
     public var atMsgs = [Message]()
@@ -273,22 +274,51 @@ open class IMMessageViewController: BaseViewController {
     }
 
     open func initTipsView() {
+        // 未读消息提醒
+        self.unReadMsgTipsView.isUserInteractionEnabled = true
+        self.unReadMsgTipsView.textColor =
+            IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
+        self.unReadMsgTipsView.font = UIFont.boldSystemFont(ofSize: 13)
+        self.unReadMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?
+            .inputLayoutBgColor()
+        self.unReadMsgTipsView.layer.cornerRadius = 6
+        self.unReadMsgTipsView.layer.masksToBounds = true
+        self.unReadMsgTipsView.padding = UIEdgeInsets.init(
+            top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+        self.containerView.addSubview(self.unReadMsgTipsView)
+        self.unReadMsgTipsView.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-20)
+            make.top.equalTo(self.messageLayout.snp.top).offset(20)
+        }
+        self.unReadMsgTipsView.rx.tapGesture().when(.ended)
+            .subscribe { [weak self] _ in
+                self?.unReadMsgTipsView.isHidden = true
+                self?.messageLayout.scrollToUnReadMsg()
+            }.disposed(by: self.disposeBag)
+        let unreadCount = self.session?.unreadCount ?? 0
+        if unreadCount > 0 {
+            self.unReadMsgTipsView.text = String.init(format: ResourceUtils.loadString("x_message_unread"), unreadCount)
+            self.unReadMsgTipsView.isHidden = false
+        } else {
+            self.unReadMsgTipsView.isHidden = true
+        }
+        
+        // 新消息提醒
         self.newMsgTipsView.isUserInteractionEnabled = true
         self.newMsgTipsView.textColor =
             IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
         self.newMsgTipsView.text = ResourceUtils.loadString("new_message_tips", comment: "")
-        self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
+        self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 13)
         self.newMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?
             .inputLayoutBgColor()
-        self.newMsgTipsView.layer.cornerRadius = 8
+        self.newMsgTipsView.layer.cornerRadius = 6
         self.newMsgTipsView.layer.masksToBounds = true
         self.newMsgTipsView.padding = UIEdgeInsets.init(
             top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
         self.containerView.addSubview(self.newMsgTipsView)
         self.newMsgTipsView.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-20)
-            make.top.equalTo(self.messageLayout.snp.top).offset(40)
-            make.height.equalTo(20)
+            make.top.equalTo(self.messageLayout.snp.top).offset(60)
         }
         self.newMsgTipsView.rx.tapGesture().when(.ended)
             .subscribe { [weak self] _ in
@@ -300,17 +330,16 @@ open class IMMessageViewController: BaseViewController {
         self.atMsgTipsView.isUserInteractionEnabled = true
         self.atMsgTipsView.textColor =
             IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
-        self.atMsgTipsView.font = UIFont.boldSystemFont(ofSize: 12)
+        self.atMsgTipsView.font = UIFont.boldSystemFont(ofSize: 13)
         self.atMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?
             .inputLayoutBgColor()
-        self.atMsgTipsView.layer.cornerRadius = 8
+        self.atMsgTipsView.layer.cornerRadius = 6
         self.atMsgTipsView.layer.masksToBounds = true
         self.atMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
         self.containerView.addSubview(self.atMsgTipsView)
         self.atMsgTipsView.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-20)
-            make.top.equalTo(self.messageLayout.snp.top).offset(70)
-            make.height.equalTo(20)
+            make.top.equalTo(self.messageLayout.snp.top).offset(100)
         }
         self.atMsgTipsView.rx.tapGesture().when(.ended)
             .subscribe { [weak self] _ in
@@ -334,6 +363,17 @@ open class IMMessageViewController: BaseViewController {
 
     }
 
+    private func updateUnreadTipsView() {
+        let unreadCount = self.session?.unreadCount ?? 0
+        if unreadCount > 0 {
+            if self.unReadMsgTipsView.isHidden == false {
+                self.unReadMsgTipsView.text = String.init(format: ResourceUtils.loadString("x_message_unread"), unreadCount)
+            }
+        } else {
+            self.unReadMsgTipsView.isHidden = true
+        }
+    }
+    
     private func updateAtTipsView() {
         if self.atMsgs.count <= 0 {
             self.atMsgTipsView.isHidden = true
@@ -509,11 +549,38 @@ open class IMMessageViewController: BaseViewController {
                 }
                 self?.messageLayout.clearMessage()
             })
+        
+        SwiftEventBus.onMainThread(
+            self, name: IMEvent.SessionNew.rawValue,
+            handler: { [weak self] result in
+                guard let session = result?.object as? Session else {
+                    return
+                }
+                self?.updateSession(session)
+            })
+        
+        SwiftEventBus.onMainThread(
+            self, name: IMEvent.SessionUpdate.rawValue,
+            handler: { [weak self] result in
+                guard let session = result?.object as? Session else {
+                    return
+                }
+                self?.updateSession(session)
+            })
 
     }
 
     func unregisterMsgEvent() {
         SwiftEventBus.unregister(self)
+    }
+    
+    private func updateSession(_ s: Session) {
+        if self.session?.id != s.id {
+            return
+        }
+        self.session?.merge(s)
+        self.session?.unreadCount = s.unreadCount
+        self.updateUnreadTipsView()
     }
 
     open override func viewWillAppear(_ animated: Bool) {

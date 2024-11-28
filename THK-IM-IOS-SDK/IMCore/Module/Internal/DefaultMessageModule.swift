@@ -24,6 +24,7 @@ open class DefaultMessageModule: MessageModule {
     private let ackLock = NSLock()
     private let ackMessagePublishSubject = PublishSubject<Int>()
     private var needAckDic = [Int64: Set<Int64>]()
+    private var querySessionMemberTimeDic = [Int64: Int64]()
 
     public init() {
         self.initAckMessagePublishSubject()
@@ -238,7 +239,7 @@ open class DefaultMessageModule: MessageModule {
                         let dbSession = try? IMCoreManager.shared.database.sessionDao().findById(
                             new.id)
                         if dbSession != nil {
-                            dbSession!.mergeServerSession(new)
+                            dbSession!.merge(new)
                             try? IMCoreManager.shared.database.sessionDao().update([dbSession!])
                         } else {
                             try? IMCoreManager.shared.database.sessionDao().insertOrUpdate([new])
@@ -339,7 +340,6 @@ open class DefaultMessageModule: MessageModule {
                     session = Session.emptySession()
                 }
                 observer.onNext(session!)
-                //                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
@@ -350,10 +350,12 @@ open class DefaultMessageModule: MessageModule {
             } else {
                 return IMCoreManager.shared.api.queryUserSession(
                     IMCoreManager.shared.uId, sessionId
-                )
-                .flatMap({ session in
+                ).flatMap({ session in
                     if session.id > 0 && session.deleted == 0 {
                         try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
+                        if session.type == SessionType.SuperGroup.rawValue {
+                            self.syncSessionMessage(session)
+                        }
                     }
                     return Observable.just(session)
                 })
@@ -370,7 +372,6 @@ open class DefaultMessageModule: MessageModule {
                     session = Session.emptySession()
                 }
                 observer.onNext(session!)
-                //                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
@@ -385,6 +386,9 @@ open class DefaultMessageModule: MessageModule {
                 .flatMap({ session in
                     if session.id > 0 && session.deleted == 0 {
                         try? IMCoreManager.shared.database.sessionDao().insertOrIgnore([session])
+                        if session.type == SessionType.SuperGroup.rawValue {
+                            self.syncSessionMessage(session)
+                        }
                     }
                     return Observable.just(session)
                 })
@@ -636,15 +640,34 @@ open class DefaultMessageModule: MessageModule {
                         if s.id <= 0 || s.deleted == 1 {
                             return
                         }
+                        var needNotify = false
+                        /// session中保存的lastMsg cTime 大于msg时 不更新lastMsg 其他情况都更新
+                        let msgData = (try? JSONEncoder().encode(msg)) ?? Data()
+                        if let lastMsgContent = s.lastMsg {
+                            let d = lastMsgContent.data(using: .utf8) ?? Data()
+                            let lastMsg = try? JSONDecoder().decode(Message.self, from: d)
+                            if lastMsg != nil {
+                                if lastMsg!.cTime <= msg.cTime {
+                                    s.lastMsg = String.init(data: msgData, encoding: .utf8)
+                                    needNotify = true
+                                }
+                            } else {
+                                s.lastMsg = String.init(data: msgData, encoding: .utf8)
+                                needNotify = true
+                            }
+                        } else {
+                            s.lastMsg = String.init(data: msgData, encoding: .utf8)
+                            needNotify = true
+                        }
+
                         let unReadCount = try IMCoreManager.shared.database.messageDao()
                             .getUnReadCount(msg.sessionId)
-                        if forceNotify || s.mTime <= msg.mTime || s.unreadCount != unReadCount
-                            || s.lastMsg == nil || (s.lastMsg!.isEmpty)
-                        {
-                            if let d = try? JSONEncoder().encode(msg) {
-                                s.lastMsg = String.init(data: d, encoding: .utf8)
-                            }
+                        if unReadCount != s.unreadCount {
                             s.unreadCount = unReadCount
+                            needNotify = true
+                        }
+
+                        if needNotify || forceNotify {
                             if s.mTime < msg.cTime {
                                 s.mTime = msg.cTime
                             }
@@ -726,27 +749,29 @@ open class DefaultMessageModule: MessageModule {
             IMCoreManager.shared.uId, session: session)
     }
 
-    open func querySessionMembers(_ sessionId: Int64, _ forceServer: Bool = false)
+    open func querySessionMembers(_ sessionId: Int64, _ needUpdate: Bool = false)
         -> RxSwift.Observable<[SessionMember]>
     {
         let count = getSessionMemberCountPerRequest()
-        if forceServer {
-            return self.queryLastSessionMember(sessionId, count)
-        } else {
-            return Observable.create({ observer -> Disposable in
-                let members = IMCoreManager.shared.database.sessionMemberDao().findBySessionId(
-                    sessionId)
-                observer.onNext(members)
-                return Disposables.create()
-            }).flatMap({ members -> Observable<[SessionMember]> in
-                if members.count == 0 {
-                    return self.queryLastSessionMember(sessionId, count)
-                } else {
-                    return Observable.just(members)
-                }
-            })
+        if needUpdate {
+            let lastQueryTime = self.querySessionMemberTimeDic[sessionId] ?? 0
+            if abs(IMCoreManager.shared.severTime - lastQueryTime) > 1000 * 60 {
+                return self.queryLastSessionMember(sessionId, count)
+            }
+            self.querySessionMemberTimeDic[sessionId] = IMCoreManager.shared.severTime
         }
-
+        return Observable.create({ observer -> Disposable in
+            let members = IMCoreManager.shared.database.sessionMemberDao().findBySessionId(
+                sessionId)
+            observer.onNext(members)
+            return Disposables.create()
+        }).flatMap({ members -> Observable<[SessionMember]> in
+            if members.count == 0 {
+                return self.queryLastSessionMember(sessionId, count)
+            } else {
+                return Observable.just(members)
+            }
+        })
     }
 
     open func queryLastSessionMember(_ sessionId: Int64, _ count: Int) -> Observable<
@@ -793,7 +818,7 @@ open class DefaultMessageModule: MessageModule {
 
             }).disposed(by: self.disposeBag)
     }
-    
+
     /**
      * 设置session下所有消息已读
      */

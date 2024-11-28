@@ -45,6 +45,7 @@
 "revoke_failed"="Revoke failed";
 "revoke_success"="Revoke successfully";
 "new_message_tips"="New message ⬇️";
+"x_message_unread"="%d unread messages⬆️";
 "x_message_at_me"="%d messages @ me";
 "do_not_allow_send_video"="Do not allow sending videos";
 "do_not_allow_send_image"="Do not allow sending images";

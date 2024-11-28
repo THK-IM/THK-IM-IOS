@@ -334,7 +334,7 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
                 tableView.insertRows(at: [IndexPath.init(row: insertPos, section: 0)], with: .none)
             }
             UIView.setAnimationsEnabled(true)
-            
+
             let distance = self.distanceFromBottom()
             if distance < 200 || message.fromUId == IMCoreManager.shared.uId {
                 self.scrollToBottom(0.2)
@@ -445,12 +445,12 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     }
 
     public func onMsgReferContentClick(message: Message, view: UIView) {
-        self.scrollToMsg(message)
+        self.scrollToMsg(message, true)
     }
 
-    func scrollToMsg(_ message: Message) {
+    func scrollToMsg(_ message: Message, _ flashing: Bool = false) {
         if let row = self.messages.firstIndex(of: message) {
-            self.scrollToRow(row)
+            self.scrollToRow(row, flashing)
         } else {
             // 尝试从db中获取
             if let lastMsg = self.messages.last {
@@ -466,22 +466,40 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
                     }
                     sf.addMessages(messages)
                     if let row = sf.messages.firstIndex(of: message) {
-                        sf.scrollToRow(row)
+                        sf.scrollToRow(row, flashing)
                     }
                 }).disposed(by: self.disposeBag)
             }
         }
     }
 
-    private func scrollToRow(_ row: Int) {
+    func scrollToUnReadMsg() {
+        guard let s = self.session else { return }
+        Observable.just(s)
+            .flatMap { s in
+                let message = try? IMCoreManager.shared.database.messageDao()
+                    .findOldestUnreadMessage(s.id)
+                return Observable.just(message)
+            }
+            .compose(RxTransformer.shared.io2Main())
+            .subscribe { [weak self] msg in
+                if let m = msg {
+                    self?.scrollToMsg(m)
+                }
+            }.disposed(by: self.disposeBag)
+    }
+
+    private func scrollToRow(_ row: Int, _ flashing: Bool = false) {
         self.messageTableView.scrollToRow(
             at: IndexPath(row: row, section: 0), at: .top, animated: true)
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + 0.5,
-            execute: { [weak self] in
-                (self?.messageTableView.cellForRow(at: IndexPath(row: row, section: 0))
-                    as? IMBaseMsgCell)?.highlightFlashing(6)
-            })
+        if flashing {
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + 0.5,
+                execute: { [weak self] in
+                    (self?.messageTableView.cellForRow(at: IndexPath(row: row, section: 0))
+                        as? IMBaseMsgCell)?.highlightFlashing(6)
+                })
+        }
     }
 
     public func onMsgCellClick(message: Message, position: Int, view: UIView) {

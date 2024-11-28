@@ -318,6 +318,16 @@ open class DefaultMessageDao: MessageDao {
         return message ?? [Message]()
     }
 
+    public func findOldestUnreadMessage(_ sessionId: Int64) throws -> Message? {
+        return try self.database?.getObject(
+            fromTable: self.tableName,
+            where: Message.Properties.sessionId == sessionId && Message.Properties.type >= 0
+                && Message.Properties.operateStatus & MsgOperateStatus.ClientRead.rawValue == 0,
+            orderBy: [Message.Properties.cTime.order(Order.ascending)],
+            offset: 0
+        )
+    }
+
     public func findLastMessageBySessionId(_ sessionId: Int64) throws -> Message? {
         return try self.database?.getObject(
             fromTable: self.tableName,
