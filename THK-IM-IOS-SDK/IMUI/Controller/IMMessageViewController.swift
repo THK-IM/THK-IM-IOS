@@ -288,7 +288,7 @@ open class IMMessageViewController: BaseViewController {
         self.containerView.addSubview(self.unReadMsgTipsView)
         self.unReadMsgTipsView.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-20)
-            make.top.equalTo(self.messageLayout.snp.top).offset(20)
+            make.top.equalTo(self.messageLayout.snp.top).offset(40)
         }
         self.unReadMsgTipsView.rx.tapGesture().when(.ended)
             .subscribe { [weak self] _ in
@@ -318,7 +318,7 @@ open class IMMessageViewController: BaseViewController {
         self.containerView.addSubview(self.newMsgTipsView)
         self.newMsgTipsView.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-20)
-            make.top.equalTo(self.messageLayout.snp.top).offset(60)
+            make.top.equalTo(self.messageLayout.snp.top).offset(100)
         }
         self.newMsgTipsView.rx.tapGesture().when(.ended)
             .subscribe { [weak self] _ in
@@ -339,7 +339,7 @@ open class IMMessageViewController: BaseViewController {
         self.containerView.addSubview(self.atMsgTipsView)
         self.atMsgTipsView.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-20)
-            make.top.equalTo(self.messageLayout.snp.top).offset(100)
+            make.top.equalTo(self.messageLayout.snp.top).offset(140)
         }
         self.atMsgTipsView.rx.tapGesture().when(.ended)
             .subscribe { [weak self] _ in
