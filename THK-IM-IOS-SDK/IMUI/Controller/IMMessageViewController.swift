@@ -295,14 +295,19 @@ open class IMMessageViewController: BaseViewController {
                 self?.unReadMsgTipsView.isHidden = true
                 self?.messageLayout.scrollToUnReadMsg()
             }.disposed(by: self.disposeBag)
-        let unreadCount = self.session?.unreadCount ?? 0
-        if unreadCount > 0 {
-            self.unReadMsgTipsView.text = String.init(format: ResourceUtils.loadString("x_message_unread"), unreadCount)
-            self.unReadMsgTipsView.isHidden = false
-        } else {
-            self.unReadMsgTipsView.isHidden = true
-        }
-        
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 1,
+            execute: { [weak self] in
+                let unreadCount = self?.session?.unreadCount ?? 0
+                if unreadCount > 0 {
+                    self?.unReadMsgTipsView.text = String.init(
+                        format: ResourceUtils.loadString("x_message_unread"), unreadCount)
+                    self?.unReadMsgTipsView.isHidden = false
+                } else {
+                    self?.unReadMsgTipsView.isHidden = true
+                }
+            })
+
         // 新消息提醒
         self.newMsgTipsView.isUserInteractionEnabled = true
         self.newMsgTipsView.textColor =
@@ -367,13 +372,14 @@ open class IMMessageViewController: BaseViewController {
         let unreadCount = self.session?.unreadCount ?? 0
         if unreadCount > 0 {
             if self.unReadMsgTipsView.isHidden == false {
-                self.unReadMsgTipsView.text = String.init(format: ResourceUtils.loadString("x_message_unread"), unreadCount)
+                self.unReadMsgTipsView.text = String.init(
+                    format: ResourceUtils.loadString("x_message_unread"), unreadCount)
             }
         } else {
             self.unReadMsgTipsView.isHidden = true
         }
     }
-    
+
     private func updateAtTipsView() {
         if self.atMsgs.count <= 0 {
             self.atMsgTipsView.isHidden = true
@@ -549,7 +555,7 @@ open class IMMessageViewController: BaseViewController {
                 }
                 self?.messageLayout.clearMessage()
             })
-        
+
         SwiftEventBus.onMainThread(
             self, name: IMEvent.SessionNew.rawValue,
             handler: { [weak self] result in
@@ -558,7 +564,7 @@ open class IMMessageViewController: BaseViewController {
                 }
                 self?.updateSession(session)
             })
-        
+
         SwiftEventBus.onMainThread(
             self, name: IMEvent.SessionUpdate.rawValue,
             handler: { [weak self] result in
@@ -573,7 +579,7 @@ open class IMMessageViewController: BaseViewController {
     func unregisterMsgEvent() {
         SwiftEventBus.unregister(self)
     }
-    
+
     private func updateSession(_ s: Session) {
         if self.session?.id != s.id {
             return
@@ -1188,7 +1194,8 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
 
     ///  预览消息
     public func previewMessage(_ msg: Message, _ position: Int, _ originView: UIView) {
-        let intercepted = IMUIManager.shared.getMsgCellProvider(msg.type).onMsgContentClick(self, msg, self.session, originView)
+        let intercepted = IMUIManager.shared.getMsgCellProvider(msg.type).onMsgContentClick(
+            self, msg, self.session, originView)
         if !intercepted {
             self.onMsgClick(msg, position, originView)
         }
