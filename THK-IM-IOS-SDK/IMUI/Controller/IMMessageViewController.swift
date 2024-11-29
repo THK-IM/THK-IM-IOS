@@ -296,7 +296,7 @@ open class IMMessageViewController: BaseViewController {
                 self?.messageLayout.scrollToUnReadMsg()
             }.disposed(by: self.disposeBag)
         DispatchQueue.main.asyncAfter(
-            deadline: .now() + 1,
+            deadline: .now() + 0.5,
             execute: { [weak self] in
                 let unreadCount = self?.session?.unreadCount ?? 0
                 if unreadCount > 0 {
