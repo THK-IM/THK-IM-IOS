@@ -295,6 +295,7 @@ open class IMMessageViewController: BaseViewController {
                 self?.unReadMsgTipsView.isHidden = true
                 self?.messageLayout.scrollToUnReadMsg()
             }.disposed(by: self.disposeBag)
+        self.unReadMsgTipsView.isHidden = true
         DispatchQueue.main.asyncAfter(
             deadline: .now() + 0.5,
             execute: { [weak self] in
