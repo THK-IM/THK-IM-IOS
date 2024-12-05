@@ -16,6 +16,8 @@
 		9A090E2A2CD2210400ED7F86 /* LiveCacheQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E292CD220F400ED7F86 /* LiveCacheQueue.swift */; };
 		9A090E2C2CD2369100ED7F86 /* LiveVideoCapturerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E2B2CD2368C00ED7F86 /* LiveVideoCapturerProxy.swift */; };
 		9A276B892CD3248C007B2CD5 /* MediaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A276B882CD32486007B2CD5 /* MediaParams.swift */; };
+		9A33B93F2D01A8E9000380AC /* sample-340s.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A33B93E2D01A8E9000380AC /* sample-340s.mp3 */; };
+		9A33B9402D01A8E9000380AC /* sample-111s.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A33B93D2D01A8E9000380AC /* sample-111s.mp3 */; };
 		9A64597B2CEF4B3800D952F6 /* IMCallMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A64597A2CEF4B3300D952F6 /* IMCallMsg.swift */; };
 		9A64597D2CEF4C0D00D952F6 /* IMCallMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */; };
 		9A6459832CEF4D4C00D952F6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459822CEF4D4900D952F6 /* Constant.swift */; };
@@ -393,6 +395,8 @@
 		9A090E292CD220F400ED7F86 /* LiveCacheQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCacheQueue.swift; sourceTree = "<group>"; };
 		9A090E2B2CD2368C00ED7F86 /* LiveVideoCapturerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoCapturerProxy.swift; sourceTree = "<group>"; };
 		9A276B882CD32486007B2CD5 /* MediaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaParams.swift; sourceTree = "<group>"; };
+		9A33B93D2D01A8E9000380AC /* sample-111s.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "sample-111s.mp3"; sourceTree = "<group>"; };
+		9A33B93E2D01A8E9000380AC /* sample-340s.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "sample-340s.mp3"; sourceTree = "<group>"; };
 		9A64597A2CEF4B3300D952F6 /* IMCallMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsg.swift; sourceTree = "<group>"; };
 		9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgView.swift; sourceTree = "<group>"; };
 		9A6459822CEF4D4900D952F6 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -797,6 +801,15 @@
 			path = Engine;
 			sourceTree = "<group>";
 		};
+		9A33B93C2D01A8E3000380AC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9A33B93D2D01A8E9000380AC /* sample-111s.mp3 */,
+				9A33B93E2D01A8E9000380AC /* sample-340s.mp3 */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		9A6459792CEF4B2E00D952F6 /* msg */ = {
 			isa = PBXGroup;
 			children = (
@@ -1118,6 +1131,7 @@
 		A0D68A952A88838A004D11A5 /* THK-IM-IOS */ = {
 			isa = PBXGroup;
 			children = (
+				9A33B93C2D01A8E3000380AC /* Resources */,
 				9A6459822CEF4D4900D952F6 /* Constant.swift */,
 				A0FCA93A2B4A718900FC6E47 /* Module */,
 				A0FCA8D82B48E63600FC6E47 /* Data */,
@@ -1929,6 +1943,8 @@
 				A0589A2D2C21557D003419B8 /* ic_msg_emoji.svg in Resources */,
 				A00425FD2C36882A00977DB2 /* ic_titlebar_back.svg in Resources */,
 				A0589A272C21557D003419B8 /* ic_msg_opr_delete.svg in Resources */,
+				9A33B93F2D01A8E9000380AC /* sample-340s.mp3 in Resources */,
+				9A33B9402D01A8E9000380AC /* sample-111s.mp3 in Resources */,
 				A0589A4B2C21557D003419B8 /* ic_msg_delete.svg in Resources */,
 				A0589A112C21557D003419B8 /* ic_all_avatar.svg in Resources */,
 				A0589A3E2C21557D003419B8 /* ic_volume_5.svg in Resources */,
