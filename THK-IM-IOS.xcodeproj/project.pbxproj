@@ -23,7 +23,6 @@
 		9A6459832CEF4D4C00D952F6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459822CEF4D4900D952F6 /* Constant.swift */; };
 		9A6459852CEF4DAB00D952F6 /* IMCallMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */; };
 		9A6459872CEF4E2700D952F6 /* IMCallMsgProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */; };
-		9A6459892CEF4E8F00D952F6 /* IMCallMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */; };
 		9A64598F2CF55E7200D952F6 /* ic_sending.svg in Resources */ = {isa = PBXBuildFile; fileRef = 9A64598E2CF55E7200D952F6 /* ic_sending.svg */; };
 		9A9D71D42CD0D04D00936EB6 /* RTCRoomCallBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */; };
 		9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */; };
@@ -396,7 +395,6 @@
 		9A6459822CEF4D4900D952F6 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgProcessor.swift; sourceTree = "<group>"; };
 		9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgProvider.swift; sourceTree = "<group>"; };
-		9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgCell.swift; sourceTree = "<group>"; };
 		9A64598E2CF55E7200D952F6 /* ic_sending.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ic_sending.svg; sourceTree = "<group>"; };
 		9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCRoomCallBack.swift; sourceTree = "<group>"; };
 		9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomMemberVo.swift; sourceTree = "<group>"; };
@@ -801,7 +799,6 @@
 		9A6459792CEF4B2E00D952F6 /* msg */ = {
 			isa = PBXGroup;
 			children = (
-				9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */,
 				9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */,
 				9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */,
 				9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */,
@@ -2180,7 +2177,6 @@
 				F56BBFEA2CBA2AC700525A33 /* CircularProgressBarView.swift in Sources */,
 				A0EF35542B5BFFFB00940F54 /* IMSessionMemberAtDelegate.swift in Sources */,
 				A0978E5B2B71CE9A0047E6A2 /* LiveCallViewController.swift in Sources */,
-				9A6459892CEF4E8F00D952F6 /* IMCallMsgCell.swift in Sources */,
 				A033FB112B918BF80053045E /* IMEmojiPanelContentCell.swift in Sources */,
 				A0FCA90F2B496D3800FC6E47 /* DefaultContactDao.swift in Sources */,
 				A0C431EA2A909CB200A84D4A /* BaseParticipant.swift in Sources */,

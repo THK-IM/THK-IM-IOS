@@ -16,5 +16,10 @@ class IMCallMsgProvider: IMBaseMessageCellProvider {
     open override func hasBubble() -> Bool {
         return true
     }
+    
+
+    override func msgBodyView(_ viewPosition: IMMsgPosType) -> any IMsgBodyView {
+        return IMCallMsgView()
+    }
 
 }
