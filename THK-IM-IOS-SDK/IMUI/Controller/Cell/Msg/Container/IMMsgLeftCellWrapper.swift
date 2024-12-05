@@ -19,7 +19,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
         v.distribution = .fill
         v.spacing = 6
 
-        if self.type != SessionType.Single.rawValue {
+        if self.sessionType != SessionType.Single.rawValue {
             _nickView = UILabel()
             _nickView?.textColor = UIColor.init(hex: "999999")
             _nickView?.font = UIFont.systemFont(ofSize: 12)
@@ -47,9 +47,8 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
 
     lazy var _resendButton: UIButton = {
         let v = UIButton()
-        v.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        let failedImage = ResourceUtils.loadImage(named: "ic_msg_failed")?.scaledToSize(
-            CGSize(width: 20, height: 20))
+        v.frame = CGRect()
+        let failedImage = ResourceUtils.loadImage(named: "ic_msg_failed")
         v.setImage(failedImage, for: .normal)
         return v
     }()
@@ -63,14 +62,14 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     }()
 
     lazy var _readStatusView: IMReadStatusView = {
-        let v = IMReadStatusView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        let v = IMReadStatusView()
         return v
     }()
 
     lazy var _stateStack: UIStackView = {
         let v = UIStackView(arrangedSubviews: [_readStatusView, _resendButton, _indicatorView])
         _readStatusView.snp.makeConstraints { make in
-            make.size.equalTo(20)
+            make.size.equalToSuperview()
         }
         v.axis = .horizontal
         v.alignment = .trailing
@@ -89,7 +88,7 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
     open override func layoutSubViews(_ isEditing: Bool) {
         let editingWidth = isEditing ? 0 : IMUIManager.shared.msgCellAvatarWidth
         var top = 10
-        if self.type != SessionType.Single.rawValue {
+        if self.sessionType != SessionType.Single.rawValue {
             top = 0
         }
         _avatarView.snp.remakeConstraints { make in
@@ -101,12 +100,12 @@ open class IMMsgLeftCellWrapper: IMMsgCellWrapper {
             make.top.equalToSuperview().offset(10 + top)
             make.left.equalTo(_avatarView.snp.right).offset(IMUIManager.shared.msgCellAvatarRight)
             make.right.lessThanOrEqualToSuperview().offset(
-                -IMUIManager.shared.msgCellPadding - 24.0)
+                -IMUIManager.shared.msgCellPadding - 20.0)
             make.bottom.equalToSuperview().offset(-10).priority(.low)
         }
         _stateStack.snp.remakeConstraints { make in
             make.right.equalTo(_messageStack.snp.left).offset(-4)
-            make.size.equalTo(20)
+            make.size.equalTo(18)
             make.bottom.equalTo(containerView)
         }
         bubbleView.snp.remakeConstraints { make in

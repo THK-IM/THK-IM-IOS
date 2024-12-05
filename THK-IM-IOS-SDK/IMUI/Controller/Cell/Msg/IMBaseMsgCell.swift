@@ -16,22 +16,34 @@ import UIKit
 open class IMBaseMsgCell: IMBaseTableCell {
 
     open weak var delegate: IMMsgCellOperator? = nil
+    open var msgBodyView: IMsgBodyView
+    open var replyView = IMMsgReplyView()
+    open var messageType = 0
     open var cellWrapper: IMMsgCellWrapper
     open var message: Message? = nil
     open var session: Session? = nil
     open var position: Int? = nil
-    open var replyView = IMMsgReplyView()
 
-    public init(_ reuseIdentifier: String, _ wrapper: IMMsgCellWrapper) {
+    public init(_ reuseIdentifier: String, _ messageType: Int, _ wrapper: IMMsgCellWrapper) {
         self.cellWrapper = wrapper
+        self.messageType = messageType
+        var cellPosition = IMMsgPosType.Left
+        if self.cellWrapper is IMMsgLeftCellWrapper {
+            cellPosition = IMMsgPosType.Left
+        } else if self.cellWrapper is IMMsgMiddleCellWrapper {
+            cellPosition = IMMsgPosType.Mid
+        } else if self.cellWrapper is IMMsgRightCellWrapper {
+            cellPosition = IMMsgPosType.Right
+        }
+        self.msgBodyView = IMUIManager.shared.getMsgCellProvider(messageType).msgBodyView(
+            cellPosition)
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         self.tintColor = IMUIManager.shared.uiResourceProvider?.tintColor()
         self.backgroundColor = UIColor.clear
         self.cellWrapper.attach(contentView)
         self.cellWrapper.layoutSubViews(self.isEditing)
         self.cellWrapper.containerView.addSubview(self.replyView)
-        let msgView = self.msgView().contentView()
-        self.cellWrapper.containerView.addSubview(msgView)
+        self.cellWrapper.containerView.addSubview(self.msgBodyView.contentView())
         self.setupEvent()
     }
 
@@ -54,7 +66,7 @@ open class IMBaseMsgCell: IMBaseTableCell {
         })
         .disposed(by: disposeBag)
 
-        let msgView = self.msgView().contentView()
+        let msgView = self.msgBodyView.contentView()
         // 点击事件
         msgView.rx.tapGesture(configuration: { gestureRecognizer, delegate in
             delegate.otherFailureRequirementPolicy = .custom {
@@ -67,7 +79,7 @@ open class IMBaseMsgCell: IMBaseTableCell {
             self?.delegate?.onMsgCellClick(
                 message: (self?.message)!,
                 position: self?.position ?? 0,
-                view: (self?.msgView().contentView())!
+                view: (self?.msgBodyView.contentView())!
             )
         })
         .disposed(by: disposeBag)
@@ -85,7 +97,7 @@ open class IMBaseMsgCell: IMBaseTableCell {
                 sf.delegate?.onMsgCellLongClick(
                     message: (sf.message)!,
                     position: sf.position ?? 0,
-                    view: sf.msgView().contentView()
+                    view: sf.msgBodyView.contentView()
                 )
             })
             .disposed(by: disposeBag)
@@ -124,7 +136,7 @@ open class IMBaseMsgCell: IMBaseTableCell {
                 self?.delegate?.onMsgSenderLongClick(
                     message: (self?.message)!,
                     position: self?.position ?? 0,
-                    view: (self?.msgView().contentView())!
+                    view: (self?.msgBodyView.contentView())!
                 )
             })
             .disposed(by: disposeBag)
@@ -190,17 +202,20 @@ open class IMBaseMsgCell: IMBaseTableCell {
     }
 
     open func initMsgContent() {
-        if let referMsg = self.message?.referMsg  {
+        if let referMsg = self.message?.referMsg {
             self.replyView.setRelyContent(referMsg, self.session, self.delegate)
         } else {
             self.replyView.clearReplyContent()
         }
-        let msgView = self.msgView().contentView()
+        let msgView = self.msgBodyView.contentView()
         msgView.snp.remakeConstraints { make in
-            make.top.equalTo(self.replyView.snp.bottom)
-            make.left.equalToSuperview()
-            make.right.lessThanOrEqualToSuperview()
-            make.bottom.equalToSuperview()
+            make.top.equalTo(self.replyView.snp.bottom).offset(2)
+            make.left.equalToSuperview().offset(2)
+            make.right.lessThanOrEqualToSuperview().offset(-2)
+            make.bottom.equalToSuperview().offset(-2)
+        }
+        if let msg = self.message {
+            self.msgBodyView.setMessage(msg, self.session, self.delegate)
         }
     }
 
@@ -269,10 +284,6 @@ open class IMBaseMsgCell: IMBaseTableCell {
 
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    open func msgView() -> IMsgBodyView {
-        return IMUnSupportMsgView()
     }
 
     private func updateUserInfo(user: User, sessionMember: SessionMember?) {
@@ -369,13 +380,13 @@ open class IMBaseMsgCell: IMBaseTableCell {
     open override func appear() {
         self.cellWrapper.appear()
         self.onMessageShow()
-        self.msgView().onViewAppear()
+        self.msgBodyView.onViewAppear()
         self.replyView.onViewAppear()
     }
 
     open override func disappear() {
         self.cellWrapper.disAppear()
-        self.msgView().onViewDisappear()
+        self.msgBodyView.onViewDisappear()
         self.replyView.onViewDisappear()
     }
 

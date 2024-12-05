@@ -14,24 +14,14 @@ open class IMTextMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.Text.rawValue
     }
 
-    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper)
-        -> IMBaseMsgCell
-    {
-        let identifier = self.identifier(viewType)
-        return IMTextMsgCell(identifier, wrapper)
-    }
-
     open override func hasBubble() -> Bool {
         return true
     }
 
-    open override func replyMsgView() -> IMsgBodyView {
-        let view = IMTextMsgView(frame: .null)
-        view.textColor = UIColor.darkGray
-        view.font = UIFont.systemFont(ofSize: 12)
-        view.textAlignment = .left
-        view.numberOfLines = 0
-        return view
+    open override func msgBodyView(_ viewPosition: IMMsgPosType) -> any IMsgBodyView {
+        let v = IMTextMsgView()
+        v.setViewPosition(viewPosition)
+        return v
     }
 
 }

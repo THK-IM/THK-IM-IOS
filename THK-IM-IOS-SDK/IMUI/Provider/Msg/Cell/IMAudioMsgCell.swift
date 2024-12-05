@@ -16,10 +16,6 @@ class IMAudioMsgCell: IMBaseMsgCell {
         return view
     }()
 
-    open override func msgView() -> IMsgBodyView {
-        return self.view
-    }
-
     open override func setMessage(
         _ position: Int, _ messages: [Message], _ session: Session, _ delegate: IMMsgCellOperator
     ) {

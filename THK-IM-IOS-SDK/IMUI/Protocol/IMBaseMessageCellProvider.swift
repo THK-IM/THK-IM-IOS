@@ -15,8 +15,12 @@ open class IMBaseMessageCellProvider {
 
     }
 
-    open func getSelfId() -> Int64 {
-        return IMCoreManager.shared.uId
+    open func canSelected() -> Bool {
+        return true
+    }
+
+    open func hasBubble() -> Bool {
+        return false
     }
 
     open func messageType() -> Int {
@@ -25,11 +29,10 @@ open class IMBaseMessageCellProvider {
 
     open func viewType(_ msg: Message) -> Int {
         let msgType = self.messageType()
-        let selfId = self.getSelfId()
         switch msg.fromUId {
         case 0:  // 中间消息
             return 3 * msgType
-        case selfId:  // 自己消息
+        case IMCoreManager.shared.uId:  // 自己消息
             return 3 * msgType + 2
         default:  // 他人消息
             return 3 * msgType + 1
@@ -45,34 +48,38 @@ open class IMBaseMessageCellProvider {
      @param viewType 视图类型
      @param cellType cell类型 sessionType不一样 cell有区别
      */
-    open func viewCell(_ viewType: Int, _ cellType: Int) -> IMBaseMsgCell {
+    open func viewCell(_ viewType: Int, _ sessionType: Int) -> IMBaseMsgCell {
         let msgType = self.messageType()
         switch viewType {
         case 3 * msgType:  // 中间消息
-            return viewCellWithWrapper(viewType, IMMsgMiddleCellWrapper(type: cellType))
+            return viewCellWithWrapper(viewType, IMMsgMiddleCellWrapper(sessionType: sessionType))
         case 3 * msgType + 2:  // 自己消息
-            return viewCellWithWrapper(viewType, IMMsgRightCellWrapper(type: cellType))
+            return viewCellWithWrapper(viewType, IMMsgRightCellWrapper(sessionType: sessionType))
         default:  // 他人消息
-            return viewCellWithWrapper(viewType, IMMsgLeftCellWrapper(type: cellType))
+            return viewCellWithWrapper(viewType, IMMsgLeftCellWrapper(sessionType: sessionType))
         }
     }
 
     open func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper) -> IMBaseMsgCell {
         let identifier = self.identifier(viewType)
-        return IMBaseMsgCell(identifier, wrapper)
+        return IMBaseMsgCell(identifier, messageType(), wrapper)
     }
 
     open func cellMaxWidth() -> CGFloat {
         return UIScreen.main.bounds.width - IMUIManager.shared.msgCellAvatarLeft
             - IMUIManager.shared.msgCellAvatarWidth
-            - IMUIManager.shared.msgCellAvatarRight - 24.0 - IMUIManager.shared.msgCellPadding
+            - IMUIManager.shared.msgCellAvatarRight - 20 - IMUIManager.shared.msgCellPadding
     }
 
-    open func canSelected() -> Bool {
-        return true
+    open func msgBodyView(_ viewPosition: IMMsgPosType) -> IMsgBodyView {
+        let view = IMTextMsgView()
+        view.setViewPosition(viewPosition)
+        return view
     }
 
-    open func hasBubble() -> Bool {
+    open func onMsgContentClick(
+        _ vc: UIViewController, _ msg: Message, _ session: Session?, _ originView: UIView
+    ) -> Bool {
         return false
     }
 
@@ -90,22 +97,6 @@ open class IMBaseMessageCellProvider {
             ).size
             return retSize
         }
-    }
-
-    open func replyMsgView()
-        -> IMsgBodyView
-    {
-        let view = IMTextMsgView()
-        view.textColor = UIColor.darkGray
-        view.font = UIFont.systemFont(ofSize: 12)
-        view.numberOfLines = 0
-        return view
-    }
-
-    open func onMsgClick(
-        _ vc: UIViewController, _ msg: Message, _ session: Session?, _ originView: UIView
-    ) -> Bool {
-        return false
     }
 
 }

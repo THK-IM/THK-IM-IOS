@@ -15,16 +15,10 @@ open class IMVideoMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.Video.rawValue
     }
 
-    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper)
-        -> IMBaseMsgCell
-    {
-        let identifier = self.identifier(viewType)
-        return IMVideoMsgCell(identifier, wrapper)
-    }
-
-    open override func replyMsgView() -> IMsgBodyView {
-        let view = IMVideoMsgView(frame: .null)
-        return view
+    open override func msgBodyView(_ viewPosition: IMMsgPosType) -> any IMsgBodyView {
+        let v = IMVideoMsgView()
+        v.setViewPosition(viewPosition)
+        return v
     }
 
 }

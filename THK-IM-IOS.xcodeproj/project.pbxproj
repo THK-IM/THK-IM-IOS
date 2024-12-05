@@ -24,6 +24,7 @@
 		9A6459852CEF4DAB00D952F6 /* IMCallMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */; };
 		9A6459872CEF4E2700D952F6 /* IMCallMsgProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */; };
 		9A6459892CEF4E8F00D952F6 /* IMCallMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */; };
+		9A64598F2CF55E7200D952F6 /* ic_sending.svg in Resources */ = {isa = PBXBuildFile; fileRef = 9A64598E2CF55E7200D952F6 /* ic_sending.svg */; };
 		9A9D71D42CD0D04D00936EB6 /* RTCRoomCallBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */; };
 		9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */; };
 		9A9D71DB2CD0F1DB00936EB6 /* InviteMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */; };
@@ -156,12 +157,10 @@
 		A0CA4E672B4AAAF50031DDDB /* IMPageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA4E662B4AAAF50031DDDB /* IMPageRouter.swift */; };
 		A0CA4E692B4AAB860031DDDB /* ExternalPageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA4E682B4AAB860031DDDB /* ExternalPageRouter.swift */; };
 		A0CC9F742AFC88F200801B25 /* IMEmojiPanelTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CC9F732AFC88F200801B25 /* IMEmojiPanelTitleCell.swift */; };
-		A0D51DC22B09E40E00E21E75 /* IMRevokeMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC12B09E40E00E21E75 /* IMRevokeMsgCell.swift */; };
 		A0D51DC42B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC32B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift */; };
 		A0D51DC62B09EFF800E21E75 /* RevokeMsgVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC52B09EFF800E21E75 /* RevokeMsgVo.swift */; };
 		A0D51DC82B11ABC600E21E75 /* ForwardMessageVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC72B11ABC600E21E75 /* ForwardMessageVo.swift */; };
 		A0D51DCA2B11BBDE00E21E75 /* IMSessionChooseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DC92B11BBDE00E21E75 /* IMSessionChooseViewController.swift */; };
-		A0D51DCC2B11D93700E21E75 /* IMRecordMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCB2B11D93700E21E75 /* IMRecordMsgCell.swift */; };
 		A0D51DCE2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCD2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift */; };
 		A0D51DD02B11DFB400E21E75 /* IMRecordMsgProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DCF2B11DFB400E21E75 /* IMRecordMsgProcessor.swift */; };
 		A0D51DD32B12EF3600E21E75 /* DefaultIMDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D51DD22B12EF3600E21E75 /* DefaultIMDatabase.swift */; };
@@ -202,12 +201,7 @@
 		A0D68BA02A888679004D11A5 /* IMVideoMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AEA2A888678004D11A5 /* IMVideoMsgCellProvider.swift */; };
 		A0D68BA12A888679004D11A5 /* IMAudioMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AEB2A888678004D11A5 /* IMAudioMsgCellProvider.swift */; };
 		A0D68BA22A888679004D11A5 /* IMTextMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AEC2A888678004D11A5 /* IMTextMsgCellProvider.swift */; };
-		A0D68BA32A888679004D11A5 /* IMVideoMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AEE2A888678004D11A5 /* IMVideoMsgCell.swift */; };
 		A0D68BA42A888679004D11A5 /* IMAudioMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AEF2A888678004D11A5 /* IMAudioMsgCell.swift */; };
-		A0D68BA52A888679004D11A5 /* IMImageMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF02A888678004D11A5 /* IMImageMsgCell.swift */; };
-		A0D68BA62A888679004D11A5 /* IMTimeLineMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF12A888678004D11A5 /* IMTimeLineMsgCell.swift */; };
-		A0D68BA72A888679004D11A5 /* IMTextMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF22A888678004D11A5 /* IMTextMsgCell.swift */; };
-		A0D68BA82A888679004D11A5 /* IMUnSupportMsgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF32A888678004D11A5 /* IMUnSupportMsgCell.swift */; };
 		A0D68BA92A888679004D11A5 /* IMUnSupportMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF42A888678004D11A5 /* IMUnSupportMsgCellProvider.swift */; };
 		A0D68BAA2A888679004D11A5 /* IMDefaultSessionCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF52A888678004D11A5 /* IMDefaultSessionCellProvider.swift */; };
 		A0D68BAB2A888679004D11A5 /* IMImageMsgCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D68AF62A888678004D11A5 /* IMImageMsgCellProvider.swift */; };
@@ -403,6 +397,7 @@
 		9A6459842CEF4DA200D952F6 /* IMCallMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgProcessor.swift; sourceTree = "<group>"; };
 		9A6459862CEF4E1F00D952F6 /* IMCallMsgProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgProvider.swift; sourceTree = "<group>"; };
 		9A6459882CEF4E8A00D952F6 /* IMCallMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgCell.swift; sourceTree = "<group>"; };
+		9A64598E2CF55E7200D952F6 /* ic_sending.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ic_sending.svg; sourceTree = "<group>"; };
 		9A9D71D32CD0D04300936EB6 /* RTCRoomCallBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCRoomCallBack.swift; sourceTree = "<group>"; };
 		9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteMemberVo.swift; sourceTree = "<group>"; };
@@ -546,12 +541,10 @@
 		A0CA4E662B4AAAF50031DDDB /* IMPageRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPageRouter.swift; sourceTree = "<group>"; };
 		A0CA4E682B4AAB860031DDDB /* ExternalPageRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalPageRouter.swift; sourceTree = "<group>"; };
 		A0CC9F732AFC88F200801B25 /* IMEmojiPanelTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMEmojiPanelTitleCell.swift; sourceTree = "<group>"; };
-		A0D51DC12B09E40E00E21E75 /* IMRevokeMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgCell.swift; sourceTree = "<group>"; };
 		A0D51DC32B09E42D00E21E75 /* IMRevokeMsgCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRevokeMsgCellProvider.swift; sourceTree = "<group>"; };
 		A0D51DC52B09EFF800E21E75 /* RevokeMsgVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevokeMsgVo.swift; sourceTree = "<group>"; };
 		A0D51DC72B11ABC600E21E75 /* ForwardMessageVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardMessageVo.swift; sourceTree = "<group>"; };
 		A0D51DC92B11BBDE00E21E75 /* IMSessionChooseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSessionChooseViewController.swift; sourceTree = "<group>"; };
-		A0D51DCB2B11D93700E21E75 /* IMRecordMsgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgCell.swift; sourceTree = "<group>"; };
 		A0D51DCD2B11DD9400E21E75 /* IMRecordMsgCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgCellProvider.swift; sourceTree = "<group>"; };
 		A0D51DCF2B11DFB400E21E75 /* IMRecordMsgProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecordMsgProcessor.swift; sourceTree = "<group>"; };
 		A0D51DD22B12EF3600E21E75 /* DefaultIMDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultIMDatabase.swift; sourceTree = "<group>"; };
@@ -594,12 +587,7 @@
 		A0D68AEA2A888678004D11A5 /* IMVideoMsgCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMVideoMsgCellProvider.swift; sourceTree = "<group>"; };
 		A0D68AEB2A888678004D11A5 /* IMAudioMsgCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMAudioMsgCellProvider.swift; sourceTree = "<group>"; };
 		A0D68AEC2A888678004D11A5 /* IMTextMsgCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMTextMsgCellProvider.swift; sourceTree = "<group>"; };
-		A0D68AEE2A888678004D11A5 /* IMVideoMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMVideoMsgCell.swift; sourceTree = "<group>"; };
 		A0D68AEF2A888678004D11A5 /* IMAudioMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMAudioMsgCell.swift; sourceTree = "<group>"; };
-		A0D68AF02A888678004D11A5 /* IMImageMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMImageMsgCell.swift; sourceTree = "<group>"; };
-		A0D68AF12A888678004D11A5 /* IMTimeLineMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMTimeLineMsgCell.swift; sourceTree = "<group>"; };
-		A0D68AF22A888678004D11A5 /* IMTextMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMTextMsgCell.swift; sourceTree = "<group>"; };
-		A0D68AF32A888678004D11A5 /* IMUnSupportMsgCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUnSupportMsgCell.swift; sourceTree = "<group>"; };
 		A0D68AF42A888678004D11A5 /* IMUnSupportMsgCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMUnSupportMsgCellProvider.swift; sourceTree = "<group>"; };
 		A0D68AF52A888678004D11A5 /* IMDefaultSessionCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMDefaultSessionCellProvider.swift; sourceTree = "<group>"; };
 		A0D68AF62A888678004D11A5 /* IMImageMsgCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMImageMsgCellProvider.swift; sourceTree = "<group>"; };
@@ -1296,6 +1284,7 @@
 		A0D68AE32A888678004D11A5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9A64598E2CF55E7200D952F6 /* ic_sending.svg */,
 				F56BBFE42CBA263900525A33 /* ic_audio_off.svg */,
 				F56BBFE22CBA262D00525A33 /* ic_audio_on.svg */,
 				A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */,
@@ -1374,14 +1363,7 @@
 		A0D68AED2A888678004D11A5 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				A0D68AEE2A888678004D11A5 /* IMVideoMsgCell.swift */,
 				A0D68AEF2A888678004D11A5 /* IMAudioMsgCell.swift */,
-				A0D68AF02A888678004D11A5 /* IMImageMsgCell.swift */,
-				A0D68AF12A888678004D11A5 /* IMTimeLineMsgCell.swift */,
-				A0D68AF22A888678004D11A5 /* IMTextMsgCell.swift */,
-				A0D68AF32A888678004D11A5 /* IMUnSupportMsgCell.swift */,
-				A0D51DC12B09E40E00E21E75 /* IMRevokeMsgCell.swift */,
-				A0D51DCB2B11D93700E21E75 /* IMRecordMsgCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -1960,6 +1942,7 @@
 				A0589A4C2C21557D003419B8 /* ic_msg_more.svg in Resources */,
 				A0589A132C21557D003419B8 /* ic_msg_audio.svg in Resources */,
 				A0589A2F2C21557D003419B8 /* ic_msg_opr_revoke.svg in Resources */,
+				9A64598F2CF55E7200D952F6 /* ic_sending.svg in Resources */,
 				A0589A4A2C21557D003419B8 /* icon_msg_silence.svg in Resources */,
 				A0589A292C21557D003419B8 /* ic_close.svg in Resources */,
 				A0589A3F2C21557D003419B8 /* icon_video_play.svg in Resources */,
@@ -2149,7 +2132,6 @@
 				F5F1F9C72CE8BFA50034EF5A /* IMLiveRequestProcessor.swift in Sources */,
 				A0D68A9B2A88838A004D11A5 /* MainTestViewController.swift in Sources */,
 				A0FCA9092B49599A00FC6E47 /* ContactDao.swift in Sources */,
-				A0D68BA52A888679004D11A5 /* IMImageMsgCell.swift in Sources */,
 				A0D68BEB2A888679004D11A5 /* IMAudioMsgProcessor.swift in Sources */,
 				A0D68BBF2A888679004D11A5 /* IMMsgLabelView.swift in Sources */,
 				A0D68BCA2A888679004D11A5 /* IMSessionViewController.swift in Sources */,
@@ -2193,7 +2175,6 @@
 				A018CE042B00A3CD00896B87 /* IMMsgDeleteOperator.swift in Sources */,
 				A0D68BFE2A888679004D11A5 /* ImageCompress.swift in Sources */,
 				A0D68B732A888679004D11A5 /* OggOpusAudioPlayer.swift in Sources */,
-				A0D68BA32A888679004D11A5 /* IMVideoMsgCell.swift in Sources */,
 				A018CDF82AFFA9A900896B87 /* MediaViewController.swift in Sources */,
 				A0E82F642B528AB0008DC681 /* GroupSessionCell.swift in Sources */,
 				F56BBFEA2CBA2AC700525A33 /* CircularProgressBarView.swift in Sources */,
@@ -2211,7 +2192,6 @@
 				A025291E2ACC344D001561A0 /* Provider.swift in Sources */,
 				9A090E1F2CD215BC00ED7F86 /* LiveRTCEngine.swift in Sources */,
 				A0FCA8E42B48ECB600FC6E47 /* RegisterVo.swift in Sources */,
-				A0D51DCC2B11D93700E21E75 /* IMRecordMsgCell.swift in Sources */,
 				A0D68BC12A888679004D11A5 /* IMMsgPreviewer.swift in Sources */,
 				A0D51DC82B11ABC600E21E75 /* ForwardMessageVo.swift in Sources */,
 				A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */,
@@ -2270,7 +2250,6 @@
 				A0FCA9392B498D2000FC6E47 /* GroupApi.swift in Sources */,
 				A0FCA9262B49863600FC6E47 /* FollowVo.swift in Sources */,
 				A0D68BFA2A888679004D11A5 /* FileLoadModule.swift in Sources */,
-				A0D68BA62A888679004D11A5 /* IMTimeLineMsgCell.swift in Sources */,
 				A0D68BD22A888679004D11A5 /* PreviewImageCellView.swift in Sources */,
 				A02529072AC6CB05001561A0 /* DefaultFileLoadModule.swift in Sources */,
 				A0E82F5E2B527388008DC681 /* ContactChooseDelegate.swift in Sources */,
@@ -2280,7 +2259,6 @@
 				A0D68BFF2A888679004D11A5 /* GCDTool.swift in Sources */,
 				A03082DF2AF7BB84001B8373 /* IMSessionCellOperator.swift in Sources */,
 				A025291C2ACC31E2001561A0 /* IMUIProtocolDefines.swift in Sources */,
-				A0D51DC22B09E40E00E21E75 /* IMRevokeMsgCell.swift in Sources */,
 				A03082D32AF67C57001B8373 /* ReadMsgVo.swift in Sources */,
 				A0D68BC92A888679004D11A5 /* IMBaseSessionCell.swift in Sources */,
 				A0D68BB42A888679004D11A5 /* IMMessageViewController.swift in Sources */,
@@ -2315,7 +2293,6 @@
 				9A9D71D42CD0D04D00936EB6 /* RTCRoomCallBack.swift in Sources */,
 				A0D68B9E2A888679004D11A5 /* IMBaseSessionCellProvider.swift in Sources */,
 				A0FCA92E2B498A7000FC6E47 /* DeleteGroupVo.swift in Sources */,
-				A0D68BA82A888679004D11A5 /* IMUnSupportMsgCell.swift in Sources */,
 				A033FB022B8A19D80053045E /* IMAudioMsgView.swift in Sources */,
 				A0D68B762A888679004D11A5 /* OGGDecoder.swift in Sources */,
 				A0D68C002A888679004D11A5 /* MimeType.swift in Sources */,
@@ -2334,7 +2311,6 @@
 				A0D68BA42A888679004D11A5 /* IMAudioMsgCell.swift in Sources */,
 				A033FB0A2B8A1F6C0053045E /* IMRecordMsgView.swift in Sources */,
 				A0EA42E92A94920300F64A90 /* DefaultMessageDao.swift in Sources */,
-				A0D68BA72A888679004D11A5 /* IMTextMsgCell.swift in Sources */,
 				A050072D2B086CB300526713 /* SwiftEventBus.swift in Sources */,
 				9A6459852CEF4DAB00D952F6 /* IMCallMsgProcessor.swift in Sources */,
 				A0D68BE02A888679004D11A5 /* CommonModule.swift in Sources */,

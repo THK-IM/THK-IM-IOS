@@ -143,6 +143,12 @@ public protocol MessageDao {
     func findBySidAndTypesAfterCTime(
         _ sessionId: Int64, _ msgId: Int64, _ types: [Int], _ cTime: Int64, _ count: Int
     ) -> [Message]
+    
+    
+    /**
+     * 查询session的最早一条未读消息
+     */
+    func findOldestUnreadMessage(_ sessionId: Int64) throws -> Message?
 
     /**
      * 查询session的最后一条消息
@@ -153,6 +159,17 @@ public protocol MessageDao {
      * 查询session中At我的未读消息
      */
     func findSessionAtMeUnreadMessages(_ sessionId: Int64) -> [Message]
+    
+    /**
+     * 查询session下的所有未读消息
+     */
+    func findAllUnreadMessagesBySessionId(_ sessionId: Int64) -> [Message]
+    
+    /**
+     * 查询所有未读消息
+     */
+    func findAllUnreadMessages() -> [Message]
+    
 
     /**
      * 根据消息类型查询消息

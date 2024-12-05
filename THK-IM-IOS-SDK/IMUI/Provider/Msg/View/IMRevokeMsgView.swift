@@ -66,10 +66,13 @@ class IMRevokeMsgView: UIView, IMsgBodyView {
             make.height.equalToSuperview()
         }
     }
+    
+    func setViewPosition(_ position: IMMsgPosType) {
+        
+    }
 
     func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
-        _ isReply: Bool = false
+        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
         self.message = message
         self.delegate = delegate

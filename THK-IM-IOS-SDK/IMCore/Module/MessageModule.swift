@@ -132,12 +132,17 @@ public protocol MessageModule: BaseModule {
     /**
      * 查询session下成员列表
      */
-    func querySessionMembers(_ sessionId: Int64, _ forceServer: Bool) -> Observable<[SessionMember]>
+    func querySessionMembers(_ sessionId: Int64, _ needUpdate: Bool) -> Observable<[SessionMember]>
 
     /**
      * 同步session成员列表
      */
     func syncSessionMembers(_ sessionId: Int64)
+
+    /**
+     * 设置session下所有消息已读
+     */
+    func setAllMessageReadBySessionId(_ sessionId: Int64) -> Observable<Void>
 
     /**
      * 设置所有消息已读

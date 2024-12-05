@@ -10,7 +10,9 @@ import Foundation
 
 open class SingleSessionCell: IMBaseSessionCell {
 
-    override open func showSessionEntityInfo(_ session: Session) {
+    open override func renderSessionEntityInfo() {
+        guard let session = self.session else { return }
+        
         IMCoreManager.shared.userModule.queryUser(id: session.entityId)
             .subscribe(onNext: { [weak self] user in
                 if user.avatar == nil || user.avatar!.isEmpty {
@@ -21,5 +23,10 @@ open class SingleSessionCell: IMBaseSessionCell {
                 }
                 self?.nickView.text = user.nickname
             }).disposed(by: self.disposeBag)
+    }
+    
+    
+    open override func renderSenderName(_ message: Message) {
+        
     }
 }

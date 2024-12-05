@@ -11,6 +11,7 @@ import RxSwift
 import UIKit
 
 class IMTimeLineMsgView: IMMsgLabelView, IMsgBodyView {
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupUI()
@@ -29,10 +30,11 @@ class IMTimeLineMsgView: IMMsgLabelView, IMsgBodyView {
         self.padding = UIEdgeInsets(top: 2, left: 20, bottom: 2, right: 20)
     }
 
-    func setMessage(
-        _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?,
-        _ isReply: Bool = false
-    ) {
+    func setViewPosition(_ position: IMMsgPosType) {
+
+    }
+
+    func setMessage(_ message: Message, _ session: Session?, _ delegate: (any IMMsgCellOperator)?) {
         let dateString = DateUtils.timeToMsgTime(
             ms: message.cTime, now: IMCoreManager.shared.severTime)
         self.text = dateString

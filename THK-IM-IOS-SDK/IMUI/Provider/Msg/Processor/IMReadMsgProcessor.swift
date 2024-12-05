@@ -90,26 +90,17 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     override public func send(
         _ msg: Message, _ resend: Bool = false, _ sendResult: IMSendMsgResult? = nil
     ) {
-        if msg.referMsgId == nil || msg.referMsgId! < 0 {
+        if msg.referMsgId == nil || msg.referMsgId! <= 0 {
             return
         }
-        Observable.create({ observer -> Disposable in
+        Observable.create({ [weak self] observer -> Disposable in
             do {
-                try IMCoreManager.shared.database.messageDao()
-                    .updateOperationStatus(
-                        msg.sessionId,
-                        [msg.referMsgId!],
+                if let referMsg = try IMCoreManager.shared.database.messageDao().findByMsgId(
+                    msg.referMsgId!, msg.sessionId)
+                {
+                    referMsg.operateStatus =
                         MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.Ack.rawValue
-                    )
-                let session = try IMCoreManager.shared.database.sessionDao().findById(msg.sessionId)
-                if session != nil {
-                    let count = try IMCoreManager.shared.database.messageDao().getUnReadCount(
-                        session!.id)
-                    if session!.unreadCount != count {
-                        session!.unreadCount = count
-                        try IMCoreManager.shared.database.sessionDao().update([session!])
-                        SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
-                    }
+                    try? self?.insertOrUpdateDb(referMsg, false, true)
                 }
                 observer.onNext(msg)
             } catch {

@@ -175,18 +175,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 
     open func getTitleBarHeight() -> CGFloat {
         var navigationBarHeight = 0.0
-        if self.navigationController != nil {
-            navigationBarHeight += navigationController!.navigationBar.frame.height
+        if let navigationController = self.navigationController {
+            navigationBarHeight += navigationController.navigationBar.frame.height
         }
         return navigationBarHeight + AppUtils.getStatusBarHeight()
-    }
-
-    open func getNavHeight() -> CGFloat {
-        var navHeight: CGFloat = 0
-        if self.navigationController != nil {
-            navHeight = self.navigationController!.navigationBar.frame.size.height
-        }
-        return navHeight + UIApplication.shared.windows[0].safeAreaInsets.top
     }
 
     // 显示自定义的警告对话框
@@ -396,16 +388,22 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     open func showLoading(text: String? = nil, _ interaction: Bool = false) {
-        ProgressHUD.animate(text, .horizontalBarScaling, interaction: interaction)
+        DispatchQueue.main.async {
+            ProgressHUD.animate(text, .horizontalBarScaling, interaction: interaction)
+        }
     }
 
     open func dismissLoading() {
-        ProgressHUD.dismiss()
+        DispatchQueue.main.async {
+            ProgressHUD.dismiss()
+        }
     }
 
     open func showToast(_ toast: String, _ success: Bool = true) {
-        NotificationPresenter.shared.present(toast)
-        NotificationPresenter.shared.dismiss(after: 1)
+        DispatchQueue.main.async {
+            NotificationPresenter.shared.present(toast)
+            NotificationPresenter.shared.dismiss(after: 1)
+        }
     }
 
 }

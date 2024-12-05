@@ -15,15 +15,9 @@ open class IMImageMsgCellProvider: IMBaseMessageCellProvider {
         return MsgType.Image.rawValue
     }
 
-    open override func viewCellWithWrapper(_ viewType: Int, _ wrapper: IMMsgCellWrapper)
-        -> IMBaseMsgCell
-    {
-        let identifier = self.identifier(viewType)
-        return IMImageMsgCell(identifier, wrapper)
-    }
-
-    open override func replyMsgView() -> IMsgBodyView {
-        let view = IMImageMsgView(frame: .null)
-        return view
+    open override func msgBodyView(_ viewPosition: IMMsgPosType) -> any IMsgBodyView {
+        let v = IMImageMsgView()
+        v.setViewPosition(viewPosition)
+        return v
     }
 }

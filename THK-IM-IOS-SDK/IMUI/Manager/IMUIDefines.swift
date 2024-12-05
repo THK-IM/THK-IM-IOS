@@ -15,6 +15,8 @@ public enum IMMsgPosType: Int {
         Left = 1
     case
         Right = 2
+    case Reply = 3
+    case Session = 4
 }
 
 public class IMFile {

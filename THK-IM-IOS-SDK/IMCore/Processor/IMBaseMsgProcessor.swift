@@ -290,7 +290,7 @@ open class IMBaseMsgProcessor {
             }
             SwiftEventBus.post(IMEvent.MsgNew.rawValue, sender: msg)
         }
-        if notify && notifySession {
+        if notifySession {
             IMCoreManager.shared.messageModule.processSessionByMessage(msg, false)
         }
     }
@@ -306,30 +306,6 @@ open class IMBaseMsgProcessor {
         return ""
     }
 
-    open func atMeDesc(msg: Message) -> String {
-        return ResourceUtils.loadString("someone_at_me")
-    }
-
-    /**
-     * 该消息在session上的描述
-     */
-    open func sessionDesc(msg: Message) -> String {
-        var desc = ""
-        guard let atUsers = msg.atUsers else {
-            return desc + msgDesc(msg: msg)
-        }
-        let uIds = atUsers.split(separator: "#")
-        for id in uIds {
-            if id == "\(IMCoreManager.shared.uId)" {
-                if (msg.operateStatus & MsgOperateStatus.ClientRead.rawValue) == 0 {
-                    desc += atMeDesc(msg: msg)
-                }
-                break
-            }
-        }
-        return desc + msgDesc(msg: msg)
-    }
-
     open func reset() {
         // 取消监听执行中的任务
         self.disposeBag = DisposeBag()
@@ -338,16 +314,16 @@ open class IMBaseMsgProcessor {
     /**
      * 获取session下用户昵称
      */
-    open func getSenderName(msg: Message) -> String? {
-        if msg.fromUId <= 0 {
+    open func getUserSessionName(_ sessionId: Int64, _ userId: Int64) -> String? {
+        if userId <= 0 {
             return nil
         }
         var sender: String? = nil
         let sessionMember = IMCoreManager.shared.database.sessionMemberDao()
-            .findSessionMember(msg.sessionId, msg.fromUId)
+            .findSessionMember(sessionId, userId)
         sender = sessionMember?.noteName
         if sender == nil || sender?.length == 0 {
-            let user = IMCoreManager.shared.database.userDao().findById(msg.fromUId)
+            let user = IMCoreManager.shared.database.userDao().findById(userId)
             sender = user?.nickname
         }
         return sender

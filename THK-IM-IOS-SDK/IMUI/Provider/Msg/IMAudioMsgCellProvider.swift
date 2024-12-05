@@ -18,16 +18,17 @@ open class IMAudioMsgCellProvider: IMBaseMessageCellProvider {
         -> IMBaseMsgCell
     {
         let identifier = self.identifier(viewType)
-        return IMAudioMsgCell(identifier, wrapper)
+        return IMAudioMsgCell(identifier, messageType(), wrapper)
     }
 
     open override func hasBubble() -> Bool {
         return true
     }
-
-    open override func replyMsgView() -> IMsgBodyView {
-        let view = IMAudioMsgView(frame: .null)
-        return view
+    
+    open override func msgBodyView(_ viewPosition: IMMsgPosType) -> any IMsgBodyView {
+        let v = IMAudioMsgView()
+        v.setViewPosition(viewPosition)
+        return v
     }
 
 }

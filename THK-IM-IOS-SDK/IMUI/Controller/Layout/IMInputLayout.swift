@@ -79,6 +79,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         textView.isScrollEnabled = true
         textView.textColor = UIColor.init(hex: "#333333")
         textView.font = inputFont
+        textView.tintColor = IMUIManager.shared.uiResourceProvider?.tintColor()
         textView.returnKeyType = .send
         textView.keyboardType = .default
         textView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
@@ -514,14 +515,14 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
                 return nil
             }
             for (k, v) in sf.atMap {
-                if v == nickname {
+                if v.trimmingCharacters(in: .whitespaces) == nickname.trimmingCharacters(in: .whitespaces) {
                     if Int64(k) != nil {
                         return Int64(k)!
                     }
                 }
             }
             if let sender = sf.sender {
-                let id = sender.syncGetSessionMemberUserIdByNickname(nickname)
+                let id = sender.syncGetSessionMemberUserIdByNickname(nickname.trimmingCharacters(in: .whitespaces))
                 if id != nil {
                     return id!
                 }

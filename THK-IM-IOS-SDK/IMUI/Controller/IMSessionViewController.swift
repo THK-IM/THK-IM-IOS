@@ -200,7 +200,7 @@ open class IMSessionViewController: BaseViewController, UITableViewDataSource, U
                 guard let session = result?.object as? Session else {
                     return
                 }
-                if self?.parentId == session.parentId || session.deleted == 1 {
+                if self?.parentId != session.parentId || session.deleted == 1 {
                     return
                 }
                 self?.onNewSession(session)
@@ -212,7 +212,7 @@ open class IMSessionViewController: BaseViewController, UITableViewDataSource, U
                 guard let session = result?.object as? Session else {
                     return
                 }
-                if self?.parentId == session.parentId || session.deleted == 1 {
+                if self?.parentId != session.parentId || session.deleted == 1 {
                     return
                 }
                 self?.onSessionUpdate(session)
