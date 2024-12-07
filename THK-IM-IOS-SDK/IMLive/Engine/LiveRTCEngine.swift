@@ -91,6 +91,7 @@ public class LiveRTCEngine: NSObject {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
         do {
+            RTCAudioSession.sharedInstance().lockForConfiguration()
             if on {
                 audioSessionConfiguration.categoryOptions = [
                     .defaultToSpeaker
@@ -106,6 +107,7 @@ public class LiveRTCEngine: NSObject {
                     audioSessionConfiguration, active: true
                 )
             }
+            RTCAudioSession.sharedInstance().unlockForConfiguration()
         } catch let error {
             DDLogError("LiveRTCEngine setSpeakerOn \(error)")
         }
