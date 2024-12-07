@@ -268,11 +268,11 @@ class LiveCallViewController: BaseViewController {
         self.requestCallLayout.initCall(self)
         self.startRequestCalling()
 
-        if let filePath = Bundle.main.url(
-            forResource: "dukou", withExtension: "mp3")?.absoluteString
-        {
-            LiveMediaPlayer.shared.start(filePath)
-        }
+//        if let filePath = Bundle.main.url(
+//            forResource: "dukou", withExtension: "mp3")?.absoluteString
+//        {
+//            LiveMediaPlayer.shared.start(filePath)
+//        }
     }
 
     private func showCallingView() {
