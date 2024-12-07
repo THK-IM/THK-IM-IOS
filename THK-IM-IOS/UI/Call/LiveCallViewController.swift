@@ -232,9 +232,10 @@ class LiveCallViewController: BaseViewController {
 
     private func setupView() {
         self.showUserInfo()
-        RTCRoomManager.shared.getRoomById(self.roomId)?.getAllParticipants().forEach({ p in
-            initParticipantView(p)
-        })
+        RTCRoomManager.shared.getRoomById(self.roomId)?.getAllParticipants()
+            .forEach({ p in
+                initParticipantView(p)
+            })
 
         if self.callType == CallType.RequestCalling.rawValue {
             self.showRequestCallView()
@@ -244,7 +245,9 @@ class LiveCallViewController: BaseViewController {
     }
 
     private func showUserInfo() {
-        if let remoteParticipants = RTCRoomManager.shared.getRoomById(self.roomId)?.getRemoteParticipants() {
+        if let remoteParticipants = RTCRoomManager.shared.getRoomById(
+            self.roomId)?.getRemoteParticipants()
+        {
             for m in remoteParticipants {
                 if m.uId != RTCRoomManager.shared.myUId {
                     IMCoreManager.shared.userModule.queryUser(id: m.uId)
@@ -264,6 +267,12 @@ class LiveCallViewController: BaseViewController {
 
         self.requestCallLayout.initCall(self)
         self.startRequestCalling()
+
+        if let filePath = Bundle.main.url(
+            forResource: "dukou", withExtension: "mp3")?.absoluteString
+        {
+            LiveMediaPlayer.shared.start(filePath)
+        }
     }
 
     private func showCallingView() {
@@ -334,7 +343,9 @@ extension LiveCallViewController: RTCRoomCallBack {
     }
 
     func onParticipantVoice(_ uId: Int64, _ volume: Double) {
-        print("onParticipantVoice uId: \(uId), isMyself: \(uId==RTCRoomManager.shared.myUId) volume: \(volume))")
+        print(
+            "onParticipantVoice uId: \(uId), isMyself: \(uId==RTCRoomManager.shared.myUId) volume: \(volume))"
+        )
     }
 
     func onTextMsgReceived(_ type: Int, _ text: String) {

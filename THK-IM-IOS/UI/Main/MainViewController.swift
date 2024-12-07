@@ -55,6 +55,23 @@ class MainViewController: UITabBarController {
         self.viewControllers?[1].tabBarItem = itemContact
         self.viewControllers?[2].tabBarItem = itemGroup
         self.viewControllers?[3].tabBarItem = itemMine
+        
+//        if let filePath = Bundle.main.url(
+//            forResource: "dukou", withExtension: "mp3")?.absoluteString {
+//            let rat = 48000.0
+//            let channels = 2
+//            LiveMediaPlayer.shared.setAudioFormat(channels, rat)
+//            LiveMediaPlayer.shared.start(filePath)
+//            let pcmPlayer = PCMPlayer(sampleRate: rat, channels: UInt32(channels))
+//            pcmPlayer.start()
+//            DispatchQueue.global().async {
+//                while (true) {
+//                    if let data = LiveMediaPlayer.shared.fetchPCMBuffer(1000) {
+//                        pcmPlayer.playPCMData(data)
+//                    }
+//                }
+//            }
+//        }
     }
 
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {

@@ -356,6 +356,8 @@
 		F56BBFE32CBA262D00525A33 /* ic_audio_on.svg in Resources */ = {isa = PBXBuildFile; fileRef = F56BBFE22CBA262D00525A33 /* ic_audio_on.svg */; };
 		F56BBFE52CBA263900525A33 /* ic_audio_off.svg in Resources */ = {isa = PBXBuildFile; fileRef = F56BBFE42CBA263900525A33 /* ic_audio_off.svg */; };
 		F56BBFEA2CBA2AC700525A33 /* CircularProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56BBFE92CBA2AC700525A33 /* CircularProgressBarView.swift */; };
+		F5C4EA8A2D041CF300F13F43 /* PCMPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C4EA892D041CEC00F13F43 /* PCMPlayer.swift */; };
+		F5C4EA8C2D0423DA00F13F43 /* dukou.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F5C4EA8B2D0423DA00F13F43 /* dukou.mp3 */; };
 		F5F1F9C52CE8B8C50034EF5A /* BeRequestedCallingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F1F9C42CE8B8C30034EF5A /* BeRequestedCallingPopup.swift */; };
 		F5F1F9C72CE8BFA50034EF5A /* IMLiveRequestProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F1F9C62CE8BFA20034EF5A /* IMLiveRequestProcessor.swift */; };
 		F5F1F9C92CE8E27D0034EF5A /* LeaveRoomVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F1F9C82CE8E2780034EF5A /* LeaveRoomVo.swift */; };
@@ -737,6 +739,8 @@
 		F56BBFE22CBA262D00525A33 /* ic_audio_on.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ic_audio_on.svg; sourceTree = "<group>"; };
 		F56BBFE42CBA263900525A33 /* ic_audio_off.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ic_audio_off.svg; sourceTree = "<group>"; };
 		F56BBFE92CBA2AC700525A33 /* CircularProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBarView.swift; sourceTree = "<group>"; };
+		F5C4EA892D041CEC00F13F43 /* PCMPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCMPlayer.swift; sourceTree = "<group>"; };
+		F5C4EA8B2D0423DA00F13F43 /* dukou.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = dukou.mp3; sourceTree = "<group>"; };
 		F5F1F9C42CE8B8C30034EF5A /* BeRequestedCallingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeRequestedCallingPopup.swift; sourceTree = "<group>"; };
 		F5F1F9C62CE8BFA20034EF5A /* IMLiveRequestProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLiveRequestProcessor.swift; sourceTree = "<group>"; };
 		F5F1F9C82CE8E2780034EF5A /* LeaveRoomVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveRoomVo.swift; sourceTree = "<group>"; };
@@ -776,6 +780,7 @@
 		9A090E202CD2165C00ED7F86 /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				F5C4EA892D041CEC00F13F43 /* PCMPlayer.swift */,
 				9AE024432CEDBE2F00ADB67D /* LiveMediaConstraints.swift */,
 				9A090E292CD220F400ED7F86 /* LiveCacheQueue.swift */,
 				9A090E272CD2208B00ED7F86 /* LiveMediaPlayer.swift */,
@@ -790,6 +795,7 @@
 		9A33B93C2D01A8E3000380AC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F5C4EA8B2D0423DA00F13F43 /* dukou.mp3 */,
 				9A33B93D2D01A8E9000380AC /* sample-111s.mp3 */,
 				9A33B93E2D01A8E9000380AC /* sample-340s.mp3 */,
 			);
@@ -1948,6 +1954,7 @@
 				A0589A252C21557D003419B8 /* icon_video_pause.svg in Resources */,
 				A0589A492C21557D003419B8 /* ic_toolbar_menu_more.svg in Resources */,
 				A0589A122C21557D003419B8 /* ic_emoji_send.svg in Resources */,
+				F5C4EA8C2D0423DA00F13F43 /* dukou.mp3 in Resources */,
 				A0589A062C21557D003419B8 /* ic_titlebar_search.svg in Resources */,
 				A0589A152C21557D003419B8 /* ic_more.svg in Resources */,
 				A0589A162C21557D003419B8 /* ic_volume_2.svg in Resources */,
@@ -2113,6 +2120,7 @@
 				A0D68BB32A888679004D11A5 /* IMBaseFunctionCellProvider.swift in Sources */,
 				A0D68BAD2A888679004D11A5 /* IMUnicodeEmojiCell.swift in Sources */,
 				A0FCA8E82B48EF4700FC6E47 /* LoginVo.swift in Sources */,
+				F5C4EA8A2D041CF300F13F43 /* PCMPlayer.swift in Sources */,
 				A0FCA8DE2B48E92300FC6E47 /* UserVo.swift in Sources */,
 				A018CE0C2B00A4A200896B87 /* IMMsgReplyOperator.swift in Sources */,
 				A0EF35572B5C014E00940F54 /* IMSessionMemberCell.swift in Sources */,

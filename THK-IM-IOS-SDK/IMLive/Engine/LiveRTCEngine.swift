@@ -64,7 +64,7 @@ public class LiveRTCEngine: NSObject {
             try RTCAudioSession.sharedInstance().setMode(AVAudioSession.Mode.voiceChat)
             RTCAudioSession.sharedInstance().unlockForConfiguration()
         } catch {
-            DDLogError("setConfiguration \(error)")
+            DDLogError("LiveRTCEngine initAudioConfig \(error)")
         }
     }
 
@@ -107,7 +107,7 @@ public class LiveRTCEngine: NSObject {
                 )
             }
         } catch let error {
-            debugPrint("Couldn't force audio to speaker: \(error)")
+            DDLogError("LiveRTCEngine setSpeakerOn \(error)")
         }
         RTCAudioSession.sharedInstance().unlockForConfiguration()
     }
