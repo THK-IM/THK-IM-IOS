@@ -83,10 +83,11 @@ open class BaseParticipant: NSObject {
         let config = RTCConfiguration()
         // Unified plan is more superior than planB
         config.sdpSemantics = .unifiedPlan
-        let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
+        let mediaConstraints = LiveMediaConstraints.offerOrAnswerConstraint(
+            isReceive: (self is RemoteParticipant), enableStereo: true)
         let p = LiveRTCEngine.shared.factory.peerConnection(
             with: config,
-            constraints: constraints,
+            constraints: mediaConstraints,
             delegate: self
         )
         self.peerConnection = p
@@ -104,11 +105,17 @@ open class BaseParticipant: NSObject {
         p.offer(for: mediaConstraints) { [weak self] sdp, err in
             if err == nil {
                 if sdp != nil && sdp!.type == RTCSdpType.offer {
-                    var stereoSdp = sdp!.description
-                    stereoSdp = stereoSdp.replacingOccurrences(
-                        of: "useinbandfec=1", with: "useinbandfec=1;stereo=1")
-                    let newSdp = RTCSessionDescription(type: sdp!.type, sdp: stereoSdp)
                     self?.onLocalSdpCreated(sdp!)
+                    var stereoSdp = sdp!.description
+                    if stereoSdp.contains("useinbandfec=1;stereo=1") || self is LocalParticipant {
+                        self?.onLocalSdpCreated(sdp!)
+                    } else {
+                        stereoSdp = stereoSdp.replacingOccurrences(
+                            of: "useinbandfec=1", with: "useinbandfec=1;stereo=1")
+                        let newSdp = RTCSessionDescription.init(type: sdp!.type, sdp: stereoSdp)
+                        self?.onLocalSdpCreated(newSdp)
+                    }
+
                 }
             } else {
                 self?.onError("offer", err!)
@@ -133,7 +140,7 @@ open class BaseParticipant: NSObject {
             if err == nil {
                 sf.onLocalSdpSetSuccess(sdp)
             } else {
-                sf.onError("onLocalSdpSetSuccess", err!)
+                sf.onError("onLocalSdpCreated", err!)
             }
         }
     }

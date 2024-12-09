@@ -18,6 +18,7 @@
 		9A276B892CD3248C007B2CD5 /* MediaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A276B882CD32486007B2CD5 /* MediaParams.swift */; };
 		9A33B93F2D01A8E9000380AC /* sample-340s.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A33B93E2D01A8E9000380AC /* sample-340s.mp3 */; };
 		9A33B9402D01A8E9000380AC /* sample-111s.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A33B93D2D01A8E9000380AC /* sample-111s.mp3 */; };
+		9A33B9422D070679000380AC /* test.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A33B9412D070678000380AC /* test.mp3 */; };
 		9A64597B2CEF4B3800D952F6 /* IMCallMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A64597A2CEF4B3300D952F6 /* IMCallMsg.swift */; };
 		9A64597D2CEF4C0D00D952F6 /* IMCallMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */; };
 		9A6459832CEF4D4C00D952F6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6459822CEF4D4900D952F6 /* Constant.swift */; };
@@ -392,6 +393,7 @@
 		9A276B882CD32486007B2CD5 /* MediaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaParams.swift; sourceTree = "<group>"; };
 		9A33B93D2D01A8E9000380AC /* sample-111s.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "sample-111s.mp3"; sourceTree = "<group>"; };
 		9A33B93E2D01A8E9000380AC /* sample-340s.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "sample-340s.mp3"; sourceTree = "<group>"; };
+		9A33B9412D070678000380AC /* test.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = test.mp3; sourceTree = "<group>"; };
 		9A64597A2CEF4B3300D952F6 /* IMCallMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsg.swift; sourceTree = "<group>"; };
 		9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgView.swift; sourceTree = "<group>"; };
 		9A6459822CEF4D4900D952F6 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -795,6 +797,7 @@
 		9A33B93C2D01A8E3000380AC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9A33B9412D070678000380AC /* test.mp3 */,
 				F5C4EA8B2D0423DA00F13F43 /* dukou.mp3 */,
 				9A33B93D2D01A8E9000380AC /* sample-111s.mp3 */,
 				9A33B93E2D01A8E9000380AC /* sample-340s.mp3 */,
@@ -1962,6 +1965,7 @@
 				A0D68AA02A88838C004D11A5 /* Assets.xcassets in Resources */,
 				A0589A072C21557D003419B8 /* ic_msg_failed.svg in Resources */,
 				A0589A242C21557D003419B8 /* ic_msg_opr_edit.svg in Resources */,
+				9A33B9422D070679000380AC /* test.mp3 in Resources */,
 				A0589A1B2C21557D003419B8 /* ic_emoji_del.svg in Resources */,
 				F56BBFE32CBA262D00525A33 /* ic_audio_on.svg in Resources */,
 				A0589A1A2C21557D003419B8 /* ic_msg_forward.svg in Resources */,

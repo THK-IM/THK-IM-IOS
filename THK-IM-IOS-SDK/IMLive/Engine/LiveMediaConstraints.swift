@@ -60,12 +60,12 @@ public class LiveMediaConstraints {
     public static func offerOrAnswerConstraint(isReceive: Bool, enableStereo: Bool) -> RTCMediaConstraints {
         
         var mandatoryConstraints = [String: String]()
-        if !isReceive {
-            mandatoryConstraints["OfferToReceiveAudio"] = "false"
-            mandatoryConstraints["OfferToReceiveVideo"] = "false"
-        } else {
+        if isReceive {
             mandatoryConstraints["OfferToReceiveAudio"] = "true"
             mandatoryConstraints["OfferToReceiveVideo"] = "true"
+        } else {
+            mandatoryConstraints["OfferToReceiveAudio"] = "false"
+            mandatoryConstraints["OfferToReceiveVideo"] = "false"
         }
         mandatoryConstraints["googCpuOveruseDetection"] = "false"
         
