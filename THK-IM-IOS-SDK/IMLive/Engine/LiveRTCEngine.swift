@@ -52,20 +52,24 @@ public class LiveRTCEngine: NSObject {
 
     public func initAudioConfig() {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
+        audioSessionConfiguration.sampleRate = 48000
+        audioSessionConfiguration.inputNumberOfChannels = 2
+        audioSessionConfiguration.outputNumberOfChannels = 2
         audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
         audioSessionConfiguration.categoryOptions = [
-            .defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
+            .defaultToSpeaker, .allowBluetoothA2DP,
         ]
+        RTCAudioSession.sharedInstance().lockForConfiguration()
         do {
-            RTCAudioSession.sharedInstance().lockForConfiguration()
+            audioSessionConfiguration.mode = AVAudioSession.Mode.videoChat.rawValue
             try RTCAudioSession.sharedInstance().setConfiguration(
                 audioSessionConfiguration, active: true
             )
-            try RTCAudioSession.sharedInstance().setMode(AVAudioSession.Mode.voiceChat)
-            RTCAudioSession.sharedInstance().unlockForConfiguration()
         } catch {
             DDLogError("LiveRTCEngine initAudioConfig \(error)")
         }
+        RTCAudioSession.sharedInstance().unlockForConfiguration()
+        DDLogError("LiveRTCEngine initAudioConfig \(RTCAudioSession.sharedInstance().sampleRate), \(RTCAudioSession.sharedInstance().inputNumberOfChannels), \(RTCAudioSession.sharedInstance().outputNumberOfChannels)")
     }
 
     /**
@@ -95,13 +99,15 @@ public class LiveRTCEngine: NSObject {
                 audioSessionConfiguration.categoryOptions = [
                     .defaultToSpeaker
                 ]
+                audioSessionConfiguration.mode = AVAudioSession.Mode.videoChat.rawValue
                 try RTCAudioSession.sharedInstance().setConfiguration(
                     audioSessionConfiguration, active: true
                 )
             } else {
                 audioSessionConfiguration.categoryOptions = [
-                    .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
+                    .allowBluetoothA2DP
                 ]
+                audioSessionConfiguration.mode = AVAudioSession.Mode.videoChat.rawValue
                 try RTCAudioSession.sharedInstance().setConfiguration(
                     audioSessionConfiguration, active: true
                 )
@@ -110,6 +116,8 @@ public class LiveRTCEngine: NSObject {
             DDLogError("LiveRTCEngine setSpeakerOn \(error)")
         }
         RTCAudioSession.sharedInstance().unlockForConfiguration()
+        
+        DDLogError("LiveRTCEngine setSpeakerOn \(on) \(RTCAudioSession.sharedInstance().sampleRate), \(RTCAudioSession.sharedInstance().inputNumberOfChannels), \(RTCAudioSession.sharedInstance().outputNumberOfChannels)")
     }
 
     /**

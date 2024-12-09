@@ -99,22 +99,15 @@ open class BaseParticipant: NSObject {
         guard let p = self.peerConnection else {
             return
         }
-        var mandatoryConstraints = [String: String]()
-        if self is LocalParticipant {
-            mandatoryConstraints["OfferToReceiveAudio"] = "false"
-            mandatoryConstraints["OfferToReceiveVideo"] = "false"
-        } else {
-            mandatoryConstraints["OfferToReceiveAudio"] = "true"
-            mandatoryConstraints["OfferToReceiveVideo"] = "true"
-        }
-        mandatoryConstraints["googCpuOveruseDetection"] = "false"
-        let mediaConstraints = RTCMediaConstraints(
-            mandatoryConstraints: mandatoryConstraints,
-            optionalConstraints: nil
-        )
+        let mediaConstraints = LiveMediaConstraints.offerOrAnswerConstraint(
+            isReceive: (self is RemoteParticipant), enableStereo: true)
         p.offer(for: mediaConstraints) { [weak self] sdp, err in
             if err == nil {
                 if sdp != nil && sdp!.type == RTCSdpType.offer {
+                    var stereoSdp = sdp!.description
+                    stereoSdp = stereoSdp.replacingOccurrences(
+                        of: "useinbandfec=1", with: "useinbandfec=1;stereo=1")
+                    let newSdp = RTCSessionDescription(type: sdp!.type, sdp: stereoSdp)
                     self?.onLocalSdpCreated(sdp!)
                 }
             } else {

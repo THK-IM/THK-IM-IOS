@@ -20,6 +20,7 @@ open class LiveAudioRenderProxy: NSObject, RTCAudioCustomProcessingDelegate {
     }
 
     open func audioProcessingProcess(audioBuffer: RTCAudioBuffer) {
+        print("LiveAudioRenderProxy sampleRate \(audioBuffer.frames), channels \(audioBuffer.channels), framesPerBand \(audioBuffer.framesPerBand), bands \(audioBuffer.bands), \(RTCAudioSession.sharedInstance().sampleRate)")
 //        let data = LiveMediaPlayer.shared.cachedPCMBuffer()
 //        let sampleRate = LiveMediaPlayer.shared.sampleRate()
 //        for i in (0..<audioBuffer.channels) {

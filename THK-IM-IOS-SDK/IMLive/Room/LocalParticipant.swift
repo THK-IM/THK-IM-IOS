@@ -36,7 +36,7 @@ open class LocalParticipant: BaseParticipant {
         }
         if self.audioEnable && self.role == Role.Broadcaster.rawValue {
             let constraints = LiveMediaConstraints.build(
-                enable3a: true, enableCpu: true, enableGainControl: true
+                enable3a: true, enableCpu: true, enableGainControl: true, enableStereo: true
             )
             let audioSource = LiveRTCEngine.shared.factory.audioSource(with: constraints)
             let audioTrack = LiveRTCEngine.shared.factory.audioTrack(

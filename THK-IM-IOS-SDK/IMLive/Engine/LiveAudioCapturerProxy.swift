@@ -36,7 +36,7 @@ open class LiveAudioCapturerProxy: NSObject, RTCAudioCustomProcessingDelegate {
 //            LiveRTCEngine.shared.captureOriginAudio(channelBuffers, audioBuffer.channels)
 //            self.lastCal = current
 //        }
-        print("LiveAudioCapturerProxy sampleRate \(audioBuffer.frames), channels \(audioBuffer.channels), framesPerBand \(audioBuffer.framesPerBand), bands \(audioBuffer.bands)")
+        print("LiveAudioCapturerProxy sampleRate \(audioBuffer.frames), channels \(audioBuffer.channels), framesPerBand \(audioBuffer.framesPerBand), bands \(audioBuffer.bands), \(RTCAudioSession.sharedInstance().sampleRate)")
         let data = LiveMediaPlayer.shared.fetchPCMBuffer(UInt32(audioBuffer.frames))
         for i in  (0..<audioBuffer.channels) {
             if (data != nil) {

@@ -13,7 +13,8 @@ public class LiveMediaConstraints {
     public static func build(
         enable3a: Bool,
         enableCpu: Bool,
-        enableGainControl: Bool
+        enableGainControl: Bool,
+        enableStereo: Bool
     ) -> RTCMediaConstraints {
         var enable3aStr = ""
         if enable3a { enable3aStr = "true" } else { enable3aStr = "false" }
@@ -42,9 +43,45 @@ public class LiveMediaConstraints {
         }
         mandatoryConstraints["googAutoGainControl2"] = enableGainControlStr
 
+        var enableStereoStr = ""
+        if enableStereo {
+            enableStereoStr = "true"
+        } else {
+            enableStereoStr = "false"
+        }
+        mandatoryConstraints["stereo"] = enableStereoStr
+        
         let constraints = RTCMediaConstraints.init(
             mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
         return constraints
     }
+    
+    
+    public static func offerOrAnswerConstraint(isReceive: Bool, enableStereo: Bool) -> RTCMediaConstraints {
+        
+        var mandatoryConstraints = [String: String]()
+        if !isReceive {
+            mandatoryConstraints["OfferToReceiveAudio"] = "false"
+            mandatoryConstraints["OfferToReceiveVideo"] = "false"
+        } else {
+            mandatoryConstraints["OfferToReceiveAudio"] = "true"
+            mandatoryConstraints["OfferToReceiveVideo"] = "true"
+        }
+        mandatoryConstraints["googCpuOveruseDetection"] = "false"
+        
+        var enableStereoStr = ""
+        if enableStereo {
+            enableStereoStr = "true"
+        } else {
+            enableStereoStr = "false"
+        }
+        mandatoryConstraints["stereo"] = enableStereoStr
+        
+        let mediaConstraints = RTCMediaConstraints(
+            mandatoryConstraints: mandatoryConstraints,
+            optionalConstraints: nil
+        )
+        return mediaConstraints
+   }
 
 }
