@@ -93,10 +93,10 @@ open class LocalParticipant: BaseParticipant {
         self.innerDataChannel = p.dataChannel(forLabel: "", configuration: dcConfig)
         self.innerDataChannel?.delegate = self
     }
-    
+
     private func startCaptureVideo() {
         // 设置设备
-        if let device = self.getFrontCameraDevice()  {
+        if let device = self.getFrontCameraDevice() {
             if let format = self.chooseFormat(device) {
                 self.videoCapturer?.startCapture(
                     with: device, format: format, fps: Int(self.mediaParams.videoFps))

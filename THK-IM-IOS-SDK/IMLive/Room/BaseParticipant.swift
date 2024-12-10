@@ -106,16 +106,6 @@ open class BaseParticipant: NSObject {
             if err == nil {
                 if sdp != nil && sdp!.type == RTCSdpType.offer {
                     self?.onLocalSdpCreated(sdp!)
-                    var stereoSdp = sdp!.description
-                    if stereoSdp.contains("useinbandfec=1;stereo=1") || self is LocalParticipant {
-                        self?.onLocalSdpCreated(sdp!)
-                    } else {
-                        stereoSdp = stereoSdp.replacingOccurrences(
-                            of: "useinbandfec=1", with: "useinbandfec=1;stereo=1")
-                        let newSdp = RTCSessionDescription.init(type: sdp!.type, sdp: stereoSdp)
-                        self?.onLocalSdpCreated(newSdp)
-                    }
-
                 }
             } else {
                 self?.onError("offer", err!)
@@ -367,7 +357,7 @@ extension BaseParticipant: RTCPeerConnectionDelegate {
      */
     public func peerConnection(
         peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver,
-        streams mediaStreams: [RTCMediaStream]
+        streams mediaStreams: Array<RTCMediaStream>
     ) {
         DDLogInfo("peerConnection didAdd RTCRtpReceiver \(self)")
     }

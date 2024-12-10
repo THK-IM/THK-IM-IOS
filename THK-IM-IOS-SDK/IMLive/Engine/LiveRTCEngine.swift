@@ -52,24 +52,20 @@ public class LiveRTCEngine: NSObject {
 
     public func initAudioConfig() {
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
-        audioSessionConfiguration.sampleRate = 48000
-        audioSessionConfiguration.inputNumberOfChannels = 2
-        audioSessionConfiguration.outputNumberOfChannels = 2
         audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
         audioSessionConfiguration.categoryOptions = [
-            .defaultToSpeaker, .allowBluetoothA2DP,
+            .defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
         ]
-        RTCAudioSession.sharedInstance().lockForConfiguration()
         do {
-            audioSessionConfiguration.mode = AVAudioSession.Mode.videoChat.rawValue
+            RTCAudioSession.sharedInstance().lockForConfiguration()
             try RTCAudioSession.sharedInstance().setConfiguration(
                 audioSessionConfiguration, active: true
             )
+            RTCAudioSession.sharedInstance().unlockForConfiguration()
         } catch {
             DDLogError("LiveRTCEngine initAudioConfig \(error)")
         }
-        RTCAudioSession.sharedInstance().unlockForConfiguration()
-        DDLogError("LiveRTCEngine initAudioConfig \(RTCAudioSession.sharedInstance().sampleRate), \(RTCAudioSession.sharedInstance().inputNumberOfChannels), \(RTCAudioSession.sharedInstance().outputNumberOfChannels)")
+        DDLogInfo("LiveRTCEngine initAudioConfig \(RTCAudioSession.sharedInstance().sampleRate), \(RTCAudioSession.sharedInstance().inputNumberOfChannels), \(RTCAudioSession.sharedInstance().outputNumberOfChannels)")
     }
 
     /**
@@ -79,6 +75,7 @@ public class LiveRTCEngine: NSObject {
         let currentRoute = RTCAudioSession.sharedInstance().currentRoute
         var isSpeakerOutput = false
         for output in currentRoute.outputs {
+            DDLogInfo("LiveRTCEngine, \(output.portName)")
             if output.portType == AVAudioSession.Port.builtInSpeaker {
                 isSpeakerOutput = true
                 break
@@ -91,33 +88,25 @@ public class LiveRTCEngine: NSObject {
      * 打开扬声器外放
     */
     public func setSpeakerOn(_ on: Bool) {
-        RTCAudioSession.sharedInstance().lockForConfiguration()
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
-        audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
-        do {
-            if on {
-                audioSessionConfiguration.categoryOptions = [
-                    .defaultToSpeaker
-                ]
-                audioSessionConfiguration.mode = AVAudioSession.Mode.videoChat.rawValue
-                try RTCAudioSession.sharedInstance().setConfiguration(
-                    audioSessionConfiguration, active: true
-                )
-            } else {
-                audioSessionConfiguration.categoryOptions = [
-                    .allowBluetoothA2DP
-                ]
-                audioSessionConfiguration.mode = AVAudioSession.Mode.videoChat.rawValue
-                try RTCAudioSession.sharedInstance().setConfiguration(
-                    audioSessionConfiguration, active: true
-                )
-            }
-        } catch let error {
-            DDLogError("LiveRTCEngine setSpeakerOn \(error)")
+        if on {
+            audioSessionConfiguration.categoryOptions = [
+                .defaultToSpeaker,
+            ]
+        } else {
+            audioSessionConfiguration.categoryOptions = [
+                .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
+            ]
         }
-        RTCAudioSession.sharedInstance().unlockForConfiguration()
-        
-        DDLogError("LiveRTCEngine setSpeakerOn \(on) \(RTCAudioSession.sharedInstance().sampleRate), \(RTCAudioSession.sharedInstance().inputNumberOfChannels), \(RTCAudioSession.sharedInstance().outputNumberOfChannels)")
+        do {
+            RTCAudioSession.sharedInstance().lockForConfiguration()
+            try RTCAudioSession.sharedInstance().setConfiguration(
+                audioSessionConfiguration, active: true)
+            RTCAudioSession.sharedInstance().unlockForConfiguration()
+        } catch {
+            DDLogError("LiveRTCEngine setSpeakerOn \(on) \(error)")
+        }
+        DDLogInfo("LiveRTCEngine initAudioConfig \(RTCAudioSession.sharedInstance().sampleRate), \(RTCAudioSession.sharedInstance().inputNumberOfChannels), \(RTCAudioSession.sharedInstance().outputNumberOfChannels)")
     }
 
     /**
