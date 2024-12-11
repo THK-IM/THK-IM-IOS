@@ -15,20 +15,10 @@ public class LiveRTCEngine: NSObject {
     public static let shared = LiveRTCEngine()
 
     var factory: RTCPeerConnectionFactory
-    private var audioProcessingModule: RTCDefaultAudioProcessingModule
-    private var audioCaptureDelegate: RTCAudioCustomProcessingDelegate
-    private var audioRenderDelegate: RTCAudioCustomProcessingDelegate
     private var videoCaptureDelegate: LiveVideoCapturerProxy?
 
     private override init() {
         RTCPeerConnectionFactory.initialize()
-        self.audioRenderDelegate = LiveAudioRenderProxy()
-        self.audioCaptureDelegate = LiveAudioCapturerProxy()
-
-        self.audioProcessingModule = RTCDefaultAudioProcessingModule.init()
-        self.audioProcessingModule.capturePostProcessingDelegate = self.audioCaptureDelegate
-        self.audioProcessingModule.renderPreProcessingDelegate = self.audioRenderDelegate
-
         let videoProxy = LiveVideoCapturerProxy()
         self.videoCaptureDelegate = videoProxy
         let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
@@ -39,33 +29,41 @@ public class LiveRTCEngine: NSObject {
                 videoEncoderFactory.preferredCodec = c
             }
         }
+        //        self.factory = RTCPeerConnectionFactory.init(
+        //            bypassVoiceProcessing: false,
+        //            encoderFactory: videoEncoderFactory,
+        //            decoderFactory: videoDecoderFactory,
+        //            audioProcessingModule: self.audioProcessingModule
+        //        )
+
+        let audioDevice = AVAudioEngineRTCAudioDevice()
         self.factory = RTCPeerConnectionFactory.init(
-            bypassVoiceProcessing: false,
-            encoderFactory: videoEncoderFactory,
-            decoderFactory: videoDecoderFactory,
-            audioProcessingModule: self.audioProcessingModule
-        )
+            encoderFactory: videoEncoderFactory, decoderFactory: videoDecoderFactory,
+            audioDevice: audioDevice)
+
         let option = RTCPeerConnectionFactoryOptions.init()
         self.factory.setOptions(option)
         super.init()
     }
 
     public func initAudioConfig() {
+        RTCAudioSession.sharedInstance().lockForConfiguration()
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
+        audioSessionConfiguration.mode = AVAudioSession.Mode.videoChat.rawValue
         audioSessionConfiguration.categoryOptions = [
             .defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
         ]
         do {
-            RTCAudioSession.sharedInstance().lockForConfiguration()
             try RTCAudioSession.sharedInstance().setConfiguration(
                 audioSessionConfiguration, active: true
             )
-            RTCAudioSession.sharedInstance().unlockForConfiguration()
+            try RTCAudioSession.sharedInstance().setPreferredSampleRate(48000)
+            try RTCAudioSession.sharedInstance().setPreferredOutputNumberOfChannels(2)
         } catch {
             DDLogError("LiveRTCEngine initAudioConfig \(error)")
         }
-        DDLogInfo("LiveRTCEngine initAudioConfig \(RTCAudioSession.sharedInstance().sampleRate), \(RTCAudioSession.sharedInstance().inputNumberOfChannels), \(RTCAudioSession.sharedInstance().outputNumberOfChannels)")
+        RTCAudioSession.sharedInstance().unlockForConfiguration()
     }
 
     /**
@@ -75,7 +73,6 @@ public class LiveRTCEngine: NSObject {
         let currentRoute = RTCAudioSession.sharedInstance().currentRoute
         var isSpeakerOutput = false
         for output in currentRoute.outputs {
-            DDLogInfo("LiveRTCEngine, \(output.portName)")
             if output.portType == AVAudioSession.Port.builtInSpeaker {
                 isSpeakerOutput = true
                 break
@@ -88,6 +85,7 @@ public class LiveRTCEngine: NSObject {
      * 打开扬声器外放
     */
     public func setSpeakerOn(_ on: Bool) {
+        RTCAudioSession.sharedInstance().lockForConfiguration()
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         if on {
             audioSessionConfiguration.categoryOptions = [
@@ -99,14 +97,14 @@ public class LiveRTCEngine: NSObject {
             ]
         }
         do {
-            RTCAudioSession.sharedInstance().lockForConfiguration()
             try RTCAudioSession.sharedInstance().setConfiguration(
                 audioSessionConfiguration, active: true)
-            RTCAudioSession.sharedInstance().unlockForConfiguration()
+            try RTCAudioSession.sharedInstance().setPreferredSampleRate(48000)
+            try RTCAudioSession.sharedInstance().setPreferredOutputNumberOfChannels(2)
         } catch {
             DDLogError("LiveRTCEngine setSpeakerOn \(on) \(error)")
         }
-        DDLogInfo("LiveRTCEngine initAudioConfig \(RTCAudioSession.sharedInstance().sampleRate), \(RTCAudioSession.sharedInstance().inputNumberOfChannels), \(RTCAudioSession.sharedInstance().outputNumberOfChannels)")
+        RTCAudioSession.sharedInstance().unlockForConfiguration()
     }
 
     /**
@@ -160,15 +158,11 @@ public class LiveRTCEngine: NSObject {
         self.videoCaptureDelegate = proxy
     }
 
-    public func updateAudioCaptureDelegate(_ delegate: RTCAudioCustomProcessingDelegate) {
-        self.audioCaptureDelegate = delegate
-        self.audioProcessingModule.capturePostProcessingDelegate = delegate
-    }
-
-    public func updateAudioRenderDelegate(_ delegate: RTCAudioCustomProcessingDelegate) {
-        self.audioRenderDelegate = delegate
-        self.audioProcessingModule.renderPreProcessingDelegate = delegate
-    }
+//    public func updateAudioCaptureDelegate(_ delegate: RTCAudioCustomProcessingDelegate) {
+//    }
+//
+//    public func updateAudioRenderDelegate(_ delegate: RTCAudioCustomProcessingDelegate) {
+//    }
 
     public func captureOriginAudio(_ samples: [[Float]], _ channel: Int) {
         DispatchQueue.main.async {

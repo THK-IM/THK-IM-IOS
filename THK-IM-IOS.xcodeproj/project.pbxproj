@@ -29,6 +29,12 @@
 		9A9D71D92CD0F17D00936EB6 /* CallRoomMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */; };
 		9A9D71DB2CD0F1DB00936EB6 /* InviteMemberVo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */; };
 		9A9D71DD2CD0F64D00936EB6 /* LiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9D71DC2CD0F64D00936EB6 /* LiveManager.swift */; };
+		9AAA61342D0933D300EC35E1 /* LiveAudioDeviceModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAA61332D0933C800EC35E1 /* LiveAudioDeviceModule.swift */; };
+		9AAA61362D094B2500EC35E1 /* AVAudioEngineRTCAudioDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAA61352D094B1C00EC35E1 /* AVAudioEngineRTCAudioDevice.swift */; };
+		9AAA61382D094B5100EC35E1 /* AudioSessionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAA61372D094B5000EC35E1 /* AudioSessionHandler.swift */; };
+		9AAA613A2D094B8300EC35E1 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAA61392D094B8200EC35E1 /* Utils.swift */; };
+		9AAA613C2D094BDD00EC35E1 /* SimpleAudioConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAA613B2D094BDB00EC35E1 /* SimpleAudioConverter.swift */; };
+		9AAA613E2D094D0D00EC35E1 /* AUAudioUnitRTCAudioDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAA613D2D094D0C00EC35E1 /* AUAudioUnitRTCAudioDevice.swift */; };
 		9AE024442CEDBE3200ADB67D /* LiveMediaConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE024432CEDBE2F00ADB67D /* LiveMediaConstraints.swift */; };
 		A00425FD2C36882A00977DB2 /* ic_titlebar_back.svg in Resources */ = {isa = PBXBuildFile; fileRef = A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */; };
 		A018CDF62AFF18EC00896B87 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CDF52AFF18EC00896B87 /* DateUtils.swift */; };
@@ -404,6 +410,12 @@
 		9A9D71D82CD0F17100936EB6 /* CallRoomMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DA2CD0F1D400936EB6 /* InviteMemberVo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteMemberVo.swift; sourceTree = "<group>"; };
 		9A9D71DC2CD0F64D00936EB6 /* LiveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveManager.swift; sourceTree = "<group>"; };
+		9AAA61332D0933C800EC35E1 /* LiveAudioDeviceModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveAudioDeviceModule.swift; sourceTree = "<group>"; };
+		9AAA61352D094B1C00EC35E1 /* AVAudioEngineRTCAudioDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAudioEngineRTCAudioDevice.swift; sourceTree = "<group>"; };
+		9AAA61372D094B5000EC35E1 /* AudioSessionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionHandler.swift; sourceTree = "<group>"; };
+		9AAA61392D094B8200EC35E1 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		9AAA613B2D094BDB00EC35E1 /* SimpleAudioConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAudioConverter.swift; sourceTree = "<group>"; };
+		9AAA613D2D094D0C00EC35E1 /* AUAudioUnitRTCAudioDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUAudioUnitRTCAudioDevice.swift; sourceTree = "<group>"; };
 		9AB6990F2CD4D7EA002E974C /* YbridOgg.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = YbridOgg.xcframework; sourceTree = "<group>"; };
 		9AB699112CD4D7FA002E974C /* YbridOpus.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = YbridOpus.xcframework; sourceTree = "<group>"; };
 		9AE024432CEDBE2F00ADB67D /* LiveMediaConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMediaConstraints.swift; sourceTree = "<group>"; };
@@ -782,6 +794,12 @@
 		9A090E202CD2165C00ED7F86 /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				9AAA613B2D094BDB00EC35E1 /* SimpleAudioConverter.swift */,
+				9AAA61392D094B8200EC35E1 /* Utils.swift */,
+				9AAA61372D094B5000EC35E1 /* AudioSessionHandler.swift */,
+				9AAA613D2D094D0C00EC35E1 /* AUAudioUnitRTCAudioDevice.swift */,
+				9AAA61352D094B1C00EC35E1 /* AVAudioEngineRTCAudioDevice.swift */,
+				9AAA61332D0933C800EC35E1 /* LiveAudioDeviceModule.swift */,
 				F5C4EA892D041CEC00F13F43 /* PCMPlayer.swift */,
 				9AE024432CEDBE2F00ADB67D /* LiveMediaConstraints.swift */,
 				9A090E292CD220F400ED7F86 /* LiveCacheQueue.swift */,
@@ -2135,6 +2153,7 @@
 				A0D68BC02A888679004D11A5 /* IMMsgSender.swift in Sources */,
 				A0D68BDA2A888679004D11A5 /* IMZoomImageView.swift in Sources */,
 				A025291A2ACC31CA001561A0 /* IMProvider.swift in Sources */,
+				9AAA61382D094B5100EC35E1 /* AudioSessionHandler.swift in Sources */,
 				A0FCA8F92B4919DE00FC6E47 /* GroupTabViewController.swift in Sources */,
 				A0EA42E62A94904400F64A90 /* IMDatabaseDefines.swift in Sources */,
 				A0D68BC22A888679004D11A5 /* IMMsgMiddleCellWrapper.swift in Sources */,
@@ -2146,6 +2165,7 @@
 				A0D68BCA2A888679004D11A5 /* IMSessionViewController.swift in Sources */,
 				A0D68A972A88838A004D11A5 /* AppDelegate.swift in Sources */,
 				A0D68C092A888679004D11A5 /* SignalListener.swift in Sources */,
+				9AAA61342D0933D300EC35E1 /* LiveAudioDeviceModule.swift in Sources */,
 				A033FA9F2B80AE8B0053045E /* IMSuperGroupCellProvider.swift in Sources */,
 				A033FB1B2B96C9F50053045E /* AtStringUtils.swift in Sources */,
 				A0D68BAE2A888679004D11A5 /* IMUnicodeEmojiPanelView.swift in Sources */,
@@ -2174,6 +2194,7 @@
 				A033FB0C2B8A33F60053045E /* IMsgBodyView.swift in Sources */,
 				A0D68BB52A888679004D11A5 /* IMInputLayout.swift in Sources */,
 				A0D68B912A888679004D11A5 /* Session.swift in Sources */,
+				9AAA613E2D094D0D00EC35E1 /* AUAudioUnitRTCAudioDevice.swift in Sources */,
 				A0C431E72A909CB200A84D4A /* RTCRoom.swift in Sources */,
 				A0D68BCE2A888679004D11A5 /* DismissAnimator.swift in Sources */,
 				A0978E662B723CAB0047E6A2 /* CallingInfoLayout.swift in Sources */,
@@ -2204,6 +2225,7 @@
 				A0D51DC82B11ABC600E21E75 /* ForwardMessageVo.swift in Sources */,
 				A0D68A992A88838A004D11A5 /* SceneDelegate.swift in Sources */,
 				A0D68BFD2A888679004D11A5 /* Data+ImageFormat.swift in Sources */,
+				9AAA61362D094B2500EC35E1 /* AVAudioEngineRTCAudioDevice.swift in Sources */,
 				A033FB172B933EA20053045E /* IMReadStatusView.swift in Sources */,
 				A050072F2B08BC9700526713 /* AppUtils.swift in Sources */,
 				A0CA4E692B4AAB860031DDDB /* ExternalPageRouter.swift in Sources */,
@@ -2298,6 +2320,7 @@
 				A0D68B9F2A888679004D11A5 /* IMTimeLineMsgCellProvider.swift in Sources */,
 				A0D68B9B2A888679004D11A5 /* UIColor+HexString.swift in Sources */,
 				A0C431E12A909C3100A84D4A /* LiveController.swift in Sources */,
+				9AAA613C2D094BDD00EC35E1 /* SimpleAudioConverter.swift in Sources */,
 				9A9D71D42CD0D04D00936EB6 /* RTCRoomCallBack.swift in Sources */,
 				A0D68B9E2A888679004D11A5 /* IMBaseSessionCellProvider.swift in Sources */,
 				A0FCA92E2B498A7000FC6E47 /* DeleteGroupVo.swift in Sources */,
@@ -2305,6 +2328,7 @@
 				A0D68B762A888679004D11A5 /* OGGDecoder.swift in Sources */,
 				A0D68C002A888679004D11A5 /* MimeType.swift in Sources */,
 				A0FCA8F32B4917D500FC6E47 /* MainViewController.swift in Sources */,
+				9AAA613A2D094B8300EC35E1 /* Utils.swift in Sources */,
 				F548787B2CDF6D9100FDC7B1 /* RTCRoomManager.swift in Sources */,
 				A0FCA90D2B4959C400FC6E47 /* SessionMemberDao.swift in Sources */,
 				A0CA4E652B4A9BA10031DDDB /* ContactTableCell.swift in Sources */,
