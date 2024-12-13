@@ -51,20 +51,22 @@ public class LiveRTCEngine: NSObject {
     }
 
     public func initAudioConfig() {
+        RTCAudioSession.sharedInstance().lockForConfiguration()
+        defer {
+            RTCAudioSession.sharedInstance().unlockForConfiguration()
+        }
         let audioSessionConfiguration = RTCAudioSessionConfiguration.webRTC()
         audioSessionConfiguration.category = AVAudioSession.Category.playAndRecord.rawValue
         audioSessionConfiguration.categoryOptions = [
             .defaultToSpeaker, .allowAirPlay, .allowBluetooth, .allowBluetoothA2DP,
         ]
         do {
-            RTCAudioSession.sharedInstance().lockForConfiguration()
             try RTCAudioSession.sharedInstance().setConfiguration(
                 audioSessionConfiguration, active: true
             )
             try RTCAudioSession.sharedInstance().setMode(AVAudioSession.Mode.voiceChat)
-            RTCAudioSession.sharedInstance().unlockForConfiguration()
         } catch {
-            DDLogError("setConfiguration \(error)")
+            DDLogError("LiveRTCEngine initAudioConfig \(error)")
         }
     }
 
@@ -106,8 +108,8 @@ public class LiveRTCEngine: NSObject {
                     audioSessionConfiguration, active: true
                 )
             }
-        } catch let error {
-            debugPrint("Couldn't force audio to speaker: \(error)")
+        } catch {
+            DDLogError("LiveRTCEngine setSpeakerOn \(on) \(error)")
         }
         RTCAudioSession.sharedInstance().unlockForConfiguration()
     }
