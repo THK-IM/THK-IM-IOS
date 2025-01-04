@@ -19,4 +19,8 @@ public protocol IMPreviewer: AnyObject {
     func previewRecordMessage(
         _ controller: UIViewController, _ originSession: Session, _ message: Message)
 
+    
+    /// 设置token
+    func setTokenForEndpoint(endPoint: String, token: String)
+    
 }
