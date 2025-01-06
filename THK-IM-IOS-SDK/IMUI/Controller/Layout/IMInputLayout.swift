@@ -726,6 +726,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             }
         }
         if isMuted {
+            self.speakView.endRecordAudio()
             self.renderInputText("")
             self.textViewDidChange(self.textView)
             self.clearReplyMessage()
