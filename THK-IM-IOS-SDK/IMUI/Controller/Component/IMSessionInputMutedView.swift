@@ -15,6 +15,7 @@ class IMSessionInputMutedView: UIView {
         v.textColor = .white
         v.font = UIFont.systemFont(ofSize: 16)
         v.text = ResourceUtils.loadString("member_muted_open")
+        v.numberOfLines = 1
         v.textAlignment = .center
         return v
     }()
