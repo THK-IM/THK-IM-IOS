@@ -588,6 +588,7 @@ open class IMMessageViewController: BaseViewController {
         self.session?.merge(s)
         self.session?.unreadCount = s.unreadCount
         self.updateUnreadTipsView()
+        self.inputLayout.onSessionUpdate()
     }
 
     open override func viewWillAppear(_ animated: Bool) {

@@ -135,10 +135,18 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
 
         return inputLayout
     }()
+    
+    lazy private var muteView: IMSessionInputMutedView = {
+        let v = IMSessionInputMutedView()
+        v.isHidden = true
+        return v
+    }()
+
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(self.inputLayout)
+        self.addSubview(self.muteView)
         self.setupEvent()
         self.resetLayout()
     }
@@ -277,13 +285,14 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         }
     }
 
-    func resetLayout(_ showLatestMsg: Bool = true) {
+    func resetLayout() {
         let spacing = 8
         let buttonSize = 30
         let bottom = (Int(IMInputLayout.minTextInputHeight) + 20 - buttonSize) / 2
 
         var showSpeaker = true
         var showMoreButton = true
+        var isMuted = false
         if let session = self.sender?.getSession() {
             showSpeaker =
                 IMUIManager.shared.uiResourceProvider?.supportFunction(
@@ -292,7 +301,11 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             if functions.count == 0 {
                 showMoreButton = false
             }
+            if session.mute > 0 && session.role == SessionRole.member.rawValue {
+                isMuted = true
+            }
         }
+        
         if !showSpeaker {
             self.speakButton.snp.remakeConstraints { make in
                 make.bottom.equalToSuperview().offset(0)
@@ -374,6 +387,14 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             make.bottom.equalToSuperview()
             make.height.equalTo(inputLayoutHeight)
         }
+        
+        self.muteView.snp.makeConstraints { make in
+            make.centerY.left.right.equalToSuperview()
+            make.height.equalTo(40)
+        }
+        self.muteView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
+        self.muteView.isHidden = !isMuted
+        
 
         self.switchSpeakView()
         self.switchEmojiView()
@@ -383,6 +404,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             }
             make.height.equalTo(sf.getLayoutHeight())
         }
+        
     }
 
     public override func endEditing(_ force: Bool) -> Bool {
@@ -540,11 +562,11 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         self.atRanges.removeAll()
         self.renderInputText("")
         self.textInputHeight = IMInputLayout.minTextInputHeight
-        self.resetLayout(false)
+        self.resetLayout()
     }
 
     func getInputContent() -> String? {
-        return self.textView.text
+        return self.textView.text 
     }
 
     @discardableResult func openKeyboard() -> Bool {
@@ -695,5 +717,26 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             }
         }
     }
+    
+    func onSessionUpdate() {
+        var isMuted = false
+        if let session = self.sender?.getSession() {
+            if session.mute > 0 && session.role == SessionRole.member.rawValue {
+                isMuted = true
+            }
+        }
+        if isMuted {
+            self.renderInputText("")
+            self.textViewDidChange(self.textView)
+            self.clearReplyMessage()
+            if let sender = self.sender {
+                if sender.isKeyboardShowing() {
+                    _ = sender.closeKeyboard()
+                }
+            }
+        }
+        self.resetLayout()
+    }
+    
 
 }
