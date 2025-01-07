@@ -67,6 +67,16 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTouched))
         tapGesture.cancelsTouchesInView = false  // 这样不会阻止其他控件接收 touch 事件
         self.view.addGestureRecognizer(tapGesture)
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()  // 或使用 configureWithDefaultBackground()
+            appearance.backgroundColor = UIColor.clear  // 固定背景色
+            appearance.shadowColor = UIColor.clear
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        } else {
+            navigationController?.navigationBar.barTintColor = UIColor.clear
+        }
         self.navigationController?.isNavigationBarHidden = isNavigationBarHidden
         self.navigationController?.navigationBar.isHidden = !hasTitlebar()
     }
