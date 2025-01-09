@@ -23,6 +23,8 @@ public protocol SessionMemberDao {
     func findBySessionId(_ sessionId: Int64) -> [SessionMember]
 
     func findBySessionId(_ sessionId: Int64, _ offset: Int, _ count: Int) -> [SessionMember]
+    
+    func findBySessionIdSortByRole(_ sessionId: Int64, _ offset: Int, _ count: Int) -> [SessionMember]
 
     func findSessionMemberCount(_ sessionId: Int64) -> Int
 
