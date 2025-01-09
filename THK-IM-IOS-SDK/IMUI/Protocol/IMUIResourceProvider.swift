@@ -24,5 +24,7 @@ public protocol IMUIResourceProvider {
     func inputLayoutBgColor() -> UIColor?
 
     func supportFunction(_ session: Session, _ functionFlag: Int64) -> Bool
+    
+    func canAtAll(_ session: Session) -> Bool
 
 }

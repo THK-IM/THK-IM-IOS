@@ -99,7 +99,13 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
 
     private func updateSessionMember(_ map: [Int64: (User, SessionMember?)]) {
         self.memberMap.append(contentsOf: map.values)
-        self.memberMap.append((User.all, nil))
+        if let session = self.session {
+            if let canAtAll = IMUIManager.shared.uiResourceProvider?.canAtAll(session) {
+                if canAtAll {
+                    self.memberMap.append((User.all, nil))
+                }
+            }
+        }
         self.memberTableView.reloadData()
     }
 
