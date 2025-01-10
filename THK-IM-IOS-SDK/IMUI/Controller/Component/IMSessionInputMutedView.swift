@@ -12,8 +12,8 @@ class IMSessionInputMutedView: UIView {
 
     private lazy var muteLabel: UILabel = {
         let v = UILabel()
-        v.textColor = .white
-        v.font = UIFont.systemFont(ofSize: 16)
+        v.textColor = UIColor.init(hex: "222222")
+        v.font = UIFont.boldSystemFont(ofSize: 14)
         v.text = ResourceUtils.loadString("member_muted_open")
         v.numberOfLines = 1
         v.textAlignment = .center
@@ -23,7 +23,6 @@ class IMSessionInputMutedView: UIView {
     private lazy var bgView: UIView = {
         let v = UIView()
         v.layer.cornerRadius = 20
-        v.layer.backgroundColor = UIColor.init(hex: "7F7F7F").cgColor
         v.addSubview(self.muteLabel)
         self.muteLabel.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
