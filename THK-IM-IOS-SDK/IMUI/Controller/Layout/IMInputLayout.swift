@@ -13,7 +13,8 @@ import SnapKit
 import UIKit
 import YbridOpus
 
-public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate {
+public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
+{
 
     weak var sender: IMMsgSender? = nil {
         didSet {
@@ -34,7 +35,8 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             replyMsgHeight = defaultReplyHeight
         }
         if self.isSpeakViewShow {
-            return IMInputLayout.minTextInputHeight + CGFloat(replyMsgHeight) + 20.0
+            return IMInputLayout.minTextInputHeight + CGFloat(replyMsgHeight)
+                + 20.0
         }
         return self.textInputHeight + CGFloat(replyMsgHeight) + 20.0
     }
@@ -61,7 +63,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
 
     lazy private var speakButton: UIButton = {
         let voiceButton = UIButton()
-        let image = ResourceUtils.loadImage(named: "ic_msg_voice")?.scaledToSize(iconSize)
+        let image = ResourceUtils.loadImage(named: "ic_msg_voice")?
+            .withTintColor(
+                IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                    ?? UIColor.init(hex: "333333")
+            )
+            .scaledToSize(iconSize)
         if image != nil {
             voiceButton.setImage(image!, for: .normal)
             voiceButton.contentHorizontalAlignment = .fill
@@ -75,17 +82,24 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     lazy private var textView: IMTextView = {
         let textView = IMTextView()
         textView.delegate = self
-        textView.placeholder = ResourceUtils.loadString("say_something", comment: "")
+        textView.placeholder = ResourceUtils.loadString("say_something")
+        textView.placeHolderColor =
+            IMUIManager.shared.uiResourceProvider?.tipTextColor()
+            ?? UIColor.init(hex: "#666666")
         textView.isScrollEnabled = true
-        textView.textColor = UIColor.init(hex: "#333333")
+        textView.textColor =
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+            ?? UIColor.init(hex: "#333333")
         textView.font = inputFont
         textView.tintColor = IMUIManager.shared.uiResourceProvider?.tintColor()
         textView.returnKeyType = .send
         textView.keyboardType = .default
-        textView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
+        textView.backgroundColor = IMUIManager.shared.uiResourceProvider?
+            .inputBgColor()
         textView.layer.cornerRadius = 20
         textView.textContainer.lineFragmentPadding = 0
-        textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        textView.textContainerInset = UIEdgeInsets(
+            top: 10, left: 10, bottom: 10, right: 10)
         textView.layer.masksToBounds = true
         textView.showsVerticalScrollIndicator = false
         textView.showsHorizontalScrollIndicator = false
@@ -100,7 +114,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
 
     lazy private var emojiButton: UIButton = {
         let emojiButton = UIButton()
-        let image = ResourceUtils.loadImage(named: "ic_msg_emoji")?.scaledToSize(iconSize)
+        let image = ResourceUtils.loadImage(named: "ic_msg_emoji")?
+            .withTintColor(
+                IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                    ?? UIColor.init(hex: "333333")
+            )
+            .scaledToSize(iconSize)
         if image != nil {
             emojiButton.setImage(image!, for: .normal)
             emojiButton.contentHorizontalAlignment = .fill
@@ -113,7 +132,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
 
     lazy private var moreButton: UIButton = {
         let moreButton = UIButton()
-        let image = ResourceUtils.loadImage(named: "ic_msg_more")?.scaledToSize(iconSize)
+        let image = ResourceUtils.loadImage(named: "ic_msg_more")?
+            .withTintColor(
+                IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                    ?? UIColor.init(hex: "333333")
+            ).scaledToSize(
+                iconSize)
         if image != nil {
             moreButton.setImage(image!, for: .normal)
             moreButton.contentHorizontalAlignment = .fill
@@ -135,13 +159,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
 
         return inputLayout
     }()
-    
+
     lazy private var muteView: IMSessionInputMutedView = {
         let v = IMSessionInputMutedView()
         v.isHidden = true
         return v
     }()
-
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -211,12 +234,22 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         }
         self.isEmojiImageShow = !self.isEmojiPanelShow
         if self.isEmojiImageShow {
-            let image = ResourceUtils.loadImage(named: "ic_msg_emoji")?.scaledToSize(iconSize)
+            let image = ResourceUtils.loadImage(named: "ic_msg_emoji")?
+                .withTintColor(
+                    IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                        ?? UIColor.init(hex: "333333")
+                )
+                .scaledToSize(iconSize)
             if image != nil {
                 self.emojiButton.setImage(image!, for: .normal)
             }
         } else {
-            let image = ResourceUtils.loadImage(named: "ic_msg_keyboard")?.scaledToSize(iconSize)
+            let image = ResourceUtils.loadImage(named: "ic_msg_keyboard")?
+                .withTintColor(
+                    IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                        ?? UIColor.init(hex: "333333")
+                )
+                .scaledToSize(iconSize)
             if image != nil {
                 self.emojiButton.setImage(image!, for: .normal)
             }
@@ -231,7 +264,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         if self.isSpeakImageShow {
             self.speakView.isHidden = false
             self.textView.isHidden = true
-            let image = ResourceUtils.loadImage(named: "ic_msg_keyboard")?.scaledToSize(iconSize)
+            let image = ResourceUtils.loadImage(named: "ic_msg_keyboard")?
+                .withTintColor(
+                    IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                        ?? UIColor.init(hex: "333333")
+                )
+                .scaledToSize(iconSize)
             if image != nil {
                 self.speakButton.setImage(image!, for: .normal)
             }
@@ -240,7 +278,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         } else {
             self.speakView.isHidden = true
             self.textView.isHidden = false
-            let image = ResourceUtils.loadImage(named: "ic_msg_voice")?.scaledToSize(iconSize)
+            let image = ResourceUtils.loadImage(named: "ic_msg_voice")?
+                .withTintColor(
+                    IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                        ?? UIColor.init(hex: "333333")
+                )
+                .scaledToSize(iconSize)
             if image != nil {
                 self.speakButton.setImage(image!, for: .normal)
             }
@@ -248,7 +291,8 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     }
 
     public func textView(
-        _ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String
+        _ textView: UITextView, shouldChangeTextIn range: NSRange,
+        replacementText text: String
     ) -> Bool {
         if text == "\n" {
             self.sendInputContent()
@@ -265,7 +309,8 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             self.reeditMsg = nil
         }
         let textViewFrame = textView.frame
-        let constraintSize = CGSizeMake(textViewFrame.size.width, CGFloat(MAXFLOAT))
+        let constraintSize = CGSizeMake(
+            textViewFrame.size.width, CGFloat(MAXFLOAT))
         var size = textView.sizeThatFits(constraintSize)
         if size.height <= textViewFrame.size.height {
             if textViewFrame.size.height <= IMInputLayout.minTextInputHeight {
@@ -288,7 +333,8 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     func resetLayout() {
         let spacing = 8
         let buttonSize = 30
-        let bottom = (Int(IMInputLayout.minTextInputHeight) + 20 - buttonSize) / 2
+        let bottom =
+            (Int(IMInputLayout.minTextInputHeight) + 20 - buttonSize) / 2
 
         var showSpeaker = true
         var showMoreButton = true
@@ -297,7 +343,8 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             showSpeaker =
                 IMUIManager.shared.uiResourceProvider?.supportFunction(
                     session, IMChatFunction.Audio.rawValue) ?? false
-            let functions = IMUIManager.shared.getBottomFunctionProviders(session: session)
+            let functions = IMUIManager.shared.getBottomFunctionProviders(
+                session: session)
             if functions.count == 0 {
                 showMoreButton = false
             }
@@ -305,7 +352,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
                 isMuted = true
             }
         }
-        
+
         if !showSpeaker {
             self.speakButton.snp.remakeConstraints { make in
                 make.bottom.equalToSuperview().offset(0)
@@ -387,14 +434,14 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             make.bottom.equalToSuperview()
             make.height.equalTo(inputLayoutHeight)
         }
-        
+
         self.muteView.snp.makeConstraints { make in
             make.centerY.left.right.equalToSuperview()
             make.height.equalTo(40)
         }
-        self.muteView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
+        self.muteView.backgroundColor = IMUIManager.shared.uiResourceProvider?
+            .inputBgColor()
         self.muteView.isHidden = !isMuted
-        
 
         self.switchSpeakView()
         self.switchEmojiView()
@@ -404,7 +451,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             }
             make.height.equalTo(sf.getLayoutHeight())
         }
-        
+
     }
 
     public override func endEditing(_ force: Bool) -> Bool {
@@ -420,7 +467,9 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         }
     }
 
-    func onKeyboardChange(_ isShow: Bool, _ duration: Double, _ keyboardHeight: CGFloat) {
+    func onKeyboardChange(
+        _ isShow: Bool, _ duration: Double, _ keyboardHeight: CGFloat
+    ) {
         self.isKeyboardShow = isShow
         if isShow {
             // 如果键盘显示
@@ -436,7 +485,9 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         self.resetLayout()
     }
 
-    func addInputText(_ text: String, _ atMap: [Int64: (User, SessionMember?)]? = nil) {
+    func addInputText(
+        _ text: String, _ atMap: [Int64: (User, SessionMember?)]? = nil
+    ) {
         if atMap != nil {
             for (_, v) in atMap! {
                 self.addAtMap(v.0, v.1)
@@ -447,12 +498,14 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         if data.length == 0 {
             data.append(text)
         } else {
-            data.insert(text, at: (selectedRange.location + selectedRange.length))
+            data.insert(
+                text, at: (selectedRange.location + selectedRange.length))
         }
         self.renderInputText(String(data))
         self.textViewDidChange(self.textView)
         let newRange = NSRange(
-            location: (selectedRange.location + selectedRange.length + text.length), length: 0)
+            location: (selectedRange.location + selectedRange.length
+                + text.length), length: 0)
         self.textView.selectedRange = newRange
     }
 
@@ -477,10 +530,12 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             selectedRange.location -= count + 1
             selectedRange.length += count
         }
-        var delRange = NSRange(location: selectedRange.location, length: selectedRange.length)
+        var delRange = NSRange(
+            location: selectedRange.location, length: selectedRange.length)
         for atRange in self.atRanges {
             if atRange.contains(selectedRange.location)
-                || atRange.contains(selectedRange.location + selectedRange.length)
+                || atRange.contains(
+                    selectedRange.location + selectedRange.length)
             {
                 let atStart = atRange.location
                 let atEnd = atRange.location + atRange.length
@@ -518,12 +573,15 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         if let session = sender?.getSession() {
             if let draft = session.draft {
                 Observable.just(draft).flatMap { draft in
-                    try? IMCoreManager.shared.database.sessionDao().updateSessionDraft(
-                        session.id, nil)
-                    if let session = try? IMCoreManager.shared.database.sessionDao().findById(
-                        session.id)
+                    try? IMCoreManager.shared.database.sessionDao()
+                        .updateSessionDraft(
+                            session.id, nil)
+                    if let session = try? IMCoreManager.shared.database
+                        .sessionDao().findById(
+                            session.id)
                     {
-                        SwiftEventBus.post(IMEvent.SessionUpdate.rawValue, sender: session)
+                        SwiftEventBus.post(
+                            IMEvent.SessionUpdate.rawValue, sender: session)
                     }
                     return Observable.just(true)
                 }.compose(RxTransformer.shared.io2Main())
@@ -532,19 +590,23 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
                     }.disposed(by: self.disposeBag)
             }
         }
-        let (_, atUIds) = AtStringUtils.replaceAtNickNamesToUIds(text) { [weak self] nickname in
+        let (_, atUIds) = AtStringUtils.replaceAtNickNamesToUIds(text) {
+            [weak self] nickname in
             guard let sf = self else {
                 return nil
             }
             for (k, v) in sf.atMap {
-                if v.trimmingCharacters(in: .whitespaces) == nickname.trimmingCharacters(in: .whitespaces) {
+                if v.trimmingCharacters(in: .whitespaces)
+                    == nickname.trimmingCharacters(in: .whitespaces)
+                {
                     if Int64(k) != nil {
                         return Int64(k)!
                     }
                 }
             }
             if let sender = sf.sender {
-                let id = sender.syncGetSessionMemberUserIdByNickname(nickname.trimmingCharacters(in: .whitespaces))
+                let id = sender.syncGetSessionMemberUserIdByNickname(
+                    nickname.trimmingCharacters(in: .whitespaces))
                 if id != nil {
                     return id!
                 }
@@ -553,7 +615,8 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         }
         if let reeditMsg = self.reeditMsg {
             let content = IMReeditMsgData(
-                sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId, edit: text)
+                sessionId: reeditMsg.sessionId, originId: reeditMsg.msgId,
+                edit: text)
             self.sender?.sendMessage(MsgType.Reedit.rawValue, content, nil, nil)
             self.reeditMsg = nil
         } else {
@@ -566,7 +629,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     }
 
     func getInputContent() -> String? {
-        return self.textView.text 
+        return self.textView.text
     }
 
     @discardableResult func openKeyboard() -> Bool {
@@ -590,7 +653,8 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     }
 
     private func addAtMap(_ user: User, _ sessionMember: SessionMember?) {
-        self.atMap["\(user.id)"] = IMUIManager.shared.nicknameForSessionMember(user, sessionMember)
+        self.atMap["\(user.id)"] = IMUIManager.shared.nicknameForSessionMember(
+            user, sessionMember)
     }
 
     private func atNickname(_ id: Int64) -> String? {
@@ -610,7 +674,9 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         lastRange.location -= 1
         lastRange.length = 1
         let lastInput = u16Content.substring(with: lastRange)
-        let offset = u16Content.substring(to: lastRange.location + lastRange.length).count
+        let offset = u16Content.substring(
+            to: lastRange.location + lastRange.length
+        ).count
         if lastInput == "@" {
             content.insert(
                 contentsOf: "\(atNickname) ",
@@ -627,13 +693,17 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     }
 
     private func renderInputText(_ data: String) {
-        guard let regex = try? NSRegularExpression(pattern: AtStringUtils.atRegular) else {
+        guard
+            let regex = try? NSRegularExpression(
+                pattern: AtStringUtils.atRegular)
+        else {
             return
         }
         let allRange = NSRange(data.startIndex..<data.endIndex, in: data)
         let attributedStr = NSMutableAttributedString(string: data)
         atRanges.removeAll()
-        regex.matches(in: data, options: [], range: allRange).forEach { matchResult in
+        regex.matches(in: data, options: [], range: allRange).forEach {
+            matchResult in
             var range = matchResult.range
             range.length += 1
             range.location -= 1
@@ -665,7 +735,9 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
                 )
             }
         }
-        self.textView.textColor = UIColor.init(hex: "#333333")
+        self.textView.textColor =
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+            ?? UIColor.init(hex: "#333333")
         self.textView.text = data
         self.textView.attributedText = attributedStr
     }
@@ -701,11 +773,14 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
     func setReeditMessage(_ message: Message) {
         self.reeditMsg = message
         if var content = message.content {
-            content = AtStringUtils.replaceAtUIdsToNickname(content, message.getAtUIds()) {
+            content = AtStringUtils.replaceAtUIdsToNickname(
+                content, message.getAtUIds()
+            ) {
                 [weak self] id in
                 if let member = self?.sender?.syncGetSessionMemberInfo(id) {
                     self?.addAtMap(member.0, member.1)
-                    return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
+                    return IMUIManager.shared.nicknameForSessionMember(
+                        member.0, member.1)
                 }
                 return "\(id)"
             }
@@ -717,7 +792,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             }
         }
     }
-    
+
     func onSessionUpdate() {
         var isMuted = false
         if let session = self.sender?.getSession() {
@@ -738,6 +813,5 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
         }
         self.resetLayout()
     }
-    
 
 }

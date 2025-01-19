@@ -30,7 +30,9 @@ public class IMMessageSelectedLayout: UIView {
 
     lazy private var deleteButton: UIImageView = {
         let button = UIImageView()
-        let image = ResourceUtils.loadImage(named: "ic_msg_opr_delete")?.scaledToSize(iconSize)
+        let image = ResourceUtils.loadImage(named: "ic_msg_opr_delete")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333")).scaledToSize(iconSize)
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit
@@ -41,7 +43,9 @@ public class IMMessageSelectedLayout: UIView {
 
     lazy private var forwardButton: UIImageView = {
         let button = UIImageView()
-        let image = ResourceUtils.loadImage(named: "ic_msg_opr_forward")?.scaledToSize(iconSize)
+        let image = ResourceUtils.loadImage(named: "ic_msg_opr_forward")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333")).scaledToSize(iconSize)
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit
@@ -52,7 +56,9 @@ public class IMMessageSelectedLayout: UIView {
 
     lazy private var cancelButton: UIImageView = {
         let button = UIImageView()
-        let image = ResourceUtils.loadImage(named: "ic_msg_opr_cancel")?.scaledToSize(iconSize)
+        let image = ResourceUtils.loadImage(named: "ic_msg_opr_cancel")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333")).scaledToSize(iconSize)
         if image != nil {
             button.image = image
             button.contentMode = .scaleAspectFit

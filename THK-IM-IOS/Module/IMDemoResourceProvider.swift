@@ -54,7 +54,7 @@ class IMDemoResourceProvider: IMUIResourceProvider {
         return UIColor.init(hex: "F4F4F4")
     }
 
-    func inputLayoutBgColor() -> UIColor? {
+    func layoutBgColor() -> UIColor? {
         return .white
     }
 

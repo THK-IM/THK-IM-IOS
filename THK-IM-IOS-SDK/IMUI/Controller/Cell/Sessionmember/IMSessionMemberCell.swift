@@ -44,7 +44,8 @@ class IMSessionMemberCell: UITableViewCell {
             make.centerY.equalToSuperview()
             make.height.equalTo(30)
         }
-        self.nicknameView.textColor = UIColor.init(hex: "333333")
+        self.nicknameView.textColor = IMUIManager.shared.uiResourceProvider?.inputTextColor()
+        ?? UIColor.init(hex: "#333333")
         self.nicknameView.font = UIFont.boldSystemFont(ofSize: 16)
     }
 

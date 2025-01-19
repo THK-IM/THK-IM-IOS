@@ -17,7 +17,9 @@ class IMReplyView: UIView {
 
     lazy private var closeView: UIImageView = {
         let view = UIImageView()
-        view.image = ResourceUtils.loadImage(named: "ic_close")?.scaledToSize(
+        view.image = ResourceUtils.loadImage(named: "ic_close")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333")).scaledToSize(
             CGSize(width: 16, height: 16))
         view.contentMode = .scaleAspectFill
         return view
@@ -27,7 +29,7 @@ class IMReplyView: UIView {
         let view = UIView()
         view.layer.cornerRadius = 2
         view.backgroundColor =
-            IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
+            IMUIManager.shared.uiResourceProvider?.tintColor()
         return view
     }()
 

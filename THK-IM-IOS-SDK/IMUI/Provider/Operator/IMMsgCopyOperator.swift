@@ -19,7 +19,9 @@ public class IMMsgCopyOperator: IMMessageOperator {
     }
 
     public func icon() -> UIImage? {
-        return ResourceUtils.loadImage(named: "ic_msg_opr_copy")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_copy")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
     }
 
     public func onClick(sender: IMMsgSender, message: Message) {

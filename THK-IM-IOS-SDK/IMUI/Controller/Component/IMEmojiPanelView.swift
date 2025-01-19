@@ -63,20 +63,23 @@ class IMEmojiPanelView: UIView, UICollectionViewDelegate, UICollectionViewDataSo
 
     lazy var sendView: UIImageView = {
         let view = UIImageView()
-        view.image = ResourceUtils.loadImage(named: "ic_emoji_send")?.withTintColor(.black)
+        view.image = ResourceUtils.loadImage(named: "ic_emoji_send")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
         return view
     }()
 
     lazy var delView: UIImageView = {
         let view = UIImageView()
-        view.image = ResourceUtils.loadImage(named: "ic_emoji_del")
+        view.image = ResourceUtils.loadImage(named: "ic_emoji_del")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
         return view
     }()
 
     lazy var emojiTabContainer: UIView = {
         let view = UIView()
-        //        view.backgroundColor = UIColor.init(hex: "#F5F5F5")
-        view.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
+        view.backgroundColor = IMUIManager.shared.uiResourceProvider?.panelBgColor()
         view.addSubview(self.sendView)
         view.addSubview(self.delView)
         view.addSubview(self.emojiTabView)

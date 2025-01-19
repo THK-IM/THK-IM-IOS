@@ -37,7 +37,7 @@ class IMSpeakView: UILabel {
     private lazy var recordingTipsView: UILabel = {
         let tips = UILabel()
         tips.font = UIFont.systemFont(ofSize: 16.0)
-        tips.textColor = UIColor.white
+        tips.textColor = UIColor.init(hex: "333333")
         tips.textAlignment = .center
         return tips
     }()
@@ -59,7 +59,7 @@ class IMSpeakView: UILabel {
             make.height.equalTo(30)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-10)
         }
         return popup
     }()
@@ -68,9 +68,9 @@ class IMSpeakView: UILabel {
         super.init(frame: frame)
         self.font = UIFont.boldSystemFont(ofSize: 16.0)
         self.textAlignment = .center
-        self.textColor = UIColor.black
+        self.textColor = UIColor.init(hex: "333333")
         self.text = ResourceUtils.loadString("press_for_record_voice", comment: "")
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
         self.isUserInteractionEnabled = true
         self.isMultipleTouchEnabled = true
     }

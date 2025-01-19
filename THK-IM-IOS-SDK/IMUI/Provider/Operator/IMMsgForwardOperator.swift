@@ -19,7 +19,9 @@ public class IMMsgForwardOperator: IMMessageOperator {
     }
 
     public func icon() -> UIImage? {
-        return ResourceUtils.loadImage(named: "ic_msg_opr_forward")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_forward")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
     }
 
     public func onClick(sender: IMMsgSender, message: Message) {

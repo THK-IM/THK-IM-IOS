@@ -22,7 +22,8 @@ class IMMessageOperatorPopupView: UIView {
 
     private lazy var cornerRadiusView: UIView = {
         let cornerRadiusView = UIView()
-        cornerRadiusView.backgroundColor = .white
+        cornerRadiusView.backgroundColor = IMUIManager.shared.uiResourceProvider?.panelBgColor()
+        ?? UIColor.init(hex: "FFFFFF")
         cornerRadiusView.layer.cornerRadius = 10
         cornerRadiusView.layer.masksToBounds = true
         return cornerRadiusView

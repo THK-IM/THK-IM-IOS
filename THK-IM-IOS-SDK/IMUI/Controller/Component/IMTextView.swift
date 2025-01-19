@@ -40,6 +40,12 @@ class IMTextView: UITextView {
             placeholderLabel.text = placeholder
         }
     }
+    
+    var placeHolderColor: UIColor? {
+        didSet {
+            placeholderLabel.textColor = placeHolderColor
+        }
+    }
 
     override var text: String! {
         didSet {

@@ -21,7 +21,7 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
 
     private lazy var messageTableView: UITableView = {
         let v = UITableView()
-        v.backgroundColor = UIColor.clear
+        v.backgroundColor = .clear
         v.dataSource = self
         v.delegate = self
         v.allowsSelection = true
@@ -29,6 +29,7 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         v.allowsMultipleSelectionDuringEditing = true
         v.estimatedRowHeight = 88
         v.rowHeight = UITableView.automaticDimension
+        v.contentInsetAdjustmentBehavior = .never
         return v
     }()
 
