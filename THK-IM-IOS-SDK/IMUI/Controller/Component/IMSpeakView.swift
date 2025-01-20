@@ -179,12 +179,12 @@ class IMSpeakView: UILabel {
 
     private func startUI() {
         self.text = ResourceUtils.loadString("release_to_cancel", comment: "")
-        self.backgroundColor = UIColor.init(hex: "CCCCCC")
+        self.backgroundColor = IMUIManager.shared.uiResourceProvider?.panelBgColor()
     }
 
     private func resetUI() {
         self.text = ResourceUtils.loadString("press_for_record_voice", comment: "")
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
         self.dismissTipsPopup()
     }
 

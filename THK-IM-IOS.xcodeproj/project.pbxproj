@@ -15,6 +15,8 @@
 		9A090E282CD2209300ED7F86 /* LiveMediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E272CD2208B00ED7F86 /* LiveMediaPlayer.swift */; };
 		9A090E2A2CD2210400ED7F86 /* LiveCacheQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E292CD220F400ED7F86 /* LiveCacheQueue.swift */; };
 		9A090E2C2CD2369100ED7F86 /* LiveVideoCapturerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A090E2B2CD2368C00ED7F86 /* LiveVideoCapturerProxy.swift */; };
+		9A15896D2D3E283F002F5ED2 /* ic_msg_album.svg in Resources */ = {isa = PBXBuildFile; fileRef = 9A15896C2D3E283F002F5ED2 /* ic_msg_album.svg */; };
+		9A15896F2D3E2867002F5ED2 /* ic_msg_camera.svg in Resources */ = {isa = PBXBuildFile; fileRef = 9A15896E2D3E2867002F5ED2 /* ic_msg_camera.svg */; };
 		9A276B892CD3248C007B2CD5 /* MediaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A276B882CD32486007B2CD5 /* MediaParams.swift */; };
 		9A64597B2CEF4B3800D952F6 /* IMCallMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A64597A2CEF4B3300D952F6 /* IMCallMsg.swift */; };
 		9A64597D2CEF4C0D00D952F6 /* IMCallMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */; };
@@ -41,8 +43,6 @@
 		A018CE0C2B00A4A200896B87 /* IMMsgReplyOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CE0B2B00A4A200896B87 /* IMMsgReplyOperator.swift */; };
 		A018CE0E2B00A4BB00896B87 /* IMMsgMultiSelectOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CE0D2B00A4BB00896B87 /* IMMsgMultiSelectOperator.swift */; };
 		A018CE102B00ADE400896B87 /* IMMessageOperatorItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A018CE0F2B00ADE400896B87 /* IMMessageOperatorItemView.swift */; };
-		A024BA212C216CED009030D2 /* ic_msg_camera.svg in Resources */ = {isa = PBXBuildFile; fileRef = A024BA202C216CED009030D2 /* ic_msg_camera.svg */; };
-		A024BA252C21753F009030D2 /* ic_msg_media.svg in Resources */ = {isa = PBXBuildFile; fileRef = A024BA242C21753E009030D2 /* ic_msg_media.svg */; };
 		A024BA532C2404E6009030D2 /* LanguageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A024BA522C2404E6009030D2 /* LanguageUtils.swift */; };
 		A024BA622C2427CE009030D2 /* IMUI.strings in Resources */ = {isa = PBXBuildFile; fileRef = A024BA562C2406FB009030D2 /* IMUI.strings */; };
 		A02529072AC6CB05001561A0 /* DefaultFileLoadModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02529062AC6CB05001561A0 /* DefaultFileLoadModule.swift */; };
@@ -387,6 +387,8 @@
 		9A090E272CD2208B00ED7F86 /* LiveMediaPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMediaPlayer.swift; sourceTree = "<group>"; };
 		9A090E292CD220F400ED7F86 /* LiveCacheQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCacheQueue.swift; sourceTree = "<group>"; };
 		9A090E2B2CD2368C00ED7F86 /* LiveVideoCapturerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoCapturerProxy.swift; sourceTree = "<group>"; };
+		9A15896C2D3E283F002F5ED2 /* ic_msg_album.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ic_msg_album.svg; sourceTree = "<group>"; };
+		9A15896E2D3E2867002F5ED2 /* ic_msg_camera.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ic_msg_camera.svg; sourceTree = "<group>"; };
 		9A276B882CD32486007B2CD5 /* MediaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaParams.swift; sourceTree = "<group>"; };
 		9A64597A2CEF4B3300D952F6 /* IMCallMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsg.swift; sourceTree = "<group>"; };
 		9A64597C2CEF4C0600D952F6 /* IMCallMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCallMsgView.swift; sourceTree = "<group>"; };
@@ -415,8 +417,6 @@
 		A018CE0B2B00A4A200896B87 /* IMMsgReplyOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgReplyOperator.swift; sourceTree = "<group>"; };
 		A018CE0D2B00A4BB00896B87 /* IMMsgMultiSelectOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgMultiSelectOperator.swift; sourceTree = "<group>"; };
 		A018CE0F2B00ADE400896B87 /* IMMessageOperatorItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageOperatorItemView.swift; sourceTree = "<group>"; };
-		A024BA202C216CED009030D2 /* ic_msg_camera.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_camera.svg; sourceTree = "<group>"; };
-		A024BA242C21753E009030D2 /* ic_msg_media.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ic_msg_media.svg; sourceTree = "<group>"; };
 		A024BA522C2404E6009030D2 /* LanguageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageUtils.swift; sourceTree = "<group>"; };
 		A024BA552C2406FB009030D2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/IMUI.strings; sourceTree = "<group>"; };
 		A024BA572C24071C009030D2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
@@ -1272,12 +1272,12 @@
 		A0D68AE32A888678004D11A5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9A15896E2D3E2867002F5ED2 /* ic_msg_camera.svg */,
+				9A15896C2D3E283F002F5ED2 /* ic_msg_album.svg */,
 				9A64598E2CF55E7200D952F6 /* ic_sending.svg */,
 				F56BBFE42CBA263900525A33 /* ic_audio_off.svg */,
 				F56BBFE22CBA262D00525A33 /* ic_audio_on.svg */,
 				A00425FC2C36882A00977DB2 /* ic_titlebar_back.svg */,
-				A024BA242C21753E009030D2 /* ic_msg_media.svg */,
-				A024BA202C216CED009030D2 /* ic_msg_camera.svg */,
 				A05899C82C215577003419B8 /* ic_all_avatar.svg */,
 				A05899E02C21557A003419B8 /* ic_close.svg */,
 				A05899D22C215578003419B8 /* ic_emoji_del.svg */,
@@ -1926,6 +1926,7 @@
 				A0589A232C21557D003419B8 /* ic_msg_opr_copy.svg in Resources */,
 				A0589A082C21557D003419B8 /* ic_msg_opr_cancel.svg in Resources */,
 				A0589A0C2C21557D003419B8 /* ic_msg_voice.svg in Resources */,
+				9A15896D2D3E283F002F5ED2 /* ic_msg_album.svg in Resources */,
 				A0589A4C2C21557D003419B8 /* ic_msg_more.svg in Resources */,
 				A0589A132C21557D003419B8 /* ic_msg_audio.svg in Resources */,
 				A0589A2F2C21557D003419B8 /* ic_msg_opr_revoke.svg in Resources */,
@@ -1941,18 +1942,17 @@
 				A0589A062C21557D003419B8 /* ic_titlebar_search.svg in Resources */,
 				A0589A152C21557D003419B8 /* ic_more.svg in Resources */,
 				A0589A162C21557D003419B8 /* ic_volume_2.svg in Resources */,
-				A024BA212C216CED009030D2 /* ic_msg_camera.svg in Resources */,
 				A0D68AA02A88838C004D11A5 /* Assets.xcassets in Resources */,
 				A0589A072C21557D003419B8 /* ic_msg_failed.svg in Resources */,
 				A0589A242C21557D003419B8 /* ic_msg_opr_edit.svg in Resources */,
 				A0589A1B2C21557D003419B8 /* ic_emoji_del.svg in Resources */,
 				F56BBFE32CBA262D00525A33 /* ic_audio_on.svg in Resources */,
+				9A15896F2D3E2867002F5ED2 /* ic_msg_camera.svg in Resources */,
 				A0589A1A2C21557D003419B8 /* ic_msg_forward.svg in Resources */,
 				A0589A432C21557D003419B8 /* ic_titlebar_add.svg in Resources */,
 				A0D68A9E2A88838A004D11A5 /* Main.storyboard in Resources */,
 				A0589A262C21557D003419B8 /* ic_volume_1.svg in Resources */,
 				A0589A4D2C21557D003419B8 /* ic_msg_opr_reply.svg in Resources */,
-				A024BA252C21753F009030D2 /* ic_msg_media.svg in Resources */,
 				A024BA622C2427CE009030D2 /* IMUI.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
