@@ -15,7 +15,7 @@ public class IMMsgMultiSelectOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("multi_select", comment: "")
+        return ResourceUtils.loadString("multi_select")
     }
 
     public func icon() -> UIImage? {

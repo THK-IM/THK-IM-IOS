@@ -36,7 +36,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
             make.right.equalToSuperview()
             make.height.equalTo(30)
         }
-        self.titleView.text = ResourceUtils.loadString("choose_at_people", comment: "")
+        self.titleView.text = ResourceUtils.loadString("choose_at_people")
         self.titleView.font = UIFont.boldSystemFont(ofSize: 18)
         self.titleView.textAlignment = .center
         self.titleView.textColor = IMUIManager.shared.uiResourceProvider?.inputTextColor()

@@ -276,14 +276,14 @@ open class IMSessionViewController: BaseViewController, UITableViewDataSource, U
         _ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
         let session = self.sessions[indexPath.row]
-        var topText = ResourceUtils.loadString("top", comment: "")
-        var silenceText = ResourceUtils.loadString("silence", comment: "")
-        let deleteText = ResourceUtils.loadString("delete", comment: "")
+        var topText = ResourceUtils.loadString("top")
+        var silenceText = ResourceUtils.loadString("silence")
+        let deleteText = ResourceUtils.loadString("delete")
         if session.topTimestamp > 0 {
-            topText = ResourceUtils.loadString("cancel_top", comment: "")
+            topText = ResourceUtils.loadString("cancel_top")
         }
         if session.status & SessionStatus.Silence.rawValue != 0 {
-            silenceText = ResourceUtils.loadString("cancel_silence", comment: "")
+            silenceText = ResourceUtils.loadString("cancel_silence")
         }
         let top = UIContextualAction(
             style: .normal, title: topText,

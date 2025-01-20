@@ -15,7 +15,7 @@ public class IMMsgCopyOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("copy", comment: "")
+        return ResourceUtils.loadString("copy")
     }
 
     public func icon() -> UIImage? {
@@ -37,11 +37,11 @@ public class IMMsgCopyOperator: IMMessageOperator {
                 }
                 UIPasteboard.general.string = content
                 sender.showSenderMessage(
-                    text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
+                    text: ResourceUtils.loadString("had_copyed"), success: true)
             } else {
                 UIPasteboard.general.string = message.content
                 sender.showSenderMessage(
-                    text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
+                    text: ResourceUtils.loadString("had_copyed"), success: true)
             }
         }
         // TODO other msgType

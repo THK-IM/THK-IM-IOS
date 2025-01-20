@@ -93,7 +93,7 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         }
 
         if updated {
-            let editStr = ResourceUtils.loadString("edited", comment: "")
+            let editStr = ResourceUtils.loadString("edited")
             let editAttributedStr = NSMutableAttributedString(string: editStr)
             let editRange = NSRange(editStr.startIndex..<editStr.endIndex, in: editStr)
             editAttributedStr.addAttribute(

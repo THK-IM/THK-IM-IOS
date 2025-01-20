@@ -33,7 +33,7 @@ open class IMSessionChooseViewController: IMSessionViewController {
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = ResourceUtils.loadString("choose_one_session", comment: "")
+        self.navigationItem.title = ResourceUtils.loadString("choose_one_session")
     }
 
     open override func openSession(_ session: Session) {
@@ -132,8 +132,8 @@ open class IMSessionChooseViewController: IMSessionViewController {
                 let title: String =
                     (session.type == SessionType.Group.rawValue
                         || session.type == SessionType.SuperGroup.rawValue)
-                    ? ResourceUtils.loadString("someone_s_group_chat_record", comment: "")
-                    : ResourceUtils.loadString("someone_s_chat_record", comment: "")
+                    ? ResourceUtils.loadString("someone_s_group_chat_record")
+                    : ResourceUtils.loadString("someone_s_chat_record")
                 recordBody.title = String.init(format: title, recordBody.title)
                 return Observable.just(recordBody)
             })

@@ -15,7 +15,7 @@ public class IMMsgEditOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("edit", comment: "")
+        return ResourceUtils.loadString("edit")
     }
 
     public func icon() -> UIImage? {

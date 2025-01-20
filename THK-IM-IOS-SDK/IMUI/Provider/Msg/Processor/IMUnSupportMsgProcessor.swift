@@ -14,6 +14,6 @@ open class IMUnSupportMsgProcessor: IMBaseMsgProcessor {
     }
 
     open override func msgDesc(msg: Message) -> String {
-        return ResourceUtils.loadString("im_un_support_msg", comment: "")
+        return ResourceUtils.loadString("im_un_support_msg")
     }
 }

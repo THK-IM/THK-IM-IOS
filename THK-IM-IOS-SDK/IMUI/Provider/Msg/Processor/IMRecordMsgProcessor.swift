@@ -75,6 +75,6 @@ open class IMRecordMsgProcessor: IMBaseMsgProcessor {
     }
 
     override open func msgDesc(msg: Message) -> String {
-        return ResourceUtils.loadString("im_record_msg", comment: "")
+        return ResourceUtils.loadString("im_record_msg")
     }
 }

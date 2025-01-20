@@ -15,7 +15,7 @@ public class IMMsgRevokeOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("revoke", comment: "")
+        return ResourceUtils.loadString("revoke")
     }
 
     public func icon() -> UIImage? {
@@ -33,11 +33,11 @@ public class IMMsgRevokeOperator: IMMessageOperator {
                 { _, err in
                     if err != nil {
                         sender?.showSenderMessage(
-                            text: ResourceUtils.loadString("revoke_failed", comment: ""),
+                            text: ResourceUtils.loadString("revoke_failed"),
                             success: false)
                     } else {
                         sender?.showSenderMessage(
-                            text: ResourceUtils.loadString("revoke_success", comment: ""),
+                            text: ResourceUtils.loadString("revoke_success"),
                             success: false)
                     }
                 })

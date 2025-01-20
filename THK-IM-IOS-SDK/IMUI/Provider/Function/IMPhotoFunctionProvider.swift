@@ -11,7 +11,7 @@ import UIKit
 open class IMPhotoFunctionProvider: IMBaseFunctionCellProvider {
 
     public func name() -> String {
-        return ResourceUtils.loadString("album", comment: "")
+        return ResourceUtils.loadString("album")
     }
 
     public func icon() -> UIImage? {

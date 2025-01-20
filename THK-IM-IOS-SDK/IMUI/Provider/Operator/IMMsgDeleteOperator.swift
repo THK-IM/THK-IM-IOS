@@ -18,7 +18,7 @@ public class IMMsgDeleteOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("delete", comment: "")
+        return ResourceUtils.loadString("delete")
     }
 
     public func icon() -> UIImage? {

@@ -40,10 +40,10 @@ open class IMTextMsgProcessor: IMBaseMsgProcessor {
             }
             var editFlag = ""
             if msg.operateStatus & MsgOperateStatus.Update.rawValue > 0 {
-                editFlag = ResourceUtils.loadString("edited", comment: "")
+                editFlag = ResourceUtils.loadString("edited")
             }
             return editFlag + body
         }
-        return ResourceUtils.loadString("im_text_msg", comment: "")
+        return ResourceUtils.loadString("im_text_msg")
     }
 }

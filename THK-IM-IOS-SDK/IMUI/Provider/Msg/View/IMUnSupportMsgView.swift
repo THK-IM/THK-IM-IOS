@@ -35,7 +35,7 @@ class IMUnSupportMsgView: IMMsgLabelView, IMsgBodyView {
     func setMessage(
         _ message: Message, _ session: Session?, _ delegate: IMMsgCellOperator?
     ) {
-        self.text = ResourceUtils.loadString("not_support_msg_update_client", comment: "")
+        self.text = ResourceUtils.loadString("not_support_msg_update_client")
     }
 
     func contentView() -> UIView {

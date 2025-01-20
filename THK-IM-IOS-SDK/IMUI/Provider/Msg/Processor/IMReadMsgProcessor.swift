@@ -187,7 +187,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
     }
 
     override open func msgDesc(msg: Message) -> String {
-        return ResourceUtils.loadString("im_msg_desc_read", comment: "")
+        return ResourceUtils.loadString("im_msg_desc_read")
     }
 
     override public func reset() {

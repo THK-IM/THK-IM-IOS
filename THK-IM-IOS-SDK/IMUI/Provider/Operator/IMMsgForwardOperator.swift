@@ -15,7 +15,7 @@ public class IMMsgForwardOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("forward", comment: "")
+        return ResourceUtils.loadString("forward")
     }
 
     public func icon() -> UIImage? {

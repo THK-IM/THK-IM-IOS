@@ -69,7 +69,7 @@ class IMSpeakView: UILabel {
         self.font = UIFont.boldSystemFont(ofSize: 16.0)
         self.textAlignment = .center
         self.textColor = UIColor.init(hex: "333333")
-        self.text = ResourceUtils.loadString("press_for_record_voice", comment: "")
+        self.text = ResourceUtils.loadString("press_for_record_voice")
         self.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
         self.isUserInteractionEnabled = true
         self.isMultipleTouchEnabled = true
@@ -89,7 +89,7 @@ class IMSpeakView: UILabel {
             }
         } else {
             self.sender?.showSenderMessage(
-                text: ResourceUtils.loadString("please_open_record_permission", comment: ""),
+                text: ResourceUtils.loadString("please_open_record_permission"),
                 success: false
             )
             if let appSettings = URL(string: UIApplication.openSettingsURLString) {
@@ -109,7 +109,7 @@ class IMSpeakView: UILabel {
             self.layoutRecording()
         } else {
             self.sender?.showSenderMessage(
-                text: ResourceUtils.loadString("record_failed", comment: ""), success: false
+                text: ResourceUtils.loadString("record_failed"), success: false
             )
         }
     }
@@ -158,10 +158,10 @@ class IMSpeakView: UILabel {
             }
             if sf.hasTouchOutside {
                 sf.recordingTipsView.text = ResourceUtils.loadString(
-                    "release_to_cancel", comment: "")
+                    "release_to_cancel")
             } else {
                 sf.recordingTipsView.text = ResourceUtils.loadString(
-                    "release_to_send_voice", comment: "")
+                    "release_to_send_voice")
             }
             if sf.recordingDb <= 45 {
                 sf.recordingDBView.image = sf.imageVolume1
@@ -178,12 +178,12 @@ class IMSpeakView: UILabel {
     }
 
     private func startUI() {
-        self.text = ResourceUtils.loadString("release_to_cancel", comment: "")
+        self.text = ResourceUtils.loadString("release_to_cancel")
         self.backgroundColor = IMUIManager.shared.uiResourceProvider?.panelBgColor()
     }
 
     private func resetUI() {
-        self.text = ResourceUtils.loadString("press_for_record_voice", comment: "")
+        self.text = ResourceUtils.loadString("press_for_record_voice")
         self.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
         self.dismissTipsPopup()
     }
@@ -214,7 +214,7 @@ class IMSpeakView: UILabel {
                     if duration < 2000 {
                         sf.sender?.showSenderMessage(
                             text: ResourceUtils.loadString(
-                                "record_duration_too_short", comment: ""), success: false
+                                "record_duration_too_short"), success: false
                         )
                         IMCoreManager.shared.storageModule.removeFile(path)
                     } else {

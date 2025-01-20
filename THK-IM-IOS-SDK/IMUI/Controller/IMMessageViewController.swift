@@ -311,7 +311,7 @@ open class IMMessageViewController: BaseViewController {
         self.newMsgTipsView.isUserInteractionEnabled = true
         self.newMsgTipsView.textColor =
             IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
-        self.newMsgTipsView.text = ResourceUtils.loadString("new_message_tips", comment: "")
+        self.newMsgTipsView.text = ResourceUtils.loadString("new_message_tips")
         self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 13)
         self.newMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?
             .panelBgColor()
@@ -384,7 +384,7 @@ open class IMMessageViewController: BaseViewController {
             self.atMsgTipsView.isHidden = true
         } else {
             self.atMsgTipsView.text = String.init(
-                format: ResourceUtils.loadString("x_message_at_me", comment: ""), self.atMsgs.count)
+                format: ResourceUtils.loadString("x_message_at_me"), self.atMsgs.count)
             self.atMsgTipsView.isHidden = false
         }
     }
@@ -733,11 +733,11 @@ open class IMMessageViewController: BaseViewController {
                                 self.readMessage(msg)
                             }
                         } else {
-                            showToast(ResourceUtils.loadString("play_failed", comment: ""))
+                            showToast(ResourceUtils.loadString("play_failed"))
                         }
                     }
                 } catch {
-                    showToast(ResourceUtils.loadString("play_failed", comment: ""))
+                    showToast(ResourceUtils.loadString("play_failed"))
                 }
             }
         } else if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
@@ -872,7 +872,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
                         if !supportImage {
                             sf.showSenderMessage(
                                 text: ResourceUtils.loadString(
-                                    "do_not_allow_send_image", comment: ""), success: false)
+                                    "do_not_allow_send_image"), success: false)
                             return
                         }
                         var ext = r.mimeType.replacingOccurrences(
@@ -883,7 +883,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
                         if !supportVideo {
                             sf.showSenderMessage(
                                 text: ResourceUtils.loadString(
-                                    "do_not_allow_send_video", comment: ""), success: false)
+                                    "do_not_allow_send_video"), success: false)
                             return
                         }
                         var ext = r.mimeType.replacingOccurrences(

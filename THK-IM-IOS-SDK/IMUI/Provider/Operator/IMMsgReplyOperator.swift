@@ -15,7 +15,7 @@ public class IMMsgReplyOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("reply", comment: "")
+        return ResourceUtils.loadString("reply")
     }
 
     public func icon() -> UIImage? {

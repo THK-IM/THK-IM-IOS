@@ -11,7 +11,7 @@ import UIKit
 open class IMCameraFunctionProvider: IMBaseFunctionCellProvider {
 
     public func name() -> String {
-        return ResourceUtils.loadString("camera", comment: "")
+        return ResourceUtils.loadString("camera")
     }
 
     public func icon() -> UIImage? {
