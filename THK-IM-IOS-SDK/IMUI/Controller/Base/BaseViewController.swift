@@ -19,7 +19,6 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     public let menuItemTagAdd = "add"
     public let menuItemTagSearch = "search"
     public let menuSize = CGSize(width: 30, height: 30)
-    open var isNavigationBarHidden = false
 
     public let disposeBag = DisposeBag()
 
@@ -29,6 +28,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     open func initNavigationBar() {
+        self.navigationItem.hidesBackButton = true
         if hasTitlebar() {
             if let title = title() {
                 setTitle(title: title)
@@ -82,8 +82,26 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 //        } else {
 //            self.navigationController?.navigationBar.barTintColor = UIColor.clear
 //        }
-        self.navigationController?.isNavigationBarHidden = isNavigationBarHidden
-        self.navigationController?.navigationBar.isHidden = !hasTitlebar()
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if hasTitlebar() {
+            self.navigationController?.isNavigationBarHidden = false
+        }
+    }
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationController?.interactivePopGestureRecognizer?.delegate =
+            self
+        if !hasTitlebar() {
+            self.navigationController?.isNavigationBarHidden = true
+        }
+    }
+
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
     }
 
     @objc open func viewTouched() {
@@ -99,18 +117,6 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             .withTintColor(
                 IMUIManager.shared.uiResourceProvider?.inputTextColor()
                     ?? UIColor.init(hex: "333333"))
-    }
-
-    open override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.navigationItem.hidesBackButton = true
-        self.navigationController?.interactivePopGestureRecognizer?.delegate =
-            self
-        self.navigationController?.navigationBar.isHidden = !hasTitlebar()
-    }
-
-    open override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
     }
 
     @objc open func backAction() {
