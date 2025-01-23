@@ -27,7 +27,7 @@ public class GCDTool: NSObject {
             cancel in
             if let closure = closure {
                 if !cancel {
-                    DispatchQueue.global().async(execute: closure)
+                    DispatchQueue.main.async(execute: closure)
                 }
             }
             closure = nil
