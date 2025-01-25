@@ -15,101 +15,100 @@ import UIKit
 
 open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 
-    public let menuItemTagNews = "News"
     public let menuItemTagAdd = "add"
     public let menuItemTagSearch = "search"
     public let menuSize = CGSize(width: 30, height: 30)
 
     public let disposeBag = DisposeBag()
+    
+    private let _defaultTabarLayout = TitlebarLayout()
+    private lazy var _titleBarLayout: UIView = {
+        let v = UIView()
+        v.addSubview(self.titleBarLayout)
+        let top = AppUtils.getStatusBarHeight()
+        self.titleBarLayout.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(top)
+            make.left.right.bottom.equalToSuperview()
+        }
+        self.titleBarLayout.setTapAction { [weak self] action in
+            if action == "back" {
+                self?.onBackItemTapped()
+            } else if action == "add" {
+                self?.onMenuClick(menu: "add")
+            } else if action == "search" {
+                self?.onMenuClick(menu: "search")
+            }
+        }
+        return v
+    }()
+    
+    open var titleBarLayout: TitlebarLayout {
+        return _defaultTabarLayout
+    }
 
     override open func viewDidLoad() {
         super.viewDidLoad()
-        self.initNavigationBar()
+        self.navigationController?.navigationBar.isHidden = true
+        if self.hasTitlebar() {
+            self.initTitleBarLayout()
+        }
     }
 
-    open func initNavigationBar() {
-        self.navigationItem.hidesBackButton = true
-        if hasTitlebar() {
-            if let title = title() {
-                setTitle(title: title)
-            }
-            var images = [UIImage?]()
-            var actions = [Selector?]()
-            var titles = [String]()
-            if hasNewsMenu() {
-                titles.append(menuItemTagNews)
-                images.append(menuImages(menu: menuItemTagNews))
-                actions.append(#selector(newsTapped))
-            }
-            if hasAddMenu() {
-                titles.append(menuItemTagAdd)
-                images.append(menuImages(menu: menuItemTagAdd))
-                actions.append(#selector(addTapped))
-            }
-            if hasSearchMenu() {
-                titles.append(menuItemTagSearch)
-                images.append(menuImages(menu: menuItemTagSearch))
-                actions.append(#selector(searchTapped))
-            }
-            setRightItems(images: images, titles: titles, actions: actions)
-            if self.swipeBack() {
-                let backImage = backIcon()?.withRenderingMode(.alwaysOriginal)
-                let customView = UIView(
-                    frame: CGRect(x: 0, y: 0, width: 20, height: 20))
-                let button = UIButton(type: .system)
-                button.addTarget(
-                    self, action: #selector(self.backAction),
-                    for: .touchUpInside)
-                button.frame = CGRect(x: -12, y: -6, width: 32, height: 32)  // 调整x值以增加或减少间隔
-                button.setImage(backImage, for: .normal)
-                customView.addSubview(button)
-                let backItem = UIBarButtonItem(customView: customView)
-                self.navigationItem.leftBarButtonItem = backItem
-            }
-        }
-        let tapGesture = UITapGestureRecognizer(
-            target: self, action: #selector(viewTouched))
-        tapGesture.cancelsTouchesInView = false  // 这样不会阻止其他控件接收 touch 事件
-        self.view.addGestureRecognizer(tapGesture)
-//        if #available(iOS 13.0, *) {
-//            let appearance = UINavigationBarAppearance()
-//            appearance.configureWithOpaqueBackground()  // 或使用 configureWithDefaultBackground()
-//            appearance.backgroundColor = UIColor.clear  // 固定背景色
-//            appearance.shadowColor = UIColor.clear
-//            self.navigationController?.navigationBar.standardAppearance = appearance
-//            self.navigationController?.navigationBar.scrollEdgeAppearance =
-//                appearance
-//        } else {
-//            self.navigationController?.navigationBar.barTintColor = UIColor.clear
-//        }
+    open func hasTitlebar() -> Bool {
+        return self.navigationController != nil
     }
-    
-    open override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if hasTitlebar() {
-            self.navigationController?.isNavigationBarHidden = false
+
+    open func initTitleBarLayout() {
+        let height = self.getTitleBarHeight()
+        self.view.addSubview(self._titleBarLayout)
+        self._titleBarLayout.snp.makeConstraints { make in
+            make.top.left.right.equalToSuperview()
+            make.height.equalTo(height)
+        }
+        self.renderTitleBar()
+    }
+
+    open override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.view.bringSubviewToFront(self._titleBarLayout)
+    }
+
+    open func renderTitleBar() {
+        self.titleBarLayout.setTitle(self.title())
+        if self.canSwipeBack() {
+            let backImage = self.backIcon()?.withRenderingMode(.alwaysOriginal)
+            self.titleBarLayout.setBackItem(backImage)
+        }
+        if self.hasAddMenu() {
+            self.titleBarLayout.setAddRightItem(
+                self.menuImages(menu: menuItemTagAdd))
+        }
+        if self.hasSearchMenu() {
+            self.titleBarLayout.setSearchItem(
+                self.menuImages(menu: menuItemTagSearch))
         }
     }
-    
+
+    open func onBackItemTapped() {
+        if self.navigationController != nil {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+        }
+    }
+
+    open func setTitle(title: String) {
+        self.titleBarLayout.setTitle(title)
+    }
+
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.interactivePopGestureRecognizer?.delegate =
             self
-        if !hasTitlebar() {
-            self.navigationController?.isNavigationBarHidden = true
-        }
-    }
-
-    open override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
     }
 
     @objc open func viewTouched() {
         self.view.endEditing(true)
-    }
-
-    open func hasTitlebar() -> Bool {
-        return true
     }
 
     open func backIcon() -> UIImage? {
@@ -158,10 +157,6 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         return image!.scaledToSize(menuSize)
     }
 
-    open func hasBadge(menu: String) -> Bool {
-        return false
-    }
-
     open func onMenuClick(menu: String) {
 
     }
@@ -174,18 +169,6 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
-    @objc func newsTapped() {
-        onMenuClick(menu: menuItemTagNews)
-    }
-
-    @objc func addTapped() {
-        onMenuClick(menu: menuItemTagAdd)
-    }
-
-    @objc func searchTapped() {
-        onMenuClick(menu: menuItemTagSearch)
-    }
-
     public func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch
     ) -> Bool {
@@ -195,10 +178,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     public func gestureRecognizerShouldBegin(
         _ gestureRecognizer: UIGestureRecognizer
     ) -> Bool {
-        return self.swipeBack()
+        return self.canSwipeBack()
     }
 
-    open func swipeBack() -> Bool {
+    open func canSwipeBack() -> Bool {
         return self.navigationController?.children.count ?? 0 > 1
     }
 
@@ -380,75 +363,6 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         SwiftEntryKit.display(entry: stackView, using: attributes)
     }
 
-    open func setTitle(title: String) {
-        let titleView = UILabel(
-            frame: CGRect.init(x: 0, y: -20, width: 150, height: 30))
-        titleView.text = title
-        titleView.textAlignment = .center
-        titleView.font = UIFont.boldSystemFont(ofSize: 18)
-        titleView.textColor =
-            IMUIManager.shared.uiResourceProvider?.inputTextColor()
-            ?? UIColor.init(hex: "#333333")
-        self.navigationItem.titleView = titleView
-        self.navigationItem.titleView?.contentMode = .center
-    }
-
-    open func setRightItems(
-        images: [UIImage?], titles: [String], actions: [Selector?]
-    ) {
-        var rightBarButtonItems = [UIBarButtonItem]()
-        var i = 0
-        for image in images {
-            let item = UIBarButtonItem(
-                title: titles[i], style: .plain, target: self, action: nil)
-            let customButton = UIButton(type: .custom)
-            customButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
-            if let action = actions[i] {
-                customButton.addTarget(
-                    self, action: action, for: .touchUpInside)
-            }
-            customButton.setImage(image, for: .normal)
-            let b = BadgeSwift(
-                frame: CGRect(x: 16, y: 0, width: 18, height: 18))
-            b.textColor = .white
-            b.insets = CGSize(width: 0, height: 0)
-            b.font = UIFont.systemFont(ofSize: 8)
-            b.isHidden = true
-            customButton.addSubview(b)
-            item.customView = customButton
-            rightBarButtonItems.append(item)
-            i += 1
-        }
-        self.navigationItem.rightBarButtonItems = rightBarButtonItems
-    }
-
-    open func setNavigationItemBadge(_ count: Int64, title: String) {
-        var text: String? = ""
-        if count <= 0 {
-            text = nil
-        } else if count >= 100 {
-            text = "99+"
-        } else {
-            text = "\(count)"
-        }
-        if let rightBarButtonItems = self.navigationItem.rightBarButtonItems {
-            for item in rightBarButtonItems {
-                if item.title == title {
-                    item.customView?.subviews.forEach({ view in
-                        if view is BadgeSwift {
-                            if text == nil {
-                                (view as? BadgeSwift)?.isHidden = true
-                            } else {
-                                (view as? BadgeSwift)?.isHidden = false
-                                (view as? BadgeSwift)?.text = text
-                            }
-                        }
-                    })
-                }
-            }
-        }
-    }
-
     open func showLoading(text: String? = nil, _ interaction: Bool = false) {
         DispatchQueue.main.async {
             ProgressHUD.animate(
@@ -469,4 +383,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
+    deinit {
+        print("deinit \(self.description)")
+    }
 }
