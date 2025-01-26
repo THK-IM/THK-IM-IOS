@@ -86,8 +86,8 @@ open class TitlebarLayout: UIView {
         }
         self.titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.left.equalToSuperview().offset(88)
-            make.right.equalToSuperview().offset(-88)
+            make.left.equalToSuperview().offset(64)
+            make.right.equalToSuperview().offset(-64)
         }
         if self.addItem.image != nil {
             self.addItem.snp.makeConstraints { make in

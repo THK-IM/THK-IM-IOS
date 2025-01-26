@@ -21,7 +21,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 
     public let disposeBag = DisposeBag()
     
-    private let _defaultTabarLayout = TitlebarLayout()
+    private let _defaultTitleBarLayout = TitlebarLayout()
     private lazy var _titleBarLayout: UIView = {
         let v = UIView()
         v.addSubview(self.titleBarLayout)
@@ -43,7 +43,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     }()
     
     open var titleBarLayout: TitlebarLayout {
-        return _defaultTabarLayout
+        return _defaultTitleBarLayout
     }
 
     override open func viewDidLoad() {
