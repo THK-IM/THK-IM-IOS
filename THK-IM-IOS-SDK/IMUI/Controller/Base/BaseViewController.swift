@@ -52,6 +52,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         if self.hasTitlebar() {
             self.initTitleBarLayout()
         }
+        let tapGesture = UITapGestureRecognizer(
+            target: self, action: #selector(self.viewTouched))
+        tapGesture.cancelsTouchesInView = false  // 这样不会阻止其他控件接收 touch 事件
+        self.view.addGestureRecognizer(tapGesture)
     }
 
     open func hasTitlebar() -> Bool {
