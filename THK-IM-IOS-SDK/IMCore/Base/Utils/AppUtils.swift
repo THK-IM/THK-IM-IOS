@@ -48,6 +48,13 @@ public class AppUtils {
         }
         return 0
     }
+    
+    public static func getBottomSafeAreaHeight() -> CGFloat {
+        if let window = UIApplication.shared.windows.first {
+            return window.safeAreaInsets.bottom
+        }
+        return 0.0
+    }
 
     public static func getVersion() -> String {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
