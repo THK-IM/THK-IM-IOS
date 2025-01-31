@@ -1056,8 +1056,9 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         }
         let frame = CGRect(
             x: (Int(screenWidth) - popupWidth) / 2, y: y, width: popupWidth, height: popupHeight)
-        let popupView = IMMessageOperatorPopupView(frame: frame)
-        popupView.show(rowCount, operators, self, message)
+        let popupView = IMMessageOperatorPopupView()
+        self.view.addSubview(popupView)
+        popupView.show(frame, rowCount, operators, self, message)
     }
 
     /// show loading

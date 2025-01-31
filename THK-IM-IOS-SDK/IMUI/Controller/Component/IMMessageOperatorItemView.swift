@@ -21,7 +21,7 @@ public class IMMessageOperatorItemView: UIView {
         let v = UILabel()
         v.font = UIFont.systemFont(ofSize: 12)
         v.textColor =
-            IMUIManager.shared.uiResourceProvider?.tipTextColor()
+        IMUIManager.shared.uiResourceProvider?.inputTextColor()
             ?? UIColor.init(hex: "666666")
         v.textAlignment = .center
         return v
