@@ -1060,6 +1060,15 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         self.view.addSubview(popupView)
         popupView.show(frame, rowCount, operators, self, message)
     }
+    
+    public func dismissMessageOperatorPanel() {
+        self.view.subviews.forEach { v in
+            if v is IMMessageOperatorPopupView {
+                v.removeFromSuperview()
+            }
+        }
+    }
+    
 
     /// show loading
     public func showSenderLoading(text: String) {
