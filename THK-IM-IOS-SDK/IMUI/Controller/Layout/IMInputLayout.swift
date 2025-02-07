@@ -712,7 +712,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
 
         attributedStr.addAttribute(
             .foregroundColor,
-            value: UIColor.init(hex: "#333333"),
+            value: IMUIManager.shared.uiResourceProvider?.inputTextColor() ?? UIColor.init(hex: "#333333"),
             range: allRange
         )
         attributedStr.addAttribute(
