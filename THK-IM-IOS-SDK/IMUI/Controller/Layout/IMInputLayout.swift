@@ -440,7 +440,7 @@ public class IMInputLayout: UIView, UITextViewDelegate, TextViewBackwardDelegate
             make.height.equalTo(40)
         }
         self.muteView.backgroundColor = IMUIManager.shared.uiResourceProvider?
-            .inputBgColor()
+            .panelBgColor()
         self.muteView.isHidden = !isMuted
 
         self.switchSpeakView()
