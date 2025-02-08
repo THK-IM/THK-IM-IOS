@@ -26,7 +26,7 @@ open class TitlebarLayout: UIView {
         let v = UILabel()
         v.numberOfLines = 1
         v.textAlignment = .center
-        v.font = UIFont.boldSystemFont(ofSize: 18)
+        v.font = UIFont.boldSystemFont(ofSize: 16)
         v.textColor =
             IMUIManager.shared.uiResourceProvider?.inputTextColor()
             ?? UIColor.init(hex: "#333333")
