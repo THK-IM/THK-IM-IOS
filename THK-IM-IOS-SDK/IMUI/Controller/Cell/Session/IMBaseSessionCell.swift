@@ -78,7 +78,7 @@ open class IMBaseSessionCell: IMBaseTableCell {
         }
 
         self.atInfoView.snp.makeConstraints { make in
-            make.left.equalTo(self.senderStatusView.snp.right)
+            make.left.equalTo(self.senderStatusView.snp.right).offset(4)
             make.centerY.equalToSuperview()
         }
 

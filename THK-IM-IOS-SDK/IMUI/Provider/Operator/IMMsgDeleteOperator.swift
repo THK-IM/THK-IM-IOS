@@ -28,8 +28,9 @@ public class IMMsgDeleteOperator: IMMessageOperator {
     }
 
     public func onClick(sender: IMMsgSender, message: Message) {
+        var deleteServer = message.sendStatus == MsgSendStatus.Success.rawValue
         IMCoreManager.shared.messageModule
-            .deleteMessages(message.sessionId, [message], true)
+            .deleteMessages(message.sessionId, [message], deleteServer)
             .compose(RxTransformer.shared.io2Main())
             .subscribe(
                 onError: { error in
