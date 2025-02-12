@@ -80,7 +80,7 @@ open class IMSessionChooseViewController: IMSessionViewController {
 
     private func pop() {
         let transition = CATransition.init()
-        transition.duration = 0.4
+        transition.duration = 0.1
         transition.type = .reveal
         transition.subtype = .fromBottom
         transition.timingFunction = CAMediaTimingFunction.init(name: .easeInEaseOut)
