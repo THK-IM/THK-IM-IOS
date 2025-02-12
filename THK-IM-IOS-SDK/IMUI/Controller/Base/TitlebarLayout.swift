@@ -87,8 +87,9 @@ open class TitlebarLayout: UIView {
         self.titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.left.equalToSuperview().offset(64)
-            make.right.equalToSuperview().offset(-64)
+            make.right.equalToSuperview().offset(-80)
         }
+        self.addItem.isHidden = self.addItem.image != nil
         if self.addItem.image != nil {
             self.addItem.snp.makeConstraints { make in
                 make.centerY.equalToSuperview()
@@ -102,6 +103,7 @@ open class TitlebarLayout: UIView {
                 make.size.equalTo(0)
             }
         }
+        self.searchItem.isHidden = self.searchItem.image != nil
         if self.searchItem.image != nil {
             self.searchItem.snp.makeConstraints { make in
                 make.centerY.equalToSuperview()
