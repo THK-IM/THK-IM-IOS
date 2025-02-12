@@ -31,9 +31,14 @@ open class IMSessionChooseViewController: IMSessionViewController {
         vc.navigationController?.pushViewController(choose, animated: false)
     }
     
+    open override func title() -> String? {
+        return ResourceUtils.loadString("choose_one_session")
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = ResourceUtils.loadString("choose_one_session")
+        self.view.backgroundColor = IMUIManager.shared.uiResourceProvider?
+            .layoutBgColor() ?? UIColor.init(hex: "#F2F2F2")
     }
 
     open override func openSession(_ session: Session) {

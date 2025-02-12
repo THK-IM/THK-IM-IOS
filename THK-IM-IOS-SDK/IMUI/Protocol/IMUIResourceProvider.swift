@@ -43,5 +43,8 @@ public protocol IMUIResourceProvider {
 
     /// 是否可以At所有人
     func canAtAll(_ session: Session) -> Bool
+    
+    /// session row 高度
+    func sessionRowHeight() -> CGFloat
 
 }

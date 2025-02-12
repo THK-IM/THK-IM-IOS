@@ -26,6 +26,7 @@ class IMAudioMsgView: UIView, IMsgBodyView {
         view.font = UIFont.boldSystemFont(ofSize: 14)
         view.padding = UIEdgeInsets.init(top: 4, left: 4, bottom: 4, right: 4)
         view.isUserInteractionEnabled = true
+        view.textColor = UIColor.init(hex: "0A0E10")
         return view
     }()
 

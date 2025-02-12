@@ -31,8 +31,9 @@ open class IMSessionViewController: BaseViewController, UITableViewDataSource, U
 
     open override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = IMUIManager.shared.uiResourceProvider?
+            .layoutBgColor() ?? UIColor.init(hex: "#F2F2F2")
         self.view.addSubview(containerView)
-        self.containerView.backgroundColor = UIColor.init(hex: "#F8F8F8")
         let top = getTitleBarHeight()
         containerView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(top)
@@ -243,13 +244,14 @@ open class IMSessionViewController: BaseViewController, UITableViewDataSource, U
             cell = provider.viewCell()
         }
         let sessionCell = cell as! IMBaseSessionCell
+        sessionCell.backgroundColor = .clear
         sessionCell.setSession(self.sessions[indexPath.row])
         return cell!
     }
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
-        return 60
+        return IMUIManager.shared.uiResourceProvider?.sessionRowHeight() ?? 60
     }
 
     public func tableView(
