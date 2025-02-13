@@ -84,11 +84,7 @@ open class TitlebarLayout: UIView {
             make.centerY.equalToSuperview()
             make.size.equalTo(32)
         }
-        self.titleLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(64)
-            make.right.equalToSuperview().offset(-80)
-        }
+        
         if self.addItem.image != nil {
             self.addItem.snp.makeConstraints { make in
                 make.centerY.equalToSuperview()
@@ -114,6 +110,15 @@ open class TitlebarLayout: UIView {
                 make.right.equalTo(self.addItem.snp.left)
                 make.size.equalTo(0)
             }
+        }
+        self.layoutTitle()
+    }
+    
+    open func layoutTitle() {
+        self.titleLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().offset(64)
+            make.right.equalToSuperview().offset(-80)
         }
     }
 
