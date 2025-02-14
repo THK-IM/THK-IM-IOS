@@ -58,7 +58,7 @@ public class AppUtils {
 
     public static func getVersion() -> String {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-        return appVersion ?? "0.0.0"
+        return appVersion ?? "1.0.0"
     }
 
     public static func getTimezone() -> String {
@@ -77,7 +77,7 @@ public class AppUtils {
     public static func getLanguage() -> String {
         let languages: [String]? =
             UserDefaults.standard.object(forKey: "AppleLanguages") as? [String]? ?? nil
-        return languages?.first?.components(separatedBy: "-").first ?? "en"
+        return languages?.first ?? "en"
     }
 
     public static func getAdvertisingId() -> String? {
