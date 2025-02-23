@@ -20,7 +20,9 @@ public class IMMessageOperatorItemView: UIView {
     private lazy var titleView: UILabel = {
         let v = UILabel()
         v.font = UIFont.systemFont(ofSize: 12)
-        v.textColor = .black
+        v.textColor =
+        IMUIManager.shared.uiResourceProvider?.inputTextColor()
+            ?? UIColor.init(hex: "666666")
         v.textAlignment = .center
         return v
     }()
@@ -70,7 +72,8 @@ public class IMMessageOperatorItemView: UIView {
     }
 
     func setIMMessageOperator(
-        _ msgOperator: IMMessageOperator, _ sender: IMMsgSender, _ message: Message,
+        _ msgOperator: IMMessageOperator, _ sender: IMMsgSender,
+        _ message: Message,
         _ onItemClick: OnItemClick?
     ) {
         self.msgOperator = msgOperator

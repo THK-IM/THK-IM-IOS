@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "THK-IM-IOS"
-  spec.version      = "0.3.0"
+  spec.version      = "0.3.8"
   spec.summary      = "A short description of THK-IM-IOS."
 
   # This description is used to generate tags and improve search results.

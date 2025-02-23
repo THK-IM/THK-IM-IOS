@@ -29,7 +29,9 @@ class IMVideoMsgView: UIView, IMsgBodyView {
 
     private lazy var playView: UIImageView = {
         let v = UIImageView()
-        v.image = ResourceUtils.loadImage(named: "icon_video_play")
+        v.image = ResourceUtils.loadImage(named: "icon_video_play")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
         return v
     }()
 

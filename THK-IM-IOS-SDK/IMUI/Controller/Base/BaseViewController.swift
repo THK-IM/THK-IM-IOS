@@ -15,83 +15,111 @@ import UIKit
 
 open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 
-    public let menuItemTagNews = "News"
     public let menuItemTagAdd = "add"
     public let menuItemTagSearch = "search"
     public let menuSize = CGSize(width: 30, height: 30)
-    open var isNavigationBarHidden = false
 
     public let disposeBag = DisposeBag()
+    
+    private let _defaultTitleBarLayout = TitlebarLayout()
+    private lazy var _titleBarLayout: UIView = {
+        let v = UIView()
+        v.addSubview(self.titleBarLayout)
+        let top = AppUtils.getStatusBarHeight()
+        self.titleBarLayout.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(top)
+            make.left.right.bottom.equalToSuperview()
+        }
+        self.titleBarLayout.setTapAction { [weak self] action in
+            if action == "back" {
+                self?.onBackItemTapped()
+            } else if action == "add" {
+                self?.onMenuClick(menu: "add")
+            } else if action == "search" {
+                self?.onMenuClick(menu: "search")
+            }
+        }
+        return v
+    }()
+    
+    open var titleBarLayout: TitlebarLayout {
+        return _defaultTitleBarLayout
+    }
 
     override open func viewDidLoad() {
         super.viewDidLoad()
-        self.initNavigationBar()
-    }
-
-    open func initNavigationBar() {
-        if hasTitlebar() {
-            if let title = title() {
-                setTitle(title: title)
-            }
-            var images = [UIImage?]()
-            var actions = [Selector?]()
-            var titles = [String]()
-            if hasNewsMenu() {
-                titles.append(menuItemTagNews)
-                images.append(menuImages(menu: menuItemTagNews))
-                actions.append(#selector(newsTapped))
-            }
-            if hasAddMenu() {
-                titles.append(menuItemTagAdd)
-                images.append(menuImages(menu: menuItemTagAdd))
-                actions.append(#selector(addTapped))
-            }
-            if hasSearchMenu() {
-                titles.append(menuItemTagSearch)
-                images.append(menuImages(menu: menuItemTagSearch))
-                actions.append(#selector(searchTapped))
-            }
-            setRightItems(images: images, titles: titles, actions: actions)
-            if self.swipeBack() {
-                let backImage = backIcon()?.withRenderingMode(.alwaysOriginal)
-                let customView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
-                let button = UIButton(type: .system)
-                button.addTarget(self, action: #selector(self.backAction), for: .touchUpInside)
-                button.frame = CGRect(x: -12, y: -6, width: 32, height: 32)  // 调整x值以增加或减少间隔
-                button.setImage(backImage, for: .normal)
-                customView.addSubview(button)
-                let backItem = UIBarButtonItem(customView: customView)
-                self.navigationItem.leftBarButtonItem = backItem
-            }
+        self.navigationController?.navigationBar.isHidden = true
+        if self.hasTitlebar() {
+            self.initTitleBarLayout()
         }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTouched))
+        let tapGesture = UITapGestureRecognizer(
+            target: self, action: #selector(self.viewTouched))
         tapGesture.cancelsTouchesInView = false  // 这样不会阻止其他控件接收 touch 事件
         self.view.addGestureRecognizer(tapGesture)
-        self.navigationController?.isNavigationBarHidden = isNavigationBarHidden
-        self.navigationController?.navigationBar.isHidden = !hasTitlebar()
+    }
+
+    open func hasTitlebar() -> Bool {
+        return self.navigationController != nil
+    }
+
+    open func initTitleBarLayout() {
+        let height = self.getTitleBarHeight()
+        self.view.addSubview(self._titleBarLayout)
+        self._titleBarLayout.snp.makeConstraints { make in
+            make.top.left.right.equalToSuperview()
+            make.height.equalTo(height)
+        }
+        self.renderTitleBar()
+    }
+
+    open override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.view.bringSubviewToFront(self._titleBarLayout)
+    }
+
+    open func renderTitleBar() {
+        self.titleBarLayout.setTitle(self.title())
+        if self.canSwipeBack() {
+            let backImage = self.backIcon()?.withRenderingMode(.alwaysOriginal)
+            self.titleBarLayout.setBackItem(backImage)
+        }
+        if self.hasAddMenu() {
+            self.titleBarLayout.setAddRightItem(
+                self.menuImages(menu: menuItemTagAdd))
+        }
+        if self.hasSearchMenu() {
+            self.titleBarLayout.setSearchItem(
+                self.menuImages(menu: menuItemTagSearch))
+        }
+    }
+
+    open func onBackItemTapped() {
+        if self.navigationController != nil {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+        }
+    }
+
+    open func setTitle(title: String) {
+        self.titleBarLayout.setTitle(title)
+    }
+
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationController?.interactivePopGestureRecognizer?.delegate =
+            self
     }
 
     @objc open func viewTouched() {
         self.view.endEditing(true)
     }
 
-    open func hasTitlebar() -> Bool {
-        return true
-    }
-
     open func backIcon() -> UIImage? {
-        return ResourceUtils.loadImage(named: "ic_titlebar_back")
-    }
-
-    open override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.navigationItem.hidesBackButton = true
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        self.navigationController?.navigationBar.isHidden = !hasTitlebar()
-    }
-
-    open override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+        return ResourceUtils.loadImage(named: "ic_titlebar_back")?
+            .withTintColor(
+                IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                    ?? UIColor.init(hex: "333333"))
     }
 
     @objc open func backAction() {
@@ -117,18 +145,20 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     open func menuImages(menu: String) -> UIImage? {
         var image: UIImage? = nil
         if menu == menuItemTagAdd {
-            image = ResourceUtils.loadImage(named: "ic_titlebar_add")
+            image = ResourceUtils.loadImage(named: "ic_titlebar_add")?
+                .withTintColor(
+                    IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                        ?? UIColor.init(hex: "333333"))
         } else if menu == menuItemTagSearch {
-            image = ResourceUtils.loadImage(named: "ic_titlebar_search")
+            image = ResourceUtils.loadImage(named: "ic_titlebar_search")?
+                .withTintColor(
+                    IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                        ?? UIColor.init(hex: "333333"))
         }
         if image == nil {
             return image
         }
         return image!.scaledToSize(menuSize)
-    }
-
-    open func hasBadge(menu: String) -> Bool {
-        return false
     }
 
     open func onMenuClick(menu: String) {
@@ -143,40 +173,32 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
-    @objc func newsTapped() {
-        onMenuClick(menu: menuItemTagNews)
-    }
-
-    @objc func addTapped() {
-        onMenuClick(menu: menuItemTagAdd)
-    }
-
-    @objc func searchTapped() {
-        onMenuClick(menu: menuItemTagSearch)
-    }
-
     public func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch
     ) -> Bool {
         return true
     }
 
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return self.swipeBack()
+    public func gestureRecognizerShouldBegin(
+        _ gestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        return self.canSwipeBack()
     }
 
-    open func swipeBack() -> Bool {
+    open func canSwipeBack() -> Bool {
         return self.navigationController?.children.count ?? 0 > 1
     }
 
-    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask
+    {
         return .portrait
     }
 
     open func getTitleBarHeight() -> CGFloat {
         var navigationBarHeight = 0.0
         if let navigationController = self.navigationController {
-            navigationBarHeight += navigationController.navigationBar.frame.height
+            navigationBarHeight +=
+                navigationController.navigationBar.frame.height
         }
         return navigationBarHeight + AppUtils.getStatusBarHeight()
     }
@@ -185,7 +207,8 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     open func showDialog(
         title: String, message: String?, okString: String, cancelString: String,
         extraString: String?,
-        _ ok: @escaping () -> Void, _ cancel: @escaping () -> Void, _ extra: (() -> Void)?
+        _ ok: @escaping () -> Void, _ cancel: @escaping () -> Void,
+        _ extra: (() -> Void)?
     ) {
         var subViews = [UIView]()
         // 定义外观属性
@@ -196,8 +219,10 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         attributes.entryBackground = .color(color: EKColor(UIColor.white))  // 背景颜色
         attributes.shadow = .active(
             with: .init(
-                color: EKColor(UIColor.black.withAlphaComponent(0.3)), opacity: 1, radius: 10))
-        attributes.screenBackground = .color(color: EKColor(UIColor.black.withAlphaComponent(0.5)))  // 屏幕背景半透明遮罩
+                color: EKColor(UIColor.black.withAlphaComponent(0.3)),
+                opacity: 1, radius: 10))
+        attributes.screenBackground = .color(
+            color: EKColor(UIColor.black.withAlphaComponent(0.5)))  // 屏幕背景半透明遮罩
         attributes.roundCorners = .all(radius: 16)  // 圆角
         attributes.border = .value(color: UIColor.gray, width: 0.5)  // 边框
         attributes.positionConstraints.maxSize = .init(
@@ -216,7 +241,8 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 
         // 分隔线
         let separatorLineView = UIView()
-        separatorLineView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+        separatorLineView.backgroundColor = UIColor.lightGray
+            .withAlphaComponent(0.5)
         subViews.append(separatorLineView)
 
         if message != nil {
@@ -233,13 +259,16 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         // 确认按钮
         let confirmButton = UIButton(type: .system)
         confirmButton.setTitle(okString, for: .normal)
-        confirmButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        confirmButton.titleLabel?.font = UIFont.systemFont(
+            ofSize: 16, weight: .semibold)
         confirmButton.setTitleColor(UIColor.white, for: .normal)
         confirmButton.backgroundColor = UIColor.blue
         confirmButton.layer.cornerRadius = 22
         confirmButton.clipsToBounds = true
-        confirmButton.rx.tapGesture(configuration: { gestureRecognizer, delegate in
-            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+        confirmButton.rx.tapGesture(configuration: {
+            gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom {
+                gestureRecognizer, touches in
                 return touches.view == confirmButton
             }
             delegate.otherFailureRequirementPolicy = .custom {
@@ -256,13 +285,16 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         // 取消按钮
         let cancelButton = UIButton(type: .system)
         cancelButton.setTitle(cancelString, for: .normal)
-        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        cancelButton.titleLabel?.font = UIFont.systemFont(
+            ofSize: 16, weight: .medium)
         cancelButton.setTitleColor(UIColor.blue, for: .normal)
         cancelButton.backgroundColor = UIColor.init(hex: "#CCCCCC")
         cancelButton.layer.cornerRadius = 22
         cancelButton.clipsToBounds = true
-        cancelButton.rx.tapGesture(configuration: { gestureRecognizer, delegate in
-            delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+        cancelButton.rx.tapGesture(configuration: {
+            gestureRecognizer, delegate in
+            delegate.touchReceptionPolicy = .custom {
+                gestureRecognizer, touches in
                 return touches.view == cancelButton
             }
             delegate.otherFailureRequirementPolicy = .custom {
@@ -279,17 +311,21 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         if extraString != nil {
             let extraButton = UIButton(type: .system)
             extraButton.setTitle(extraString!, for: .normal)
-            extraButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+            extraButton.titleLabel?.font = UIFont.systemFont(
+                ofSize: 16, weight: .medium)
             extraButton.setTitleColor(UIColor.blue, for: .normal)
             extraButton.layer.cornerRadius = 22
             extraButton.clipsToBounds = true
-            extraButton.rx.tapGesture(configuration: { gestureRecognizer, delegate in
-                delegate.touchReceptionPolicy = .custom { gestureRecognizer, touches in
+            extraButton.rx.tapGesture(configuration: {
+                gestureRecognizer, delegate in
+                delegate.touchReceptionPolicy = .custom {
+                    gestureRecognizer, touches in
                     return touches.view == extraButton
                 }
                 delegate.otherFailureRequirementPolicy = .custom {
                     gestureRecognizer, otherGestureRecognizer in
-                    return otherGestureRecognizer is UILongPressGestureRecognizer
+                    return otherGestureRecognizer
+                        is UILongPressGestureRecognizer
                 }
             }).when(.ended)
                 .subscribe { _ in
@@ -299,7 +335,8 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
             subViews.append(extraButton)
 
             extraButton.translatesAutoresizingMaskIntoConstraints = false
-            extraButton.heightAnchor.constraint(equalToConstant: 44).isActive = true  // 设置按钮高度
+            extraButton.heightAnchor.constraint(equalToConstant: 44).isActive =
+                true  // 设置按钮高度
         }
 
         // 垂直堆叠视图
@@ -310,86 +347,30 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 
         // 添加约束
         separatorLineView.translatesAutoresizingMaskIntoConstraints = false
-        separatorLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorLineView.heightAnchor.constraint(equalToConstant: 1).isActive =
+            true
 
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
-        confirmButton.heightAnchor.constraint(equalToConstant: 44).isActive = true  // 设置按钮高度
+        confirmButton.heightAnchor.constraint(equalToConstant: 44).isActive =
+            true  // 设置按钮高度
 
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        cancelButton.heightAnchor.constraint(equalToConstant: 44).isActive = true  // 设置按钮高度
+        cancelButton.heightAnchor.constraint(equalToConstant: 44).isActive =
+            true  // 设置按钮高度
 
         // 设置内边距
-        stackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        stackView.layoutMargins = UIEdgeInsets(
+            top: 20, left: 20, bottom: 20, right: 20)
         stackView.isLayoutMarginsRelativeArrangement = true
 
         // 显示对话框
         SwiftEntryKit.display(entry: stackView, using: attributes)
     }
 
-    open func setTitle(title: String) {
-        let titleView = UILabel(frame: CGRect.init(x: 0, y: -20, width: 150, height: 30))
-        titleView.text = title
-        titleView.textAlignment = .center
-        titleView.font = UIFont.boldSystemFont(ofSize: 18)
-        titleView.textColor = UIColor.black
-        self.navigationItem.titleView = titleView
-        self.navigationItem.titleView?.contentMode = .center
-    }
-
-    open func setRightItems(images: [UIImage?], titles: [String], actions: [Selector?]) {
-        var rightBarButtonItems = [UIBarButtonItem]()
-        var i = 0
-        for image in images {
-            let item = UIBarButtonItem(title: titles[i], style: .plain, target: self, action: nil)
-            let customButton = UIButton(type: .custom)
-            customButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
-            if let action = actions[i] {
-                customButton.addTarget(self, action: action, for: .touchUpInside)
-            }
-            customButton.setImage(image, for: .normal)
-            let b = BadgeSwift(frame: CGRect(x: 16, y: 0, width: 18, height: 18))
-            b.textColor = .white
-            b.insets = CGSize(width: 0, height: 0)
-            b.font = UIFont.systemFont(ofSize: 8)
-            b.isHidden = true
-            customButton.addSubview(b)
-            item.customView = customButton
-            rightBarButtonItems.append(item)
-            i += 1
-        }
-        self.navigationItem.rightBarButtonItems = rightBarButtonItems
-    }
-
-    open func setNavigationItemBadge(_ count: Int64, title: String) {
-        var text: String? = ""
-        if count <= 0 {
-            text = nil
-        } else if count >= 100 {
-            text = "99+"
-        } else {
-            text = "\(count)"
-        }
-        if let rightBarButtonItems = self.navigationItem.rightBarButtonItems {
-            for item in rightBarButtonItems {
-                if item.title == title {
-                    item.customView?.subviews.forEach({ view in
-                        if view is BadgeSwift {
-                            if text == nil {
-                                (view as? BadgeSwift)?.isHidden = true
-                            } else {
-                                (view as? BadgeSwift)?.isHidden = false
-                                (view as? BadgeSwift)?.text = text
-                            }
-                        }
-                    })
-                }
-            }
-        }
-    }
-
     open func showLoading(text: String? = nil, _ interaction: Bool = false) {
         DispatchQueue.main.async {
-            ProgressHUD.animate(text, .horizontalBarScaling, interaction: interaction)
+            ProgressHUD.animate(
+                text, .horizontalBarScaling, interaction: interaction)
         }
     }
 
@@ -406,4 +387,7 @@ open class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
+    deinit {
+        print("deinit \(self.description)")
+    }
 }

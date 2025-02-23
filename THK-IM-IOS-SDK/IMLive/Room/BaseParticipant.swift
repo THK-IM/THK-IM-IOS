@@ -130,7 +130,7 @@ open class BaseParticipant: NSObject {
             if err == nil {
                 sf.onLocalSdpSetSuccess(sdp)
             } else {
-                sf.onError("onLocalSdpCreated", err!)
+                sf.onError("setLocalDescription", err!)
             }
         }
     }
@@ -254,6 +254,7 @@ open class BaseParticipant: NSObject {
             }
         } catch {
             DDLogError("Participant: onNewMessage \(error)")
+            self.onError("onNewMessage", error)
         }
     }
 

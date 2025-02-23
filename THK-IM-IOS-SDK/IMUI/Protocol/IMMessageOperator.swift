@@ -14,4 +14,17 @@ public protocol IMMessageOperator: AnyObject {
     func icon() -> UIImage?
     func onClick(sender: IMMsgSender, message: Message)
     func supportMessage(_ message: Message, _ session: Session) -> Bool
+    func renderBySelf() -> Bool
+    func addOperatorView(_ frame: CGRect, _ superView: UIView, _ message: Message, _ sender: IMMsgSender)
+}
+
+extension IMMessageOperator {
+    
+    public func renderBySelf() -> Bool {
+        return false
+    }
+    
+    public func addOperatorView(_ frame: CGRect, _ superView: UIView, _ message: Message, _ sender: IMMsgSender) {
+        
+    }
 }

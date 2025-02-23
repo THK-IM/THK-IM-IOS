@@ -23,7 +23,7 @@ class IMEmojiPanelTitleCell: UICollectionViewCell {
         let backgroundView = UIView(frame: frame)
         backgroundView.layer.cornerRadius = 6
         backgroundView.layer.backgroundColor =
-            IMUIManager.shared.uiResourceProvider?.inputBgColor()?.cgColor
+        IMUIManager.shared.uiResourceProvider?.inputBgColor()?.cgColor
         self.selectedBackgroundView = backgroundView
     }
 

@@ -106,7 +106,7 @@ class IMRecordMsgView: UIView, IMsgBodyView {
 
         self.recordTitleView.text = recordBody.title
         self.recordContentView.text = recordBody.content
-        self.descView.text = ResourceUtils.loadString("chat_record", comment: "")
+        self.descView.text = ResourceUtils.loadString("chat_record")
 
         if self.position == IMMsgPosType.Reply {
             self.recordTitleView.font = UIFont.boldSystemFont(ofSize: 12)

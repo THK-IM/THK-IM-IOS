@@ -78,7 +78,7 @@ open class IMBaseSessionCell: IMBaseTableCell {
         }
 
         self.atInfoView.snp.makeConstraints { make in
-            make.left.equalTo(self.senderStatusView.snp.right)
+            make.left.equalTo(self.senderStatusView.snp.right).offset(4)
             make.centerY.equalToSuperview()
         }
 
@@ -119,20 +119,27 @@ open class IMBaseSessionCell: IMBaseTableCell {
         DDLogDebug("BaseSessionCell init")
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        contentView.addSubview(self.avatarView)
-        contentView.addSubview(self.nickView)
-        contentView.addSubview(self.msgLayout)
-        contentView.addSubview(self.lastTimeView)
-        contentView.addSubview(self.unreadCountView)
-        contentView.addSubview(self.silenceView)
-
-        avatarView.snp.makeConstraints { make in
+        self.addSubviews()
+        self.layoutAddedSubviews()
+    }
+    
+    open func addSubviews() {
+        self.contentView.addSubview(self.avatarView)
+        self.contentView.addSubview(self.nickView)
+        self.contentView.addSubview(self.msgLayout)
+        self.contentView.addSubview(self.lastTimeView)
+        self.contentView.addSubview(self.unreadCountView)
+        self.contentView.addSubview(self.silenceView)
+    }
+    
+    open func layoutAddedSubviews() {
+        self.avatarView.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(10)
             make.centerY.equalToSuperview()
             make.width.equalTo(42)
             make.height.equalTo(42)
         }
-        nickView.snp.makeConstraints { [weak self] make in
+        self.nickView.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
             }
@@ -140,7 +147,7 @@ open class IMBaseSessionCell: IMBaseTableCell {
             make.left.equalTo(sf.avatarView.snp.right).offset(5)
             make.right.equalTo(sf.lastTimeView.snp.left).offset(-5)
         }
-        msgLayout.snp.makeConstraints { [weak self] make in
+        self.msgLayout.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
             }
@@ -149,7 +156,7 @@ open class IMBaseSessionCell: IMBaseTableCell {
             make.left.equalTo(sf.avatarView.snp.right).offset(5)
             make.right.equalTo(sf.lastTimeView.snp.left).offset(-5)
         }
-        lastTimeView.snp.makeConstraints { [weak self] make in
+        self.lastTimeView.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
             }
@@ -157,13 +164,13 @@ open class IMBaseSessionCell: IMBaseTableCell {
             make.right.equalTo(sf.contentView.snp.right).offset(-10)
             make.width.lessThanOrEqualTo(120)
         }
-        unreadCountView.snp.makeConstraints { make in
+        self.unreadCountView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(4)
             make.left.equalToSuperview().offset(42)
             make.height.equalTo(16)
             make.width.greaterThanOrEqualTo(16)
         }
-        silenceView.snp.makeConstraints { make in
+        self.silenceView.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-8)
             make.bottom.equalToSuperview().offset(-8)
             make.height.equalTo(16)

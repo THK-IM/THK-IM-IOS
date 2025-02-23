@@ -73,6 +73,9 @@ public protocol IMMsgSender: AnyObject {
 
     /// 弹出消息操作面板弹窗
     func popupMessageOperatorPanel(_ view: UIView, _ message: Message)
+    
+    /// 关闭消息操作面板弹窗
+    func dismissMessageOperatorPanel()
 
     /// show loading
     func showSenderLoading(text: String)

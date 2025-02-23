@@ -15,11 +15,13 @@ public class IMMsgRevokeOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("revoke", comment: "")
+        return ResourceUtils.loadString("revoke")
     }
 
     public func icon() -> UIImage? {
-        return ResourceUtils.loadImage(named: "ic_msg_opr_revoke")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_revoke")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
     }
 
     public func onClick(sender: IMMsgSender, message: Message) {
@@ -31,11 +33,11 @@ public class IMMsgRevokeOperator: IMMessageOperator {
                 { _, err in
                     if err != nil {
                         sender?.showSenderMessage(
-                            text: ResourceUtils.loadString("revoke_failed", comment: ""),
+                            text: ResourceUtils.loadString("revoke_failed"),
                             success: false)
                     } else {
                         sender?.showSenderMessage(
-                            text: ResourceUtils.loadString("revoke_success", comment: ""),
+                            text: ResourceUtils.loadString("revoke_success"),
                             success: false)
                     }
                 })

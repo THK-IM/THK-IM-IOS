@@ -69,6 +69,7 @@ class IMFunctionPanelView: UIView, UICollectionViewDelegate, UICollectionViewDat
             withReuseIdentifier: self.cellID, for: indexPath)
         let functionCell = cell as! IMFunctionCell
         functionCell.setFunction(functions[indexPath.row])
+        functionCell.backgroundColor = .clear
         return functionCell
     }
 

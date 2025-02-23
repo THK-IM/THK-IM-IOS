@@ -647,7 +647,7 @@ open class DefaultMessageModule: MessageModule {
                             let d = lastMsgContent.data(using: .utf8) ?? Data()
                             let lastMsg = try? JSONDecoder().decode(Message.self, from: d)
                             if lastMsg != nil {
-                                if lastMsg!.cTime <= msg.cTime {
+                                if lastMsg!.cTime <= msg.cTime || forceNotify {
                                     s.lastMsg = String.init(data: msgData, encoding: .utf8)
                                     needNotify = true
                                 }

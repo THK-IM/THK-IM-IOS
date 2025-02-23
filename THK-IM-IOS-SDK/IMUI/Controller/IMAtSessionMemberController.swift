@@ -28,7 +28,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
     }
 
     private func setupUI() {
-        self.view.backgroundColor = UIColor.white
+        self.view.backgroundColor = IMUIManager.shared.uiResourceProvider?.panelBgColor()
         self.view.addSubview(self.titleView)
         self.titleView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
@@ -36,14 +36,15 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
             make.right.equalToSuperview()
             make.height.equalTo(30)
         }
-        self.titleView.text = ResourceUtils.loadString("choose_at_people", comment: "")
+        self.titleView.text = ResourceUtils.loadString("choose_at_people")
         self.titleView.font = UIFont.boldSystemFont(ofSize: 18)
         self.titleView.textAlignment = .center
-        self.titleView.textColor = UIColor.init(hex: "#333333")
+        self.titleView.textColor = IMUIManager.shared.uiResourceProvider?.inputTextColor()
+        ?? UIColor.init(hex: "#333333")
 
         self.view.addSubview(memberTableView)
         self.memberTableView.separatorStyle = .none
-        self.memberTableView.backgroundColor = UIColor.white
+        self.memberTableView.backgroundColor = .clear
         self.memberTableView.snp.makeConstraints { [weak self] make in
             guard let sf = self else {
                 return
@@ -99,7 +100,13 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
 
     private func updateSessionMember(_ map: [Int64: (User, SessionMember?)]) {
         self.memberMap.append(contentsOf: map.values)
-        self.memberMap.append((User.all, nil))
+        if let session = self.session {
+            if let canAtAll = IMUIManager.shared.uiResourceProvider?.canAtAll(session) {
+                if canAtAll {
+                    self.memberMap.append((User.all, nil))
+                }
+            }
+        }
         self.memberTableView.reloadData()
     }
 
@@ -118,6 +125,7 @@ class IMAtSessionMemberController: UIViewController, UITableViewDelegate, UITabl
             viewCell = IMSessionMemberCell(
                 style: .default, reuseIdentifier: sessionMemberIdentifier)
         }
+        (viewCell! as! IMSessionMemberCell).backgroundColor = .clear
         (viewCell! as! IMSessionMemberCell).setData(memberInfo: member)
         return viewCell!
     }

@@ -157,7 +157,7 @@ open class IMMessageViewController: BaseViewController {
         if let session = self.session {
             showInput = session.functionFlag > 0
         }
-        containerView.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputLayoutBgColor()
+        containerView.backgroundColor = IMUIManager.shared.uiResourceProvider?.panelBgColor()
         let top = getTitleBarHeight()
         containerView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(top)
@@ -173,8 +173,6 @@ open class IMMessageViewController: BaseViewController {
             self.msgSelectedLayout.sender = self
             self.msgSelectedLayout.height += Int(bottom)
             self.containerView.addSubview(self.msgSelectedLayout)
-            self.msgSelectedLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?
-                .inputLayoutBgColor()
             self.msgSelectedLayout.isHidden = true
             self.msgSelectedLayout.snp.makeConstraints { make in
                 make.left.equalToSuperview()
@@ -182,13 +180,13 @@ open class IMMessageViewController: BaseViewController {
                 make.bottom.equalToSuperview()
                 make.height.equalTo(0)
             }
+            self.msgSelectedLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?
+                .panelBgColor()
 
             // 消息视图，在输入框之上，铺满alwaysShowView
             self.messageLayout.sender = self
             self.messageLayout.previewer = self
             self.containerView.addSubview(self.messageLayout)
-            self.messageLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?
-                .inputBgColor()
             self.messageLayout.session = self.session
             self.messageLayout.snp.makeConstraints { [weak self] make in
                 guard let sf = self else {
@@ -199,10 +197,11 @@ open class IMMessageViewController: BaseViewController {
                 make.top.equalToSuperview()
                 make.bottom.equalTo(sf.msgSelectedLayout.snp.top)
             }
+            self.messageLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?
+                .layoutBgColor()
         } else {
             self.bottomPanelLayout.sender = self
             self.containerView.addSubview(self.bottomPanelLayout)
-            self.bottomPanelLayout.backgroundColor = .clear
             self.bottomPanelLayout.snp.makeConstraints { [weak self] make in
                 guard let sf = self else {
                     return
@@ -216,7 +215,6 @@ open class IMMessageViewController: BaseViewController {
 
             // 输入框等布局
             self.inputLayout.sender = self
-            self.inputLayout.backgroundColor = .clear
             self.containerView.addSubview(self.inputLayout)
 
             self.inputLayout.resetLayout()
@@ -241,8 +239,6 @@ open class IMMessageViewController: BaseViewController {
             // 多选msg视图
             self.msgSelectedLayout.sender = self
             self.containerView.addSubview(self.msgSelectedLayout)
-            self.msgSelectedLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?
-                .inputLayoutBgColor()
             self.msgSelectedLayout.isHidden = true
             self.msgSelectedLayout.snp.makeConstraints { [weak self] make in
                 guard let sf = self else {
@@ -253,13 +249,13 @@ open class IMMessageViewController: BaseViewController {
                 make.bottom.equalTo(sf.bottomPanelLayout.snp.top)
                 make.height.equalTo(sf.msgSelectedLayout.getLayoutHeight())  // 高度内部自己计算
             }
+            self.msgSelectedLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?
+                .panelBgColor()
 
             // 消息视图，在输入框之上，铺满alwaysShowView
             self.messageLayout.sender = self
             self.messageLayout.previewer = self
             self.containerView.addSubview(self.messageLayout)
-            self.messageLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?
-                .inputBgColor()
             self.messageLayout.session = self.session
             self.messageLayout.snp.makeConstraints { [weak self] make in
                 guard let sf = self else {
@@ -270,6 +266,8 @@ open class IMMessageViewController: BaseViewController {
                 make.top.equalToSuperview()
                 make.bottom.equalTo(sf.inputLayout.snp.top)
             }
+            self.messageLayout.backgroundColor = IMUIManager.shared.uiResourceProvider?
+                .layoutBgColor()
         }
     }
 
@@ -280,7 +278,7 @@ open class IMMessageViewController: BaseViewController {
             IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
         self.unReadMsgTipsView.font = UIFont.boldSystemFont(ofSize: 13)
         self.unReadMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?
-            .inputLayoutBgColor()
+            .panelBgColor()
         self.unReadMsgTipsView.layer.cornerRadius = 6
         self.unReadMsgTipsView.layer.masksToBounds = true
         self.unReadMsgTipsView.padding = UIEdgeInsets.init(
@@ -313,10 +311,10 @@ open class IMMessageViewController: BaseViewController {
         self.newMsgTipsView.isUserInteractionEnabled = true
         self.newMsgTipsView.textColor =
             IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
-        self.newMsgTipsView.text = ResourceUtils.loadString("new_message_tips", comment: "")
+        self.newMsgTipsView.text = ResourceUtils.loadString("new_message_tips")
         self.newMsgTipsView.font = UIFont.boldSystemFont(ofSize: 13)
         self.newMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?
-            .inputLayoutBgColor()
+            .panelBgColor()
         self.newMsgTipsView.layer.cornerRadius = 6
         self.newMsgTipsView.layer.masksToBounds = true
         self.newMsgTipsView.padding = UIEdgeInsets.init(
@@ -338,7 +336,7 @@ open class IMMessageViewController: BaseViewController {
             IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#1390f4")
         self.atMsgTipsView.font = UIFont.boldSystemFont(ofSize: 13)
         self.atMsgTipsView.backgroundColor = IMUIManager.shared.uiResourceProvider?
-            .inputLayoutBgColor()
+            .panelBgColor()
         self.atMsgTipsView.layer.cornerRadius = 6
         self.atMsgTipsView.layer.masksToBounds = true
         self.atMsgTipsView.padding = UIEdgeInsets.init(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
@@ -386,7 +384,7 @@ open class IMMessageViewController: BaseViewController {
             self.atMsgTipsView.isHidden = true
         } else {
             self.atMsgTipsView.text = String.init(
-                format: ResourceUtils.loadString("x_message_at_me", comment: ""), self.atMsgs.count)
+                format: ResourceUtils.loadString("x_message_at_me"), self.atMsgs.count)
             self.atMsgTipsView.isHidden = false
         }
     }
@@ -588,6 +586,7 @@ open class IMMessageViewController: BaseViewController {
         self.session?.merge(s)
         self.session?.unreadCount = s.unreadCount
         self.updateUnreadTipsView()
+        self.inputLayout.onSessionUpdate()
     }
 
     open override func viewWillAppear(_ animated: Bool) {
@@ -734,11 +733,11 @@ open class IMMessageViewController: BaseViewController {
                                 self.readMessage(msg)
                             }
                         } else {
-                            showToast(ResourceUtils.loadString("play_failed", comment: ""))
+                            showToast(ResourceUtils.loadString("play_failed"))
                         }
                     }
                 } catch {
-                    showToast(ResourceUtils.loadString("play_failed", comment: ""))
+                    showToast(ResourceUtils.loadString("play_failed"))
                 }
             }
         } else if msg.type == MsgType.Image.rawValue || msg.type == MsgType.Video.rawValue {
@@ -873,7 +872,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
                         if !supportImage {
                             sf.showSenderMessage(
                                 text: ResourceUtils.loadString(
-                                    "do_not_allow_send_image", comment: ""), success: false)
+                                    "do_not_allow_send_image"), success: false)
                             return
                         }
                         var ext = r.mimeType.replacingOccurrences(
@@ -884,7 +883,7 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
                         if !supportVideo {
                             sf.showSenderMessage(
                                 text: ResourceUtils.loadString(
-                                    "do_not_allow_send_video", comment: ""), success: false)
+                                    "do_not_allow_send_video"), success: false)
                             return
                         }
                         var ext = r.mimeType.replacingOccurrences(
@@ -1057,9 +1056,19 @@ extension IMMessageViewController: IMMsgSender, IMMsgPreviewer, IMSessionMemberA
         }
         let frame = CGRect(
             x: (Int(screenWidth) - popupWidth) / 2, y: y, width: popupWidth, height: popupHeight)
-        let popupView = IMMessageOperatorPopupView(frame: frame)
-        popupView.show(rowCount, operators, self, message)
+        let popupView = IMMessageOperatorPopupView()
+        self.view.addSubview(popupView)
+        popupView.show(frame, rowCount, operators, self, message)
     }
+    
+    public func dismissMessageOperatorPanel() {
+        self.view.subviews.forEach { v in
+            if v is IMMessageOperatorPopupView {
+                v.removeFromSuperview()
+            }
+        }
+    }
+    
 
     /// show loading
     public func showSenderLoading(text: String) {

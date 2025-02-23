@@ -32,6 +32,15 @@ extension UIImageView {
         self.layer.masksToBounds = true
         self.kf.setImage(with: URL(string: url), placeholder: placeHolderImage)
     }
+    
+    public func renderImageByUrl(url: String, processor: ImageProcessor, placeHolderImage: UIImage? = nil) {
+        self.layer.masksToBounds = true
+        self.kf.setImage(with: URL(string: url), placeholder: placeHolderImage, options: [
+            .processor(processor),
+            .scaleFactor(UIScreen.main.scale),
+            .cacheOriginalImage
+        ])
+    }
 
     public func renderImageByUrl(
         url: String, placeHolderImage: UIImage? = nil,

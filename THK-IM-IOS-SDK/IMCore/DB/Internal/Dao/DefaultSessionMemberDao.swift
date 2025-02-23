@@ -72,7 +72,26 @@ open class DefaultSessionMemberDao: SessionMemberDao {
             fromTable: self.tableName,
             where: SessionMember.Properties.sessionId == sessionId
                 && SessionMember.Properties.deleted == 0,
-            orderBy: [SessionMember.Properties.cTime.order(Order.ascending)],
+            orderBy: [
+                SessionMember.Properties.cTime.order(Order.ascending)
+            ],
+            limit: count,
+            offset: offset
+        )
+        return members ?? [SessionMember]()
+    }
+
+    public func findBySessionIdSortByRole(_ sessionId: Int64, _ offset: Int, _ count: Int)
+        -> [SessionMember]
+    {
+        let members: [SessionMember]? = try? self.database?.getObjects(
+            fromTable: self.tableName,
+            where: SessionMember.Properties.sessionId == sessionId
+                && SessionMember.Properties.deleted == 0,
+            orderBy: [
+                SessionMember.Properties.role.order(Order.descending),
+                SessionMember.Properties.cTime.order(Order.ascending),
+            ],
             limit: count,
             offset: offset
         )

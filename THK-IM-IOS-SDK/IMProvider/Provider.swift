@@ -14,8 +14,9 @@ import UIKit
 import ZLPhotoBrowser
 
 public class Provider: IMProvider {
-
-    public init(token: String) {
+    
+    public init() {
+        
     }
 
     public func openCamera(
@@ -50,10 +51,12 @@ public class Provider: IMProvider {
                 }
             } else if image != nil {
                 if image!.pngData() != nil {
-                    self?.sendResult(image!.pngData()!, "", "image/png", imContentResult)
+                    self?.sendResult(
+                        image!.pngData()!, "", "image/png", imContentResult)
                 } else {
                     self?.sendResult(
-                        image!.jpegData(compressionQuality: 1.0)!, "", "image/jpeg", imContentResult
+                        image!.jpegData(compressionQuality: 1.0)!, "",
+                        "image/jpeg", imContentResult
                     )
                 }
             }
@@ -96,7 +99,8 @@ public class Provider: IMProvider {
     public func startRecordAudio(
         path: String, duration: Int, audioCallback: @escaping AudioCallback
     ) -> Bool {
-        return OggOpusAudioRecorder.shared.startRecording(path, duration, audioCallback)
+        return OggOpusAudioRecorder.shared.startRecording(
+            path, duration, audioCallback)
     }
 
     public func stopRecordAudio() {
@@ -107,7 +111,9 @@ public class Provider: IMProvider {
         return OggOpusAudioRecorder.shared.isRecording()
     }
 
-    public func startPlayAudio(path: String, audioCallback: @escaping AudioCallback) -> Bool {
+    public func startPlayAudio(
+        path: String, audioCallback: @escaping AudioCallback
+    ) -> Bool {
         return OggOpusAudioPlayer.shared.startPlaying(path, audioCallback)
     }
 
@@ -124,7 +130,8 @@ public class Provider: IMProvider {
     }
 
     private func onMediaResult(
-        _ r: ZLResultModel, _ isOriginal: Bool, _ imContentResult: @escaping IMContentResult
+        _ r: ZLResultModel, _ isOriginal: Bool,
+        _ imContentResult: @escaping IMContentResult
     ) throws {
         switch r.asset.mediaType {
         case PHAssetMediaType.image:
@@ -134,13 +141,16 @@ public class Provider: IMProvider {
                 if data != nil {
                     if r.image.images != nil {
                         self?.sendResult(
-                            data!, r.asset.zl.filename ?? "", "image/gif", imContentResult)
+                            data!, r.asset.zl.filename ?? "", "image/gif",
+                            imContentResult)
                     } else if r.image.pngData() != nil {
                         self?.sendResult(
-                            data!, r.asset.zl.filename ?? "", "image/png", imContentResult)
+                            data!, r.asset.zl.filename ?? "", "image/png",
+                            imContentResult)
                     } else {
                         self?.sendResult(
-                            data!, r.asset.zl.filename ?? "", "image/jpeg", imContentResult)
+                            data!, r.asset.zl.filename ?? "", "image/jpeg",
+                            imContentResult)
                     }
                 }
             }
@@ -159,7 +169,8 @@ public class Provider: IMProvider {
                         let data = try Data(contentsOf: urlAsset.url)
                         let ext = urlAsset.url.pathExtension
                         let name = urlAsset.url.lastPathComponent
-                        sf.sendResult(data, name, "video/\(ext)", imContentResult)
+                        sf.sendResult(
+                            data, name, "video/\(ext)", imContentResult)
                     } catch {
                         DDLogError("\(error)")
                     }

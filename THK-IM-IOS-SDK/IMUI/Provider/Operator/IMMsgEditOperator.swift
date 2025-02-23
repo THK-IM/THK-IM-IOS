@@ -15,11 +15,13 @@ public class IMMsgEditOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("edit", comment: "")
+        return ResourceUtils.loadString("edit")
     }
 
     public func icon() -> UIImage? {
-        return ResourceUtils.loadImage(named: "ic_msg_opr_edit")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_edit")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
     }
 
     public func onClick(sender: IMMsgSender, message: Message) {

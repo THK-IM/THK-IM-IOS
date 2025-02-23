@@ -15,11 +15,13 @@ public class IMMsgMultiSelectOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("multi_select", comment: "")
+        return ResourceUtils.loadString("multi_select")
     }
 
     public func icon() -> UIImage? {
-        return ResourceUtils.loadImage(named: "ic_msg_opr_multi_select")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_multi_select")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
     }
 
     public func onClick(sender: IMMsgSender, message: Message) {

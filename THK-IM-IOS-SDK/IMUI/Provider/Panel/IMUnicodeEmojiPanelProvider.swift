@@ -17,7 +17,9 @@ open class IMUnicodeEmojiPanelProvider: IMBasePanelViewProvider {
     }
 
     open func icon(selected: Bool) -> UIImage? {
-        return ResourceUtils.loadImage(named: "ic_msg_emoji")
+        return ResourceUtils.loadImage(named: "ic_msg_emoji")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
     }
 
     open func support(session: Session) -> Bool {

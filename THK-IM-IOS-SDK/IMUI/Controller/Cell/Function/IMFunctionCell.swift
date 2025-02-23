@@ -22,18 +22,15 @@ class IMFunctionCell: UICollectionViewCell {
         labelView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(20)
-            make.bottom.equalToSuperview().offset(-10)
+            make.bottom.equalToSuperview().offset(-14)
         }
         self.contentView.addSubview(iconView)
 
         iconView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview()
-            make.width.equalTo(60)
-            make.height.equalTo(60)
+            make.top.equalToSuperview().offset(14)
+            make.size.equalTo(36)
         }
-        iconView.layer.cornerRadius = 8
-        iconView.clipsToBounds = true
     }
 
     required init?(coder: NSCoder) {

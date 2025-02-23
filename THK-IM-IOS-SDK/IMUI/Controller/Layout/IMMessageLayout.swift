@@ -21,7 +21,7 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
 
     private lazy var messageTableView: UITableView = {
         let v = UITableView()
-        v.backgroundColor = UIColor.clear
+        v.backgroundColor = .clear
         v.dataSource = self
         v.delegate = self
         v.allowsSelection = true
@@ -29,6 +29,7 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
         v.allowsMultipleSelectionDuringEditing = true
         v.estimatedRowHeight = 88
         v.rowHeight = UITableView.automaticDimension
+        v.contentInsetAdjustmentBehavior = .never
         return v
     }()
 
@@ -108,7 +109,6 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     }
 
     public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        DDLogInfo("didDeselectRowAt \(indexPath.row)")
         let message = self.messages[indexPath.row]
         self.selectedMessages.remove(message)
     }
@@ -134,12 +134,13 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
     }
 
     func scrollToBottom(_ delay: CGFloat = 0.1) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            if self.messages.count > 0 {
-                let rows = self.messageTableView.numberOfRows(inSection: 0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            guard let sf = self else { return }
+            if sf.messages.count > 0 {
+                let rows = sf.messageTableView.numberOfRows(inSection: 0)
                 if rows > 0 {
                     let indexPath = IndexPath(row: rows - 1, section: 0)
-                    self.messageTableView.scrollToRow(
+                    sf.messageTableView.scrollToRow(
                         at: indexPath,
                         at: UITableView.ScrollPosition.bottom,
                         animated: true
@@ -306,10 +307,19 @@ public class IMMessageLayout: UIView, UITableViewDataSource, UITableViewDelegate
 
     func insertMessage(_ message: Message) {
         let tableView = self.messageTableView
+        if #available(iOS 17.4, *) {
+            // 如果视图在滑动中 等待0.2s再插入或更新
+            if tableView.isScrollAnimating {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                    self?.insertMessage(message)
+                }
+                return
+            }
+        }
         let pos = findPosition(message)
         if pos != -1 {
-            UIView.setAnimationsEnabled(false)
             // 老消息，替换reload
+            UIView.setAnimationsEnabled(false)
             self.messages[pos] = message
             tableView.reloadRows(at: [IndexPath.init(row: pos, section: 0)], with: .none)
             UIView.setAnimationsEnabled(true)

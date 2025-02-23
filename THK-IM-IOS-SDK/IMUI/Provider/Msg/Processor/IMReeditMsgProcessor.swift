@@ -98,7 +98,7 @@ public class IMReeditMsgProcessor: IMBaseMsgProcessor {
     }
 
     open override func msgDesc(msg: Message) -> String {
-        return ResourceUtils.loadString("im_reedit_msg", comment: "")
+        return ResourceUtils.loadString("im_reedit_msg")
     }
 
 }

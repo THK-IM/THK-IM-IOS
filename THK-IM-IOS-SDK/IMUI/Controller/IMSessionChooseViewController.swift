@@ -31,9 +31,14 @@ open class IMSessionChooseViewController: IMSessionViewController {
         vc.navigationController?.pushViewController(choose, animated: false)
     }
     
+    open override func title() -> String? {
+        return ResourceUtils.loadString("choose_one_session")
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = ResourceUtils.loadString("choose_one_session", comment: "")
+        self.view.backgroundColor = IMUIManager.shared.uiResourceProvider?
+            .layoutBgColor() ?? UIColor.init(hex: "#F2F2F2")
     }
 
     open override func openSession(_ session: Session) {
@@ -75,7 +80,7 @@ open class IMSessionChooseViewController: IMSessionViewController {
 
     private func pop() {
         let transition = CATransition.init()
-        transition.duration = 0.4
+        transition.duration = 0.1
         transition.type = .reveal
         transition.subtype = .fromBottom
         transition.timingFunction = CAMediaTimingFunction.init(name: .easeInEaseOut)
@@ -132,8 +137,8 @@ open class IMSessionChooseViewController: IMSessionViewController {
                 let title: String =
                     (session.type == SessionType.Group.rawValue
                         || session.type == SessionType.SuperGroup.rawValue)
-                    ? ResourceUtils.loadString("someone_s_group_chat_record", comment: "")
-                    : ResourceUtils.loadString("someone_s_chat_record", comment: "")
+                    ? ResourceUtils.loadString("someone_s_group_chat_record")
+                    : ResourceUtils.loadString("someone_s_chat_record")
                 recordBody.title = String.init(format: title, recordBody.title)
                 return Observable.just(recordBody)
             })

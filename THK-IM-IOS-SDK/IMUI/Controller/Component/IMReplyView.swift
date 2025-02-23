@@ -17,7 +17,10 @@ class IMReplyView: UIView {
 
     lazy private var closeView: UIImageView = {
         let view = UIImageView()
-        view.image = ResourceUtils.loadImage(named: "ic_close")?.scaledToSize(
+        view.image = ResourceUtils.loadImage(named: "ic_close")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333")
+        ).scaledToSize(
             CGSize(width: 16, height: 16))
         view.contentMode = .scaleAspectFill
         return view
@@ -27,13 +30,15 @@ class IMReplyView: UIView {
         let view = UIView()
         view.layer.cornerRadius = 2
         view.backgroundColor =
-            IMUIManager.shared.uiResourceProvider?.tintColor() ?? UIColor.init(hex: "#ff08AAFF")
+            IMUIManager.shared.uiResourceProvider?.tintColor()
         return view
     }()
 
     lazy private var replyUserView: UILabel = {
         let view = UILabel()
-        view.textColor = UIColor.init(hex: "333333")
+        view.textColor =
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+            ?? UIColor.init(hex: "333333")
         view.font = UIFont.systemFont(ofSize: 15)
         view.textAlignment = .left
         view.numberOfLines = 1
@@ -42,7 +47,9 @@ class IMReplyView: UIView {
 
     lazy private var replyMsgView: UILabel = {
         let view = UILabel()
-        view.textColor = UIColor.init(hex: "666666")
+        view.textColor =
+            IMUIManager.shared.uiResourceProvider?.tipTextColor()
+            ?? UIColor.init(hex: "666666")
         view.font = UIFont.systemFont(ofSize: 13)
         view.textAlignment = .justified
         view.numberOfLines = 2
@@ -131,7 +138,8 @@ class IMReplyView: UIView {
 
     private func showContentView(_ nickname: String, _ msg: Message) {
         self.replyUserView.text = "\(nickname)"
-        self.replyMsgView.text = IMCoreManager.shared.messageModule.getMsgProcessor(msg.type)
+        self.replyMsgView.text = IMCoreManager.shared.messageModule
+            .getMsgProcessor(msg.type)
             .msgDesc(msg: msg)
     }
 

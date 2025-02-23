@@ -16,7 +16,7 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
     private weak var delegate: IMMsgCellOperator?
     private let fontSize: CGFloat = 16
 
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.numberOfLines = 0
     }
@@ -56,10 +56,11 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         if message.atUsers != nil && message.atUsers!.length > 0 {
             content = self.replaceIdToNickname(content, message.getAtUIds())
         }
-        self.render(content, updated)
+        let attributedString = self.render(message, content, updated)
+        self.attributedText = attributedString
     }
 
-    private func replaceIdToNickname(_ content: String, _ atUIds: Set<Int64>) -> String {
+    public func replaceIdToNickname(_ content: String, _ atUIds: Set<Int64>) -> String {
         let content = AtStringUtils.replaceAtUIdsToNickname(content, atUIds) { [weak self] id in
             if let member = self?.delegate?.msgSender()?.syncGetSessionMemberInfo(id) {
                 return IMUIManager.shared.nicknameForSessionMember(member.0, member.1)
@@ -69,9 +70,9 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         return content
     }
 
-    private func render(_ data: String, _ updated: Bool) {
+    open func render(_ message: Message, _ data: String, _ updated: Bool) -> NSMutableAttributedString {
         guard let regex = try? NSRegularExpression(pattern: AtStringUtils.atRegular) else {
-            return
+            return NSMutableAttributedString(string: "")
         }
         let range = NSRange(data.startIndex..<data.endIndex, in: data)
         let contentAttributedStr = NSMutableAttributedString(string: data)
@@ -93,7 +94,7 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
         }
 
         if updated {
-            let editStr = ResourceUtils.loadString("edited", comment: "")
+            let editStr = ResourceUtils.loadString("edited")
             let editAttributedStr = NSMutableAttributedString(string: editStr)
             let editRange = NSRange(editStr.startIndex..<editStr.endIndex, in: editStr)
             editAttributedStr.addAttribute(
@@ -108,7 +109,7 @@ open class IMTextMsgView: IMMsgLabelView, IMsgBodyView {
             )
             contentAttributedStr.append(editAttributedStr)
         }
-        self.attributedText = contentAttributedStr
+        return contentAttributedStr
     }
 
     public func contentView() -> UIView {

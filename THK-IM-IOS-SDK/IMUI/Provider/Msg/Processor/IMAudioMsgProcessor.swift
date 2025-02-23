@@ -16,7 +16,7 @@ open class IMAudioMsgProcessor: IMBaseMsgProcessor {
     }
 
     open override func msgDesc(msg: Message) -> String {
-        return ResourceUtils.loadString("im_audio_msg", comment: "")
+        return ResourceUtils.loadString("im_audio_msg")
     }
 
     open override func reprocessingObservable(_ message: Message) -> Observable<Message>? {

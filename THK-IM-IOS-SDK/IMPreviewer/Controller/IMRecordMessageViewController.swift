@@ -17,14 +17,14 @@ class IMRecordMessageViewController: BaseViewController, IMMsgPreviewer {
     var originSession: Session? = nil
     var session: Session? = nil
     private var messageLayout = IMMessageLayout()
+    
+    override func title() -> String? {
+        return self.recordTitle
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = IMUIManager.shared.uiResourceProvider?.inputBgColor()
-        if let title = self.recordTitle {
-            self.navigationItem.title = title
-        }
-
+        self.view.backgroundColor = IMUIManager.shared.uiResourceProvider?.layoutBgColor()
         self.messageLayout.session = session
         self.messageLayout.mode = 1
         self.messageLayout.previewer = self
@@ -36,8 +36,10 @@ class IMRecordMessageViewController: BaseViewController, IMMsgPreviewer {
             self.messageLayout.addMessages(orderMessages)
         }
         self.initEvent()
+        let top = self.getTitleBarHeight()
         messageLayout.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperview().offset(top)
+            make.left.right.bottom.equalToSuperview()
         }
     }
 

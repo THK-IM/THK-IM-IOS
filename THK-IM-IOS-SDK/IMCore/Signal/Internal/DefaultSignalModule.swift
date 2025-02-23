@@ -21,7 +21,6 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     private let connectTimeout = 5.0
     private let reconnectInterval: Float = 3.0
     private let heatBeatInterval = 10
-    private let lock = NSLock.init()
 
     private var hearBeatTask: GCDTask?
     private var timeoutTask: GCDTask?
@@ -34,8 +33,6 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
 
     public func connect() {
         DDLogDebug("DefaultSignalModule: connect start, status: \(self.status) ")
-        lock.lock()
-        defer { lock.unlock() }
         if self.status == SignalStatus.Connecting || self.status == SignalStatus.Connected {
             return
         }
@@ -134,28 +131,20 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     }
 
     public func disconnect(_ reason: String) {
-        lock.lock()
         self.webSocketClient?.forceDisconnect()
         self.signalListener = nil
         self.status = SignalStatus.DisConnected
-        lock.unlock()
     }
 
     public func getSignalStatus() -> SignalStatus {
-        lock.lock()
-        defer { lock.unlock() }
         return self.status
     }
 
     public func setSignalListener(_ listener: SignalListener) {
-        lock.lock()
-        defer { lock.unlock() }
         self.signalListener = listener
     }
 
     public func sendSignal(_ signal: String) {
-        lock.lock()
-        defer { lock.unlock() }
         var msg = signal
         DDLogDebug("DefaultSignalModule sendSignal \(msg)")
         if let cipher = IMCoreManager.shared.crypto {
@@ -216,7 +205,7 @@ public class DefaultSignalModule: SignalModule, WebSocketDelegate {
     }
 
     private func onStateChange(_ status: SignalStatus) {
-        DDLogDebug("DefaultSignalModule: onStateChange \(status)")
+        DDLogDebug("DefaultSignalModule: onStateChange \(self.status) \(status)")
         if self.status != status {
             self.status = status
             self.signalListener?.onSignalStatusChange(status)

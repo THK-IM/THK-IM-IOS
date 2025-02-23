@@ -15,11 +15,13 @@ public class IMMsgCopyOperator: IMMessageOperator {
     }
 
     public func title() -> String {
-        return ResourceUtils.loadString("copy", comment: "")
+        return ResourceUtils.loadString("copy")
     }
 
     public func icon() -> UIImage? {
-        return ResourceUtils.loadImage(named: "ic_msg_opr_copy")
+        return ResourceUtils.loadImage(named: "ic_msg_opr_copy")?.withTintColor(
+            IMUIManager.shared.uiResourceProvider?.inputTextColor()
+                ?? UIColor.init(hex: "333333"))
     }
 
     public func onClick(sender: IMMsgSender, message: Message) {
@@ -35,11 +37,11 @@ public class IMMsgCopyOperator: IMMessageOperator {
                 }
                 UIPasteboard.general.string = content
                 sender.showSenderMessage(
-                    text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
+                    text: ResourceUtils.loadString("had_copyed"), success: true)
             } else {
                 UIPasteboard.general.string = message.content
                 sender.showSenderMessage(
-                    text: ResourceUtils.loadString("had_copyed", comment: ""), success: true)
+                    text: ResourceUtils.loadString("had_copyed"), success: true)
             }
         }
         // TODO other msgType
