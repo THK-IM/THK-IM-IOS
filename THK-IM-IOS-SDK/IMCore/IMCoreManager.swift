@@ -99,7 +99,7 @@ open class IMCoreManager: SignalListener {
 
     public func initApplication(_ debug: Bool = true) {
         self.debug = debug
-        if self.debug {
+        if !self.debug {
             self.env = "Release"
         }
         self.initIMLog()
