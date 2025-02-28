@@ -56,7 +56,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     | MsgOperateStatus.ClientRead.rawValue | MsgOperateStatus.Ack.rawValue
                 if msg.fromUId == IMCoreManager.shared.uId {
                     // 自己发的已读消息，更新rMsgId的消息状态为服务端已读
-                    try insertOrUpdateDb(referMsg!, true, false)
+                    try insertOrUpdateDb(referMsg!, referMsg!.fromUId == IMCoreManager.shared.uId, false)
                     let session = try IMCoreManager.shared.database.sessionDao().findById(
                         msg.sessionId)
                     if session != nil {
@@ -75,7 +75,7 @@ public class IMReadMsgProcessor: IMBaseMsgProcessor {
                     } else {
                         referMsg!.rUsers = "\(msg.fromUId)"
                     }
-                    try insertOrUpdateDb(referMsg!, true, false)
+                    try insertOrUpdateDb(referMsg!, referMsg!.fromUId == IMCoreManager.shared.uId, false)
                     if msg.operateStatus & MsgOperateStatus.Ack.rawValue == 0 {
                         IMCoreManager.shared.messageModule.ackMessageToCache(msg)
                     }
